@@ -1,0 +1,57 @@
+import ROOT
+from xAH_config import xAH_config
+
+c = xAH_config()
+
+#GRL = "$ROOTCOREBIN/data/ZprimeDM/data15_13TeV.periodAllYear_DetStatus-v64-pro19_DQDefects-00-01-02_PHYS_StandardGRL_All_Good.xml"
+#GRL = "$ROOTCOREBIN/data/XhhResolved/data15_13TeV.periodAllYear_DetStatus-v67-pro19-02_DQDefects-00-01-02_PHYS_StandardGRL_All_Good.xml"
+#GRL = "$ROOTCOREBIN/data/XhhBoosted/data15_13TeV.periodAllYear_DetStatus-v71-pro19-06_DQDefects-00-01-02_PHYS_StandardGRL_All_Good_25ns.xml"
+GRL = "$ROOTCOREBIN/data/XhhBoosted/data15_13TeV.periodAllYear_DetStatus-v73-pro19-08_DQDefects-00-01-02_PHYS_StandardGRL_All_Good_25ns.xml"
+
+
+#
+#  Data Config
+#
+if not args.is_MC:
+    applyGRL           = True
+
+#
+#  MC Config
+#
+else:
+    applyGRL           = False
+
+#
+# Process Ntuple
+#
+
+'''
+For 0.2 track jets,
+        	          "70": -0.3098,
+                    "77": -0.6134,
+                    "80": -0.7132,
+                    "85": -0.8433,
+                    "90": -0.9291,
+'''
+c.setalg("ProcessBoostedXhhMiniNTuple", { "m_name"                   : "ProcXhhMiniTree",
+                                           "m_debug"                  : False,
+                                           "m_doBlind"                : False,
+                                           "m_radius_SR"              : 1.6,
+                                           "m_radius_CR"              : 35.8,
+                                           "m_leadMass_SR"            : 124.0,
+                                           "m_sublMass_SR"            : 115.0,
+                                           "m_doTrigger"              : True,
+                                           "m_doTruthOnly"            : False,
+                                           "m_detailLevel"            : 1,
+                                           "m_useWeighted"            : True,
+                                           "m_weightsFile"            : "",
+                                           "m_doStitching"            : True,
+                                           "m_doBtagSyst"             : False,
+                                           "m_doCleaning"             : True,
+                                           "m_lumi"                   : 3.20905, # lumi in fb-1
+                                           "m_MV2ccut"                : -0.6134, # 77% working point
+                                           "m_applyGRL"               : applyGRL,
+                                           "m_doData"                 : (not args.is_MC),
+                                           "m_GRLxml"                 : GRL,
+                                           } )
+

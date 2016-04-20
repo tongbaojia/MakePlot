@@ -1,0 +1,93 @@
+
+#tree: XhhMiniNtuple
+
+directory: /afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot
+
+output: test.root
+
+selection:
+     - "1"
+#    - PassTrackJetEta
+#    - (num_pass_btag(asso_trkjet_MV2c20[0][0], asso_trkjet_MV2c20[0][1], asso_trkjet_MV2c20[1][0], asso_trkjet_MV2c20[1][1], -0.9291) == 4 || Pass4Btag)
+#    - PassControlMass
+    
+ratio: yes
+
+ks: yes
+
+systematics: no # not working
+
+data: no # not working
+
+autoRatio: no
+
+norm: no
+
+prename: c10_signal_
+
+samples:
+
+    - name    : 1TeV
+      is_data : no
+      stack   : no
+      overlay : yes
+      path    : signal_G_hh_c10_M1000/hist-MiniNTuple.root
+      folder  : ""
+      label   : "1TeV"
+      color   : ROOT.kBlack
+      weights : "1"
+
+    - name    : 1.5TeV
+      is_data : no
+      stack   : no
+      overlay : yes
+      path    : signal_G_hh_c10_M1500/hist-MiniNTuple.root
+      folder  : ""
+      label   : "1.5TeV"
+      color   : ROOT.kBlue
+      weights : "1"
+
+    - name    : 2TeV
+      is_data : no
+      stack   : no
+      overlay : yes
+      path    : signal_G_hh_c10_M2000/hist-MiniNTuple.root
+      folder  : ""
+      label   : "2TeV"
+      color   : ROOT.kRed
+      weights : "1"
+
+    - name    : 2.5TeV
+      is_data : no
+      stack   : no
+      overlay : yes
+      path    : signal_G_hh_c10_M2500/hist-MiniNTuple.root
+      folder  : ""
+      label   : "2.5TeV"
+      color   : ROOT.kGreen
+      weights : "1"
+
+    - name    : 3TeV
+      is_data : no
+      stack   : no
+      overlay : yes
+      path    : signal_G_hh_c10_M3000/hist-MiniNTuple.root
+      folder  : ""
+      label   : "3TeV"
+      color   : ROOT.kYellow
+      weights : "1"
+
+plots:
+
+    - name     : CutFlowWeight
+      variable : CutFlowWeight
+      xtitle   : "CutFlow"
+      ytitle   : Number of events
+      rebin    : 1
+      logY     : no
+
+
+
+      
+      
+    
