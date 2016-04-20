@@ -142,7 +142,7 @@ def rebinData(ifile, rebin, scale=1.0):
 ####################################################################################
 #plot
 
-def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labelPos, rebin=None, inputBinWidth=25, finalBinUnits=25):
+def plotRegion(filename, cut, xTitle, yTitle="N Events", labelPos=11, rebin=None, inputBinWidth=25, finalBinUnits=25):
 
     gStyle.SetErrorX(0)
     gStyle.SetHatchesSpacing(0.7)
@@ -155,46 +155,38 @@ def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labe
     data = ifile.Get("data_" + cut )
     qcd = ifile.Get("qcd_est_" + cut )
     qcd_origin = ifile.Get("qcd_" + cut )
-    print "factor is ", qcd.Integral()/qcd_origin.Integral()
+    #print "factor is ", qcd.Integral()/qcd_origin.Integral()
     ttbar = ifile.Get("ttbar_" + cut )
     zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
     RSG1_2000 = ifile.Get("RSG1_2000_" + cut )
+
+    if not rebin == None:
+        data.Rebin(rebin)
+        qcd.Rebin(rebin)
+        ttbar.Rebin(rebin)
+        zjet.Rebin(rebin)
+        RSG1_1000.Rebin(rebin)
+        RSG1_1500.Rebin(rebin)
+        RSG1_2000.Rebin(rebin)
+
+
+    xMin = data.GetXaxis().GetBinCenter(1)
+    xMax = data.GetXaxis().GetBinCenter(data.GetXaxis().GetNbins())
     yMax = data.GetMaximum() * 1.5
     #qcd_fit = ifile.Get("qcd_fit")
     #qcd_fitUp = ifile.Get("qcd_fitUp")
-    #qcd_fitDown = ifile.Get("qcd_fitDown")
+    #qcd_fitDown = ifile.Get("qcd_fitDown"
 
-    if not rebin == None:
-        if isinstance(rebin,list):
-            binScale = float(inputBinWidth)/finalBinUnits
 
-            data  = do_variable_rebinning(data, rebin, binScale)
-            qcd   = do_variable_rebinning(qcd, rebin, binScale)
-            ttbar = do_variable_rebinning(ttbar, rebin, binScale)
-            zjet = do_variable_rebinning(zjet, rebin, binScale)
-        else:
-            print "rebin has to be a list"
-            import sys
-            sys.exit(-1)
-
-    # total background: [0] histogram, [1] graph for the bkg errors
-    if filename.find("boosted")>-1:
-        totalbkg_hh = ifile.Get("totalbkg_hh")
-        if isinstance(rebin,list):
-            binScale = float(inputBinWidth)/finalBinUnits
-            totalbkg_hh = do_variable_rebinning(totalbkg_hh, rebin,binScale)
-        bkg = makeTotBkg([totalbkg_hh])
-    else:
-        data = makeTotBkg([data])[1]
-        bkg = makeTotBkg([ttbar,qcd,zjet])
-
+    data = makeTotBkg([data])[1]
+    bkg = makeTotBkg([ttbar,qcd,zjet])
     # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
-    ratios = makeDataRatio(data,bkg[1])
+    ratios = makeDataRatio(data, bkg[1])
 
     # canvas
-    c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 600)
+    c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
     c0.SetRightMargin(0.05)
 
     # top pad
@@ -232,8 +224,6 @@ def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labe
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
     bkg[0].GetYaxis().SetRangeUser(0.001, yMax)
-    #bkg[0].GetYaxis().SetRangeUser(0, yMax)
-    bkg[0].GetXaxis().SetRangeUser(xMin, xMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -282,7 +272,7 @@ def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labe
     pad1.Draw()
     pad1.cd()
 
-    hratio = ROOT.TH1F("hratio","",1,xMin,xMax)
+    hratio = ROOT.TH1F("hratio","",1, xMin, xMax)
     hratio.SetStats(0)
     
     hratio.GetYaxis().SetTitleFont(43)
@@ -290,7 +280,7 @@ def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labe
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(rMin, rMax)
+    hratio.GetYaxis().SetRangeUser(0.001, 2.5) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -335,30 +325,17 @@ def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labe
     legHunit=0.05
     legH=legHunit*6 # retuned below based on number of entries to 0.05*num_entries
     legW=0.4
-    if labelPos==1:
-        leg = ROOT.TLegend(0.6, 0.702-legH, 0.6+legW, 0.702)
-        # top right
-        ATLASLabel(0.61,0.85, StatusLabel);
-        myText(0.61,0.80, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22);
-        myText(0.61,0.75, 1, ' ' + cut.replace("_", "; "), 22);
-    elif labelPos==11:
-        leg = ROOT.TLegend(0.6, 0.72-legH, 0.6+legW, 0.72)
+    if labelPos==11:
+        leg = ROOT.TLegend(0.5, 0.7, 0.9, 0.9)
         # top right, a bit left
-        ATLASLabel(0.57,0.85,StatusLabel);
-        myText(0.57,0.80, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22);
-        myText(0.57,0.75, 1, ' ' + cut.replace("_", "; "), 22);
-    elif labelPos==2:
-        leg = ROOT.TLegend(0.6, 0.905-legH, 0.6+legW, 0.905)
-        # top
-        ATLASLabel(0.26,0.86,StatusLabel);
-        myText(0.26,0.81, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22);
-        myText(0.26,0.76, 1, ' ' + cut.replace("_", "; "), 22);
-    else:
-        leg = ROOT.TLegend(0.6, 0.905-legH, 0.6+legW, 0.905)
+        ATLASLabel(0.15, 0.87, StatusLabel);
+        myText(0.15, 0.82, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22);
+        myText(0.15, 0.77, 1, ' ' + cut.replace("_", "; "), 22);
 
     ##### legend
+    leg.SetNColumns(2);
     leg.SetTextFont(43)
-    leg.SetTextSize(22)
+    leg.SetTextSize(12)
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
@@ -381,6 +358,8 @@ def plotRegion(filename, cut, xTitle, yTitle, xMin, xMax, yMax, rMin, rMax, labe
     #c0.SaveAs("../"+figuresFolder+"/"+ cut + ".pdf")
     #c0.SaveAs("../"+figuresFolder+"/"+ cut + ".eps")
 
+    pad0.Close()
+    pad1.Close()
 
 
 ##################################################################################################
@@ -395,18 +374,31 @@ def main():
     figuresFolder = "Plot"
     
     # plot in the control region #
-    # plotRegion("../Plot/TEST_b77.root", cut="4Trk_FourTag_Signal_mHH_l",xTitle="m_{2J} [GeV]",yTitle="Number of Events",xMin=500,xMax=3000,yMax=20,rMin=0.001,rMax=2.5,labelPos=11,rebin=None)
-    
+    plotRegion("../Plot/TEST_b77.root", cut="FourTag" + "_Control_mHH_l",            xTitle="m_{2J} [GeV]")
+
     # cut_lst = ["2Trk_in1_NoTag", "2Trk_in1_OneTag", "2Trk_in1_TwoTag", \
     #     "2Trk_NoTag", "2Trk_OneTag", "2Trk_TwoTag_split", \
     #     "3Trk_NoTag", "3Trk_OneTag", "3Trk_TwoTag", "3Trk_TwoTag_split", "3Trk_ThreeTag", \
     #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",\
     #     "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 
-    cut_lst = ["ThreeTag", "FourTag"]
+    cut_lst = ["TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
     for i, cut in enumerate(cut_lst):
         if "NoTag" not in cut:
-            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_mHH_l", xTitle="m_{2J} [GeV]",yTitle="Number of Events",xMin=500,xMax=3000,yMax=20,rMin=0.001,rMax=2.5,labelPos=11,rebin=None)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_mHH_l",            xTitle="m_{2J} [GeV]")
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_hCandDr",          xTitle="#Delta R", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_hCandDeta",        xTitle="#Delta #eta", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_hCandDphi",        xTitle="#Delta #phi", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_leadHCand_Eta",    xTitle="J0 #eta", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_leadHCand_Phi",    xTitle="J0 #phi", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_leadHCand_Mass",   xTitle="J0 m [GeV]", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_leadHCand_trk_dr", xTitle="J0 dRtrk", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_sublHCand_Eta",    xTitle="J1 #eta", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_sublHCand_Phi",    xTitle="J1 #phi", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_sublHCand_Mass",   xTitle="J1 m [GeV]", rebin=2)
+            plotRegion("../Plot/TEST_b77.root", cut=cut + "_Control_sublHCand_trk_dr", xTitle="J1 dRtrk", rebin=2)
     
 
 

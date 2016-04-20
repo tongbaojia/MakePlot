@@ -15,18 +15,19 @@ ROOT.gROOT.SetBatch(True)
 outputdir = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
 #mass_lst = [1000, 2000, 3000]
 mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
-cut_lst = ["2Trk_in1_NoTag", "2Trk_in1_OneTag", "2Trk_in1_TwoTag", \
-    "2Trk_NoTag", "2Trk_OneTag", "2Trk_TwoTag_split", \
-    "3Trk_NoTag", "3Trk_OneTag", "3Trk_TwoTag", "3Trk_TwoTag_split", "3Trk_ThreeTag", \
-    "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
-    "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+# cut_lst = ["2Trk_in1_NoTag", "2Trk_in1_OneTag", "2Trk_in1_TwoTag", \
+#     "2Trk_NoTag", "2Trk_OneTag", "2Trk_TwoTag_split", \
+#     "3Trk_NoTag", "3Trk_OneTag", "3Trk_TwoTag", "3Trk_TwoTag_split", "3Trk_ThreeTag", \
+#     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
+#     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+cut_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 region_lst = ["Sideband", "Control", "ZZ", "Signal"]
 blind=True
 #set list of plotting items
 plt_m = "_mHH_l"
 plt_lst = ["mHH_l", \
-"leadHCand_Pt_l", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_trk_dr",\
-"sublHCand_Pt_l", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_trk_dr",\
+"leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_trk_dr",\
+"sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_trk_dr",\
 "hCandDr", "hCandDeta", "hCandDphi"]
 
 #define functions
@@ -52,9 +53,9 @@ def main():
     masterinfo = {}
     #
     # Get the dic of counts for split signal sample
-    # for mass in mass_lst:
-    #     masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, outroot, "RSG1_%i" % mass)
-    #     WriteEvtCount(masterinfo["RSG1_" + str(mass)], output, "RSG %i" % mass)
+    for mass in mass_lst:
+        masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, outroot, "RSG1_%i" % mass)
+        WriteEvtCount(masterinfo["RSG1_" + str(mass)], output, "RSG %i" % mass)
 
     #Get ttbar samples
     masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test.root", outroot, "ttbar")
@@ -72,19 +73,19 @@ def main():
     masterinfo["qcd_est"] = qcd_estimation(masterinfo["qcd"], outroot)
     WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     # # #Do data estimation
-    # masterinfo["data_est"] = GetdataEst(masterinfo, outroot)
-    # WriteEvtCount(masterinfo["data_est"], output, "data Est")
+    masterinfo["data_est"] = GetdataEst(masterinfo, outroot)
+    WriteEvtCount(masterinfo["data_est"], output, "data Est")
     # # #Do data estimation Difference comparision in control and ZZ region
-    # masterinfo["dataEstDiff"] = GetDiff(masterinfo["data_est"], masterinfo["data"])
-    # WriteEvtCount(masterinfo["dataEstDiff"], output, "Est Diff Percentage")
+    masterinfo["dataEstDiff"] = GetDiff(masterinfo["data_est"], masterinfo["data"])
+    WriteEvtCount(masterinfo["dataEstDiff"], output, "Est Diff Percentage")
     
-    # ###Do overlay signal region predictions
-    # for mass in mass_lst:
-    #     masterinfo["RSG1_" + str(mass) + "sig_est"],  masterinfo["RSG1_" + str(mass) + "sig_est_err"] = GetSignificance(masterinfo, mass)
-    #     WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
+    ###Do overlay signal region predictions
+    for mass in mass_lst:
+        masterinfo["RSG1_" + str(mass) + "sig_est"],  masterinfo["RSG1_" + str(mass) + "sig_est_err"] = GetSignificance(masterinfo, mass)
+        WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
     
     # #produce the significance plots
-    # DumpSignificance(masterinfo, outroot)
+    DumpSignificance(masterinfo, outroot)
 
     #finish and quit
     outroot.Close()
@@ -99,15 +100,17 @@ def GetdataEst(inputdic, outroot):
         #get the corresponding region
         cutcounts = {}
         for j, region in enumerate(region_lst):
-            print cut, region
+            #scale all the qcd estimation plots
+            for hst in plt_lst:
+                htemp_ttbar = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
+                htemp_zjet  = outroot.Get("zjet" + "_" + cut + "_" + region + "_" + hst).Clone()
+                htemp_qcd   = outroot.Get("qcd_est" + "_" + cut + "_" + "Sideband" + "_" + hst).Clone()
+                htemp_qcd.SetName("data_est" + "_" + cut + "_" + region + "_" + hst)
+                htemp_qcd.Add(htemp_ttbar, 1)
+                htemp_qcd.Add(htemp_zjet, 1)
+                htemp_qcd.Write()
+
             cutcounts[region] = inputdic["qcd_est"][cut][region] + inputdic["ttbar"][cut][region] + inputdic["zjet"][cut][region]
-            htemp_est   = inputdic["qcd_est"][cut][region + plt_m].Clone()
-            htemp_zjet  = inputdic["zjet"][cut][region + plt_m].Clone()
-            htemp_ttbar = inputdic["ttbar"][cut][region + plt_m].Clone()
-            htemp_est.Add(htemp_ttbar, 1)
-            htemp_est.Add(htemp_zjet, 1)
-            htemp_est.SetName("data_est" + "_" + cut + "_" + region + plt_m)
-            htemp_est.Write()
             cutcounts[region + plt_m] = outroot.Get("data_est" + "_" + cut + "_" + region + plt_m)
 
         data_est[cut] = cutcounts
@@ -126,44 +129,32 @@ def qcd_estimation(qcd, outroot):
         cutcounts = {}
         for j, region in enumerate(region_lst):
             #start the histogram as a dumb holder
-            htemp_qcd = qcd[cut]["Sideband" + plt_m].Clone()
             Ftransfer = 1.0
-
-            if ("Sideband" in region):
-                cutcounts[region] = qcd[cut][region]
-            else:
-                if ("2Trk_in1" in cut):
-                    Ftransfer = qcd[cut]["Sideband"]/qcd["2Trk_in1_NoTag"]["Sideband"]
-                    cutcounts[region] = Ftransfer * qcd["2Trk_in1_NoTag"][region]
-                    htemp_qcd = qcd["2Trk_in1_NoTag"][region + plt_m].Clone()
-                elif ("2Trk" in cut):
-                    Ftransfer = qcd[cut]["Sideband"]/qcd["2Trk_NoTag"]["Sideband"]
-                    cutcounts[region] = Ftransfer * qcd["2Trk_NoTag"][region]
-                    htemp_qcd = qcd["2Trk_NoTag"][region + plt_m].Clone()
-                elif ("3Trk" in cut):
-                    Ftransfer = qcd[cut]["Sideband"]/qcd["3Trk_NoTag"]["Sideband"]
-                    cutcounts[region] = Ftransfer * qcd["3Trk_NoTag"][region]
-                    htemp_qcd = qcd["3Trk_NoTag"][region + plt_m].Clone()
-                elif ("4Trk" in cut):
-                    Ftransfer = qcd[cut]["Sideband"]/qcd["4Trk_NoTag"]["Sideband"]
-                    cutcounts[region] = Ftransfer * qcd["4Trk_NoTag"][region]
-                    htemp_qcd = qcd["4Trk_NoTag"][region + plt_m].Clone()
-                elif ("Trk" not in cut):
-                    Ftransfer = qcd[cut]["Sideband"]/qcd["NoTag"]["Sideband"]
-                    cutcounts[region] = Ftransfer * qcd["NoTag"][region]
-                    htemp_qcd = qcd["NoTag"][region + plt_m].Clone()
-            #get the notag sideband for the current version
-            htemp_qcd.Scale(Ftransfer)
-            htemp_qcd.SetName("qcd_est" + "_" + cut + "_" + region + plt_m)
-            htemp_qcd.Write()
-            cutcounts[region + plt_m] = outroot.Get("qcd_est" + "_" + cut + "_" + region + plt_m)
-            cutcounts[region + "scale_factor"] = Ftransfer
-
+            #define where the qcd come from
+            ref_cut = cut
+            if ("2Trk_in1" in cut):
+                ref_cut = "2Trk_in1_NoTag"
+            elif ("2Trk" in cut):
+                ref_cut = "2Trk_NoTag"
+            elif ("3Trk" in cut):
+                ref_cut = "3Trk_NoTag"
+            elif ("4Trk" in cut):
+                ref_cut = "4Trk_NoTag"
+            elif ("Trk" not in cut):
+                ref_cut = "NoTag"
+            #start the temp calculation of Ftransfer
+            Ftransfer = qcd[cut]["Sideband"]/qcd[ref_cut]["Sideband"]
+            #scale all the qcd estimation plots
             for hst in plt_lst:
-                htemp_qcd = outroot.Get("qcd" + "_" + cut + "_" + region + "_" + hst).Clone()
+                htemp_qcd = outroot.Get("qcd" + "_" + ref_cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName("qcd_est" + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Scale(Ftransfer)
                 htemp_qcd.Write()
+
+            #get the notag sideband for the current version
+            cutcounts[region] = Ftransfer * qcd[ref_cut][region]
+            cutcounts[region + plt_m] = outroot.Get("qcd_est" + "_" + cut + "_" + region + plt_m)
+            cutcounts[region + "scale_factor"] = Ftransfer
 
         est[cut] = cutcounts
     return est
@@ -202,8 +193,9 @@ def Getqcd(inputdic, outroot):
                 cutcounts[region] = 0
             else:
                 cutcounts[region] = inputdic["data"][cut][region] - inputdic["ttbar"][cut][region] - inputdic["zjet"][cut][region]
-                #get qcd prediction shapes
-                cutcounts[region + plt_m] = outroot.Get("qcd" + "_" + cut + "_" + region + plt_m)
+            #get qcd prediction shapes
+            cutcounts[region + plt_m] = outroot.Get("qcd" + "_" + cut + "_" + region + plt_m)
+
         qcd[cut] = cutcounts
     return qcd
 
@@ -265,7 +257,8 @@ def GetEvtCount(inputdir, outroot, histname=""):
                 cutcounts[region] = 0
             else:
                 cutcounts[region] = mHH_temp.Integral()
-
+            #save the mass plot into the dictionary
+            cutcounts[region + plt_m] = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
         #finish the for loop
         eventcounts[cut] = cutcounts
 
