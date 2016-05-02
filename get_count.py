@@ -6,6 +6,8 @@ import helpers
 import os
 import sys
 import time
+from Xhh4bUtils.BkgFit.BackgroundFit_Ultimate import BackgroundFit
+import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 #end of import for now
 
 ROOT.gROOT.SetBatch(True)
@@ -21,13 +23,15 @@ mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 150
 #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
 #     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 cut_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
+#cut_lst = ["NoTag", "FourTag"]
 region_lst = ["Sideband", "Control", "ZZ", "Signal"]
 blind=True
 #set list of plotting items
 plt_m = "_mHH_l"
 plt_lst = ["mHH_l", \
-"leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_trk_dr",\
-"sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_trk_dr",\
+"leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
+"sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
 "hCandDr", "hCandDeta", "hCandDphi"]
 
 #define functions
@@ -47,42 +51,57 @@ def main():
     outroot = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/TEST_%s.root" % inputdir, "recreate")
     inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
 
+    print "input is", inputpath
     #print GetEvtCount(inputpath + "ttbar_comb_test.root")
-
     # Create the master dictionary for cutflows and plots
     masterinfo = {}
-    #
     # Get the dic of counts for split signal sample
     for mass in mass_lst:
         masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, outroot, "RSG1_%i" % mass)
-        WriteEvtCount(masterinfo["RSG1_" + str(mass)], output, "RSG %i" % mass)
+        #WriteEvtCount(masterinfo["RSG1_" + str(mass)], output, "RSG %i" % mass)
 
     #Get ttbar samples
     masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test.root", outroot, "ttbar")
-    WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
+    #WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
     # # Get Zjet samples
     masterinfo["zjet"] = GetEvtCount(inputpath + "zjets_test/hist-MiniNTuple.root", outroot, "zjet")
-    WriteEvtCount(masterinfo["zjet"], output, "z+jets")
+    #WriteEvtCount(masterinfo["zjet"], output, "z+jets")
     # # Get Signal samples; do not unblind now
     masterinfo["data"] = GetEvtCount(inputpath + "data_test/hist-MiniNTuple.root", outroot, "data")
-    WriteEvtCount(masterinfo["data"], output, "data")
+    #WriteEvtCount(masterinfo["data"], output, "data")
     # # Get qcd from data 
     masterinfo["qcd"] = Getqcd(masterinfo, outroot)
-    WriteEvtCount(masterinfo["qcd"], output, "qcd")
+    #WriteEvtCount(masterinfo["qcd"], output, "qcd")
+    ####################################################
     # #Do qcd background estimation
-    masterinfo["qcd_est"] = qcd_estimation(masterinfo["qcd"], outroot)
-    WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
+    masterinfo["qcd_est_nofit"] = qcd_estimation(masterinfo["qcd"], outroot)
+    #WriteEvtCount(masterinfo["qcd_est_nofit"], output, "qcd Est nofit")
+    ####################################################
+    #Do qcd background estimation from the fit
+    print "Start Fit!"
+    fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+        inputpath + "ttbar_comb_test.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+        distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2)
+    print "End of Fit!"
+    masterinfo["qcd_est"] = fitestimation(masterinfo["qcd"], "qcd", fitresult, outroot)
+    #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
+    masterinfo["ttbar_est"] = fitestimation(masterinfo["ttbar"], "ttbar", fitresult, outroot)
+    #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo["data_est"] = GetdataEst(masterinfo, outroot)
-    WriteEvtCount(masterinfo["data_est"], output, "data Est")
+    #WriteEvtCount(masterinfo["data_est"], output, "data Est")
     # # #Do data estimation Difference comparision in control and ZZ region
     masterinfo["dataEstDiff"] = GetDiff(masterinfo["data_est"], masterinfo["data"])
-    WriteEvtCount(masterinfo["dataEstDiff"], output, "Est Diff Percentage")
+    WriteEvtCount(masterinfo["dataEstDiff"], output, "Data Est Diff Percentage")
+    # masterinfo["qcdEstDiff"] = GetDiff(masterinfo["qcd_est"], masterinfo["qcd_est_nofit"])
+    # WriteEvtCount(masterinfo["qcdEstDiff"], output, "QCD Est Diff Percentage")
+    # masterinfo["ttbarEstDiff"] = GetDiff(masterinfo["ttbar_est"], masterinfo["ttbar"])
+    # WriteEvtCount(masterinfo["ttbarEstDiff"], output, "top Est Diff Percentage")
     
     ###Do overlay signal region predictions
     for mass in mass_lst:
         masterinfo["RSG1_" + str(mass) + "sig_est"],  masterinfo["RSG1_" + str(mass) + "sig_est_err"] = GetSignificance(masterinfo, mass)
-        WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
+        #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
     
     # #produce the significance plots
     DumpSignificance(masterinfo, outroot)
@@ -102,23 +121,68 @@ def GetdataEst(inputdic, outroot):
         for j, region in enumerate(region_lst):
             #scale all the qcd estimation plots
             for hst in plt_lst:
-                htemp_ttbar = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
+                if "ttbar_est" in inputdic:
+                    htemp_ttbar = outroot.Get("ttbar_est" + "_" + cut + "_" + region + "_" + hst).Clone()
+                else:
+                    htemp_ttbar = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_zjet  = outroot.Get("zjet" + "_" + cut + "_" + region + "_" + hst).Clone()
-                htemp_qcd   = outroot.Get("qcd_est" + "_" + cut + "_" + "Sideband" + "_" + hst).Clone()
+                htemp_qcd   = outroot.Get("qcd_est" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName("data_est" + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, 1)
                 htemp_qcd.Add(htemp_zjet, 1)
                 htemp_qcd.Write()
-
             cutcounts[region] = inputdic["qcd_est"][cut][region] + inputdic["ttbar"][cut][region] + inputdic["zjet"][cut][region]
             cutcounts[region + plt_m] = outroot.Get("data_est" + "_" + cut + "_" + region + plt_m)
 
         data_est[cut] = cutcounts
     return data_est
 
+### returns the estimation dictionary;
+def fitestimation(inputdic, inputname, fitresult, outroot):
+    #now do the real work
+    print "***** estimation *****"
+    #do a dump fill first
+    outroot.cd()
+    est = {}
+    for i, cut in enumerate(cut_lst):
+        #get the corresponding region
+        cutcounts = {}
+        for j, region in enumerate(region_lst):
+            #start the histogram as a dumb holder
+            Ftransfer = 1.0
+            #define where the qcd come from
+            ref_cut = cut
+            if ("2Trk_in1" in cut):
+                ref_cut = "2Trk_in1_NoTag"
+            elif ("2Trk" in cut):
+                ref_cut = "2Trk_NoTag"
+            elif ("3Trk" in cut):
+                ref_cut = "3Trk_NoTag"
+            elif ("4Trk" in cut):
+                ref_cut = "4Trk_NoTag"
+            elif ("Trk" not in cut):
+                ref_cut = "NoTag"
+            if "ttbar" in inputname: #reset for top, use the correct MCs
+                ref_cut = cut
+            #start the temp calculation of Ftransfer
+            if fitresult:
+                if word_dict[cut] < len(fitresult["mu" + inputname]):
+                    Ftransfer = fitresult["mu" + inputname][word_dict[cut]]
+            #scale all the inputdic estimation plots
+            for hst in plt_lst:
+                htemp_qcd = outroot.Get(inputname + "_" + ref_cut + "_" + region + "_" + hst).Clone()
+                htemp_qcd.SetName(inputname + "_est" + "_" + cut + "_" + region + "_" + hst)
+                htemp_qcd.Scale(Ftransfer)
+                htemp_qcd.Write()
+            #get the notag sideband for the current version
+            cutcounts[region] = Ftransfer * inputdic[ref_cut][region]
+            cutcounts[region + plt_m] = outroot.Get(inputname + "_est" + "_" + cut + "_" + region + plt_m)
+            cutcounts[region + "scale_factor"] = Ftransfer
+        est[cut] = cutcounts
+    return est
+
 ### returns the qcd estimation dictionary;
 def qcd_estimation(qcd, outroot):
-
     #now do the real work
     print "***** estimation *****"
     #do a dump fill first
@@ -236,9 +300,10 @@ def WriteEvtCount(inputdic, outFile, samplename="region"):
 def GetEvtCount(inputdir, outroot, histname=""):
     #get input file
     input_f = ROOT.TFile.Open(inputdir, "read")
-    ### 
+    ###
     eventcounts = {}
     ###
+    #outdir = outroot.mkdir(histname)
     for i, cut in enumerate(cut_lst):
         #get the corresponding region
         cutcounts = {}
