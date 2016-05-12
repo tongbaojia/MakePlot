@@ -4,20 +4,34 @@
 #   -> plotSR(...)
 #
 #
-import os
+import os, argparse
 import sys
 import math
 import ROOT
 import time
 from ROOT import *
 import AtlasStyle
-gROOT.LoadMacro("AtlasLabels.C")
+import rootlogon  
+try:
+    ROOT.gROOT.LoadMacro("AtlasStyle.C")
+    ROOT.gROOT.LoadMacro("AtlasLabels.C")
+    SetAtlasStyle()
+except:
+    print "Passing on AtlasStyle.C"
+    pass
 from array import array
 TH1.AddDirectory(False)
-
 StatusLabel="Internal"
-
 ROOT.gROOT.SetBatch(True)
+
+#define functions
+def options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--plotter")
+    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputroot", default="sum")
+    return parser.parse_args()
+
 # zero the x-errors
 def zeroXerror(g):
     for i in range(0,g.GetN()):
@@ -143,21 +157,24 @@ def rebinData(ifile, rebin, scale=1.0):
 ####################################################################################
 #plot
 
-def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, inputBinWidth=25, finalBinUnits=25):
+def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, inputBinWidth=25, finalBinUnits=25):
 
     gStyle.SetErrorX(0)
     gStyle.SetHatchesSpacing(0.7)
     gStyle.SetHatchesLineWidth(1)
 
     # input file
-    ifile = ROOT.TFile("../Plot/TEST_" + filename + ".root")
+    ifile = ROOT.TFile(filepath + filename + ".root")
 
     # read stuff
-    data = ifile.Get("data_" + cut )
+    data = ifile.Get("data_est_" + cut )
+    if "Signal" not in cut and blinded:
+        data = ifile.Get("data_" + cut )
+    data_est = ifile.Get("data_est_" + cut )
     qcd = ifile.Get("qcd_est_" + cut )
-    qcd_origin = ifile.Get("qcd_" + cut )
+    #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
-    ttbar = ifile.Get("ttbar_" + cut )
+    ttbar = ifile.Get("ttbar_est_" + cut )
     zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
@@ -165,6 +182,7 @@ def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, re
 
     if not rebin == None:
         data.Rebin(rebin)
+        data_est.Rebin(rebin)
         qcd.Rebin(rebin)
         ttbar.Rebin(rebin)
         zjet.Rebin(rebin)
@@ -172,10 +190,16 @@ def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, re
         RSG1_1500.Rebin(rebin)
         RSG1_2000.Rebin(rebin)
 
+    #get QS scores
+    ks   = data.KolmogorovTest(data_est, "QU")
+    #chi2 =        data.Chi2Test(data_est, "QU CHI2")
+    #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
 
     xMin = data.GetXaxis().GetBinCenter(1)
     xMax = data.GetXaxis().GetBinCenter(data.GetXaxis().GetNbins())
-    yMax = data.GetMaximum() * 1.5
+    yMax = data.GetMaximum() * 1.6
+    if Logy==1:
+        yMax = yMax * 100
     #qcd_fit = ifile.Get("qcd_fit")
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown"
@@ -268,6 +292,8 @@ def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, re
     data.SetMarkerStyle(20)
     data.SetMarkerSize(1)
     data.SetLineWidth(2)
+    data.GetXaxis().SetLabelSize(0)
+    data.GetXaxis().SetLabelOffset(999)
     data.Draw("EPZ SAME")
 
     # bottom pad
@@ -324,19 +350,23 @@ def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, re
 
     c0.cd()
 
+    #
+    # Add ks score
+    #
+    myText(0.2, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
+    #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
+
     # labels
     legHunit=0.05
     legH=legHunit*6 # retuned below based on number of entries to 0.05*num_entries
     legW=0.4
-    if labelPos==11:
-        leg = ROOT.TLegend(0.5, 0.7, 0.9, 0.9)
-        # top right, a bit left
-        ATLASLabel(0.15, 0.87, StatusLabel);
-        myText(0.15, 0.82, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22);
-        myText(0.15, 0.77, 1, ' ' + cut.replace("_", "; "), 22);
-
+    leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
+    # top right, a bit left
+    ATLASLabel(0.19, 0.91, StatusLabel)
+    myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22)
+    myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
-    leg.SetNColumns(2);
+    leg.SetNColumns(2)
     leg.SetTextFont(43)
     leg.SetTextSize(12)
     leg.SetFillColor(0)
@@ -356,10 +386,10 @@ def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, re
     leg.Draw()
 
     # save
-    #c0.SaveAs("../"+figuresFolder+"/"+filename.replace(".root", ".pdf"))
-    c0.SaveAs("../"+figuresFolder+ "/" + filename + "_" + cut + ("" if Logy == 0 else "_" + str(Logy)) + ".png")
-    #c0.SaveAs("../"+figuresFolder+ "/" + filename + "_" + cut + ".pdf")
-    #c0.SaveAs("../"+figuresFolder+ "/" + filename + "_" + cut + ".eps")
+    #c0.SaveAs(figuresFolder+"/"+filename.replace(".root", ".pdf"))
+    c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ("" if Logy == 0 else "_" + str(Logy)) + ".png")
+    #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ".pdf")
+    #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ".eps")
 
     pad0.Close()
     pad1.Close()
@@ -372,43 +402,57 @@ def plotRegion(filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, re
 def main():
 
     start_time = time.time()
+    ops = options()
+    global blinded
+    blinded = True
+    #setup basics
+    inputdir = ops.inputdir
+    inputroot = ops.inputroot
+    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    rootinputpath = inputpath + inputroot + "_"
+    print "inputroot file is: ", rootinputpath
 
     global StatusLabel
     StatusLabel = "Internal" ##StatusLabel = "Preliminary"
-    
     global figuresFolder
-    figuresFolder = "Plot"
-    
+
     # plot in the control region #
-    # plotRegion("../Plot/TEST_b77.root", cut="FourTag" + "_Control_mHH_l",            xTitle="m_{2J} [GeV]")
+    # figuresFolder = inputpath + inputroot + "Plot/" + "Sideband"
+    # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
+    # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    # cut_lst = ["2Trk_in1_NoTag", "2Trk_in1_OneTag", "2Trk_in1_TwoTag", \
-    #     "2Trk_NoTag", "2Trk_OneTag", "2Trk_TwoTag_split", \
-    #     "3Trk_NoTag", "3Trk_OneTag", "3Trk_TwoTag", "3Trk_TwoTag_split", "3Trk_ThreeTag", \
-    #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",\
-    #     "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+    region_lst = ["Control", "Sideband", "ZZ", "Signal"]
+    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+    plt_lst = ["mHH_l", \
+    "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass_s", "leadHCand_trk_dr",\
+    "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass_s", "sublHCand_trk_dr",\
+    "hCandDr", "hCandDeta", "hCandDphi"]
 
-    cut_lst = ["OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
-    file    = "b77"
-    for i, cut in enumerate(cut_lst):
-        if "NoTag" not in cut:
-            plotRegion(file, cut=cut + "_Control_mHH_l",            xTitle="m_{2J} [GeV]")
-            plotRegion(file, cut=cut + "_Control_mHH_l",            xTitle="m_{2J} [GeV]", Logy=1)
-            plotRegion(file, cut=cut + "_Control_hCandDr",          xTitle="#Delta R", rebin=2)
-            plotRegion(file, cut=cut + "_Control_hCandDeta",        xTitle="#Delta #eta", rebin=2)
-            plotRegion(file, cut=cut + "_Control_hCandDphi",        xTitle="#Delta #phi", rebin=2)
-            plotRegion(file, cut=cut + "_Control_leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2)
-            plotRegion(file, cut=cut + "_Control_leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2, Logy=1)
-            plotRegion(file, cut=cut + "_Control_leadHCand_Eta",    xTitle="J0 #eta", rebin=2)
-            plotRegion(file, cut=cut + "_Control_leadHCand_Phi",    xTitle="J0 #phi", rebin=2)
-            plotRegion(file, cut=cut + "_Control_leadHCand_Mass_s",   xTitle="J0 m [GeV]", rebin=2)
-            plotRegion(file, cut=cut + "_Control_leadHCand_trk_dr", xTitle="J0 dRtrk", rebin=2)
-            plotRegion(file, cut=cut + "_Control_sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2)
-            plotRegion(file, cut=cut + "_Control_sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
-            plotRegion(file, cut=cut + "_Control_sublHCand_Eta",    xTitle="J1 #eta", rebin=2)
-            plotRegion(file, cut=cut + "_Control_sublHCand_Phi",    xTitle="J1 #phi", rebin=2)
-            plotRegion(file, cut=cut + "_Control_sublHCand_Mass_s",   xTitle="J1 m [GeV]", rebin=2)
-            plotRegion(file, cut=cut + "_Control_sublHCand_trk_dr", xTitle="J1 dRtrk", rebin=2)
+    for i, region in enumerate(region_lst):
+
+        figuresFolder = inputpath + inputroot + "Plot/" + region
+        print "output is", figuresFolder
+        if not os.path.exists(figuresFolder):
+            os.makedirs(figuresFolder)
+
+        for j, cut in enumerate(cut_lst):
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_l",            xTitle="m_{2J} [GeV]")
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_l",            xTitle="m_{2J} [GeV]", Logy=1)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDr",          xTitle="#Delta R", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDeta",        xTitle="#Delta #eta", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDphi",        xTitle="#Delta #phi", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2, Logy=1)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Eta",    xTitle="J0 #eta", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Phi",    xTitle="J0 #phi", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Mass_s",   xTitle="J0 m [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk_dr", xTitle="J0 dRtrk", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Eta",    xTitle="J1 #eta", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Phi",    xTitle="J1 #phi", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Mass_s",   xTitle="J1 m [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk_dr", xTitle="J1 dRtrk", rebin=2)
     
     print("--- %s seconds ---" % (time.time() - start_time))
 

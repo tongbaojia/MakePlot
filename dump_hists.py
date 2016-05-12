@@ -12,17 +12,32 @@ ROOT.gROOT.SetBatch()
 mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
 
+#define functions
+def options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--plotter")
+    parser.add_argument("--inputdir", default="b77")
+    return parser.parse_args()
+
 def main():
-    dump("b77")
+    ops = options()
+    inputdir = ops.inputdir
+    #setup basics
+    dump(inputdir)
 
 def dump(filename):
 
     ops = options()
-    ifile = ROOT.TFile("../Plot/TEST_" + filename + ".root")
+    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + filename 
+    outputpath = inputpath + "/Limitinput/"
+    ifile = ROOT.TFile(inputpath + "/" + "sum_" + filename + ".root")
+
+    if not os.path.exists(outputpath):
+        os.makedirs(outputpath)
 
     for c in cut_lst:
         print "start ", c, " file conversion "
-        outfile  = ROOT.TFile("%s/%s_limit_%s.root" % (ops.output, filename, c), "RECREATE")
+        outfile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, filename, c), "RECREATE")
         #get the mass plot
         cut = c + "_Signal_mHH_l" 
         savehist(ifile, outfile, "data_est_" + cut,  "data_hh")#blind data now
@@ -49,11 +64,6 @@ def savehist(inputroot, outputroot, inname, outname, dosmooth=False, smoothrange
     #hist.SetBins(60, 200, 3200)
     outputroot.cd()
     hist.Write()
-
-def options():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--output", default="/afs/cern.ch/user/b/btong/work/bbbb/NewAnalysis/Plot")
-    return parser.parse_args()
 
 def fatal(message):
     sys.exit("Error in %s: %s" % (__file__, message))

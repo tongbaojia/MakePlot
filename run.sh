@@ -4,12 +4,15 @@ python get_count.py --inputdir b77
 python get_count.py --inputdir b80
 python get_count.py --inputdir b85
 python get_count.py --inputdir b90
+python get_count.py --inputdir SB58
 python get_count.py --inputdir SB68
+python get_count.py --inputdir SB78
 python get_count.py --inputdir SB88
+python get_count.py --inputdir SB98
 python get_count.py --inputdir SB108
 python get_count.py --inputdir SB128
 python get_count.py --inputdir SB168
-
+python get_count.py --inputdir SB999
 # for signal efficiency
 # python plot_sigeff.py --inputdir b70
 # python plot_sigeff.py --inputdir b77
