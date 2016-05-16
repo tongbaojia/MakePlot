@@ -15,7 +15,8 @@ outputdir = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
 def main():
 
     ops = options()
-
+    inputdir = ops.inputdir
+    inputroot = ops.inputroot
     # create output file
     output = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/sig_prediction.root", "recreate")
     # select the cuts
@@ -31,7 +32,7 @@ def main():
     
     cut_sig_lst = ["OneTag_Signal_Significance", "TwoTag_split_Signal_Significance",\
     "TwoTag_Signal_Significance", "ThreeTag_Signal_Significance",\
-    "FourTag_Signal_Significance", "4Trk_ThreeTag_Signal_Significance", "4Trk_FourTag_Signal_Significance"]
+    "FourTag_Signal_Significance", "ThreeTag_1loose_Signal_Significance", "TwoTag_split_1loose_Signal_Significance", "TwoTag_split_2loose_Signal_Significance"]
 
     # cut_sig_lst = ["2Trk_in1_OneTag_Signal_Significance", "2Trk_in1_TwoTag_Signal_Significance", \
     #     "2Trk_OneTag_Signal_Significance", "2Trk_TwoTag_split_Signal_Significance", \
@@ -41,13 +42,12 @@ def main():
     # Draw the efficiency plot relative to the all normalization
     #DrawSignalEff(cut_sig_lst, "TEST_b77", "Significance", 100)
     # b_tag = [70, 77, 80, 85, 90]
-    b_tag = [77]
-    for i in b_tag:
-        DrawSignalEff(cut_sig_lst, "TEST_b%i" % i, "bag", 0.005, (2400, 3100))
-        DrawSignalEff(cut_sig_lst, "TEST_b%i" % i, "bag", 0.05, (1750, 2450))
-        DrawSignalEff(cut_sig_lst, "TEST_b%i" % i, "bag", 0.2, (1450, 2450))
-        DrawSignalEff(cut_sig_lst, "TEST_b%i" % i, "bag", 1.5)
-        #DrawSignalEff(cut_sig_lst, "TEST_b%i" % i, "Significance", 0.2, (400, 850))
+    
+    DrawSignalEff(cut_sig_lst, inputdir, inputroot, "bag", 0.005, (2400, 3100))
+    DrawSignalEff(cut_sig_lst, inputdir, inputroot, "bag", 0.05, (1750, 2450))
+    DrawSignalEff(cut_sig_lst, inputdir, inputroot, "bag", 0.2, (1450, 2450))
+    DrawSignalEff(cut_sig_lst, inputdir, inputroot, "bag", 1.5)
+    #DrawSignalEff(cut_sig_lst, "TEST_b%i" % i, "Significance", 0.2, (400, 850))
     # Draw the efficiency plot relative to the signal region
 
     output.Close()
@@ -61,29 +61,30 @@ def ratioerror(a, b):
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="TEST")
+    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputroot", default="sum")
     return parser.parse_args()
 
-def DrawSignalEff(cut_lst, inputdir, outputname="", normalization=1.0, plotrange=(0, 3100)):
+def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", normalization=1.0, plotrange=(0, 3100)):
     ### the first argument is the input directory
     ### the second argument is the output prefix name
     ### the third argument is relative to what normalization: 0 for total number of events
     ### 1 for signal mass region
 
-    canv = ROOT.TCanvas(inputdir + "_" + str(normalization), "Efficiency", 800, 800)
+    canv = ROOT.TCanvas(inputroot + "_" + str(normalization), "Efficiency", 800, 800)
     xleg, yleg = 0.55, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
     # setup basic plot parameters
     lowmass = -50
     highmass = 3150
     # load input MC file
-    input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/" + inputdir + ".root")
+    input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/" + inputroot + "_" + inputdir + ".root")
     maxbincontent = normalization
     minbincontent = 0.00001
     temp_all = input_mc.Get(cut_lst[0]).Clone()
     temp_all.SetName("Combined")
 
-    input_mc_b77 = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/" + "TEST_b77" + ".root")
+    input_mc_b77 = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/b77/" + "sum_b77" + ".root")
     temp_current = input_mc_b77.Get(cut_lst[0]).Clone()
     temp_current.SetName("Run2-b77")
 
@@ -96,7 +97,7 @@ def DrawSignalEff(cut_lst, inputdir, outputname="", normalization=1.0, plotrange
             temp_current.SetMinimum(minbincontent)
 
     for i, cut in enumerate(cut_lst):
-        print cut
+        #print cut
         cutflow_mc = input_mc.Get(cut) #get the input histogram
         cutflow_mc_b77 = input_mc_b77.Get(cut) #get the input histogram
         for j in range(1, temp_all.GetNbinsX()+1):

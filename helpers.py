@@ -685,3 +685,13 @@ def do_variable_rebinning(hist,bins):
         newhist.SetBinError(newb,err)
 
     return newhist
+
+
+def ratioerror(a, b, ea=-1, eb=-1):
+    if ea > 0 and eb > 0:
+        return 1 / b * ea + a / b / b * eb
+    elif a > 0:
+        return a / b * ROOT.TMath.Sqrt(1.0/a + 1.0/b)
+    else:
+        return 0
+

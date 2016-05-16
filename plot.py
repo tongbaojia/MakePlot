@@ -192,6 +192,9 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
     #get QS scores
     ks   = data.KolmogorovTest(data_est, "QU")
+    int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
+    int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
+    percentdiff   = (int_data_est - int_data)/int_data * 100.0
     #chi2 =        data.Chi2Test(data_est, "QU CHI2")
     #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
 
@@ -354,6 +357,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     # Add ks score
     #
     myText(0.2, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
+    myText(0.6, 0.97, 1, "(e-d)/d = %s" % str(('%.3g' % percentdiff)), 22)
     #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
 
     # labels

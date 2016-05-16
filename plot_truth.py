@@ -58,7 +58,7 @@ def DrawSignalTruth(outputroot, cut_lst, inputdir, outputname="", normalization=
             input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
             temp_mc = input_mc.Get(cut).Clone()
             outputroot.cd()
-            temp_mc.SetName("RSG" + "_" + str(mass) + "_" + temp_mc.GetName())
+            temp_mc.SetName("RSG" + "_" + str(mass) + "_" + cut.replace("/", "_"))
             temp_mc.Write()
             truth_mc = outputroot.Get(temp_mc.GetName())
             truth_mc.SetLineColor(1 + j)

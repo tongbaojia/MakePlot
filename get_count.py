@@ -21,8 +21,12 @@ mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 150
 #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
 #     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 # input are exclusive trkjets
-dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
-cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", "OneTag_2Trk_split", "OneTag_3Trk", "OneTag_4Trk", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag", "ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
+cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
+"OneTag_2Trk_split", "OneTag_3Trk", "OneTag_4Trk", "OneTag", \
+"TwoTag", "TwoTag_split", "ThreeTag", "FourTag", \
+"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
+
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Sideband", "Control", "ZZ", "Signal"]
@@ -80,7 +84,7 @@ def main():
     masterinfo["data_est_nofit"] = GetdataEst(masterinfo, outroot, "qcd_est_nofit")
     #WriteEvtCount(masterinfo["data_est_nofit"], output, "data Est nofit")
     masterinfo["dataEstDiffnofit"] = GetDiff(masterinfo["data_est_nofit"], masterinfo["data"])
-    #WriteEvtCount(masterinfo["dataEstDiffnofit"], output, "Data Est no fit Diff Percentage")
+    WriteEvtCount(masterinfo["dataEstDiffnofit"], output, "Data Est no fit Diff Percentage")
     ####################################################
     #Do qcd background estimation from the fit
     print "Start Fit!"
@@ -337,7 +341,7 @@ def GetEvtCount(inputdir, outroot, histname=""):
                 or ("ThreeTag" in cut) or ("FourTag" in cut)) & blind & (histname == "data"):
                 cutcounts[region] = 0
             else:
-                cutcounts[region] = mHH_temp.Integral()
+                cutcounts[region] = mHH_temp.Integral(0, mHH_temp.GetXaxis().GetNbins()+1)
             #save the mass plot into the dictionary
             cutcounts[region + plt_m] = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
         #finish the for loop
@@ -410,8 +414,9 @@ def GetSignificance(inputdic, mass, samplename="region"):
         cutcounts = {}
         cutcounts_err = {}
         for j, region in enumerate(region_lst):
+            #nees fix!!!
             cutcounts[region], cutcounts_err[region], S, B = \
-            GetSensitivity(inputdic["RSG1_" + str(mass)][cut][region + plt_m], inputdic["data_est"][cut][region + plt_m])
+            GetSensitivity(inputdic["RSG1_" + str(mass)][cut][region + plt_m], inputdic["data_est_nofit"][cut][region + plt_m])
             #print mass, cut, region, " sig ", cutcounts[region], " sigerr ", cutcounts_err[region], " Nsig ", S, " Nbkg ", B
             #get the mass plot
             # if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \

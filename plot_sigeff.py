@@ -10,99 +10,103 @@ import time
 
 ROOT.gROOT.SetBatch(True)
 
-#set output directory
-outputdir = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
-
 def main():
 
     ops = options()
+    inputdir = ops.inputdir
 
+    global inputpath
+    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    global outputpath
+    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/" + "Plot/SigEff/"
+
+    if not os.path.exists(outputpath):
+        os.makedirs(outputpath)
+    #set global draw options
+    global mass_lst
+    mass_lst = [700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    global lowmass
+    lowmass = 650
+    global highmass
+    highmass = 3150
     # create output file
-    output = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/sig_eff.root", "recreate")
+    #output = ROOT.TFile.Open(outuputpath + "sigeff.root", "recreate")
+    #output.Close()
+
     # select the cuts
-    cut_lst = ["PassTrig", "PassDiJetPt", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
-    cut_sig_lst = ["2trk_0tag_signal", "3trk_0tag_signal", "4trk_0tag_signal", "2trk_1tag_signal", "3trk_1tag_signal", "4trk_1tag_signal"]
-    #cut_sig_lst = ["2trk_2tag_split_signal", "3trk_2tag_split_signal", "3trk_2tag_signal", "3trk_3tag_signal", "4trk_2tag_split_signal", "4trk_2tag_signal", "4trk_3tag_signal", "4trk_4tag_signal"]
+    # the list must start from the largest to the smallest!
+    evtsel_lst = ["PassTrig", "PassDiJetPt", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
+    detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
+    "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
+    region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"]
 
-    # # Draw the efficiency plot relative to the all normalization
-    # DrawSignalEff(cut_lst, "b70", "pre_")
-    DrawSignalEff(cut_lst, "b77", "pre_")
-    # DrawSignalEff(cut_lst, "b80", "pre_")
-    # DrawSignalEff(cut_lst, "b85", "pre_")
-    # DrawSignalEff(cut_lst, "b90", "pre_")
-    # # Draw the efficiency plot relative to the all normalization
-    # DrawSignalEff(cut_sig_lst, "b70", "")
-    DrawSignalEff(cut_sig_lst, "b77", "")
-    # DrawSignalEff(cut_sig_lst, "b80", "")
-    # DrawSignalEff(cut_sig_lst, "b85", "")
-    # DrawSignalEff(cut_sig_lst, "b90", "")
-    # # Draw the efficiency plot relative to the signal region
-    # DrawSignalEff(cut_sig_lst, "b70", "", 1)
-    DrawSignalEff(cut_sig_lst, "b77", "", 1)
-    # DrawSignalEff(cut_sig_lst, "b80", "", 1)
-    # DrawSignalEff(cut_sig_lst, "b85", "", 1)
-    # DrawSignalEff(cut_sig_lst, "b90", "", 1)
+    # Draw the efficiency plot relative to the all normalization
+    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel")
+    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", dorel=True)
+    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All")
+    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True)
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
+    # For cuts that don't exist in the cutflow plot
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
 
-    output.Close()
-
-def ratioerror(a, b):
-    if a > 0:
-        return a / b * ROOT.TMath.Sqrt(1.0/a + 1.0/b)
-    else:
-        return 0
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="TEST")
+    parser.add_argument("--inputdir", default="b77")
     return parser.parse_args()
 
-def fatal(message):
-    sys.exit("Error in %s: %s" % (__file__, message))
 
-def warn(message):
-    print
-    print "Warning in %s: %s" % (__file__, message)
-    print
-
-def DrawSignalEff(cut_lst, inputdir, outputname="", normalization=0):
+def DrawSignalEff(cut_lst, inputdir, outputname="", normalization="All", doint=False, donormint=False, dorel=False):
     ### the first argument is the input directory
     ### the second argument is the output prefix name
     ### the third argument is relative to what normalization: 0 for total number of events
     ### 1 for signal mass region
-
-    canv = ROOT.TCanvas(inputdir + "_" + outputname + str(normalization) + "_" + "Efficiency", "Efficiency", 800, 800)
-    xleg, yleg = 0.55, 0.7
+    afterscript = "_rel" if dorel else ""
+    canv = ROOT.TCanvas(inputdir + "_" + "Efficiency" + "_" + normalization + afterscript, "Efficiency", 800, 800)
+    xleg, yleg = 0.52, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
     # setup basic plot parameters
-    lowmass = -50
-    highmass = 3150
     # load input MC file
-    mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
     eff_lst = []
-    maxbincontent = 1
-    minbincontent = -0.01
+    maxbincontent = 0.001
+    minbincontent = -0.001
+
     for i, cut in enumerate(cut_lst):
-        eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass, GeV; Efficiency" %cut, 32, lowmass, highmass) )
-        eff_lst[i].SetLineColor(1 + i)
+        eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass, GeV; Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
+        eff_lst[i].SetLineColor(2 + i)
         eff_lst[i].SetMarkerStyle(20 + i)
-        eff_lst[i].SetMarkerColor(1 + i)
+        eff_lst[i].SetMarkerColor(2 + i)
         eff_lst[i].SetMarkerSize(1)
 
         for mass in mass_lst:
             #here could be changed to have more options
-            input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
+            input_mc = ROOT.TFile.Open(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
             cutflow_mc = input_mc.Get("CutFlowNoWeight") #notice here we use no weight for now!
-            totevt_mc = 0
-            if (normalization == 0): 
-                totevt_mc = cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin("PreSel"))
-                maxbincontent = 0.05
-            if (normalization == 1): 
-                totevt_mc = cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin("PassSignal"))
-                maxbincontent = 0.6
+            cutflow_mc_w = input_mc.Get("CutFlowWeight")
+            if dorel:
+                if i > 0:
+                    normalization = cut_lst[i - 1]
+            totevt_mc = cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin(normalization))
             cutevt_mc = cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin(cut))
+            #this is a really dirty temp fix
+            scale_weight = (cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin("All")) * 1.0)\
+                / (cutflow_mc_w.GetBinContent(cutflow_mc.GetXaxis().FindBin("All")) * 1.0)
+            #for cuts that are defined in folders but not in the cutflow table...
+            if doint:
+                cuthist_temp = input_mc.Get(cut + "/mHH_l")
+                cutevt_mc    = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
+            if donormint:
+                cuthist_temp = input_mc.Get(normalization + "/mHH_l")
+                totevt_mc    = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
+
+            eff_content = cutevt_mc/totevt_mc
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), cutevt_mc/totevt_mc)
-            eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), ratioerror(cutevt_mc, totevt_mc))
+            eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), helpers.ratioerror(cutevt_mc, totevt_mc))
+            maxbincontent = max(maxbincontent, eff_content)
             # print ratioerror(cutevt_mc, totevt_mc)
             input_mc.Close()
 
@@ -121,12 +125,6 @@ def DrawSignalEff(cut_lst, inputdir, outputname="", normalization=0):
     legend.Draw()
 
     # draw reference lines
-    xline05 = ROOT.TLine(lowmass, 0.05, highmass, 0.05)
-    xline05.SetLineStyle(3)
-    xline05.Draw()
-    xline10 = ROOT.TLine(lowmass, 0.1, highmass, 0.1)
-    xline10.SetLineStyle(4)
-    xline10.Draw()
     yline05 = ROOT.TLine(1000, 0.0, 1000, maxbincontent)
     yline05.SetLineStyle(9)
     yline05.Draw()
@@ -145,10 +143,10 @@ def DrawSignalEff(cut_lst, inputdir, outputname="", normalization=0):
         wm.SetTextFont(42)
         wm.SetNDC()
         wm.Draw()
-
     # finish up
-    canv.SaveAs(outputdir + outputname + canv.GetName() + ".pdf")
-    canv.Clear()
+    canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".pdf")
+    canv.Close()
+
 
 
 
