@@ -695,3 +695,14 @@ def ratioerror(a, b, ea=-1, eb=-1):
     else:
         return 0
 
+#round the significant numbers
+def round_sig(x, sig=2):
+    if x == 0:
+        return 0
+    if x > 1:
+        return round(x, sig)
+    else:
+        return round(x, sig-int(ROOT.TMath.Log10(abs(x))))
+
+
+

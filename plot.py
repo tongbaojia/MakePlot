@@ -168,7 +168,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
     # read stuff
     data = ifile.Get("data_est_" + cut )
-    if "Signal" not in cut and blinded:
+    if "Signal" in cut and not blinded:
         data = ifile.Get("data_" + cut )
     data_est = ifile.Get("data_est_" + cut )
     qcd = ifile.Get("qcd_est_" + cut )
@@ -178,7 +178,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
-    RSG1_2000 = ifile.Get("RSG1_2000_" + cut )
+    RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
 
     if not rebin == None:
         data.Rebin(rebin)
@@ -188,7 +188,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         zjet.Rebin(rebin)
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
-        RSG1_2000.Rebin(rebin)
+        RSG1_2500.Rebin(rebin)
 
     #get QS scores
     ks   = data.KolmogorovTest(data_est, "QU")
@@ -285,11 +285,11 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     RSG1_1500.Draw("HISTO SAME")
 
 
-    RSG1_2000.Scale(100)
-    RSG1_2000.SetLineWidth(2)
-    RSG1_2000.SetLineStyle(2)
-    RSG1_2000.SetLineColor(ROOT.kGreen+4)
-    RSG1_2000.Draw("HISTO SAME")
+    RSG1_2500.Scale(1000)
+    RSG1_2500.SetLineWidth(2)
+    RSG1_2500.SetLineStyle(2)
+    RSG1_2500.SetLineColor(ROOT.kGreen+4)
+    RSG1_2500.Draw("HISTO SAME")
 
     zeroXerror(data)
     data.SetMarkerStyle(20)
@@ -297,7 +297,8 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     data.SetLineWidth(2)
     data.GetXaxis().SetLabelSize(0)
     data.GetXaxis().SetLabelOffset(999)
-    data.Draw("EPZ SAME")
+    if not ("Signal" in cut and blinded):
+        data.Draw("EPZ SAME")
 
     # bottom pad
     c0.cd()
@@ -323,12 +324,20 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     hratio.GetXaxis().SetTitle(xTitle)
 
     hratio.Draw()
-    
+
+    #
+    # Add stat uncertianty
+    #
+    ratios[0].SetFillColor(kBlue)
+    ratios[0].SetFillStyle(3345)
+    ratios[0].Draw("E2")
+
     #zeroXerror(ratios[1])
     ratios[1].SetMarkerStyle(20)
     ratios[1].SetMarkerSize(1)
     ratios[1].SetLineWidth(2)
-    ratios[1].Draw("E0PZ SAME")
+    if not ("Signal" in cut and blinded):
+        ratios[1].Draw("E0PZ SAME")
     # qcd_fit.SetLineColor(kRed)
     # qcd_fitUp.SetLineColor(kRed)
     # qcd_fitUp.SetLineStyle(2)
@@ -338,15 +347,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     # qcd_fitUp.Draw("SAME")
     # qcd_fitDown.Draw("SAME")
 
-
-    #
-    # Add stat uncertianty
-    #
-    ratios[0].SetFillColor(kBlue)
-    ratios[0].SetFillStyle(3345)
-    ratios[0].Draw("E2 same")
-
-
+    # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
     line.SetLineStyle(1)
     line.Draw()
@@ -383,15 +384,19 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     leg.AddEntry(RSG1_1500, "RSG1, 1.5TeV * 25", "F")
-    leg.AddEntry(RSG1_2000, "RSG1, 2TeV * 100", "F")
+    leg.AddEntry(RSG1_2500, "RSG1, 2.5TeV * 1000", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
     leg.Draw()
 
+
+
     # save
+    postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(figuresFolder+"/"+filename.replace(".root", ".pdf"))
-    c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ("" if Logy == 0 else "_" + str(Logy)) + ".png")
+    #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + postname + ".png")
+    c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + postname + ".pdf")
     #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ".pdf")
     #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ".eps")
 
@@ -425,15 +430,16 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Control", "Sideband", "ZZ", "Signal"]
+    region_lst = ["Control", "Sideband", "Signal"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
-    plt_lst = ["mHH_l", \
+    plt_lst = ["mHH_l", "mHH_pole",\
     "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass_s", "leadHCand_trk_dr",\
     "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass_s", "sublHCand_trk_dr",\
     "hCandDr", "hCandDeta", "hCandDphi"]
 
     for i, region in enumerate(region_lst):
-
+        if inputroot == "sum":
+            inputroot = ""
         figuresFolder = inputpath + inputroot + "Plot/" + region
         print "output is", figuresFolder
         if not os.path.exists(figuresFolder):
@@ -442,6 +448,8 @@ def main():
         for j, cut in enumerate(cut_lst):
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_l",            xTitle="m_{2J} [GeV]")
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_l",            xTitle="m_{2J} [GeV]", Logy=1)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_pole",            xTitle="m_{2J} [GeV]")
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_pole",            xTitle="m_{2J} [GeV]", Logy=1)
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDr",          xTitle="#Delta R", rebin=2)
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDeta",        xTitle="#Delta #eta", rebin=2)
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDphi",        xTitle="#Delta #phi", rebin=2)
@@ -457,6 +465,16 @@ def main():
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Phi",    xTitle="J1 #phi", rebin=2)
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Mass_s",   xTitle="J1 m [GeV]", rebin=2)
                 plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk_dr", xTitle="J1 dRtrk", rebin=2)
+
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk0_Pt", xTitle="J0 leadtrk p_{T} [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk1_Pt", xTitle="J0 subltrk p_{T} [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk0_Pt", xTitle="J1 leadtrk p_{T} [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk1_Pt", xTitle="J1 subltrk p_{T} [GeV]", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_ntrk", xTitle="J0 Ntrk")
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_ntrk", xTitle="J1 Ntrk")
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
+                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+
     
     print("--- %s seconds ---" % (time.time() - start_time))
 

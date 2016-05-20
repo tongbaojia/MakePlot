@@ -21,22 +21,31 @@ mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 150
 #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
 #     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 # input are exclusive trkjets
-dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag", "ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
+dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 "OneTag_2Trk_split", "OneTag_3Trk", "OneTag_4Trk", "OneTag", \
-"TwoTag", "TwoTag_split", "ThreeTag", "FourTag", \
-"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
+"TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+#"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Sideband", "Control", "ZZ", "Signal"]
 blind=True
+
 #set list of plotting items
 plt_m = "_mHH_l"
-plt_lst = ["mHH_l", \
+plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
 "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
 "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
-"hCandDr", "hCandDeta", "hCandDphi"]
+"leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
+"leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
+
+#set list of dumping yields
+yield_lst = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
+yield_dic = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
+ "data":"Data", "RSG1_1000":"$c=1.0$,$m=1.0TeV$", "RSG1_2000":"$c=1.0$,$m=2.0TeV$", "RSG1_3000":"$c=1.0$,$m=3.0TeV$"}
+yield_tag_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+yield_region_lst = ["Sideband", "Control", "Signal"]
 
 #define functions
 def options():
@@ -50,10 +59,12 @@ def main():
     ops = options()
     inputdir = ops.inputdir
     background_model = 0
+    fullchain = True
 
     # create output file
     inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
     output = open(inputpath + "sum%s_%s.tex" % ("" if background_model==0 else str(background_model), inputdir), "w")
+    global outroot
     outroot = ROOT.TFile.Open(inputpath + "sum%s_%s.root" % ("" if background_model==0 else str(background_model), inputdir), "recreate")
 
     print "input is", inputpath
@@ -61,9 +72,10 @@ def main():
     # Create the master dictionary for cutflows and plots
     masterinfo = {}
     # Get the dic of counts for split signal sample
-    for mass in mass_lst:
-        masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, outroot, "RSG1_%i" % mass)
-        #WriteEvtCount(masterinfo["RSG1_" + str(mass)], output, "RSG %i" % mass)
+    if fullchain:
+        for mass in mass_lst:
+            masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, outroot, "RSG1_%i" % mass)
+            #WriteEvtCount(masterinfo["RSG1_" + str(mass)], output, "RSG %i" % mass)
 
     #Get ttbar samples
     masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test.root", outroot, "ttbar")
@@ -92,10 +104,11 @@ def main():
         inputpath + "ttbar_comb_test.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
     print "End of Fit!"
+    #print fitresult
     masterinfo["qcd_est"] = fitestimation(masterinfo["qcd"], "qcd", fitresult, outroot, background_model)
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     masterinfo["ttbar_est"] = fitestimation(masterinfo["ttbar"], "ttbar", fitresult, outroot, background_model)
-    #(masterinfo["ttbar_est"], output, "top Est")
+    #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo["data_est"] = GetdataEst(masterinfo, outroot)
     #WriteEvtCount(masterinfo["data_est"], output, "data Est")
@@ -105,13 +118,23 @@ def main():
     # masterinfo["ttbarEstDiff"] = GetDiff(masterinfo["ttbar_est"], masterinfo["ttbar"])
     # WriteEvtCount(masterinfo["ttbarEstDiff"], output, "top Est Diff Percentage")
     
+    ##Dump yield tables
+    for tag in yield_tag_lst:
+        texoutpath = inputpath + "Plot/Tables/"
+        if not os.path.exists(texoutpath):
+            os.makedirs(texoutpath)
+        yield_tex = open( texoutpath + tag + "_yield.tex", "w")
+        WriteYield(masterinfo, yield_tex, tag)
+
+
     ##Do overlay signal region predictions
-    for mass in mass_lst:
-        masterinfo["RSG1_" + str(mass) + "sig_est"],  masterinfo["RSG1_" + str(mass) + "sig_est_err"] = GetSignificance(masterinfo, mass)
-        #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
-    
-    # #produce the significance plots
-    DumpSignificance(masterinfo, outroot)
+    if fullchain:
+        for mass in mass_lst:
+            masterinfo["RSG1_" + str(mass) + "sig_est"],  masterinfo["RSG1_" + str(mass) + "sig_est_err"] = GetSignificance(masterinfo, mass)
+            #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
+
+        # #produce the significance plots
+        DumpSignificance(masterinfo, outroot)
     
     #finish and quit
     outroot.Close()
@@ -121,6 +144,7 @@ def main():
 ### returns the data estimate from qcd dictionary
 def GetdataEst(inputdic, outroot, optionalqcd="qcd_est"):
     outroot.cd()
+    data_temphist_name = "data_est" if "nofit" in optionalqcd else "data_est_nofit"
     data_est = {}
     for i, cut in enumerate(cut_lst):
         #get the corresponding region
@@ -134,16 +158,14 @@ def GetdataEst(inputdic, outroot, optionalqcd="qcd_est"):
                     htemp_ttbar = outroot.Get("ttbar_est" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_zjet  = outroot.Get("zjet" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd   = outroot.Get(optionalqcd + "_" + cut + "_" + region + "_" + hst).Clone()
-                htemp_qcd.SetName("data_est" + "_" + cut + "_" + region + "_" + hst)
+                htemp_qcd.SetName(data_temphist_name + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, 1)
                 htemp_qcd.Add(htemp_zjet, 1)
                 htemp_qcd.Write()
-            if "nofit" in optionalqcd: 
-                cutcounts[region] = inputdic[optionalqcd][cut][region] + inputdic["ttbar"][cut][region] + inputdic["zjet"][cut][region]
-            else: 
-                cutcounts[region] = inputdic[optionalqcd][cut][region] + inputdic["ttbar_est"][cut][region] + inputdic["zjet"][cut][region]
-            cutcounts[region + plt_m] = outroot.Get("data_est" + "_" + cut + "_" + region + plt_m)
-
+            cutcounts[region + plt_m] = outroot.Get(data_temphist_name + "_" + cut + "_" + region + plt_m)
+            err = ROOT.Double(0.)
+            cutcounts[region] = cutcounts[region + plt_m].IntegralAndError(0, cutcounts[region + plt_m].GetXaxis().GetNbins()+1, err)
+            cutcounts[region + "_err"] = err
         data_est[cut] = cutcounts
     return data_est
 
@@ -193,8 +215,10 @@ def fitestimation(inputdic, inputname, fitresult, outroot, background_model=0):
                 htemp_qcd.Scale(Ftransfer)
                 htemp_qcd.Write()
             #get the notag sideband for the current version
-            cutcounts[region] = Ftransfer * inputdic[ref_cut][region]
             cutcounts[region + plt_m] = outroot.Get(inputname + "_est" + "_" + cut + "_" + region + plt_m)
+            err = ROOT.Double(0.)
+            cutcounts[region] = cutcounts[region + plt_m].IntegralAndError(0, cutcounts[region + plt_m].GetXaxis().GetNbins()+1, err)
+            cutcounts[region + "_err"] = err
             cutcounts[region + "scale_factor"] = Ftransfer
         est[cut] = cutcounts
     return est
@@ -272,17 +296,19 @@ def Getqcd(inputdic, outroot):
                 htemp_qcd.Add(htemp_ttbar, -1)
                 htemp_qcd.Add(htemp_zjet, -1)
                 htemp_qcd.Write()
-            if ("Signal" in region) & ("NoTag" not in cut) & blind:
-                cutcounts[region] = 0
-            else:
-                cutcounts[region] = inputdic["data"][cut][region] - inputdic["ttbar"][cut][region] - inputdic["zjet"][cut][region]
+
             #get qcd prediction shapes
             cutcounts[region + plt_m] = outroot.Get("qcd" + "_" + cut + "_" + region + plt_m)
-
+            if ("Signal" in region) & ("NoTag" not in cut) & blind:
+                cutcounts[region] = 0
+                cutcounts[region + "_err"] = 0
+            else:
+                err = ROOT.Double(0.)
+                cutcounts[region] = cutcounts[region + plt_m].IntegralAndError(0, cutcounts[region + plt_m].GetXaxis().GetNbins()+1, err)
+                cutcounts[region + "_err"] = err
         qcd[cut] = cutcounts
     return qcd
 
-### 
 def WriteEvtCount(inputdic, outFile, samplename="region"):
     ### 
     tableList = []
@@ -315,6 +341,44 @@ def WriteEvtCount(inputdic, outFile, samplename="region"):
         print line
         outFile.write(line+" \n")
 
+def WriteYield(inputdic, outFile, cut="Signal"):
+    outroot.cd()
+    ### 
+    tableList = []
+    ###
+    tableList.append("\\begin{footnotesize}")
+    tableList.append("\\begin{tabular}{c|c|c|c}")
+    tableList.append("%s & Sideband & Control & Signal \\\\")
+    tableList.append("\\hline\\hline")
+    tableList.append("& & & \\\\")
+
+    for i, file in enumerate(yield_lst):
+        #get the corresponding region
+        outstr = ""
+        outstr += yield_dic[file]
+        for j, region in enumerate(yield_region_lst):
+            #print file, region
+            outstr += " & "
+            outstr += str(helpers.round_sig(inputdic[file][cut][region], 2))
+            outstr += " $\\pm$ "
+            outstr += str(helpers.round_sig(inputdic[file][cut][region+"_err"], 2))
+            outstr += " $\\pm$ "
+            outstr += str("sys")
+
+        outstr+="\\\\"
+        tableList.append(outstr)
+
+    tableList.append("& & & \\\\")
+    tableList.append("\\hline\\hline")
+    tableList.append("\\end{tabular}")
+    tableList.append("\\end{footnotesize}")
+    tableList.append("\\newline")
+
+    #return the table
+    for line in tableList:
+        #print line
+        outFile.write(line+" \n")
+
 
 ### 
 def GetEvtCount(inputdir, outroot, histname=""):
@@ -340,8 +404,12 @@ def GetEvtCount(inputdir, outroot, histname=""):
             if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
                 or ("ThreeTag" in cut) or ("FourTag" in cut)) & blind & (histname == "data"):
                 cutcounts[region] = 0
+                cutcounts[region + "_err"] = 0
             else:
-                cutcounts[region] = mHH_temp.Integral(0, mHH_temp.GetXaxis().GetNbins()+1)
+                err = ROOT.Double(0.)
+                cutcounts[region] = mHH_temp.IntegralAndError(0, mHH_temp.GetXaxis().GetNbins()+1, err)
+                cutcounts[region + "_err"] = err
+                
             #save the mass plot into the dictionary
             cutcounts[region + plt_m] = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
         #finish the for loop
@@ -351,7 +419,6 @@ def GetEvtCount(inputdir, outroot, histname=""):
     input_f.Close()
     #return the table
     return eventcounts
-
 
 #functin from Qi
 def GetMassWindow(hist, eff):
@@ -403,7 +470,6 @@ def GetSensitivity(h_signal, h_bkg):
         #return the sensitivity, error, number of signal and number of background estimated in this window
         return (sensitivity, sensitivity_err, S, B)
 
-
 ### 
 def GetSignificance(inputdic, mass, samplename="region"):    
     eventcounts = {}
@@ -424,7 +490,6 @@ def GetSignificance(inputdic, mass, samplename="region"):
         eventcounts[cut] = cutcounts
         eventcounts_err[cut] = cutcounts_err
     return eventcounts, eventcounts_err
-
 
 ### 
 def DumpSignificance(inputdic, outroot, samplename="region"):    

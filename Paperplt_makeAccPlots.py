@@ -7,10 +7,12 @@ o, a = parser.parse_args()
 
 import os
 import ROOT, rootlogon
+import AtlasStyle
 ROOT.gROOT.SetBatch(1)
 from ROOT import gStyle    
 try:
     ROOT.gROOT.LoadMacro("AtlasStyle.C")
+    ROOT.gROOT.LoadMacro("AtlasLabels.C")
     SetAtlasStyle()
 except:
     print "Passing on AtlasStyle.C"
