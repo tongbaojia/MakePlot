@@ -1,24 +1,34 @@
+channels=(b70 b77 b80 b85 b90 SB58 SB68 SB78 SB88 SB98 SB108 SB128 SB168 SB999 jl400)
+#channels=(ref)
 #for gather tables and histograms
-python get_count.py --inputdir b70
-python get_count.py --inputdir b77
-python get_count.py --inputdir b80
-python get_count.py --inputdir b85
-python get_count.py --inputdir b90
-python get_count.py --inputdir SB58
-python get_count.py --inputdir SB68
-python get_count.py --inputdir SB78
-python get_count.py --inputdir SB88
-python get_count.py --inputdir SB98
-python get_count.py --inputdir SB108
-python get_count.py --inputdir SB128
-python get_count.py --inputdir SB168
-python get_count.py --inputdir SB999
-# for signal efficiency
-# python plot_sigeff.py --inputdir b70
-# python plot_sigeff.py --inputdir b77
-# python plot_sigeff.py --inputdir b80
-# python plot_sigeff.py --inputdir b85
-# python plot_sigeff.py --inputdir b90
+
+# for ch in ${channels[@]}; do
+# 	python get_count.py --inputdir $ch
+# 	#python plot.py --inputdir $ch
+# 	#python plot_trigeff.py --inputdir $ch
+# 	#python plot_sigeff.py --inputdir $ch
+# 	python plot_prediction.py --inputdir $ch
+# 	#python dump_hists.py --inputdir $ch
+# 	#python plot_random.py --inputdir $ch
+# 	#python plot_smooth.py --inputdir $ch
+# done
+
+
+#specify the paths to gather!
+inputpath="/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/"
+plotpath="/Plot/SigEff/"
+plotname="_relsig_0_3100_1.pdf"
+tablepath="/Plot/Tables/"
+tablename="normfit.tex"
+outputpath="/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
+#pick scipt
+for ch in ${channels[@]}; do
+	cp $inputpath$ch$plotpath$ch$plotname $outputpath$"/."
+	#cp $inputpath$ch$tablepath$tablename $outputpath$"/"$ch$"_"$tablename
+	echo $ch
+	more $inputpath$ch$tablepath$tablename
+	#more $inputpath$ch$"/sum_"$ch$".tex"
+done
 
 # for distributions, old
 # python plot_boosted.py --plotter=boosted_data_qcd_4b.yml --inputdir b70 > log_4b_70.txt

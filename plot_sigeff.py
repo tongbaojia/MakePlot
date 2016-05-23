@@ -60,7 +60,7 @@ def options():
     return parser.parse_args()
 
 
-def DrawSignalEff(cut_lst, inputdir, outputname="", normalization="All", doint=False, donormint=False, dorel=False):
+def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", doint=False, donormint=False, dorel=False):
     ### the first argument is the input directory
     ### the second argument is the output prefix name
     ### the third argument is relative to what normalization: 0 for total number of events

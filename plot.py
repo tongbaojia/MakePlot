@@ -3,12 +3,10 @@
 #   -> plotCR(...)
 #   -> plotSR(...)
 #
-#
-import os, argparse
-import sys
-import math
+
+import os, argparse, sys, math, time
+from array import array
 import ROOT
-import time
 from ROOT import *
 import AtlasStyle
 import rootlogon  
@@ -19,7 +17,7 @@ try:
 except:
     print "Passing on AtlasStyle.C"
     pass
-from array import array
+
 TH1.AddDirectory(False)
 StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
@@ -167,9 +165,9 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     ifile = ROOT.TFile(filepath + filename + ".root")
 
     # read stuff
-    data = ifile.Get("data_est_" + cut )
-    if "Signal" in cut and not blinded:
-        data = ifile.Get("data_" + cut )
+    data = ifile.Get("data_" + cut )
+    if "Signal" in cut and blinded:
+        data = ifile.Get("data_est_" + cut )
     data_est = ifile.Get("data_est_" + cut )
     qcd = ifile.Get("qcd_est_" + cut )
     #qcd_origin = ifile.Get("qcd_" + cut )
@@ -431,7 +429,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
     region_lst = ["Control", "Sideband", "Signal"]
-    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+    cut_lst = ["OneTag", "TwoTag_split", "ThreeTag", "FourTag"]
     plt_lst = ["mHH_l", "mHH_pole",\
     "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass_s", "leadHCand_trk_dr",\
     "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass_s", "sublHCand_trk_dr",\
