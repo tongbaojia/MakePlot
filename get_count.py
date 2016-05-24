@@ -88,13 +88,13 @@ def main():
 
     #Get ttbar samples
     masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test.root", outroot, "ttbar")
-    #WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
+    WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
     # # Get Zjet samples
     masterinfo["zjet"] = GetEvtCount(inputpath + "zjets_test/hist-MiniNTuple.root", outroot, "zjet")
     #WriteEvtCount(masterinfo["zjet"], output, "z+jets")
     # # Get Signal samples; do not unblind now
     masterinfo["data"] = GetEvtCount(inputpath + "data_test/hist-MiniNTuple.root", outroot, "data")
-    #WriteEvtCount(masterinfo["data"], output, "data")
+    WriteEvtCount(masterinfo["data"], output, "data")
     # # Get qcd from data 
     masterinfo["qcd"] = Getqcd(masterinfo, outroot)
     #WriteEvtCount(masterinfo["qcd"], output, "qcd")
@@ -279,8 +279,8 @@ def GetDiff(dic1, dic2):
         #get the corresponding region
         cutcounts = {}
         for j, region in enumerate(region_lst):
-            if dic1[cut][region]!= 0:
-            	cutcounts[region] = (dic1[cut][region] - dic2[cut][region])/dic1[cut][region] * 100
+            if dic2[cut][region]!= 0:
+            	cutcounts[region] = (dic1[cut][region] - dic2[cut][region])/dic2[cut][region] * 100
             else:
             	cutcounts[region] = 0
             result[cut] = cutcounts

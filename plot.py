@@ -428,8 +428,8 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Control", "Sideband", "Signal"]
-    cut_lst = ["OneTag", "TwoTag_split", "ThreeTag", "FourTag"]
+    region_lst = ["Control", "Sideband", "Signal", "ZZ"]
+    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
     plt_lst = ["mHH_l", "mHH_pole",\
     "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass_s", "leadHCand_trk_dr",\
     "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass_s", "sublHCand_trk_dr",\
