@@ -1,16 +1,10 @@
-# plot.py
-#  main():
-#   -> plotCR(...)
-#   -> plotSR(...)
-#
-#
+# Tony Tong, baojia.tong@cern.ch
 import os, argparse
 import sys
 import math
 import ROOT
 import time
 from ROOT import *
-import AtlasStyle
 import rootlogon  
 try:
     ROOT.gROOT.LoadMacro("AtlasStyle.C")

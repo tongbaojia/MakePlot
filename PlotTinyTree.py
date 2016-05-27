@@ -4,6 +4,8 @@
 ###For a more proper anlaysis, do the c++ standard way please
 import ROOT, rootlogon
 import time, os
+#for parallel processing!
+import multiprocessing as mp
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
@@ -237,15 +239,19 @@ def main():
     global outputpath
     outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/mutest/"
     checkpath(outputpath)
-    #full set of analysis
-    # analysis("data_test")
-    # analysis("zjets_test")
-    # analysis("ttbar_comb_test")
-    # mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
-    # for i, mass in enumerate(mass_lst):
-    #     analysis("signal_G_hh_c10_M" + str(mass))
+    #inputtasks = ["data_test", "zjets_test", "ttbar_comb_test"]
+    inputtasks = ["data_test", "ttbar_comb_test", "zjets_test"]
+    mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    for i, mass in enumerate(mass_lst):
+        inputtasks.append("signal_G_hh_c10_M" + str(mass))
+    #parallel compute!
+    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)
+    pool = mp.Pool(npool)
+    pool.map(analysis, inputtasks)
     #all the other extra set of MCs
-    analysis("signal_QCD") #2 mins!
+    #analysis("data_test") #2 mins!
+    #analysis("signal_QCD") #2 mins!
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
 

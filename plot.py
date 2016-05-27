@@ -1,23 +1,15 @@
-# plot.py
-#  main():
-#   -> plotCR(...)
-#   -> plotSR(...)
-#
-
+# Tony Tong; baojia.tong@cern.ch
 import os, argparse, sys, math, time
+#for parallel processing!
+import multiprocessing as mp
 from array import array
-import ROOT
+import ROOT, rootlogon
 from ROOT import *
-import AtlasStyle
-import rootlogon  
-try:
-    ROOT.gROOT.LoadMacro("AtlasStyle.C")
-    ROOT.gROOT.LoadMacro("AtlasLabels.C")
-    SetAtlasStyle()
-except:
-    print "Passing on AtlasStyle.C"
-    pass
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.gROOT.LoadMacro("AtlasLabels.C")
+SetAtlasStyle()
 
+#other setups
 TH1.AddDirectory(False)
 StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
@@ -155,7 +147,7 @@ def rebinData(ifile, rebin, scale=1.0):
 ####################################################################################
 #plot
 
-def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, inputBinWidth=25, finalBinUnits=25):
+def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, inputBinWidth=25, finalBinUnits=25, outputFolder=""):
 
     gStyle.SetErrorX(0)
     gStyle.SetHatchesSpacing(0.7)
@@ -392,15 +384,47 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
     # save
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
-    #c0.SaveAs(figuresFolder+"/"+filename.replace(".root", ".pdf"))
-    #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + postname + ".png")
-    c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + postname + ".pdf")
-    #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ".pdf")
-    #c0.SaveAs(figuresFolder+ "/" + filename + "_" + cut + ".eps")
+    #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".pdf")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".eps")
 
     pad0.Close()
     pad1.Close()
     c0.Close()
+
+def dumpRegion(config):
+    #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2, Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass_s",   xTitle="J0 m [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass_s",   xTitle="J1 m [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+
+    print config["outputdir"], "done!"
 
 
 ##################################################################################################
@@ -417,14 +441,13 @@ def main():
     inputroot = ops.inputroot
     inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
     rootinputpath = inputpath + inputroot + "_"
-    print "inputroot file is: ", rootinputpath
+    print "input root file is: ", rootinputpath
 
     global StatusLabel
     StatusLabel = "Internal" ##StatusLabel = "Preliminary"
-    global figuresFolder
 
     # plot in the control region #
-    # figuresFolder = inputpath + inputroot + "Plot/" + "Sideband"
+    # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
@@ -435,44 +458,28 @@ def main():
     "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass_s", "sublHCand_trk_dr",\
     "hCandDr", "hCandDeta", "hCandDphi"]
 
+    #create master list
+    inputtasks = []
+    #fill the task list
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        figuresFolder = inputpath + inputroot + "Plot/" + region
-        print "output is", figuresFolder
-        if not os.path.exists(figuresFolder):
-            os.makedirs(figuresFolder)
+        outputFolder = inputpath + inputroot + "Plot/" + region
+        if not os.path.exists(outputFolder):
+            os.makedirs(outputFolder)
 
         for j, cut in enumerate(cut_lst):
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_l",            xTitle="m_{2J} [GeV]")
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_l",            xTitle="m_{2J} [GeV]", Logy=1)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_pole",            xTitle="m_{2J} [GeV]")
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "mHH_pole",            xTitle="m_{2J} [GeV]", Logy=1)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDr",          xTitle="#Delta R", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDeta",        xTitle="#Delta #eta", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "hCandDphi",        xTitle="#Delta #phi", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Pt_m",   xTitle="J0 p_{T} [GeV]", rebin=2, Logy=1)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Eta",    xTitle="J0 #eta", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Phi",    xTitle="J0 #phi", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_Mass_s",   xTitle="J0 m [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk_dr", xTitle="J0 dRtrk", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Pt_m",   xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Eta",    xTitle="J1 #eta", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Phi",    xTitle="J1 #phi", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_Mass_s",   xTitle="J1 m [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk_dr", xTitle="J1 dRtrk", rebin=2)
-
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk0_Pt", xTitle="J0 leadtrk p_{T} [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk1_Pt", xTitle="J0 subltrk p_{T} [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk0_Pt", xTitle="J1 leadtrk p_{T} [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk1_Pt", xTitle="J1 subltrk p_{T} [GeV]", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_ntrk", xTitle="J0 Ntrk")
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_ntrk", xTitle="J1 Ntrk")
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
-                plotRegion(rootinputpath, inputdir, cut=cut + "_" + region + "_" + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
-
+            config = {}
+            config["root"] = rootinputpath
+            config["inputdir"] = inputdir
+            config["outputdir"] = outputFolder
+            config["cut"] = cut + "_" + region + "_"
+            inputtasks.append(config)
+    #parallel compute!
+    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)
+    pool = mp.Pool(npool)
+    pool.map(dumpRegion, inputtasks)
     
     print("--- %s seconds ---" % (time.time() - start_time))
 

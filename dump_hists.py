@@ -189,8 +189,5 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     return
 
 
-def fatal(message):
-    sys.exit("Error in %s: %s" % (__file__, message))
-
 if __name__ == '__main__': 
     main()

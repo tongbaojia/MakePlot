@@ -1,6 +1,8 @@
 import ROOT
 print "Using %s" % __file__
 
+#set the global output info level
+ROOT.gErrorIgnoreLevel = ROOT.kWarning
 # whitening
 ROOT.gStyle.SetFrameBorderMode(0)
 ROOT.gStyle.SetFrameFillColor(0)
