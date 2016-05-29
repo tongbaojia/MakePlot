@@ -28,21 +28,40 @@ def checkpath(outputpath):
         os.makedirs(outputpath)
 
 class eventHists:
-    def __init__(self, region, outputroot):
+    def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
         self.region = region
+        self.reweight = reweight
         self.mHH_l    = ROOT.TH1F("mHH_l", ";mHH [GeV]",  76,  200, 4000)
         self.mHH_pole = ROOT.TH1F("mHH_pole", ";mHH [GeV]",  76,  200, 4000)
         self.h0_m     = ROOT.TH1F("leadHCand_Mass", ";Mass [GeV]",    100,  0,   500)
         self.h1_m     = ROOT.TH1F("sublHCand_Mass", ";Mass [GeV]",    100,  0,   500)
+        #trackjet for reweight
+        self.h0_trk0_pt     = ROOT.TH1F("leadHCand_trk0_Pt", ";p_{T} [GeV]",    100,  0,   500)
+        self.h1_trk0_pt     = ROOT.TH1F("sublHCand_trk0_Pt", ";p_{T} [GeV]",    100,  0,   500)
+        self.h0_trk1_pt     = ROOT.TH1F("leadHCand_trk1_Pt", ";p_{T} [GeV]",    100,  0,   500)
+        self.h1_trk1_pt     = ROOT.TH1F("sublHCand_trk1_Pt", ";p_{T} [GeV]",    100,  0,   500)
 
     def Fill(self, event):
-        self.mHH_l.Fill(event.mHH, event.weight)
-        self.mHH_pole.Fill(event.mHH_pole, event.weight)
-        self.h0_m.Fill(event.j0_m, event.weight)
-        self.h1_m.Fill(event.j1_m, event.weight)
+        weight = event.weight
+        if (self.reweight):
+            tempw0 = 0.63 + 0.012 * event.j0_trk1_pt - 6.3E-05 * event.j0_trk1_pt ** 2
+            if tempw0 > 0:
+                weight *= tempw0
+            tempw1 = 0.73 + 0.008 * event.j1_trk1_pt - 4.2E-05 * event.j1_trk1_pt ** 2
+            if tempw1 > 0:
+                weight *= tempw1
+        self.mHH_l.Fill(event.mHH, weight)
+        self.mHH_pole.Fill(event.mHH_pole, weight)
+        self.h0_m.Fill(event.j0_m, weight)
+        self.h1_m.Fill(event.j1_m, weight)
+
+        self.h0_trk0_pt.Fill(event.j0_trk0_pt, weight)
+        self.h1_trk0_pt.Fill(event.j1_trk0_pt, weight)
+        self.h0_trk1_pt.Fill(event.j0_trk1_pt, weight)
+        self.h1_trk1_pt.Fill(event.j1_trk1_pt, weight)
 
     def Write(self, outputroot):
         outputroot.cd(self.region)
@@ -51,27 +70,33 @@ class eventHists:
         self.h0_m.Write()
         self.h1_m.Write()
 
+        self.h0_trk0_pt.Write()
+        self.h1_trk0_pt.Write()
+        self.h0_trk1_pt.Write()
+        self.h1_trk1_pt.Write()
+
 class massregionHists:
-    def __init__(self, region, outputroot):
+    def __init__(self, region, outputroot, reweight=False):
         #self.Incl = eventHists(region + "_" + "Incl", outputroot)
-        self.Sideband = eventHists(region + "_" + "Sideband", outputroot)
-        self.Control = eventHists(region + "_" + "Control", outputroot)
-        self.Signal = eventHists(region + "_" + "Signal", outputroot)
-        self.ZZ = eventHists(region + "_" + "ZZ", outputroot)
-        self.Rhh20  = eventHists(region + "_" + "Rhh20", outputroot)
-        self.Rhh30  = eventHists(region + "_" + "Rhh30", outputroot)
-        self.Rhh40  = eventHists(region + "_" + "Rhh40", outputroot)
-        self.Rhh50  = eventHists(region + "_" + "Rhh50", outputroot)
-        self.Rhh60  = eventHists(region + "_" + "Rhh60", outputroot)
-        self.Rhh70  = eventHists(region + "_" + "Rhh70", outputroot)
-        self.Rhh80  = eventHists(region + "_" + "Rhh80", outputroot)
-        self.Rhh90  = eventHists(region + "_" + "Rhh90", outputroot)
-        self.Rhh100 = eventHists(region + "_" + "Rhh100", outputroot)
-        self.Rhh110 = eventHists(region + "_" + "Rhh110", outputroot)
-        self.Rhh120 = eventHists(region + "_" + "Rhh120", outputroot)
-        self.Rhh130 = eventHists(region + "_" + "Rhh130", outputroot)
-        self.Rhh140 = eventHists(region + "_" + "Rhh140", outputroot)
-        self.Rhh150 = eventHists(region + "_" + "Rhh150", outputroot)
+        self.Sideband = eventHists(region + "_" + "Sideband", outputroot, reweight)
+        self.Control = eventHists(region + "_" + "Control", outputroot, reweight)
+        self.Signal = eventHists(region + "_" + "Signal", outputroot, reweight)
+        self.ZZ = eventHists(region + "_" + "ZZ", outputroot, reweight)
+        # self.Rhh20  = eventHists(region + "_" + "Rhh20", outputroot)
+        # self.Rhh30  = eventHists(region + "_" + "Rhh30", outputroot)
+        # self.Rhh40  = eventHists(region + "_" + "Rhh40", outputroot)
+        # self.Rhh50  = eventHists(region + "_" + "Rhh50", outputroot)
+        # self.Rhh60  = eventHists(region + "_" + "Rhh60", outputroot)
+        # self.Rhh70  = eventHists(region + "_" + "Rhh70", outputroot)
+        # self.Rhh80  = eventHists(region + "_" + "Rhh80", outputroot)
+        # self.Rhh90  = eventHists(region + "_" + "Rhh90", outputroot)
+        # self.Rhh100 = eventHists(region + "_" + "Rhh100", outputroot)
+        # self.Rhh110 = eventHists(region + "_" + "Rhh110", outputroot)
+        # self.Rhh120 = eventHists(region + "_" + "Rhh120", outputroot)
+        # self.Rhh130 = eventHists(region + "_" + "Rhh130", outputroot)
+        # self.Rhh140 = eventHists(region + "_" + "Rhh140", outputroot)
+        # self.Rhh150 = eventHists(region + "_" + "Rhh150", outputroot)
+
     def Fill(self, event):
         #self.Incl.Fill(event)
         if event.Xhh < 1.6:
@@ -84,36 +109,36 @@ class massregionHists:
             self.ZZ.Fill(event)
 
         #for mass mu qcd test
-        if event.Xhh > 1.6 and event.Rhh < 20:
-            self.Rhh20.Fill(event)
-        elif event.Rhh < 30:
-            self.Rhh30.Fill(event)
-        elif event.Rhh < 30: 
-            self.Rhh30.Fill(event)
-        elif event.Rhh < 40: 
-            self.Rhh40.Fill(event)
-        elif event.Rhh < 50: 
-            self.Rhh50.Fill(event)
-        elif event.Rhh < 60: 
-            self.Rhh60.Fill(event)
-        elif event.Rhh < 70: 
-            self.Rhh70.Fill(event)
-        elif event.Rhh < 80: 
-            self.Rhh80.Fill(event)
-        elif event.Rhh < 90: 
-            self.Rhh90.Fill(event)
-        elif event.Rhh < 100: 
-            self.Rhh100.Fill(event)
-        elif event.Rhh < 110: 
-            self.Rhh110.Fill(event)
-        elif event.Rhh < 120: 
-            self.Rhh120.Fill(event)
-        elif event.Rhh < 130: 
-            self.Rhh130.Fill(event)
-        elif event.Rhh < 140: 
-            self.Rhh140.Fill(event)
-        elif event.Rhh < 150: 
-            self.Rhh150.Fill(event)
+        # if event.Xhh > 1.6 and event.Rhh < 20:
+        #     self.Rhh20.Fill(event)
+        # elif event.Rhh < 30:
+        #     self.Rhh30.Fill(event)
+        # elif event.Rhh < 30: 
+        #     self.Rhh30.Fill(event)
+        # elif event.Rhh < 40: 
+        #     self.Rhh40.Fill(event)
+        # elif event.Rhh < 50: 
+        #     self.Rhh50.Fill(event)
+        # elif event.Rhh < 60: 
+        #     self.Rhh60.Fill(event)
+        # elif event.Rhh < 70: 
+        #     self.Rhh70.Fill(event)
+        # elif event.Rhh < 80: 
+        #     self.Rhh80.Fill(event)
+        # elif event.Rhh < 90: 
+        #     self.Rhh90.Fill(event)
+        # elif event.Rhh < 100: 
+        #     self.Rhh100.Fill(event)
+        # elif event.Rhh < 110: 
+        #     self.Rhh110.Fill(event)
+        # elif event.Rhh < 120: 
+        #     self.Rhh120.Fill(event)
+        # elif event.Rhh < 130: 
+        #     self.Rhh130.Fill(event)
+        # elif event.Rhh < 140: 
+        #     self.Rhh140.Fill(event)
+        # elif event.Rhh < 150: 
+        #     self.Rhh150.Fill(event)
 
     def Write(self, outputroot):
         #self.Incl.Write(outputroot)
@@ -121,30 +146,30 @@ class massregionHists:
         self.Control.Write(outputroot)
         self.Signal.Write(outputroot)
         self.ZZ.Write(outputroot)
-        self.Rhh20.Write(outputroot)
-        self.Rhh30.Write(outputroot) 
-        self.Rhh40.Write(outputroot) 
-        self.Rhh50.Write(outputroot) 
-        self.Rhh60.Write(outputroot) 
-        self.Rhh70.Write(outputroot) 
-        self.Rhh80.Write(outputroot) 
-        self.Rhh90.Write(outputroot)
-        self.Rhh100.Write(outputroot)
-        self.Rhh110.Write(outputroot)
-        self.Rhh120.Write(outputroot)
-        self.Rhh130.Write(outputroot)
-        self.Rhh140.Write(outputroot)
-        self.Rhh150.Write(outputroot)
+        # self.Rhh20.Write(outputroot)
+        # self.Rhh30.Write(outputroot) 
+        # self.Rhh40.Write(outputroot) 
+        # self.Rhh50.Write(outputroot) 
+        # self.Rhh60.Write(outputroot) 
+        # self.Rhh70.Write(outputroot) 
+        # self.Rhh80.Write(outputroot) 
+        # self.Rhh90.Write(outputroot)
+        # self.Rhh100.Write(outputroot)
+        # self.Rhh110.Write(outputroot)
+        # self.Rhh120.Write(outputroot)
+        # self.Rhh130.Write(outputroot)
+        # self.Rhh140.Write(outputroot)
+        # self.Rhh150.Write(outputroot)
 
 
 class trkregionHists:
-    def __init__(self, region, outputroot):
-        self.Trk0  = massregionHists(region, outputroot)
+    def __init__(self, region, outputroot, reweight=False):
+        self.Trk0  = massregionHists(region, outputroot, reweight)
         #self.Trk1  = massregionHists(region + "_" + "1Trk", outputroot)
         #self.Trk2  = massregionHists(region + "_" + "2Trk", outputroot)
-        self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot)
-        self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot)
-        self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot)
+        self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)
+        self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
+        self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
     def Fill(self, event):
         self.Trk0.Fill(event)
         # if event.j0_nTrk >= 1 or event.j1_nTrk >= 1:
@@ -168,7 +193,7 @@ class trkregionHists:
 
 class regionHists:
     def __init__(self, outputroot):
-        self.NoTag  = trkregionHists("NoTag", outputroot)
+        self.NoTag  = trkregionHists("NoTag", outputroot, reweight=True)
         self.OneTag = trkregionHists("OneTag", outputroot)
         self.TwoTag = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
@@ -237,7 +262,7 @@ def main():
     global inputpath
     inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/TEST/"
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/mutest/"
+    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/test/"
     checkpath(outputpath)
     #inputtasks = ["data_test", "zjets_test", "ttbar_comb_test"]
     inputtasks = ["data_test", "ttbar_comb_test", "zjets_test"]
@@ -248,10 +273,10 @@ def main():
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
-    pool.map(analysis, inputtasks)
+    #pool.map(analysis, inputtasks)
     #all the other extra set of MCs
-    #analysis("data_test") #2 mins!
-    #analysis("signal_QCD") #2 mins!
+    analysis("data_test") #2 mins! 4 mins with expanded...
+    #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
 
