@@ -49,9 +49,9 @@ def dump(finaldis="l"):
         cut = c + "_Signal_mHH" + pltname
         #cut = c + "_Signal_mHH_pole"
         savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
-        tempdic["data_est"] = savehist(ifile, "data_est_" + cut,  "totalbkg_hh", True)
-        tempdic["qcd_est"] = savehist(ifile, "qcd_est_" + cut,   "qcd_hh", True)
-        tempdic["ttbar_est"] = savehist(ifile, "ttbar_est_" + cut, "ttbar_hh", True, smoothfunc="Exp")
+        tempdic["data_est"] = savehist(ifile, "data_est_" + cut,  "totalbkg_hh", dosmooth=True)
+        tempdic["qcd_est"] = savehist(ifile, "qcd_est_" + cut,   "qcd_hh", dosmooth=True)
+        tempdic["ttbar_est"] = savehist(ifile, "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (875, 2500), smoothfunc="Dijet")
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -69,7 +69,7 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1000, 2500), smoothfunc="Dijet"):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1000, 3200), smoothfunc="Dijet"):
     hist  = inputroot.Get(inname).Clone()
     if dosmooth:
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
@@ -90,17 +90,17 @@ def WriteFitResult(inputdic, outFile, npar=3):
     tableList = []
     ###
     tableList.append("\\begin{footnotesize}")
-    tableList.append("\\begin{tabular}{c|c|c|c|c|c}")
-    tableList.append("Region & $ a_{t\\bar{t}}$ & $ b_{t\\bar{t}}$ & $ a_{qcd}$ & $ b_{qcd}$ & $c_{qcd}$ \\\\")
+    tableList.append("\\begin{tabular}{c|c|c|c|c|c|c}")
+    tableList.append("Region & $ a_{t\\bar{t}}$ & $ b_{t\\bar{t}}$ & $ c_{t\\bar{t}}$ & $ a_{qcd}$ & $ b_{qcd}$ & $c_{qcd}$ \\\\")
     tableList.append("\\hline\\hline")
-    tableList.append("& & & & & \\\\")
+    tableList.append("& & & & & &\\\\")
 
     for i, cut in enumerate(cut_lst):
     #get the mass plot
         outstr = ""
         outstr += cut.replace("_", " ")
         outstr += " & "
-        print inputdic[cut]["ttbar_est"]["paramerrs"][0]
+        #print inputdic[cut]["ttbar_est"]["paramerrs"][0]
         outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][0], 2))
         outstr += " $\\pm$ "
         outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][0], 2))
@@ -108,6 +108,10 @@ def WriteFitResult(inputdic, outFile, npar=3):
         outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][1], 2))
         outstr += " $\\pm$ "
         outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][1], 2))
+        outstr += " & "
+        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][2], 2))
+        outstr += " $\\pm$ "
+        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][2], 2))
         outstr += " & "
         outstr += str(round_sig(inputdic[cut]["qcd_est"]["params"][0], 2))
         outstr += " $\\pm$ "
@@ -123,7 +127,7 @@ def WriteFitResult(inputdic, outFile, npar=3):
         outstr+="\\\\"
         tableList.append(outstr)
 
-    tableList.append("& & & & & \\\\")
+    tableList.append("& & & & & &\\\\")
     tableList.append("\\hline\\hline")
     tableList.append("\\end{tabular}")
     tableList.append("\\end{footnotesize}")

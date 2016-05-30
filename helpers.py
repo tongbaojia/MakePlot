@@ -119,7 +119,6 @@ def clear():
     if canv:
         canv.Close()
 
-
 #
 #  Make the actual plot
 #
@@ -423,9 +422,6 @@ def plot(var, cut, region, plotter_config,  **kw):
     canv.Update()
 
 
-
-
-
 def show_overflow(hist):
     """ Show overflow and underflow on a TH1. h/t Josh """
 
@@ -704,5 +700,20 @@ def round_sig(x, sig=2):
     else:
         return round(x, sig-int(ROOT.TMath.Log10(abs(x))))
 
+
+def checkpath(outputpath):
+    if not os.path.exists(outputpath):
+        os.makedirs(outputpath)
+
+def drawProgressBar(percent, barLen = 20):
+    progress = ""
+    for i in range(barLen):
+        if i < int(barLen * percent):
+            progress += "="
+        elif i == int(barLen * percent):
+            progress += ">"
+        else:
+            progress += " "
+    print ("[ %s ] %.2f%%" % (progress, percent * 100))
 
 

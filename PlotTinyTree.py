@@ -2,8 +2,8 @@
 ###Performance is not garanteened. The way to register hists are slow
 ###For a quick on the fly anaysis, great.
 ###For a more proper anlaysis, do the c++ standard way please
-import ROOT, rootlogon
-import time, os
+import ROOT, rootlogon, helpers
+import time, os, subprocess, glob
 #for parallel processing!
 import multiprocessing as mp
 #import tree configuration
@@ -12,20 +12,7 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #ROOT.gSystem.Load('TinyTree.h')
 
 #input file path
-def drawProgressBar(percent, barLen = 20):
-    progress = ""
-    for i in range(barLen):
-        if i < int(barLen * percent):
-            progress += "="
-        elif i == int(barLen * percent):
-            progress += ">"
-        else:
-            progress += " "
-    print ("[ %s ] %.2f%%" % (progress, percent * 100))
 
-def checkpath(outputpath):
-    if not os.path.exists(outputpath):
-        os.makedirs(outputpath)
 
 class eventHists:
     def __init__(self, region, outputroot, reweight=False):
@@ -223,12 +210,17 @@ class regionHists:
         self.FourTag.Write(outputroot)
 
 
-def analysis(inputfile, outname="", DEBUG=False):
-    checkpath(outputpath + inputfile)
-    outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + "hist.root", "recreate")
+def analysis(inputconfig, DEBUG=False):
+    inputfile = inputconfig["inputfile"]
+    inputroot = inputconfig["inputroot"]
+    outputroot = inputconfig["outputroot"]
+    DEBUG = inputconfig["DEBUG"]
+
+    helpers.checkpath(outputpath + inputfile)
+    outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
     AllHists = regionHists(outroot)
     #read the input file
-    f = ROOT.TFile(inputpath + inputfile + "/" + "hist-MiniNTuple.root", "read")
+    f = ROOT.TFile(inputpath + inputfile + "/" + inputroot, "read")
     #load the target tree
     t = ROOT.TinyTree(f.Get("TinyTree"))
     #save the cutflow histograms
@@ -244,7 +236,7 @@ def analysis(inputfile, outname="", DEBUG=False):
         if DEBUG & (i > 100000):
             break
         if i %20000 == 0:
-            drawProgressBar(i/(N*1.0))
+            helpers.drawProgressBar(i/(N*1.0))
             #print i, " events done!"
         t.fChain.GetEntry(i)
         #print t.Xzz
@@ -252,10 +244,19 @@ def analysis(inputfile, outname="", DEBUG=False):
 
     #write all the output
     AllHists.Write(outroot)
-    print "DONE with the " + inputfile  + " analysis!"
+    print "DONE with the " + inputfile,  outputroot  + " analysis!"
     #close the input file;
     del(t)
     outroot.Close()
+
+#pack the input into a configuration dictionary
+def pack_input(inputfile, inputsplit=-1):
+    dic = {}
+    dic["inputfile"] = inputfile
+    dic["inputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit  >= 0 else "") + ".root"
+    dic["outputroot"] = "hist" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ".root"
+    dic["DEBUG"] = False
+    return dic
 
 def main():
     start_time = time.time()
@@ -263,19 +264,31 @@ def main():
     inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/TEST/"
     global outputpath
     outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/test/"
-    checkpath(outputpath)
+    helpers.checkpath(outputpath)
+    nsplit = 7
     #inputtasks = ["data_test", "zjets_test", "ttbar_comb_test"]
-    inputtasks = ["data_test", "ttbar_comb_test", "zjets_test"]
-    mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
-    for i, mass in enumerate(mass_lst):
-        inputtasks.append("signal_G_hh_c10_M" + str(mass))
+    inputtasks = []
+    # inputtasks.append(pack_input("ttbar_comb_test"))
+    # inputtasks.append(pack_input("zjets_test"))
+    # mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    # for i, mass in enumerate(mass_lst):
+    #     inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+    for i in range(nsplit):
+        inputtasks.append(pack_input("data_test", inputsplit=i))
+    #print inputtasks
     #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     #pool.map(analysis, inputtasks)
     #all the other extra set of MCs
-    analysis("data_test") #2 mins! 4 mins with expanded...
+    targetpath = outputpath + "data_test/"
+    targetfiles = glob.glob(targetpath + "hist_*.root")
+    haddcommand = ["hadd", "-f", targetpath + "hist.root"]
+    haddcommand += targetfiles
+    #print haddcommand
+    subprocess.call(haddcommand)
+    #analysis("data_test") #2 mins! 4 mins with expanded...
     #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"

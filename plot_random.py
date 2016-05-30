@@ -39,8 +39,8 @@ def main():
 
     #signalregion shape comparison
     inputroot = "sum_" + inputdir + ".root"
-    DrawSRcomparison(inputroot, inputdata="ttbar_est")
-    DrawSRcomparison(inputroot, inputdata="ttbar_est", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="ttbar")
+    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
     DrawSRcomparison(inputroot, inputdata="qcd_est")
     DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
@@ -84,16 +84,16 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", noteword="PhysMain", prenam
             canv.Close()
     inputroot.Close()
 
-def DrawSRcomparison(inputname, inputdata="ttbar_est", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
+def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
     tempname = inputdata + "_" + "compare" + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
     canv = ROOT.TCanvas(tempname, tempname, 800, 800)
     canv.SetLogy(Logy)
-    xleg, yleg = 0.52, 0.7
-    legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
+    xleg, yleg = 0.5, 0.7
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.15, yleg+0.2)
     counter = 0
-    maxbincontent = (0.3 if Logy ==0 else 10)
+    maxbincontent = (0.2 if Logy ==0 else 10)
 
     for key in ROOT.gDirectory.GetListOfKeys():
         kname = key.GetName()
@@ -117,13 +117,12 @@ def DrawSRcomparison(inputname, inputdata="ttbar_est", inputtype=["TwoTag_split_
 
                 maxbincontent = max(maxbincontent, temp_hist.GetMaximum())
                 temp_hist.SetMaximum(maxbincontent * 1.5)
-                legend.AddEntry(temp_hist, region, "apl")
+                legend.AddEntry(temp_hist, region.replace("_", " "), "apl")
 
                 if counter==0:
                     temp_hist.Draw("")
                 else:
                     temp_hist.Draw("same")
-
                 counter += 1
 
     legend.SetBorderSize(0)

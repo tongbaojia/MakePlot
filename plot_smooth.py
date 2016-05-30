@@ -422,10 +422,6 @@ def main():
 
     region_lst = ["Signal"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
-    plt_lst = ["mHH_l", "mHH_pole",\
-    "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass_s", "leadHCand_trk_dr",\
-    "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass_s", "sublHCand_trk_dr",\
-    "hCandDr", "hCandDeta", "hCandDphi"]
 
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
