@@ -21,8 +21,7 @@ mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 150
 # input are exclusive trkjets
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"OneTag_2Trk_split", "OneTag_3Trk", "OneTag_4Trk", "OneTag", \
-"TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+"OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
@@ -194,7 +193,7 @@ def fitestimation(histname=""):
             #     ref_cut = "4Trk_NoTag"
             if ("Trk" not in cut):
                 ref_cut = numb_dict[background_model]
-                if ("split" in cut):
+                if ("split" in cut):#map to the specific trackjets
                     ref_cut = numb_dict[background_model] + "_2Trk_split"
                 elif ("ThreeTag" in cut):
                     ref_cut = numb_dict[background_model] + "_3Trk"

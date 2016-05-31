@@ -691,6 +691,18 @@ def ratioerror(a, b, ea=-1, eb=-1):
     else:
         return 0
 
+def map_phi(phi):
+    while phi >= math.pi:
+        phi -= math.pi
+    while phi < -(math.pi):
+        phi += math.pi
+    return phi
+
+def dR(eta1, phi1, eta2, phi2):
+    phi1 = map_phi(phi1)
+    phi2 = map_phi(phi2)
+    return ROOT.TMath.Sqrt((eta1-eta2) ** 2 + (phi1-phi2) ** 2)
+
 #round the significant numbers
 def round_sig(x, sig=2):
     if x == 0:
