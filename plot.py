@@ -1,5 +1,6 @@
 # Tony Tong; baojia.tong@cern.ch
 import os, argparse, sys, math, time
+import config as CONF
 #for parallel processing!
 import multiprocessing as mp
 from array import array
@@ -449,7 +450,7 @@ def main():
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
     rootinputpath = inputpath + inputroot + "_"
     print "input root file is: ", rootinputpath
 

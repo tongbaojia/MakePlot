@@ -7,12 +7,10 @@ import helpers
 import os
 import sys
 import time
+import config as CONF
 
 ROOT.gROOT.SetBatch(True)
 from ROOT import gStyle    
-
-
-
 
 def options():
     parser = argparse.ArgumentParser()
@@ -26,9 +24,9 @@ def main():
     ops = options()
     inputdir = ops.inputdir
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/" + "Plot/Other/"
+    outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
 
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)

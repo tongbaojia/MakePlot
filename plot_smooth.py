@@ -6,6 +6,7 @@ import ROOT
 import time
 from ROOT import *
 import rootlogon  
+import config as CONF
 try:
     ROOT.gROOT.LoadMacro("AtlasStyle.C")
     ROOT.gROOT.LoadMacro("AtlasLabels.C")
@@ -409,7 +410,7 @@ def main():
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
 
     global StatusLabel
     StatusLabel = "Internal" ##StatusLabel = "Preliminary"

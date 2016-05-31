@@ -1,7 +1,8 @@
 import optparse
+import config as CONF
 parser = optparse.OptionParser()
 parser.add_option('--signalDir',                dest="signalDir",             default="", help="")
-parser.add_option('-o', '--out',                dest="output",                default="/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/", help="")
+parser.add_option('-o', '--out',                dest="output",                default=CONF.outplotpath, help="")
 parser.add_option('-c', '--couping',            dest="coupling",              default="boosted10", help="")
 o, a = parser.parse_args()
 
@@ -18,11 +19,8 @@ except:
     print "Passing on AtlasStyle.C"
     pass
 
-
-
 if not os.path.isdir(o.output):
     os.mkdir(o.output)
-
 
 
 doResolved = True

@@ -1,6 +1,7 @@
 import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 import helpers
+import config as CONF
 
 ROOT.gROOT.SetBatch(True)
 
@@ -11,9 +12,9 @@ def main():
     inputroot = ops.inputroot
 
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/" + "Plot/SigEff/"
+    outputpath = CONF.inputpath + inputdir + "/" + "Plot/SigEff/"
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 
@@ -105,13 +106,13 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     lowmass = -50
     highmass = 3150
     # load input MC file
-    input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/" + inputroot + "_" + inputdir + ".root")
+    input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + "/" + inputroot + "_" + inputdir + ".root")
     maxbincontent = normalization
     minbincontent = 0.00001
     temp_all = input_mc.Get(cut_lst[0] + histname).Clone()
     temp_all.SetName("Combined")
 
-    input_mc_ref = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/ref/" + "sum_ref" + ".root")
+    input_mc_ref = ROOT.TFile.Open(CONF.inputpath +"ref/" + "sum_ref" + ".root")
     temp_ref = input_mc_ref.Get(cut_lst[0] + histname).Clone()
     temp_ref.SetName("Run2-ref")
 

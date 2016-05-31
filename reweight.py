@@ -3,7 +3,8 @@ import os, argparse, sys, math, time
 #for parallel processing!
 import multiprocessing as mp
 from array import array
-import ROOT, rootlogon
+import ROOT, rootlogon, helpers
+import config as CONF
 from ROOT import *
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
@@ -471,7 +472,7 @@ def main():
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputdir + inputdir + "/"
     rootinputpath = inputpath + inputroot + "_"
     print "input root file is: ", rootinputpath
 

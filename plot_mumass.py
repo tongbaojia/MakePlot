@@ -1,6 +1,7 @@
 import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 import helpers
+import config as CONF
 
 ROOT.gROOT.SetBatch(True)
 
@@ -15,9 +16,9 @@ def main():
     global tag_lst
     tag_lst = ["OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/mutest/"
+    inputpath = CONF.inputpath + "mutest/"
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
+    outputpath = CONF.outplotpath
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 

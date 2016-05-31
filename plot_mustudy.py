@@ -1,6 +1,7 @@
 import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 import helpers
+import config as CONF
 
 ROOT.gROOT.SetBatch(True)
 
@@ -14,9 +15,9 @@ def main():
     channels=["SB58", "SB68", "SB78", "SB88", "SB98", "SB108", "SB128", "SB168", "SB999"]#, "b70", "b77", "b80", "b85", "b90"]
 
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/"
+    inputpath = CONF.inputpath
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
+    outputpath = CONF.outplotPath
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 

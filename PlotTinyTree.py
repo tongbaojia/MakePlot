@@ -3,18 +3,18 @@
 ###For a quick on the fly anaysis, great.
 ###For a more proper anlaysis, do the c++ standard way please
 import ROOT, rootlogon, helpers
+import config as CONF
 import time, os, subprocess, glob
 #for parallel processing!
 import multiprocessing as mp
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
-#ROOT.gSystem.Load('TinyTree.h')
 
 
 class eventHists:
 
-    fullhist = False # will take 3 minutes to generate all histograms; 3 times more time...
+    fullhist = True # will take 3 minutes to generate all histograms; 3 times more time...
 
     def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
@@ -339,9 +339,9 @@ def pack_input(inputfile, inputsplit=-1):
 def main():
     start_time = time.time()
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/TEST/"
+    inputpath = CONF.inputpath + "TEST/"
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/test/"
+    outputpath = CONF.outputpath + "test/"
     helpers.checkpath(outputpath)
     #for testing
     #analysis(pack_input("zjets_test"))
@@ -351,8 +351,7 @@ def main():
     inputtasks = []
     # inputtasks.append(pack_input("ttbar_comb_test"))
     # inputtasks.append(pack_input("zjets_test"))
-    # mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
-    # for i, mass in enumerate(mass_lst):
+    # for i, mass in enumerate(CONF.mass_lst):
     #     inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
     for i in range(nsplit):
         inputtasks.append(pack_input("data_test", inputsplit=i))

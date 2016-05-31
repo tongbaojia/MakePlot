@@ -1,6 +1,6 @@
-import ROOT, rootlogon
+import ROOT, rootlogon, helpers
+import config as CONF
 import argparse, copy, glob, os, sys, time
-import helpers
 from Xhh4bUtils.BkgFit.BackgroundFit_Ultimate import BackgroundFit
 import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 #for parallel processing!
@@ -10,8 +10,6 @@ import multiprocessing as mp
 ROOT.gROOT.SetBatch(True)
 
 #set global variables
-#mass_lst = [1000, 2000, 3000]
-mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 # cut_lst = ["2Trk_in1_NoTag", "2Trk_in1_OneTag", "2Trk_in1_TwoTag", \
 #     "2Trk_NoTag", "2Trk_OneTag", "2Trk_TwoTag_split", \
 #     "3Trk_NoTag", "3Trk_OneTag", "3Trk_TwoTag", "3Trk_TwoTag_split", "3Trk_ThreeTag", \
@@ -51,6 +49,9 @@ def main():
     background_model = 0
     global fullhists
     fullhists = ops.full
+    global mass_lst
+    #mass_lst = [1000, 2000, 3000]
+    mass_lst = CONF.mass_lst
     global plt_lst
     plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
         "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
@@ -64,7 +65,7 @@ def main():
         plt_lst = ["mHH_pole"]
 
     # create output file
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
     print "input is", inputpath
     output = open(inputpath + "sum%s_%s.tex" % ("" if background_model==0 else str(background_model), inputdir), "w")
     global outroot

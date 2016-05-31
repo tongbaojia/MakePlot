@@ -3,6 +3,7 @@ import ROOT, rootlogon, helpers
 import argparse, copy, glob, os, sys, time
 #for parallel processing!
 import multiprocessing as mp
+import config as CONF
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 #this is probably the worse parallel effort
@@ -22,9 +23,9 @@ def split(targetpath="data_test"):
     ops = options()
     nfiles = ops.nfiles
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/TEST/" + targetpath
+    inputpath = CONF.inputpath + "TEST/" + targetpath
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/TEST/" +  targetpath
+    outputpath = CONF.inputpath + "TEST/" +  targetpath
     helpers.checkpath(outputpath)
 
     f = ROOT.TFile(inputpath + "/" + "hist-MiniNTuple.root", "read")

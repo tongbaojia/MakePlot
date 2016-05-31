@@ -6,13 +6,14 @@ import helpers
 import os
 import sys
 import time
+import config as CONF
 #end of import for now
 
 ROOT.gROOT.SetBatch(True)
 
 #set global variables
 #set output directory
-outputdir = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
+outputdir = CONF.outplotpath
 mass_lst = [1000, 2000, 3000]
 #mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 
@@ -21,7 +22,7 @@ def main():
 
     ops = options()
     # create output file
-    output = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/sig_truth.root", "recreate")
+    output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
     # select the cuts
     cut_lst = ["truth_2j_2trk/nh_matched", "truth_2j_2trk/nb_matched", \
     "truth_2j_2trk/nh_double_matched", "truth_2j_2trk/nb_double_matched",\
@@ -55,7 +56,7 @@ def DrawSignalTruth(outputroot, cut_lst, inputdir, outputname="", normalization=
 
         for j, mass in enumerate(mass_lst):
             #here could be changed to have more options
-            input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
+            input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
             temp_mc = input_mc.Get(cut).Clone()
             outputroot.cd()
             temp_mc.SetName("RSG" + "_" + str(mass) + "_" + cut.replace("/", "_"))

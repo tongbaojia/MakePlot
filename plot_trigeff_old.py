@@ -7,6 +7,7 @@ import helpers
 import os
 import sys
 import time
+import config as CONF
 
 ROOT.gROOT.SetBatch(True)
 #ROOT.gROOT.Macro("../../XhhCommon/post_processing/helpers.C")
@@ -15,8 +16,8 @@ ROOT.gROOT.SetBatch(True)
 def main():
 
     # create output file
-    output = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/Analysis/Plot/Trig_eff.root", "recreate")
-    outputdir = "/afs/cern.ch/work/b/btong/bbbb/Analysis/Plot/"
+    output = ROOT.TFile.Open(CONF.outplotpath + "Trig_eff.root", "recreate")
+    outputdir = CONF.outplotpath
     # setup canvas
     canv = ROOT.TCanvas("Trig", "Trig", 800, 800)
     # load input MC file
@@ -24,7 +25,7 @@ def main():
     eff_lst = ["j_Pt_t", "j_Eta", "j_Phi"]
     for plot_name in eff_lst:
 
-        input_mc = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/Analysis/Output/trig_ttbarnonhad/hist-MiniNTuple.root ")
+        input_mc = ROOT.TFile.Open(CONF.inputpath + "trig_ttbarnonhad/hist-MiniNTuple.root ")
         allevt_mc = input_mc.Get("PassLep_%s" % plot_name)
         passevt_mc = input_mc.Get("PassTrig_%s" % plot_name)
         eff_mc = ROOT.TEfficiency(passevt_mc, allevt_mc)
@@ -40,7 +41,7 @@ def main():
         eff_mc.GetPaintedGraph().SetMaximum(1.5)
         eff_mc.GetPaintedGraph().SetMinimum(0)
         # load input data file
-        input_data = ROOT.TFile.Open("/afs/cern.ch/work/b/btong/bbbb/Analysis/Output/trig_data/hist-MiniNTuple.root")
+        input_data = ROOT.TFile.Open(CONF.inputpath + "trig_data/hist-MiniNTuple.root")
         allevt_data = input_data.Get("PassLep_%s" % plot_name)
         passevt_data = input_data.Get("PassTrig_%s" % plot_name)
         eff_data = ROOT.TEfficiency(passevt_data, allevt_data)

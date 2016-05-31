@@ -2,10 +2,11 @@ import argparse, array, copy, os, sys, glob
 import ROOT, rootlogon
 import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 from helpers import round_sig
+import confg as CONF
+ROOT.gROOT.SetBatch()
+
 
 treename  = "XhhMiniNtuple"
-ROOT.gROOT.SetBatch()
-mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 
 #define functions
@@ -26,11 +27,13 @@ def main():
 def dump(finaldis="l"):
 
     pltname = "_" + finaldis
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir 
+    inputpath = CONF.inputpath + inputdir 
     outputpath = inputpath + "/Limitinput/"
     global pltoutputpath
     pltoutputpath = inputpath + "/Plot/"+ "Smooth/"
     ifile = ROOT.TFile(inputpath + "/" + "sum_" + inputdir + ".root")
+    global mass_lst
+    mass_lst = CONF.mass_lst
 
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)

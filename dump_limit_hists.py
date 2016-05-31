@@ -12,6 +12,7 @@ import glob
 from math import sqrt
 from Xhh4bUtils.BkgFit.BackgroundFit_MultiChannel import BackgroundFit
 from Xhh4bUtils.BkgFit.HistoTools import BlindData2bSR
+import config as CONF
 
 treename  = "XhhMiniNtuple"
 
@@ -212,7 +213,7 @@ def options():
     parser.add_argument("--mc")
     parser.add_argument("--zjets")
     parser.add_argument("--suffix")
-    parser.add_argument("--output", default="/afs/cern.ch/user/b/btong/work/bbbb/Analysis/Output")
+    parser.add_argument("--output", default=CONF.inputpath)
 
     return parser.parse_args()
 

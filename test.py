@@ -1,8 +1,8 @@
-import ROOT, rootlogon
+import ROOT, rootlogon, helpers
 import argparse, copy, glob, os, sys, time
-import helpers
 from Xhh4bUtils.BkgFit.BackgroundFit_Ultimate import BackgroundFit
 import Xhh4bUtils.BkgFit.smoothfit as smoothfit
+import config as CONF
 #for parallel processing!
 import multiprocessing as mp
 #end of import for now
@@ -50,6 +50,9 @@ def main():
     background_model = 0
     global fullhists
     fullhists = ops.full
+    global mass_lst
+    #mass_lst = [1000, 2000, 3000]
+    mass_lst = CONF.mass_lst
     global plt_lst
     plt_lst = ["mHH_l", "mHH_pole", "leadHCand_Mass", "sublHCand_Mass", \
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
@@ -60,7 +63,7 @@ def main():
         plt_lst = ["mHH_pole"]
 
     # create output file
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
     print "input is", inputpath
     output = open(inputpath + "sum%s_%s.tex" % ("" if background_model==0 else str(background_model), inputdir), "w")
     global outroot

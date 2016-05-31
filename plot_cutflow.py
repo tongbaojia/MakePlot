@@ -1,12 +1,6 @@
-import ROOT, rootlogon
-import argparse
-import array
-import copy
-import glob
-import helpers
-import os
-import sys
-import time
+import ROOT, rootlogon, helpers
+import argparse, array, copy, glob,  os, sys, time
+import config as CONF
 
 ROOT.gROOT.SetBatch(True)
 
@@ -17,9 +11,9 @@ def main():
     inputdir = ops.inputdir
 
     global inputpath
-    inputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/"
+    inputpath = CONF.inputpath + inputdir + "/"
     global outputpath
-    outputpath = "/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/" + inputdir + "/" + "Plot/Tables/"
+    outputpath = CONF.outputpath + inputdir + "/" + "Plot/Tables/"
     global blind
     blind=True
 
