@@ -77,7 +77,7 @@ def main():
 
     #set the input tasks!
     inputtasks = []
-    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test.root", "histname":"ttbar"})
+    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "histname":"ttbar"})
     inputtasks.append({"inputdir":inputpath + "zjets_test/hist-MiniNTuple.root", "histname":"zjet"})
     inputtasks.append({"inputdir":inputpath + "data_test/hist-MiniNTuple.root", "histname":"data"})
     for mass in mass_lst:
@@ -106,7 +106,7 @@ def main():
     print "Start Fit!"
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-        inputpath + "ttbar_comb_test.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est"))

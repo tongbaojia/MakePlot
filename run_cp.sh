@@ -6,7 +6,7 @@ channels=(jl425 jl450 jl400js275 jl425js275 jl450js275 jl400js300 jl425js300 jl4
 #for gather tables and histograms
 
 for ch in ${channels[@]}; do
-	python get_count.py --inputdir $ch --full True
+	python get_count.py --inputdir $ch
 	#python plot.py --inputdir $ch
 	#python plot_trigeff.py --inputdir $ch
 	#python plot_sigeff.py --inputdir $ch

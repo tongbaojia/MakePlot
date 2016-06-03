@@ -12,7 +12,7 @@ ROOT.gROOT.SetBatch(True)
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--nfiles", default=7)
+    parser.add_argument("--nfiles", default=14)
     return parser.parse_args()
 
 
@@ -62,6 +62,7 @@ def split(targetpath="data_test"):
 
 def main():
     split(targetpath="data_test")
+    split(targetpath="ttbar_comb_test")
     split(targetpath="signal_QCD")
 
 #def clearbranches():

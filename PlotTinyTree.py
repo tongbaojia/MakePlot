@@ -14,7 +14,7 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 
 class eventHists:
 
-    fullhist = True # will take 3 minutes to generate all histograms; 3 times more time...
+    fullhist = False # will take 3 minutes to generate all histograms; 3 times more time...
 
     def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
@@ -123,20 +123,19 @@ class massregionHists:
         self.Control = eventHists(region + "_" + "Control", outputroot, reweight)
         self.Signal = eventHists(region + "_" + "Signal", outputroot, reweight)
         self.ZZ = eventHists(region + "_" + "ZZ", outputroot, reweight)
-        # self.Rhh20  = eventHists(region + "_" + "Rhh20", outputroot)
-        # self.Rhh30  = eventHists(region + "_" + "Rhh30", outputroot)
-        # self.Rhh40  = eventHists(region + "_" + "Rhh40", outputroot)
-        # self.Rhh50  = eventHists(region + "_" + "Rhh50", outputroot)
-        # self.Rhh60  = eventHists(region + "_" + "Rhh60", outputroot)
-        # self.Rhh70  = eventHists(region + "_" + "Rhh70", outputroot)
-        # self.Rhh80  = eventHists(region + "_" + "Rhh80", outputroot)
-        # self.Rhh90  = eventHists(region + "_" + "Rhh90", outputroot)
-        # self.Rhh100 = eventHists(region + "_" + "Rhh100", outputroot)
-        # self.Rhh110 = eventHists(region + "_" + "Rhh110", outputroot)
-        # self.Rhh120 = eventHists(region + "_" + "Rhh120", outputroot)
-        # self.Rhh130 = eventHists(region + "_" + "Rhh130", outputroot)
-        # self.Rhh140 = eventHists(region + "_" + "Rhh140", outputroot)
-        # self.Rhh150 = eventHists(region + "_" + "Rhh150", outputroot)
+
+        #for specific studies!
+        self.studylst = []
+        for i, cut in enumerate(range(20, 160, 20)):
+            for j, masssplit in enumerate([" and event.j0_m > 125 and event.j1_m > 114",\
+            " and event.j0_m < 125 and event.j1_m > 114",\
+            " and event.j0_m < 125 and event.j1_m < 114",\
+            " and event.j0_m > 125 and event.j1_m < 114"]):
+                tempdic = {}
+                tempdic["histname"] = region + "_" + "r" + str(j) + "_" + "Rhh" + str(cut)
+                tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot)
+                tempdic["evencondition"] = "event.Xhh > 1.6 and event.Rhh < " + str(cut) + " and event.Rhh > " + str(cut - 20) + masssplit
+                self.studylst.append(tempdic)
 
     def Fill(self, event, weight=-1):
         #self.Incl.Fill(event)
@@ -149,37 +148,11 @@ class massregionHists:
         if event.Xhh > 1.6 and event.Xzz < 2.1:
             self.ZZ.Fill(event, weight)
 
-        #for mass mu qcd test
-        # if event.Xhh > 1.6 and event.Rhh < 20:
-        #     self.Rhh20.Fill(event)
-        # elif event.Rhh < 30:
-        #     self.Rhh30.Fill(event)
-        # elif event.Rhh < 30: 
-        #     self.Rhh30.Fill(event)
-        # elif event.Rhh < 40: 
-        #     self.Rhh40.Fill(event)
-        # elif event.Rhh < 50: 
-        #     self.Rhh50.Fill(event)
-        # elif event.Rhh < 60: 
-        #     self.Rhh60.Fill(event)
-        # elif event.Rhh < 70: 
-        #     self.Rhh70.Fill(event)
-        # elif event.Rhh < 80: 
-        #     self.Rhh80.Fill(event)
-        # elif event.Rhh < 90: 
-        #     self.Rhh90.Fill(event)
-        # elif event.Rhh < 100: 
-        #     self.Rhh100.Fill(event)
-        # elif event.Rhh < 110: 
-        #     self.Rhh110.Fill(event)
-        # elif event.Rhh < 120: 
-        #     self.Rhh120.Fill(event)
-        # elif event.Rhh < 130: 
-        #     self.Rhh130.Fill(event)
-        # elif event.Rhh < 140: 
-        #     self.Rhh140.Fill(event)
-        # elif event.Rhh < 150: 
-        #     self.Rhh150.Fill(event)
+        #for specific studies!
+        for tempdic in self.studylst:
+            if eval(tempdic["evencondition"]):
+                tempdic["eventHists"].Fill(event, weight)
+
 
     def Write(self, outputroot):
         #self.Incl.Write(outputroot)
@@ -187,20 +160,10 @@ class massregionHists:
         self.Control.Write(outputroot)
         self.Signal.Write(outputroot)
         self.ZZ.Write(outputroot)
-        # self.Rhh20.Write(outputroot)
-        # self.Rhh30.Write(outputroot) 
-        # self.Rhh40.Write(outputroot) 
-        # self.Rhh50.Write(outputroot) 
-        # self.Rhh60.Write(outputroot) 
-        # self.Rhh70.Write(outputroot) 
-        # self.Rhh80.Write(outputroot) 
-        # self.Rhh90.Write(outputroot)
-        # self.Rhh100.Write(outputroot)
-        # self.Rhh110.Write(outputroot)
-        # self.Rhh120.Write(outputroot)
-        # self.Rhh130.Write(outputroot)
-        # self.Rhh140.Write(outputroot)
-        # self.Rhh150.Write(outputroot)
+
+        #for specific studies!
+        for tempdic in self.studylst:
+            tempdic["eventHists"].Write(outputroot)
 
 #reweighting is done here: what a genius design
 class trkregionHists:
@@ -248,6 +211,7 @@ class trkregionHists:
                 if tempw1 > 0:
                     weight *= tempw1
             self.Trk4.Fill(event, weight)
+
     def Write(self, outputroot):
         self.Trk0.Write(outputroot)
         #self.Trk1.Write(outputroot)
@@ -258,7 +222,7 @@ class trkregionHists:
 
 class regionHists:
     def __init__(self, outputroot):
-        self.NoTag  = trkregionHists("NoTag", outputroot, reweight=True)
+        self.NoTag  = trkregionHists("NoTag", outputroot, reweight=False)
         self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
         self.TwoTag = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
@@ -341,32 +305,37 @@ def main():
     global inputpath
     inputpath = CONF.inputpath + "TEST/"
     global outputpath
-    outputpath = CONF.outputpath + "test/"
+    outputpath = CONF.outputpath + "musplit_test/"
     helpers.checkpath(outputpath)
     #for testing
     #analysis(pack_input("zjets_test"))
 
     #real job; full chain 2 mins...just data is 50 seconds
-    nsplit = 7
+    nsplit = 14
+    split_list = ["signal_QCD"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     inputtasks = []
-    # inputtasks.append(pack_input("ttbar_comb_test"))
+    for split_file in split_list:
+        for i in range(nsplit):
+            inputtasks.append(pack_input(split_file, inputsplit=i))
+            
     # inputtasks.append(pack_input("zjets_test"))
-    # for i, mass in enumerate(CONF.mass_lst):
-    #     inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
-    for i in range(nsplit):
-        inputtasks.append(pack_input("data_test", inputsplit=i))
+    #     for i, mass in enumerate(CONF.mass_lst):
+    #         inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
     #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(analysis, inputtasks)
     #all the other extra set of MCs
-    targetpath = outputpath + "data_test/"
-    targetfiles = glob.glob(targetpath + "hist_*.root")
-    haddcommand = ["hadd", "-f", targetpath + "hist.root"]
-    haddcommand += targetfiles
-    #print haddcommand
-    subprocess.call(haddcommand)
+    for split_file in split_list:
+        targetpath = outputpath + split_file + "/"
+        targetfiles = glob.glob(targetpath + "hist_*.root")
+        haddcommand = ["hadd", "-f", targetpath + "hist.root"]
+        haddcommand += targetfiles
+        #print haddcommand
+        subprocess.call(haddcommand)
+
+
     #analysis("data_test") #2 mins! 4 mins with expanded...
     #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))

@@ -6,7 +6,7 @@ channels=(b70 b77 b80 b85 b90 SB58 SB68 SB78 SB88 SB98 SB108 SB128 SB168 SB999 j
 #for gather tables and histograms
 
 for ch in ${channels[@]}; do
-	python get_count.py --inputdir $ch --full True
+	python get_count.py --inputdir $ch #--full True
 	#python plot.py --inputdir $ch
 	#python plot_trigeff.py --inputdir $ch
 	#python plot_sigeff.py --inputdir $ch
