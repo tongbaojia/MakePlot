@@ -47,19 +47,19 @@ def main():
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
 
     # #signalregion shape comparison
-    # inputroot = "sum_" + inputdir + ".root"
-    # DrawSRcomparison(inputroot, inputdata="ttbar")
-    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    # DrawSRcomparison(inputroot, inputdata="qcd_est")
-    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    inputroot = "sum_" + inputdir + ".root"
+    DrawSRcomparison(inputroot, inputdata="ttbar")
+    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="qcd_est")
+    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
     # #draw the mhh before and after scale
-    # DrawScalecomparison(inputroot, norm=False)
-    # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    DrawScalecomparison(inputroot, norm=False)
+    DrawScalecomparison(inputroot, norm=True, Logy=1)
 
 def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
     #print inputdir

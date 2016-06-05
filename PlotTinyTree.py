@@ -126,16 +126,16 @@ class massregionHists:
 
         #for specific studies!
         self.studylst = []
-        for i, cut in enumerate(range(20, 160, 20)):
-            for j, masssplit in enumerate([" and event.j0_m > 125 and event.j1_m > 114",\
-            " and event.j0_m < 125 and event.j1_m > 114",\
-            " and event.j0_m < 125 and event.j1_m < 114",\
-            " and event.j0_m > 125 and event.j1_m < 114"]):
-                tempdic = {}
-                tempdic["histname"] = region + "_" + "r" + str(j) + "_" + "Rhh" + str(cut)
-                tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot)
-                tempdic["evencondition"] = "event.Xhh > 1.6 and event.Rhh < " + str(cut) + " and event.Rhh > " + str(cut - 20) + masssplit
-                self.studylst.append(tempdic)
+        # for i, cut in enumerate(range(20, 160, 20)):
+        #     for j, masssplit in enumerate([" and event.j0_m > 125 and event.j1_m > 114",\
+        #     " and event.j0_m < 125 and event.j1_m > 114",\
+        #     " and event.j0_m < 125 and event.j1_m < 114",\
+        #     " and event.j0_m > 125 and event.j1_m < 114"]):
+        #         tempdic = {}
+        #         tempdic["histname"] = region + "_" + "r" + str(j) + "_" + "Rhh" + str(cut)
+        #         tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot)
+        #         tempdic["evencondition"] = "event.Xhh > 1.6 and event.Rhh < " + str(cut) + " and event.Rhh > " + str(cut - 20) + masssplit
+        #         self.studylst.append(tempdic)
 
     def Fill(self, event, weight=-1):
         #self.Incl.Fill(event)
@@ -143,7 +143,7 @@ class massregionHists:
             self.Signal.Fill(event, weight)
         elif event.Rhh < 35.8:
             self.Control.Fill(event, weight)
-        elif event.Rhh < 108:
+        elif event.Rhh < 108 and (event.j0_m > 125 or event.j1_m > 114):
             self.Sideband.Fill(event, weight)
         if event.Xhh > 1.6 and event.Xzz < 2.1:
             self.ZZ.Fill(event, weight)
@@ -305,35 +305,35 @@ def main():
     global inputpath
     inputpath = CONF.inputpath + "TEST/"
     global outputpath
-    outputpath = CONF.outputpath + "musplit_test/"
+    outputpath = CONF.outputpath + "mutuna_test/"
     helpers.checkpath(outputpath)
     #for testing
-    #analysis(pack_input("zjets_test"))
+    analysis(pack_input("zjets_test"))
 
-    #real job; full chain 2 mins...just data is 50 seconds
-    nsplit = 14
-    split_list = ["signal_QCD"] #["data_test", "ttbar_comb_test", "signal_QCD"]
-    inputtasks = []
-    for split_file in split_list:
-        for i in range(nsplit):
-            inputtasks.append(pack_input(split_file, inputsplit=i))
+    ##real job; full chain 2 mins...just data is 50 seconds
+    # nsplit = 14
+    # split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    # inputtasks = []
+    # for split_file in split_list:
+    #     for i in range(nsplit):
+    #         inputtasks.append(pack_input(split_file, inputsplit=i))
             
     # inputtasks.append(pack_input("zjets_test"))
-    #     for i, mass in enumerate(CONF.mass_lst):
-    #         inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
-    #parallel compute!
-    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    npool = min(len(inputtasks), mp.cpu_count()-1)
-    pool = mp.Pool(npool)
-    pool.map(analysis, inputtasks)
-    #all the other extra set of MCs
-    for split_file in split_list:
-        targetpath = outputpath + split_file + "/"
-        targetfiles = glob.glob(targetpath + "hist_*.root")
-        haddcommand = ["hadd", "-f", targetpath + "hist.root"]
-        haddcommand += targetfiles
-        #print haddcommand
-        subprocess.call(haddcommand)
+    # for i, mass in enumerate(CONF.mass_lst):
+    #     inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+    # #parallel compute!
+    # print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    # npool = min(len(inputtasks), mp.cpu_count()-1)
+    # pool = mp.Pool(npool)
+    # pool.map(analysis, inputtasks)
+    # #all the other extra set of MCs
+    # for split_file in split_list:
+    #     targetpath = outputpath + split_file + "/"
+    #     targetfiles = glob.glob(targetpath + "hist_*.root")
+    #     haddcommand = ["hadd", "-f", targetpath + "hist.root"]
+    #     haddcommand += targetfiles
+    #     #print haddcommand
+    #     subprocess.call(haddcommand)
 
 
     #analysis("data_test") #2 mins! 4 mins with expanded...

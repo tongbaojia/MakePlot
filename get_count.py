@@ -107,7 +107,7 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est"))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")

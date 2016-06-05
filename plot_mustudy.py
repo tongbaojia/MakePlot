@@ -2,6 +2,10 @@ import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 import helpers
 import config as CONF
+from ROOT import *
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.gROOT.LoadMacro("AtlasLabels.C")
+SetAtlasStyle()
 
 ROOT.gROOT.SetBatch(True)
 
@@ -77,10 +81,12 @@ def DrawFitParameters(region="4b"):
         f1.close()
     h_muqcd.SetMaximum(h_muqcd.GetMaximum() * 1.5)   
     h_muqcd.Draw("EPL")
+    myText(0.5, 0.87, 1, "Region: %s" % region, 42)
     canv.SaveAs(outputpath + h_muqcd.GetName() + ".pdf")
     canv.Clear()
     h_mutop.SetMaximum(h_mutop.GetMaximum() * 1.5) 
     h_mutop.Draw("EPL")
+    myText(0.5, 0.87, 1, "Region: %s" % region, 42)
     canv.SaveAs(outputpath + h_mutop.GetName() + ".pdf")
     canv.Close()
 
