@@ -19,8 +19,9 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="test")
+    parser.add_argument("--inputdir", default="reweight")
     parser.add_argument("--inputroot", default="sum")
+    parser.add_argument("--iter", default=0)
     return parser.parse_args()
 
 # zero the x-errors
@@ -92,9 +93,7 @@ def makeDataRatio(data, bkg):
 
 def graphFromHist(hist):
     hist.SetBinErrorOption(1)
-
     nBins = hist.GetNbinsX()
-
     dataGr = ROOT.TGraphAsymmErrors(nBins)
     dataGr.SetName("data_hh")
     for i in range(nBins):
@@ -211,13 +210,11 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
 
-
     data = makeTotBkg([data])[1]
     bkg = makeTotBkg([qcd])
     #bkg = makeTotBkg([ttbar,qcd,zjet]) #original
     # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
     ratios = makeDataRatio(data, bkg[1])
-
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
     c0.SetRightMargin(0.05)
@@ -247,7 +244,6 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     pad0.SetLogy(Logy)
     pad0.Draw()
     pad0.cd()
-
 
     bkg[0].SetTitle("")
     bkg[0].SetStats(0)
@@ -371,6 +367,16 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         myText(0.05, 0.17, 1, "y=%s + %s x + %sx^2, prob:%s" % (str('%.2g' % fitresult[0]), \
             str('%.2g' % fitresult[1]), str('%.2g' % fitresult[2]), str('%.2g' % fitprob)), 22)
 
+        #write out the reweighting parameteres; for things in the sideband only
+        if ("Sideband" in cut and True):
+            f_reweight = open(reweightfolder + "r" + str(iter_reweight + 1) + "_" + cut +".txt", "w")
+            f_reweight.write("reweighting function of: " + cut + "; prob is: " + str('%.2g' % fitprob) + "\n")
+            f_reweight.write("par0: " + str('%.3g' % fitresult[0]) + " \n")
+            f_reweight.write("par1: " + str('%.3g' % fitresult[1]) + " \n")
+            f_reweight.write("par2: " + str('%.3g' % fitresult[2]) + " \n")
+            f_reweight.close()
+
+
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
     line.SetLineStyle(1)
@@ -427,6 +433,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     pad1.Close()
     c0.Close()
 
+
 def dumpRegion(config):
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]")
@@ -469,15 +476,22 @@ def main():
     ops = options()
     global blinded
     blinded = True
+    global iter_reweight
+    iter_reweight = ops.iter
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
-    inputpath = CONF.inputdir + inputdir + "/"
-    rootinputpath = inputpath + inputroot + "_"
+    inputpath = CONF.inputpath + inputdir + "/"
+    rootinputpath = inputpath + inputroot + ("r" + str(iter_reweight) if iter_reweight > 0 else "") + "_"
     print "input root file is: ", rootinputpath
 
     global StatusLabel
     StatusLabel = "Internal" ##StatusLabel = "Preliminary"
+
+    global reweightfolder
+    reweightfolder = inputpath + "Reweight/"
+    helpers.checkpath(reweightfolder)
+
 
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
@@ -493,9 +507,8 @@ def main():
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        outputFolder = inputpath + inputroot + "Plot/" + region
-        if not os.path.exists(outputFolder):
-            os.makedirs(outputFolder)
+        outputFolder = inputpath + inputroot + "Plot_" + ("r" + str(iter_reweight) if iter_reweight > 0 else "") +  "/" + region
+        helpers.checkpath(outputFolder)
 
         for j, cut in enumerate(cut_lst):
             config = {}

@@ -12,6 +12,34 @@ ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
 
 
+#returns a dictionary of weights
+def get_reweight(filename):
+    f_reweight = open(reweightfolder + filename, "r")
+    par_weight = {}
+    for line in f_reweight:
+        lstline =  line.split()
+        #print lstline
+        if "par0" in line:
+            par_weight["par0"] = float(lstline[1])
+        if "par1" in line:
+            par_weight["par1"] = float(lstline[1])
+        if "par2" in line:
+            par_weight["par2"] = float(lstline[1])
+    #print par_weight
+    f_reweight.close()
+    return par_weight
+
+#calculate the weight based on the input dictionary as the instruction
+def calc_reweight(dic, event):
+    totalweight = 1
+    for x, v in dic.iteritems():
+        tempweight = 1
+        tempweight = v["par0"] + v["par1"] * eval(x) + v["par2"] * eval(x) ** 2
+        if tempweight >= 0:
+            totalweight *= tempweight
+    #print totalweight
+    return totalweight
+
 class eventHists:
 
     fullhist = False # will take 3 minutes to generate all histograms; 3 times more time...
@@ -143,7 +171,7 @@ class massregionHists:
             self.Signal.Fill(event, weight)
         elif event.Rhh < 35.8:
             self.Control.Fill(event, weight)
-        elif event.Rhh < 108 and (event.j0_m > 125 or event.j1_m > 114):
+        elif event.Rhh < 108:
             self.Sideband.Fill(event, weight)
         if event.Xhh > 1.6 and event.Xzz < 2.1:
             self.ZZ.Fill(event, weight)
@@ -175,41 +203,38 @@ class trkregionHists:
         self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)
         self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
+        if self.reweight:
+            self.Trk2s_dic = {}
+            self.Trk3_dic = {}
+            self.Trk4_dic = {}
+            #setup all the reweighting parameters here
+            self.Trk2s_dic["event.j0_trk1_pt"] = get_reweight("r" + str(iter_reweight) + "_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt")
+            self.Trk2s_dic["event.j1_trk1_pt"] = get_reweight("r" + str(iter_reweight) + "_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk3_dic["event.j0_trk1_pt"] = get_reweight("r" + str(iter_reweight) + "_ThreeTag_Sideband_leadHCand_trk1_Pt.txt")
+            self.Trk3_dic["event.j1_trk1_pt"] = get_reweight("r" + str(iter_reweight) + "_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk4_dic["event.j0_trk1_pt"] = get_reweight("r" + str(iter_reweight) + "_ThreeTag_Sideband_leadHCand_trk1_Pt.txt")
+            self.Trk4_dic["event.j1_trk1_pt"] = get_reweight("r" + str(iter_reweight) + "_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            #print self.Trk2s_dic
+            #print self.Trk3_dic
+            #print self.Trk4_dic
+
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, weight)
         # if event.j0_nTrk >= 1 or event.j1_nTrk >= 1:
         #     self.Trk1.Fill(event)
-        if event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
-            if self.reweight:
-                weight = event.weight
-                tempw0 = 0.77 + 0.0077 * event.j0_trk1_pt - 4.2E-05 * event.j0_trk1_pt ** 2
-                if tempw0 > 0:
-                    weight *= tempw0
-                tempw1 = 0.73 + 0.0087 * event.j1_trk1_pt - 4.7E-05 * event.j1_trk1_pt ** 2
-                if tempw1 > 0:
-                    weight *= tempw1
-            self.Trk2s.Fill(event, weight)
         # if event.j0_nTrk >= 2 or event.j1_nTrk >= 2:
         #     self.Trk2.Fill(event)
+        if event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
+            if self.reweight:
+                weight = event.weight * calc_reweight(self.Trk2s_dic, event)
+            self.Trk2s.Fill(event, weight)
         if (event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1):
             if self.reweight:
-                weight = event.weight
-                tempw0 = 0.41 + 0.017  * event.j0_trk1_pt - 7.8E-05 * event.j0_trk1_pt ** 2
-                if tempw0 > 0:
-                    weight *= tempw0
-                tempw1 = 0.46 + 0.017 * event.j1_trk1_pt - 8.2E-05 * event.j1_trk1_pt ** 2
-                if tempw1 > 0:
-                    weight *= tempw1
+                weight = event.weight * calc_reweight(self.Trk3_dic, event)
             self.Trk3.Fill(event, weight)
         if event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
             if self.reweight:
-                weight = event.weight
-                tempw0 = 0.41 + 0.017  * event.j0_trk1_pt - 7.8E-05 * event.j0_trk1_pt ** 2
-                if tempw0 > 0:
-                    weight *= tempw0
-                tempw1 = 0.46 + 0.017 * event.j1_trk1_pt - 8.2E-05 * event.j1_trk1_pt ** 2
-                if tempw1 > 0:
-                    weight *= tempw1
+                weight = event.weight * calc_reweight(self.Trk4_dic, event)
             self.Trk4.Fill(event, weight)
 
     def Write(self, outputroot):
@@ -221,8 +246,8 @@ class trkregionHists:
         self.Trk4.Write(outputroot)
 
 class regionHists:
-    def __init__(self, outputroot):
-        self.NoTag  = trkregionHists("NoTag", outputroot, reweight=False)
+    def __init__(self, outputroot, reweight):
+        self.NoTag  = trkregionHists("NoTag", outputroot, reweight)
         self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
         self.TwoTag = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
@@ -260,7 +285,7 @@ def analysis(inputconfig, DEBUG=False):
 
     helpers.checkpath(outputpath + inputfile)
     outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
-    AllHists = regionHists(outroot)
+    AllHists = regionHists(outroot, turnon_reweight)
     #read the input file
     f = ROOT.TFile(inputpath + inputfile + "/" + inputroot, "read")
     #load the target tree
@@ -296,7 +321,7 @@ def pack_input(inputfile, inputsplit=-1):
     dic = {}
     dic["inputfile"] = inputfile
     dic["inputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit  >= 0 else "") + ".root"
-    dic["outputroot"] = "hist" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ".root"
+    dic["outputroot"] = "hist" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ("_r" + str(iter_reweight) if turnon_reweight else "") +".root"
     dic["DEBUG"] = False
     return dic
 
@@ -305,35 +330,49 @@ def main():
     global inputpath
     inputpath = CONF.inputpath + "TEST/"
     global outputpath
-    outputpath = CONF.outputpath + "mutuna_test/"
+    outputpath = CONF.outputpath + "reweight/"
     helpers.checkpath(outputpath)
+    global turnon_reweight #reweight or not
+    turnon_reweight = True
+    global iter_reweight #iterative reweight or not
+    iter_reweight = 0
+    global reweightfolder #where the reweighting parameter sits
+    reweightfolder = outputpath + "Reweight/"
     #for testing
-    analysis(pack_input("zjets_test"))
+    #analysis(pack_input("zjets_test"))
 
-    ##real job; full chain 2 mins...just data is 50 seconds
-    # nsplit = 14
-    # split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
-    # inputtasks = []
-    # for split_file in split_list:
-    #     for i in range(nsplit):
-    #         inputtasks.append(pack_input(split_file, inputsplit=i))
-            
-    # inputtasks.append(pack_input("zjets_test"))
-    # for i, mass in enumerate(CONF.mass_lst):
-    #     inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+    #real job; full chain 2 mins...just data is 50 seconds
+    nsplit = 14
+    split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    inputtasks = []
+    for split_file in split_list:
+        for i in range(nsplit):
+            inputtasks.append(pack_input(split_file, inputsplit=i))    
+    inputtasks.append(pack_input("zjets_test"))
+    for i, mass in enumerate(CONF.mass_lst):
+        inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+    ##only reweight data!
+    if turnon_reweight:
+        inputtasks = [] 
+        for i in range(nsplit):
+            inputtasks.append(pack_input("data_test", inputsplit=i))
+
     # #parallel compute!
-    # print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    # npool = min(len(inputtasks), mp.cpu_count()-1)
-    # pool = mp.Pool(npool)
-    # pool.map(analysis, inputtasks)
-    # #all the other extra set of MCs
-    # for split_file in split_list:
-    #     targetpath = outputpath + split_file + "/"
-    #     targetfiles = glob.glob(targetpath + "hist_*.root")
-    #     haddcommand = ["hadd", "-f", targetpath + "hist.root"]
-    #     haddcommand += targetfiles
-    #     #print haddcommand
-    #     subprocess.call(haddcommand)
+    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)
+    pool = mp.Pool(npool)
+    pool.map(analysis, inputtasks)
+    
+    #all the other extra set of MCs
+    for split_file in split_list:
+        targetpath = outputpath + split_file + "/"
+        targetfiles = []
+        for i in range(nsplit):
+            targetfiles += glob.glob(targetpath + ("hist_%s"% str(i)) + ("_r" + str(iter_reweight) if turnon_reweight else "") +  ".root")
+        haddcommand = ["hadd", "-f", targetpath + "hist" + ("_r" + str(iter_reweight) if turnon_reweight else "") + ".root"]
+        haddcommand += targetfiles
+        #print haddcommand
+        subprocess.call(haddcommand)
 
 
     #analysis("data_test") #2 mins! 4 mins with expanded...

@@ -37,7 +37,8 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="sb_test")
+    parser.add_argument("--inputdir", default="reweight")
+    parser.add_argument("--reweight", default="no")
     parser.add_argument("--full", default=True) #4times more time
     return parser.parse_args()
 
@@ -58,6 +59,16 @@ def main():
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     global plt_m
     plt_m = "_mHH_pole"
+    #if use reweighted configurations, needs to change this inputroot name
+    global inputroot
+    inputroot = "hist.root"
+    inputdataroot = "hist.root"
+    global doreweight
+    doreweight = ("no" not in ops.reweight)
+    if doreweight:
+        inputdataroot = "hist" + "_" + ops.reweight + ".root"
+    
+    print doreweight, inputdataroot
     #set fast test version, with all the significance output still
     if not fullhists:
         plt_lst = ["mHH_pole"]
@@ -65,9 +76,9 @@ def main():
     # create output file
     inputpath = CONF.inputpath + inputdir + "/"
     print "input is", inputpath
-    output = open(inputpath + "sum%s_%s.tex" % ("" if background_model==0 else str(background_model), inputdir), "w")
+    output = open(inputpath + "sum%s_%s.tex" % ("" if not doreweight else ops.reweight, inputdir), "w")
     global outroot
-    outroot = ROOT.TFile.Open(inputpath + "sum%s_%s.root" % ("" if background_model==0 else str(background_model), inputdir), "recreate")
+    outroot = ROOT.TFile.Open(inputpath + "sum%s_%s.root" % ("" if not doreweight else ops.reweight, inputdir), "recreate")
     #print GetEvtCount(inputpath + "ttbar_comb_test.root")
 
     # Create the master dictionary for cutflows and plots
@@ -75,11 +86,11 @@ def main():
 
     #set the input tasks!
     inputtasks = []
-    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/hist.root", "histname":"ttbar"})
-    inputtasks.append({"inputdir":inputpath + "zjets_test/hist.root", "histname":"zjet"})
-    inputtasks.append({"inputdir":inputpath + "data_test/hist.root", "histname":"data"})
+    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/" + inputroot, "histname":"ttbar"})
+    inputtasks.append({"inputdir":inputpath + "zjets_test/" + inputroot, "histname":"zjet"})
+    inputtasks.append({"inputdir":inputpath + "data_test/" + inputdataroot, "histname":"data"})
     for mass in mass_lst:
-        inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist.root" % mass, "histname":"RSG1_%i" % mass})
+        inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/" % mass + inputroot , "histname":"RSG1_%i" % mass})
 
     #start calculating the dictionary
     for task in inputtasks:
@@ -103,9 +114,9 @@ def main():
     #Do qcd background estimation from the fit
     print "Start Fit!"
     global fitresult
-    fitresult = BackgroundFit(inputpath + "data_test/hist.root", \
-        inputpath + "ttbar_comb_test/hist.root", inputpath + "zjets_test/hist.root", \
-        distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
+    fitresult = BackgroundFit(inputpath + "data_test/" + inputdataroot, \
+        inputpath + "ttbar_comb_test/" + inputroot, inputpath + "zjets_test/" + inputroot, \
+        distributionName = ["leadHCand_Mass", "sublHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est"))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")

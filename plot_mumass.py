@@ -2,10 +2,9 @@ import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 import helpers
 import config as CONF
-from ROOT import *
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
-SetAtlasStyle()
+ROOT.SetAtlasStyle()
 
 ROOT.gROOT.SetBatch(True)
 
