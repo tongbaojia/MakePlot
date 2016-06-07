@@ -14,8 +14,8 @@ ROOT.gROOT.SetBatch(True)
 #set global variables
 #set output directory
 outputdir = CONF.outplotpath
-mass_lst = [1000, 2000, 3000]
-#mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+mass_lst = [300, 1200, 2000, 3000]
+# mass_lst = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2250, 2500, 2750]
 
 
 def main():
@@ -23,11 +23,20 @@ def main():
     ops = options()
     # create output file
     output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
+
+    print output
     # select the cuts
-    cut_lst = ["truth_2j_2trk/nh_matched", "truth_2j_2trk/nb_matched", \
+    cut_lst = [path + data for path in ["truth_2j_2trk/", "truth_3j_3trk/"]
+		for data in ["nh0_pt", "nh1_pt", "nb0_pt", "nb1_pt", "nb2_pt", 
+				"nb3_pt", "h0h1_dR", "h0b0_dR", "h1b2_dR", 
+				"b0b1_dR", "b2b3_dR"]]
+
+    """
+    ["truth_2j_2trk/nh_matched", "truth_2j_2trk/nb_matched", \
     "truth_2j_2trk/nh_double_matched", "truth_2j_2trk/nb_double_matched",\
     "truth_3j_3trk/nh_matched", "truth_3j_3trk/nb_matched", \
     "truth_3j_3trk/nh_double_matched", "truth_3j_3trk/nb_double_matched"]
+    """
 
     # # Draw the efficiency plot relative to the all normalization
     DrawSignalTruth(output, cut_lst, "TEST", "truth_")
@@ -45,7 +54,7 @@ def DrawSignalTruth(outputroot, cut_lst, inputdir, outputname="", normalization=
     lowmass = -50
     highmass = 3150
     # load input MC file
-    maxbincontent = 1
+    maxbincontent = .4 # approx
     minbincontent = -0.01
 
     for i, cut in enumerate(cut_lst):
@@ -57,7 +66,19 @@ def DrawSignalTruth(outputroot, cut_lst, inputdir, outputname="", normalization=
         for j, mass in enumerate(mass_lst):
             #here could be changed to have more options
             input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
-            temp_mc = input_mc.Get(cut).Clone()
+	    if not input_mc:
+		print CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass
+	    try:
+                temp_mc = input_mc.Get(cut).Clone()
+	    except:
+		print cut
+		print mass
+		raise
+
+	    # rebin the hist for pt
+	    if cut.split("_")[-1] == "pt":
+		temp_mc.Rebin(10)
+
             outputroot.cd()
             temp_mc.SetName("RSG" + "_" + str(mass) + "_" + cut.replace("/", "_"))
             temp_mc.Write()
