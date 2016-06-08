@@ -19,7 +19,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="reweight")
+    parser.add_argument("--inputdir", default="reweight_0")
     parser.add_argument("--inputroot", default="sum")
     parser.add_argument("--iter", default=0)
     return parser.parse_args()
@@ -350,7 +350,10 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
     # Fit the ratio with a TF1
     if not ("Signal" in cut and blinded):
-        if ("trk1" in cut and "Pt" in cut): #for the subleading track jet fit
+        if ("trk0_Pt" in cut): #for the leading track jet fit
+            testfit = ROOT.TF1("testfit", "pol2", 50, 500)
+            testfit.SetParameters(1, 0.000001, -0.0000001)
+        elif ("trk1_Pt" in cut): #for the subleading track jet fit
             testfit = ROOT.TF1("testfit", "pol2", 0, 200)
             testfit.SetParameters(0.6, 0.01, -0.0000001)
         else:
@@ -359,7 +362,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         #testfit.SetParLimits(0, -1, 2)
         #testfit.SetParLimits(1, -1, 1)
         #testfit.SetParLimits(1, -1, 1)
-        ratios[1].Fit("testfit")
+        ratios[1].Fit("testfit", "Q")
         testfit.SetLineColor(kRed)
         testfit.Draw("SAME")
         fitresult = testfit.GetParameters()
@@ -440,12 +443,12 @@ def dumpRegion(config):
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebin=4)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 180, 240, 500]))
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebin=4)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 180, 240, 500]))
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass",   xTitle="J0 m [GeV]", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass",   xTitle="J1 m [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass",     xTitle="J1 m [GeV]", rebin=2)
     
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2)
@@ -509,7 +512,7 @@ def main():
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        outputFolder = inputpath + inputroot + "Plot" + ("_r" + str(iter_reweight - 1) if iter_reweight > 0 else "") +  "/" + region
+        outputFolder = inputpath + inputroot + "Plot_r" + str(iter_reweight) + "/" + region
         helpers.checkpath(outputFolder)
 
         for j, cut in enumerate(cut_lst):

@@ -46,13 +46,13 @@ def main():
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", dorel=True)
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All")
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True)
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
     # For cuts that don't exist in the cutflow plot
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
-    #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
 
 
 def options():
@@ -73,18 +73,21 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     # setup basic plot parameters
     # load input MC file
     eff_lst = []
-    graph_lst = []
     maxbincontent = 0.001
     minbincontent = -0.001
 
     for i, cut in enumerate(cut_lst):
         eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass, GeV; Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
+        eff_lst[i].SetLineColor(CONF.clr_lst[i])
+        eff_lst[i].SetMarkerStyle(20 + i)
+        eff_lst[i].SetMarkerColor(CONF.clr_lst[i])
+        eff_lst[i].SetMarkerSize(1)
 
         for mass in mass_lst:
             #here could be changed to have more options
             input_mc = ROOT.TFile.Open(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
-            cutflow_mc = input_mc.Get("CutFlowNoWeight").Clone() #notice here we use no weight for now!
-            cutflow_mc_w = input_mc.Get("CutFlowWeight").Clone()
+            cutflow_mc = input_mc.Get("CutFlowNoWeight") #notice here we use no weight for now!
+            cutflow_mc_w = input_mc.Get("CutFlowWeight")
             if dorel:
                 if i > 0:
                     normalization = cut_lst[i - 1]
@@ -108,22 +111,14 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             # print ratioerror(cutevt_mc, totevt_mc)
             input_mc.Close()
 
+        eff_lst[i].SetMaximum(maxbincontent * 1.5)
+        eff_lst[i].SetMinimum(minbincontent)
+        legend.AddEntry(eff_lst[i], cut.replace("_", " "), "apl")
         canv.cd()
-        #convert it to a TGraph
-        graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
-        graph_lst[i].SetLineColor(CONF.clr_lst[i])
-        graph_lst[i].SetMarkerStyle(20 + i)
-        graph_lst[i].SetMarkerColor(CONF.clr_lst[i])
-        graph_lst[i].SetMarkerSize(1)
-        graph_lst[i].SetMaximum(maxbincontent * 1.5)
-        graph_lst[i].SetMinimum(minbincontent)
-        legend.AddEntry(graph_lst[i], cut.replace("_", " "), "apl")
         if cut==cut_lst[0]: 
-            graph_lst[i].Draw("APC")
-            #gr.Draw("same L hist")
+            eff_lst[i].Draw("epl")
         else: 
-            graph_lst[i].Draw("PC")
-            #gr.Draw("same L hist")
+            eff_lst[i].Draw("same epl")
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)

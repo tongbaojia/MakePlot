@@ -712,7 +712,6 @@ def round_sig(x, sig=2):
     else:
         return round(x, sig-int(ROOT.TMath.Log10(abs(x))))
 
-
 def checkpath(outputpath):
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
@@ -728,4 +727,41 @@ def drawProgressBar(percent, barLen = 20):
             progress += " "
     print ("[ %s ] %.2f%%" % (progress, percent * 100))
 
+
+def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
+    #only for efficiency plot now!
+    x = array("f", [])
+    y = array("f", [])
+    exl = array("f", [])
+    eyl = array("f", [])
+    exh = array("f", [])
+    eyh = array("f", [])
+    #print pltrange
+    if pltrange==(0, 0):
+        xMin = hist.GetXaxis().GetXmin()
+        xMax = hist.GetXaxis().GetXmax()
+    else:
+        xMin = pltrange[0]
+        xMax = pltrange[1]
+    n = 0
+    for i in range(0, hist.GetNbinsX()):
+        if (hist.GetBinCenter(i) < xMin):
+            continue
+        if (hist.GetBinCenter(i) > xMax):
+            continue
+        if hist.GetBinContent(i) > cutvalue:
+            n += 1
+            x.append(hist.GetBinCenter(i))
+            y.append(hist.GetBinContent(i))
+            exl.append(0)
+            exh.append(0)
+            eyl.append(hist.GetBinError(i))
+            eyh.append(min(hist.GetBinError(i), 1 - hist.GetBinContent(i)))
+    #print n, x
+    gr = ROOT.TGraphAsymmErrors(n,x,y,exl,exh,eyl,eyh)
+    gr.GetXaxis().SetLimits(xMin, xMax)
+    gr.SetName(hist.GetName() + "_") #add _ to make sure no overlap pointer...
+    gr.GetXaxis().SetTitle(hist.GetXaxis().GetTitle())
+    gr.GetYaxis().SetTitle(hist.GetYaxis().GetTitle())
+    return gr
 

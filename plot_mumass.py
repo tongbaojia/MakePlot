@@ -149,7 +149,6 @@ def DrawMuqcd(qcdmc=False):
     input_ttbar.Close()
     input_zjet.Close()
 
-
 def DrawMuqcd_split(prename="", qcdmc=True):
 
     input_data = ROOT.TFile.Open(inputpath + "data_test/hist.root", "read")

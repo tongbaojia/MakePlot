@@ -127,46 +127,55 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
             temp_all.SetMinimum(minbincontent)
             temp_ref.SetMinimum(minbincontent)
 
+    graph_lst = []
+    
     for i, cut in enumerate(cut_lst):
         #print cut
-        cutflow_mc = input_mc.Get(cut + histname) #get the input histogram
-        cutflow_mc_ref = input_mc_ref.Get(cut + histname) #get the input histogram
+        sig_mc = input_mc.Get(cut + histname) #get the input histogram
+        sig_mc_ref = input_mc_ref.Get(cut + histname) #get the input histogram
         for j in range(1, temp_all.GetNbinsX()+1):
-            #temp_all.SetBinContent(j, ROOT.TMath.Sqrt(temp_all.GetBinContent(j) * temp_all.GetBinContent(j) + cutflow_mc.GetBinContent(j) * cutflow_mc.GetBinContent(j)))
-            temp_ref.SetBinContent(j, ROOT.TMath.Sqrt(temp_ref.GetBinContent(j) * temp_ref.GetBinContent(j) + cutflow_mc_ref.GetBinContent(j) * cutflow_mc_ref.GetBinContent(j)))
-            temp_all.SetBinContent(j, ROOT.TMath.Sqrt(temp_all.GetBinContent(j) * temp_all.GetBinContent(j) + cutflow_mc.GetBinContent(j) * cutflow_mc.GetBinContent(j)))
-            temp_ref.SetBinError(j, ROOT.TMath.Sqrt(temp_ref.GetBinError(j) * temp_ref.GetBinError(j) + cutflow_mc_ref.GetBinError(j) * cutflow_mc_ref.GetBinError(j)))
-            temp_all.SetBinError(j, ROOT.TMath.Sqrt(temp_all.GetBinError(j) * temp_all.GetBinError(j) + cutflow_mc.GetBinError(j) * cutflow_mc.GetBinError(j)))
+            #temp_all.SetBinContent(j, ROOT.TMath.Sqrt(temp_all.GetBinContent(j) * temp_all.GetBinContent(j) + sig_mc.GetBinContent(j) * sig_mc.GetBinContent(j)))
+            temp_ref.SetBinContent(j, ROOT.TMath.Sqrt(temp_ref.GetBinContent(j) * temp_ref.GetBinContent(j) + sig_mc_ref.GetBinContent(j) * sig_mc_ref.GetBinContent(j)))
+            temp_all.SetBinContent(j, ROOT.TMath.Sqrt(temp_all.GetBinContent(j) * temp_all.GetBinContent(j) + sig_mc.GetBinContent(j) * sig_mc.GetBinContent(j)))
+            temp_ref.SetBinError(j, ROOT.TMath.Sqrt(temp_ref.GetBinError(j) * temp_ref.GetBinError(j) + sig_mc_ref.GetBinError(j) * sig_mc_ref.GetBinError(j)))
+            temp_all.SetBinError(j, ROOT.TMath.Sqrt(temp_all.GetBinError(j) * temp_all.GetBinError(j) + sig_mc.GetBinError(j) * sig_mc.GetBinError(j)))
+        del(sig_mc_ref)
 
-        cutflow_mc.SetMaximum(maxbincontent * 1.5)
-        cutflow_mc.SetMinimum(minbincontent)
-        cutflow_mc.SetLineColor(CONF.clr_lst[i])
-        cutflow_mc.SetMarkerStyle(20 + i)
-        cutflow_mc.SetMarkerColor(CONF.clr_lst[i])
-        cutflow_mc.SetMarkerSize(1)
-        cutflow_mc.GetXaxis().SetRangeUser(plotrange[0], plotrange[1])
-        legend.AddEntry(cutflow_mc, cut.replace("_", " "), "apl")
+
+        graph_lst.append(helpers.TH1toTAsym(sig_mc, pltrange=plotrange))
+        graph_lst[i].SetMaximum(maxbincontent * 1.5)
+        graph_lst[i].SetMinimum(minbincontent)
+        graph_lst[i].SetLineColor(CONF.clr_lst[i])
+        graph_lst[i].SetMarkerStyle(20 + i)
+        graph_lst[i].SetMarkerColor(CONF.clr_lst[i])
+        graph_lst[i].SetMarkerSize(1)
+        legend.AddEntry(graph_lst[i], cut.replace("_", " "), "APL")
         
         if cut==cut_lst[0]: 
-            cutflow_mc.Draw("epl")
+            graph_lst[i].Draw("APC")
         else: 
-            cutflow_mc.Draw("same epl")
+            graph_lst[i].Draw("PC")
+        del(sig_mc)
 
-    temp_all.SetLineColor(2)
-    temp_all.SetMarkerStyle(5)
-    temp_all.SetMarkerColor(2)
-    temp_all.SetMarkerSize(1)
-    temp_all.GetXaxis().SetRangeUser(plotrange[0], plotrange[1])
-    legend.AddEntry(temp_all, temp_all.GetName(), "apl")
-    temp_all.Draw("same ep")
+    graph_all = helpers.TH1toTAsym(temp_all)
+    graph_all.SetLineColor(2)
+    graph_all.SetLineStyle(2)
+    graph_all.SetMarkerStyle(5)
+    graph_all.SetMarkerColor(2)
+    graph_all.SetMarkerSize(1)
+    graph_all.GetXaxis().SetRangeUser(plotrange[0], plotrange[1])
+    legend.AddEntry(graph_all, graph_all.GetName().replace("_", " "), "APL")
+    graph_all.Draw("PC")
 
-    temp_ref.SetLineColor(1)
-    temp_ref.SetMarkerStyle(4)
-    temp_ref.SetMarkerColor(1)
-    temp_ref.SetMarkerSize(1)
-    temp_ref.GetXaxis().SetRangeUser(plotrange[0], plotrange[1])
-    legend.AddEntry(temp_ref, temp_ref.GetName(), "apl")
-    temp_ref.Draw("same ep")
+    graph_ref = helpers.TH1toTAsym(temp_ref)
+    graph_ref.SetLineColor(1)
+    graph_ref.SetLineStyle(3)
+    graph_ref.SetMarkerStyle(4)
+    graph_ref.SetMarkerColor(1)
+    graph_ref.SetMarkerSize(1)
+    graph_ref.GetXaxis().SetRangeUser(plotrange[0], plotrange[1])
+    legend.AddEntry(graph_ref, graph_ref.GetName().replace("_", " "), "APL")
+    graph_ref.Draw("PC")
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
@@ -245,7 +254,13 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     canv.Close()
     input_mc.Close()
     input_mc_ref.Close()
-
+    #clean up all the pointers...
+    del(temp_all)
+    del(temp_ref)
+    del(temp_ratio)
+    del(graph_all)
+    del(graph_ref)
+    del(graph_lst)
 
 
 if __name__ == "__main__":

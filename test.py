@@ -37,7 +37,7 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="reweight")
+    parser.add_argument("--inputdir", default="reweight_0")
     parser.add_argument("--reweight", default="no")
     parser.add_argument("--full", default=True) #4times more time
     return parser.parse_args()
@@ -66,8 +66,8 @@ def main():
     plt_m = "_mHH_pole"
     #if use reweighted configurations, needs to change this inputroot name
     global inputroot
-    inputroot = "hist.root"
-    inputdataroot = "hist.root"
+    inputroot = CONF.hist_r
+    inputdataroot = CONF.hist_r
     global doreweight
     doreweight = ("no" not in ops.reweight)
     if doreweight:
