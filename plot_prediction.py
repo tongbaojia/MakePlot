@@ -140,9 +140,9 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
 
         cutflow_mc.SetMaximum(maxbincontent * 1.5)
         cutflow_mc.SetMinimum(minbincontent)
-        cutflow_mc.SetLineColor(i%7 + 1)
+        cutflow_mc.SetLineColor(CONF.clr_lst[i])
         cutflow_mc.SetMarkerStyle(20 + i)
-        cutflow_mc.SetMarkerColor(i%7 + 1)
+        cutflow_mc.SetMarkerColor(CONF.clr_lst[i])
         cutflow_mc.SetMarkerSize(1)
         cutflow_mc.GetXaxis().SetRangeUser(plotrange[0], plotrange[1])
         legend.AddEntry(cutflow_mc, cut.replace("_", " "), "apl")

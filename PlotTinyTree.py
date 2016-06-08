@@ -4,13 +4,21 @@
 ###For a more proper anlaysis, do the c++ standard way please
 import ROOT, rootlogon, helpers
 import config as CONF
-import time, os, subprocess, glob
+import time, os, subprocess, glob, argparse
 #for parallel processing!
 import multiprocessing as mp
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
 
+
+
+#define functions
+def options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--doreweight", default=False)
+    parser.add_argument("--iter", default=0)
+    return parser.parse_args()
 
 #returns a dictionary of weights
 def get_reweight(filename):
@@ -42,7 +50,7 @@ def calc_reweight(dic, event):
 
 class eventHists:
 
-    fullhist = False # will take 3 minutes to generate all histograms; 3 times more time...
+    fullhist = True # will take 3 minutes to generate all histograms; 3 times more time...
 
     def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
@@ -64,6 +72,7 @@ class eventHists:
             self.h_deta       = ROOT.TH1F("hCandDeta",          "hCand #Delta#eta",  66,    0,  3.3)
             self.h_dphi       = ROOT.TH1F("hCandDphi",          "hCand #Delta#phi",  66, -3.3,  3.3)
             self.h_dr         = ROOT.TH1F("hCandDr",            "hCand #Deltar",     100,   0,    5)
+            self.h_pt_assy    = ROOT.TH1F("hCand_Pt_assy",      ";hCand p_{T} assym", 22, -0.05, 1.05)
             self.h0_m_s       = ROOT.TH1F("leadHCand_Mass_s",   ";Mass [GeV]",       40,   70,  170)
             self.h1_m_s       = ROOT.TH1F("sublHCand_Mass_s",   ";Mass [GeV]",       40,   70,  170)
             self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   0,  2000)
@@ -76,8 +85,8 @@ class eventHists:
             self.h1_trk_dr    = ROOT.TH1F("sublHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
             self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
             self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
-            self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.1, 1)
-            self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.1, 1)
+            self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.05, 1.05)
+            self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.05, 1.05)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 60,  0,  300, 60,  0,  300)
 
     def Fill(self, event, weight=-1):
@@ -97,7 +106,8 @@ class eventHists:
             self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
             self.h_deta.Fill(event.detaHH, weight)    
             self.h_dphi.Fill(event.dphiHH, weight)    
-            self.h_dr.Fill(event.drHH, weight)    
+            self.h_dr.Fill(event.drHH, weight) 
+            self.h_pt_assy.Fill((event.j0_pt - event.j1_pt)/(event.j0_pt + event.j1_pt), weight)
             self.h0_m_s.Fill(event.j0_m, weight)   
             self.h1_m_s.Fill(event.j1_m, weight)    
             self.h0_pt_m.Fill(event.j0_pt, weight)
@@ -128,7 +138,8 @@ class eventHists:
             self.mH0H1.Write() 
             self.h_deta.Write()    
             self.h_dphi.Write()    
-            self.h_dr.Write()     
+            self.h_dr.Write()  
+            self.h_pt_assy.Write()   
             self.h0_m_s.Write()   
             self.h1_m_s.Write()  
             self.h0_pt_m.Write()    
@@ -307,6 +318,9 @@ def analysis(inputconfig, DEBUG=False):
             #print i, " events done!"
         t.fChain.GetEntry(i)
         #print t.Xzz
+        #place a cut if necessary
+        # if ((t.j0_pt - t.j1_pt)/(t.j0_pt + t.j1_pt) > 0.15):
+        #     continue
         AllHists.Fill(t)
 
     #write all the output
@@ -327,15 +341,17 @@ def pack_input(inputfile, inputsplit=-1):
 
 def main():
     start_time = time.time()
+    ops = options()
+
     global inputpath
     inputpath = CONF.inputpath + "TEST/"
     global outputpath
     outputpath = CONF.outputpath + "reweight/"
     helpers.checkpath(outputpath)
     global turnon_reweight #reweight or not
-    turnon_reweight = True
+    turnon_reweight = bool(ops.doreweight)
     global iter_reweight #iterative reweight or not
-    iter_reweight = 0
+    iter_reweight = int(ops.iter)
     global reweightfolder #where the reweighting parameter sits
     reweightfolder = outputpath + "Reweight/"
     #for testing

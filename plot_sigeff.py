@@ -78,9 +78,9 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
     for i, cut in enumerate(cut_lst):
         eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass, GeV; Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
-        eff_lst[i].SetLineColor(2 + i)
+        eff_lst[i].SetLineColor(CONF.clr_lst[i])
         eff_lst[i].SetMarkerStyle(20 + i)
-        eff_lst[i].SetMarkerColor(2 + i)
+        eff_lst[i].SetMarkerColor(CONF.clr_lst[i])
         eff_lst[i].SetMarkerSize(1)
 
         for mass in mass_lst:

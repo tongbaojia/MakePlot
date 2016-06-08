@@ -369,7 +369,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
         #write out the reweighting parameteres; for things in the sideband only
         if ("Sideband" in cut and True):
-            f_reweight = open(reweightfolder + "r" + str(iter_reweight + 1) + "_" + cut +".txt", "w")
+            f_reweight = open(reweightfolder + "r" + str(iter_reweight) + "_" + cut +".txt", "w")
             f_reweight.write("reweighting function of: " + cut + "; prob is: " + str('%.2g' % fitprob) + "\n")
             f_reweight.write("par0: " + str('%.3g' % fitresult[0]) + " \n")
             f_reweight.write("par1: " + str('%.3g' % fitresult[1]) + " \n")
@@ -446,23 +446,25 @@ def dumpRegion(config):
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=array('d', [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 180, 240, 500]))
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass",   xTitle="J0 m [GeV]", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass",   xTitle="J1 m [GeV]", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2, Logy=1)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+    
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2, Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy")
 
     print config["outputdir"], "done!"
 
@@ -477,12 +479,12 @@ def main():
     global blinded
     blinded = True
     global iter_reweight
-    iter_reweight = ops.iter
+    iter_reweight = int(ops.iter)
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
     inputpath = CONF.inputpath + inputdir + "/"
-    rootinputpath = inputpath + inputroot + ("r" + str(iter_reweight) if iter_reweight > 0 else "") + "_"
+    rootinputpath = inputpath + inputroot + ("r" + str(iter_reweight - 1) if iter_reweight > 0 else "") + "_"
     print "input root file is: ", rootinputpath
 
     global StatusLabel
@@ -507,7 +509,7 @@ def main():
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        outputFolder = inputpath + inputroot + "Plot_" + ("r" + str(iter_reweight) if iter_reweight > 0 else "") +  "/" + region
+        outputFolder = inputpath + inputroot + "Plot" + ("_r" + str(iter_reweight - 1) if iter_reweight > 0 else "") +  "/" + region
         helpers.checkpath(outputFolder)
 
         for j, cut in enumerate(cut_lst):

@@ -57,6 +57,11 @@ def main():
     global plt_lst
     plt_lst = ["mHH_l", "mHH_pole", "leadHCand_Mass", "sublHCand_Mass", \
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
+    plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi", "hCand_Pt_assy",\
+        "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
+        "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
+        "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
+        "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
     global plt_m
     plt_m = "_mHH_pole"
     #if use reweighted configurations, needs to change this inputroot name
@@ -67,8 +72,7 @@ def main():
     doreweight = ("no" not in ops.reweight)
     if doreweight:
         inputdataroot = "hist" + "_" + ops.reweight + ".root"
-    
-    print doreweight, inputdataroot
+    print "reweight is: ", doreweight, " hence input is: ", inputdataroot
     #set fast test version, with all the significance output still
     if not fullhists:
         plt_lst = ["mHH_pole"]
@@ -116,7 +120,8 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/" + inputdataroot, \
         inputpath + "ttbar_comb_test/" + inputroot, inputpath + "zjets_test/" + inputroot, \
-        distributionName = ["leadHCand_Mass", "sublHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
+        distributionName = ["leadHCand_Mass", "sublHCand_Mass"], whichFunc = "XhhBoosted", \
+        output = inputpath + "Plot" + ("_" + ops.reweight if doreweight else "") + "/", NRebin=2, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est"))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
@@ -133,7 +138,7 @@ def main():
 
     ##Dump yield tables
     for tag in yield_tag_lst:
-        texoutpath = inputpath + "Plot/Tables/"
+        texoutpath = inputpath + "Plot" + ("_" + ops.reweight if doreweight else "") +  "/Tables/"
         if not os.path.exists(texoutpath):
             os.makedirs(texoutpath)
         yield_tex = open( texoutpath + tag + "_yield.tex", "w")
