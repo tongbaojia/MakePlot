@@ -149,7 +149,7 @@ def rebinData(ifile, rebin, scale=1.0):
 #plot
 
 def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, inputBinWidth=25, finalBinUnits=25, outputFolder=""):
-
+    #print cut
     gStyle.SetErrorX(0)
     gStyle.SetHatchesSpacing(0.7)
     gStyle.SetHatchesLineWidth(1)
@@ -182,7 +182,10 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         RSG1_2500.Rebin(rebin)
 
     #get QS scores
-    ks   = data.KolmogorovTest(data_est, "QU")
+    if "Signal" in cut and blinded:
+        ks = 0
+    else:
+        ks   = data.KolmogorovTest(data_est, "QU")
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
     percentdiff   = (int_data_est - int_data)/int_data * 100.0
@@ -339,15 +342,15 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     # qcd_fitDown.Draw("SAME")
 
     # Fit the ratio with a TF1
-    if not ("Signal" in cut and blinded):
-        testfit = ROOT.TF1("testfit", "pol2", xMin, xMax)
-        testfit.SetParameters(1, 0, 0)
-        ratios[1].Fit("testfit")
-        testfit.SetLineColor(kRed)
-        testfit.Draw("SAME")
-        fitresult = testfit.GetParameters()
-        myText(0.2, 0.17, 1, "y=%s x^2 + %s x + %s" % (str('%.2g' % fitresult[0]), \
-            str('%.2g' % fitresult[1]),str('%.2g' % fitresult[2])), 22)
+    # if not ("Signal" in cut and blinded):
+    #     testfit = ROOT.TF1("testfit", "pol2", xMin, xMax)
+    #     testfit.SetParameters(1, 0, 0)
+    #     ratios[1].Fit("testfit")
+    #     testfit.SetLineColor(kRed)
+    #     testfit.Draw("SAME")
+    #     fitresult = testfit.GetParameters()
+    #     myText(0.2, 0.17, 1, "y=%s x^2 + %s x + %s" % (str('%.2g' % fitresult[0]), \
+    #         str('%.2g' % fitresult[1]),str('%.2g' % fitresult[2])), 22)
 
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
@@ -487,7 +490,8 @@ def main():
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
-    
+    # for i in inputtasks:
+    #     dumpRegion(i)
     print("--- %s seconds ---" % (time.time() - start_time))
 
     

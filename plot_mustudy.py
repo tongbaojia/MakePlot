@@ -2,9 +2,15 @@ import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 import helpers
 import config as CONF
+from ROOT import *
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.gROOT.LoadMacro("AtlasLabels.C")
+SetAtlasStyle()
 
 ROOT.gROOT.SetBatch(True)
 
+
+#this script is used to plot different mu qcd fit parameters as a funciton of the SB size
 def main():
 
     start_time = time.time()
@@ -17,18 +23,18 @@ def main():
     global inputpath
     inputpath = CONF.inputpath
     global outputpath
-    outputpath = CONF.outplotPath
+    outputpath = CONF.outplotpath + "mutest/"
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 
     global outputroot
     outputroot = ROOT.TFile.Open(outputpath + "temp.root", "recreate")
     # Fill the histogram from the table
-    DrawFitParameters("4b")
-    DrawFitParameters("3b")
-    DrawFitParameters("2bs")
-    DrawFitParameters("2b")
-    DrawFitParameters("1b")
+    DrawFitParameters("Nb=4")
+    DrawFitParameters("Nb=3")
+    DrawFitParameters("Nb=2s")
+    DrawFitParameters("Nb=2")
+    DrawFitParameters("Nb=1")
     # Finish the work
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -40,14 +46,14 @@ def options():
 ### 
 def DrawFitParameters(region="4b"):
     outputroot.cd()
-    canv = ROOT.TCanvas(region + "_" + "mustudy", "mustudy", 800, 800)
-    h_muqcd = ROOT.TH1D(region + "_" + "muqcd","muqcd",1,1,2)
+    canv = ROOT.TCanvas(region.replace("Nb=", "Nb") + "_" + "mustudy", "mustudy", 800, 800)
+    h_muqcd = ROOT.TH1D(region.replace("Nb=", "Nb") + "_" + "muqcd","muqcd",1,1,2)
     h_muqcd.SetMarkerStyle(20)
     h_muqcd.SetMarkerColor(1)
     h_muqcd.SetLineColor(1)
     h_muqcd.SetMarkerSize(1)
     h_muqcd.GetYaxis().SetTitle("#mu qcd")
-    h_mutop = ROOT.TH1D(region + "_" + "mutop","mutop",1,1,2)
+    h_mutop = ROOT.TH1D(region.replace("Nb=", "Nb") + "_" + "mutop","mutop",1,1,2)
     h_mutop.SetMarkerStyle(21)
     h_mutop.SetMarkerColor(1)
     h_mutop.SetLineColor(1)
@@ -68,17 +74,19 @@ def DrawFitParameters(region="4b"):
                 mutop = float(temptop[1])
                 mutop_err = float(temptop[3])
                 #print tempqcd
-                h_muqcd.Fill(h_muqcd.GetXaxis().FindBin(ch), muqcd)
+                h_muqcd.Fill(ch, muqcd)
                 h_muqcd.SetBinError(h_muqcd.GetXaxis().FindBin(ch), muqcd_err)
-                h_mutop.Fill(h_mutop.GetXaxis().FindBin(ch), mutop)
+                h_mutop.Fill(ch, mutop)
                 h_mutop.SetBinError(h_mutop.GetXaxis().FindBin(ch), mutop_err)
         f1.close()
     h_muqcd.SetMaximum(h_muqcd.GetMaximum() * 1.5)   
     h_muqcd.Draw("EPL")
+    myText(0.5, 0.87, 1, "Region: %s" % region, 42)
     canv.SaveAs(outputpath + h_muqcd.GetName() + ".pdf")
     canv.Clear()
     h_mutop.SetMaximum(h_mutop.GetMaximum() * 1.5) 
     h_mutop.Draw("EPL")
+    myText(0.5, 0.87, 1, "Region: %s" % region, 42)
     canv.SaveAs(outputpath + h_mutop.GetName() + ".pdf")
     canv.Close()
 

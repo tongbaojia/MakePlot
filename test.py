@@ -37,7 +37,8 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="test")
+    parser.add_argument("--inputdir", default="reweight_0")
+    parser.add_argument("--reweight", default="no")
     parser.add_argument("--full", default=True) #4times more time
     return parser.parse_args()
 
@@ -56,8 +57,22 @@ def main():
     global plt_lst
     plt_lst = ["mHH_l", "mHH_pole", "leadHCand_Mass", "sublHCand_Mass", \
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
+    plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi", "hCand_Pt_assy", "Rhh",\
+        "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
+        "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
+        "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
+        "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
     global plt_m
     plt_m = "_mHH_pole"
+    #if use reweighted configurations, needs to change this inputroot name
+    global inputroot
+    inputroot = CONF.hist_r
+    inputdataroot = CONF.hist_r
+    global doreweight
+    doreweight = ("no" not in ops.reweight)
+    if doreweight:
+        inputdataroot = "hist" + "_" + ops.reweight + ".root"
+    print "reweight is: ", doreweight, " hence input is: ", inputdataroot
     #set fast test version, with all the significance output still
     if not fullhists:
         plt_lst = ["mHH_pole"]
@@ -65,9 +80,9 @@ def main():
     # create output file
     inputpath = CONF.inputpath + inputdir + "/"
     print "input is", inputpath
-    output = open(inputpath + "sum%s_%s.tex" % ("" if background_model==0 else str(background_model), inputdir), "w")
+    output = open(inputpath + "sum%s_%s.tex" % ("" if not doreweight else ops.reweight, inputdir), "w")
     global outroot
-    outroot = ROOT.TFile.Open(inputpath + "sum%s_%s.root" % ("" if background_model==0 else str(background_model), inputdir), "recreate")
+    outroot = ROOT.TFile.Open(inputpath + "sum%s_%s.root" % ("" if not doreweight else ops.reweight, inputdir), "recreate")
     #print GetEvtCount(inputpath + "ttbar_comb_test.root")
 
     # Create the master dictionary for cutflows and plots
@@ -75,11 +90,11 @@ def main():
 
     #set the input tasks!
     inputtasks = []
-    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/hist.root", "histname":"ttbar"})
-    inputtasks.append({"inputdir":inputpath + "zjets_test/hist.root", "histname":"zjet"})
-    inputtasks.append({"inputdir":inputpath + "data_test/hist.root", "histname":"data"})
+    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/" + inputroot, "histname":"ttbar"})
+    inputtasks.append({"inputdir":inputpath + "zjets_test/" + inputroot, "histname":"zjet"})
+    inputtasks.append({"inputdir":inputpath + "data_test/" + inputdataroot, "histname":"data"})
     for mass in mass_lst:
-        inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist.root" % mass, "histname":"RSG1_%i" % mass})
+        inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/" % mass + inputroot , "histname":"RSG1_%i" % mass})
 
     #start calculating the dictionary
     for task in inputtasks:
@@ -103,9 +118,10 @@ def main():
     #Do qcd background estimation from the fit
     print "Start Fit!"
     global fitresult
-    fitresult = BackgroundFit(inputpath + "data_test/hist.root", \
-        inputpath + "ttbar_comb_test/hist.root", inputpath + "zjets_test/hist.root", \
-        distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
+    fitresult = BackgroundFit(inputpath + "data_test/" + inputdataroot, \
+        inputpath + "ttbar_comb_test/" + inputroot, inputpath + "zjets_test/" + inputroot, \
+        distributionName = ["leadHCand_Mass", "sublHCand_Mass"], whichFunc = "XhhBoosted", \
+        output = inputpath + "Plot" + ("_" + ops.reweight if doreweight else "") + "/", NRebin=2, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est"))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
@@ -122,7 +138,7 @@ def main():
 
     ##Dump yield tables
     for tag in yield_tag_lst:
-        texoutpath = inputpath + "Plot/Tables/"
+        texoutpath = inputpath + "Plot" + ("_" + ops.reweight if doreweight else "") +  "/Tables/"
         if not os.path.exists(texoutpath):
             os.makedirs(texoutpath)
         yield_tex = open( texoutpath + tag + "_yield.tex", "w")
@@ -305,6 +321,9 @@ def Getqcd(inputdic, histname=""):
                 htemp_qcd.Add(htemp_ttbar, -1)
                 htemp_qcd.Add(htemp_zjet, -1)
                 htemp_qcd.Write()
+                del(htemp_qcd)
+                del(htemp_zjet)
+                del(htemp_ttbar)
             #get qcd prediction shapes
             plttemp = outroot.Get("qcd" + "_" + cut + "_" + region + plt_m)
             if ("Signal" in region) & ("NoTag" not in cut) & blind:
@@ -409,7 +428,7 @@ def GetEvtCount(config):
                 hst_temp.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 outroot.cd()
                 hst_temp.Write()
-
+                del(hst_temp)
             #get the mass plot
             plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
             if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
@@ -421,7 +440,6 @@ def GetEvtCount(config):
                 cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
                 err = float(err) #convert it back...so that python likes it
                 cutcounts[region + "_err"] = err
-                
         #finish the for loop
         eventcounts[cut] = cutcounts
 

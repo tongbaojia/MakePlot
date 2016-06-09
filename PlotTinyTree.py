@@ -4,13 +4,57 @@
 ###For a more proper anlaysis, do the c++ standard way please
 import ROOT, rootlogon, helpers
 import config as CONF
-import time, os, subprocess, glob
+import time, os, subprocess, glob, argparse
 #for parallel processing!
 import multiprocessing as mp
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
 
+#define functions
+def options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--iter", default=0)
+    return parser.parse_args()
+
+#returns a dictionary of weights
+def get_reweight(folder, filename):
+    reweightfolder = CONF.outputpath + folder + "/" + "Reweight/"
+    f_reweight = open(reweightfolder + filename, "r")
+    par_weight = {}
+    for line in f_reweight:
+        lstline =  line.split()
+        #print lstline
+        if "par0" in line:
+            par_weight["par0"] = float(lstline[1])
+        if "par1" in line:
+            par_weight["par1"] = float(lstline[1])
+        if "par2" in line:
+            par_weight["par2"] = float(lstline[1])
+        if "par3" in line:
+            par_weight["par3"] = float(lstline[1])
+    #print par_weight
+    f_reweight.close()
+    return par_weight
+
+#calculate the weight based on the input dictionary as the instruction
+def calc_reweight(dic, event):
+    totalweight = 1
+    maxscale = 0.5 #this means the maximum correction is this for each reweighting
+    for x, v in dic.iteritems():
+        tempweight = 1
+        tempweight = v["par0"] + v["par1"] * eval(x) + v["par2"] * eval(x) ** 2 + v["par3"] * eval(x) ** 3
+        if tempweight < maxscale:
+            tempweight = maxscale
+        if tempweight > 1 + maxscale:
+            tempweight = 1 + maxscale
+        totalweight *= tempweight
+    #also contrain the totalweight
+    if totalweight < maxscale:
+        totalweight = maxscale
+    if totalweight > 1 + maxscale:
+        totalweight = 1 + maxscale
+    return totalweight
 
 class eventHists:
 
@@ -25,32 +69,34 @@ class eventHists:
         #add in all the histograms
         self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        76,  200, 4000)
         self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        76,  200, 4000)
-        self.h0_m         = ROOT.TH1F("leadHCand_Mass",     ";Mass [GeV]",       100,   0,  500)
-        self.h1_m         = ROOT.TH1F("sublHCand_Mass",     ";Mass [GeV]",       100,   0,  500)
-        self.h0_trk0_pt   = ROOT.TH1F("leadHCand_trk0_Pt",  ";p_{T} [GeV]",      100,  0,   500)
-        self.h1_trk0_pt   = ROOT.TH1F("sublHCand_trk0_Pt",  ";p_{T} [GeV]",      100,  0,   500)
-        self.h0_trk1_pt   = ROOT.TH1F("leadHCand_trk1_Pt",  ";p_{T} [GeV]",      100,  0,   500)
-        self.h1_trk1_pt   = ROOT.TH1F("sublHCand_trk1_Pt",  ";p_{T} [GeV]",      100,  0,   500)
+        self.h0_m         = ROOT.TH1F("leadHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
+        self.h1_m         = ROOT.TH1F("sublHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
+        self.h0_trk0_pt   = ROOT.TH1F("leadHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+        self.h1_trk0_pt   = ROOT.TH1F("sublHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+        self.h0_trk1_pt   = ROOT.TH1F("leadHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
+        self.h1_trk1_pt   = ROOT.TH1F("sublHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
+        self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
 
         if self.fullhist:
-            self.h_deta       = ROOT.TH1F("hCandDeta",          "hCand #Delta#eta",  66,    0,  3.3)
+            self.h_deta       = ROOT.TH1F("hCandDeta",          "hCand #Delta#eta",  40,    0,  2.0)
             self.h_dphi       = ROOT.TH1F("hCandDphi",          "hCand #Delta#phi",  66, -3.3,  3.3)
             self.h_dr         = ROOT.TH1F("hCandDr",            "hCand #Deltar",     100,   0,    5)
+            self.h_pt_assy    = ROOT.TH1F("hCand_Pt_assy",      ";hCand p_{T} assym", 22, -0.05, 1.05)
             self.h0_m_s       = ROOT.TH1F("leadHCand_Mass_s",   ";Mass [GeV]",       40,   70,  170)
             self.h1_m_s       = ROOT.TH1F("sublHCand_Mass_s",   ";Mass [GeV]",       40,   70,  170)
-            self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   0,  2000)
-            self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   0,  2000)
-            self.h0_eta       = ROOT.TH1F("leadHCand_Eta",      ";#Eta",             60, -3.2,  3.2)
-            self.h1_eta       = ROOT.TH1F("sublHCand_Eta",      ";#Eta",             60, -3.2,  3.2)
+            self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
+            self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
+            self.h0_eta       = ROOT.TH1F("leadHCand_Eta",      ";#Eta",             42, -2.1,  2.1)
+            self.h1_eta       = ROOT.TH1F("sublHCand_Eta",      ";#Eta",             42, -2.1,  2.1)
             self.h0_phi       = ROOT.TH1F("leadHCand_Phi",      ";#Phi",             64, -3.2,  3.2)
             self.h1_phi       = ROOT.TH1F("sublHCand_Phi",      ";#Phi",             64, -3.2,  3.2)
             self.h0_trk_dr    = ROOT.TH1F("leadHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
             self.h1_trk_dr    = ROOT.TH1F("sublHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
-            self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
-            self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
-            self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.1, 1)
-            self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.1, 1)
-            self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 60,  0,  300, 60,  0,  300)
+            self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
+            self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
+            self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.05, 1.05)
+            self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.05, 1.05)
+            self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  300,  50,  50,  300)
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
@@ -64,12 +110,14 @@ class eventHists:
         self.h1_trk0_pt.Fill(event.j1_trk0_pt, weight)
         self.h0_trk1_pt.Fill(event.j0_trk1_pt, weight)
         self.h1_trk1_pt.Fill(event.j1_trk1_pt, weight)
+        self.Rhh.Fill(event.Rhh, weight)
 
         if self.fullhist:
             self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
             self.h_deta.Fill(event.detaHH, weight)    
             self.h_dphi.Fill(event.dphiHH, weight)    
-            self.h_dr.Fill(event.drHH, weight)    
+            self.h_dr.Fill(event.drHH, weight) 
+            self.h_pt_assy.Fill((event.j0_pt - event.j1_pt)/(event.j0_pt + event.j1_pt), weight)
             self.h0_m_s.Fill(event.j0_m, weight)   
             self.h1_m_s.Fill(event.j1_m, weight)    
             self.h0_pt_m.Fill(event.j0_pt, weight)
@@ -96,11 +144,13 @@ class eventHists:
         self.h1_trk0_pt.Write()
         self.h0_trk1_pt.Write()
         self.h1_trk1_pt.Write()
+        self.Rhh.Write()
         if self.fullhist:
             self.mH0H1.Write() 
             self.h_deta.Write()    
             self.h_dphi.Write()    
-            self.h_dr.Write()     
+            self.h_dr.Write()  
+            self.h_pt_assy.Write()   
             self.h0_m_s.Write()   
             self.h1_m_s.Write()  
             self.h0_pt_m.Write()    
@@ -118,28 +168,26 @@ class eventHists:
 
 class massregionHists:
     def __init__(self, region, outputroot, reweight=False):
-        #self.Incl = eventHists(region + "_" + "Incl", outputroot)
+        self.Incl = eventHists(region + "_" + "Incl", outputroot)
         self.Sideband = eventHists(region + "_" + "Sideband", outputroot, reweight)
         self.Control = eventHists(region + "_" + "Control", outputroot, reweight)
         self.Signal = eventHists(region + "_" + "Signal", outputroot, reweight)
         self.ZZ = eventHists(region + "_" + "ZZ", outputroot, reweight)
-        # self.Rhh20  = eventHists(region + "_" + "Rhh20", outputroot)
-        # self.Rhh30  = eventHists(region + "_" + "Rhh30", outputroot)
-        # self.Rhh40  = eventHists(region + "_" + "Rhh40", outputroot)
-        # self.Rhh50  = eventHists(region + "_" + "Rhh50", outputroot)
-        # self.Rhh60  = eventHists(region + "_" + "Rhh60", outputroot)
-        # self.Rhh70  = eventHists(region + "_" + "Rhh70", outputroot)
-        # self.Rhh80  = eventHists(region + "_" + "Rhh80", outputroot)
-        # self.Rhh90  = eventHists(region + "_" + "Rhh90", outputroot)
-        # self.Rhh100 = eventHists(region + "_" + "Rhh100", outputroot)
-        # self.Rhh110 = eventHists(region + "_" + "Rhh110", outputroot)
-        # self.Rhh120 = eventHists(region + "_" + "Rhh120", outputroot)
-        # self.Rhh130 = eventHists(region + "_" + "Rhh130", outputroot)
-        # self.Rhh140 = eventHists(region + "_" + "Rhh140", outputroot)
-        # self.Rhh150 = eventHists(region + "_" + "Rhh150", outputroot)
+        #for specific studies!
+        self.studylst = []
+        # for i, cut in enumerate(range(20, 160, 20)):
+        #     for j, masssplit in enumerate([" and event.j0_m > 125 and event.j1_m > 114",\
+        #     " and event.j0_m < 125 and event.j1_m > 114",\
+        #     " and event.j0_m < 125 and event.j1_m < 114",\
+        #     " and event.j0_m > 125 and event.j1_m < 114"]):
+        #         tempdic = {}
+        #         tempdic["histname"] = region + "_" + "r" + str(j) + "_" + "Rhh" + str(cut)
+        #         tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot)
+        #         tempdic["evencondition"] = "event.Xhh > 1.6 and event.Rhh < " + str(cut) + " and event.Rhh > " + str(cut - 20) + masssplit
+        #         self.studylst.append(tempdic)
 
     def Fill(self, event, weight=-1):
-        #self.Incl.Fill(event)
+        self.Incl.Fill(event)
         if event.Xhh < 1.6:
             self.Signal.Fill(event, weight)
         elif event.Rhh < 35.8:
@@ -148,59 +196,21 @@ class massregionHists:
             self.Sideband.Fill(event, weight)
         if event.Xhh > 1.6 and event.Xzz < 2.1:
             self.ZZ.Fill(event, weight)
+        #for specific studies!
+        for tempdic in self.studylst:
+            if eval(tempdic["evencondition"]):
+                tempdic["eventHists"].Fill(event, weight)
 
-        #for mass mu qcd test
-        # if event.Xhh > 1.6 and event.Rhh < 20:
-        #     self.Rhh20.Fill(event)
-        # elif event.Rhh < 30:
-        #     self.Rhh30.Fill(event)
-        # elif event.Rhh < 30: 
-        #     self.Rhh30.Fill(event)
-        # elif event.Rhh < 40: 
-        #     self.Rhh40.Fill(event)
-        # elif event.Rhh < 50: 
-        #     self.Rhh50.Fill(event)
-        # elif event.Rhh < 60: 
-        #     self.Rhh60.Fill(event)
-        # elif event.Rhh < 70: 
-        #     self.Rhh70.Fill(event)
-        # elif event.Rhh < 80: 
-        #     self.Rhh80.Fill(event)
-        # elif event.Rhh < 90: 
-        #     self.Rhh90.Fill(event)
-        # elif event.Rhh < 100: 
-        #     self.Rhh100.Fill(event)
-        # elif event.Rhh < 110: 
-        #     self.Rhh110.Fill(event)
-        # elif event.Rhh < 120: 
-        #     self.Rhh120.Fill(event)
-        # elif event.Rhh < 130: 
-        #     self.Rhh130.Fill(event)
-        # elif event.Rhh < 140: 
-        #     self.Rhh140.Fill(event)
-        # elif event.Rhh < 150: 
-        #     self.Rhh150.Fill(event)
 
     def Write(self, outputroot):
-        #self.Incl.Write(outputroot)
+        self.Incl.Write(outputroot)
         self.Sideband.Write(outputroot)
         self.Control.Write(outputroot)
         self.Signal.Write(outputroot)
         self.ZZ.Write(outputroot)
-        # self.Rhh20.Write(outputroot)
-        # self.Rhh30.Write(outputroot) 
-        # self.Rhh40.Write(outputroot) 
-        # self.Rhh50.Write(outputroot) 
-        # self.Rhh60.Write(outputroot) 
-        # self.Rhh70.Write(outputroot) 
-        # self.Rhh80.Write(outputroot) 
-        # self.Rhh90.Write(outputroot)
-        # self.Rhh100.Write(outputroot)
-        # self.Rhh110.Write(outputroot)
-        # self.Rhh120.Write(outputroot)
-        # self.Rhh130.Write(outputroot)
-        # self.Rhh140.Write(outputroot)
-        # self.Rhh150.Write(outputroot)
+        #for specific studies!
+        for tempdic in self.studylst:
+            tempdic["eventHists"].Write(outputroot)
 
 #reweighting is done here: what a genius design
 class trkregionHists:
@@ -212,42 +222,67 @@ class trkregionHists:
         self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)
         self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
+        if self.reweight:
+            self.Trk2s_dic = {}
+            self.Trk3_dic = {}
+            self.Trk4_dic = {}
+            #setup all the reweighting parameters here
+            tempname_lead_pt = "(event.j0_pt)"
+            tempname_subl_pt = "(event.j1_pt)"
+            tempname_lead_trk0_pt = "(event.j0_trk0_pt)"
+            tempname_subl_trk0_pt = "(event.j1_trk0_pt)"
+            tempname_lead_trk1_pt = "(event.j0_trk1_pt)"
+            tempname_subl_trk1_pt = "(event.j1_trk1_pt)"
+            tempname_lead_trkasy = "(event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt)"
+            tempname_subl_trkasy = "(event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt)"
+            #for 2tag split region
+            self.Trk2s_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt")
+            self.Trk2s_dic[tempname_subl_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt")
+            self.Trk2s_dic[tempname_lead_trk1_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt")
+            self.Trk2s_dic[tempname_subl_trk1_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
+            #self.Trk2s_dic[tempname_lead_pt] = get_reweight("reweight_2", "r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt")
+            #self.Trk2s_dic[tempname_subl_pt] = get_reweight("reweight_2", "r0_TwoTag_split_Sideband_sublHCand_Pt_m.txt")
+            #self.Trk2s_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt")
+            #self.Trk2s_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt")
+            #for 4tag region
+            self.Trk3_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
+            self.Trk3_dic[tempname_subl_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk3_dic[tempname_lead_trk1_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
+            self.Trk3_dic[tempname_subl_trk1_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            #self.Trk3_dic[tempname_lead_pt] = get_reweight("reweight_2", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
+            #self.Trk3_dic[tempname_subl_pt] = get_reweight("reweight_2", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
+            #self.Trk3_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
+            #self.Trk3_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
+            #for 4tag region
+            self.Trk4_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
+            self.Trk4_dic[tempname_subl_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk4_dic[tempname_lead_trk1_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
+            self.Trk4_dic[tempname_subl_trk1_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            #self.Trk4_dic[tempname_lead_pt] = get_reweight("reweight_2", "r0_FourTag_Sideband_leadHCand_Pt_m.txt")
+            #self.Trk4_dic[tempname_subl_pt] = get_reweight("reweight_2", "r0_FourTag_Sideband_sublHCand_Pt_m.txt")
+            #self.Trk4_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
+            #self.Trk4_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
+            #print self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic
+
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, weight)
         # if event.j0_nTrk >= 1 or event.j1_nTrk >= 1:
         #     self.Trk1.Fill(event)
-        if event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
-            if self.reweight:
-                weight = event.weight
-                tempw0 = 0.77 + 0.0077 * event.j0_trk1_pt - 4.2E-05 * event.j0_trk1_pt ** 2
-                if tempw0 > 0:
-                    weight *= tempw0
-                tempw1 = 0.73 + 0.0087 * event.j1_trk1_pt - 4.7E-05 * event.j1_trk1_pt ** 2
-                if tempw1 > 0:
-                    weight *= tempw1
-            self.Trk2s.Fill(event, weight)
         # if event.j0_nTrk >= 2 or event.j1_nTrk >= 2:
         #     self.Trk2.Fill(event)
+        if event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
+            if self.reweight:
+                weight = event.weight * calc_reweight(self.Trk2s_dic, event)
+            self.Trk2s.Fill(event, weight)
         if (event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1):
             if self.reweight:
-                weight = event.weight
-                tempw0 = 0.41 + 0.017  * event.j0_trk1_pt - 7.8E-05 * event.j0_trk1_pt ** 2
-                if tempw0 > 0:
-                    weight *= tempw0
-                tempw1 = 0.46 + 0.017 * event.j1_trk1_pt - 8.2E-05 * event.j1_trk1_pt ** 2
-                if tempw1 > 0:
-                    weight *= tempw1
+                weight = event.weight * calc_reweight(self.Trk3_dic, event)
             self.Trk3.Fill(event, weight)
         if event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
             if self.reweight:
-                weight = event.weight
-                tempw0 = 0.41 + 0.017  * event.j0_trk1_pt - 7.8E-05 * event.j0_trk1_pt ** 2
-                if tempw0 > 0:
-                    weight *= tempw0
-                tempw1 = 0.46 + 0.017 * event.j1_trk1_pt - 8.2E-05 * event.j1_trk1_pt ** 2
-                if tempw1 > 0:
-                    weight *= tempw1
+                weight = event.weight * calc_reweight(self.Trk4_dic, event)
             self.Trk4.Fill(event, weight)
+
     def Write(self, outputroot):
         self.Trk0.Write(outputroot)
         #self.Trk1.Write(outputroot)
@@ -257,8 +292,8 @@ class trkregionHists:
         self.Trk4.Write(outputroot)
 
 class regionHists:
-    def __init__(self, outputroot):
-        self.NoTag  = trkregionHists("NoTag", outputroot, reweight=True)
+    def __init__(self, outputroot, reweight):
+        self.NoTag  = trkregionHists("NoTag", outputroot, reweight)
         self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
         self.TwoTag = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
@@ -296,7 +331,7 @@ def analysis(inputconfig, DEBUG=False):
 
     helpers.checkpath(outputpath + inputfile)
     outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
-    AllHists = regionHists(outroot)
+    AllHists = regionHists(outroot, turnon_reweight)
     #read the input file
     f = ROOT.TFile(inputpath + inputfile + "/" + inputroot, "read")
     #load the target tree
@@ -318,6 +353,9 @@ def analysis(inputconfig, DEBUG=False):
             #print i, " events done!"
         t.fChain.GetEntry(i)
         #print t.Xzz
+        #place a cut if necessary
+        # if ((t.j0_pt - t.j1_pt)/(t.j0_pt + t.j1_pt) > 0.15):
+        #     continue
         AllHists.Fill(t)
 
     #write all the output
@@ -326,47 +364,66 @@ def analysis(inputconfig, DEBUG=False):
     #close the input file;
     del(t)
     outroot.Close()
+    del(AllHists)
+    del(cutflow_weight)
+    del(cutflow)
 
 #pack the input into a configuration dictionary
 def pack_input(inputfile, inputsplit=-1):
     dic = {}
     dic["inputfile"] = inputfile
     dic["inputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit  >= 0 else "") + ".root"
-    dic["outputroot"] = "hist" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ".root"
+    dic["outputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ".root"
     dic["DEBUG"] = False
     return dic
 
 def main():
     start_time = time.time()
+    ops = options()
+
     global inputpath
     inputpath = CONF.inputpath + "TEST/"
+    global iter_reweight #iterative reweight or not
+    iter_reweight = int(ops.iter)
+    global turnon_reweight #reweight or not
+    turnon_reweight = False
+    if iter_reweight > 0:
+        turnon_reweight = True
     global outputpath
-    outputpath = CONF.outputpath + "test/"
+    outputpath = CONF.outputpath + "reweight_" + str(iter_reweight) + "/"
     helpers.checkpath(outputpath)
     #for testing
     #analysis(pack_input("zjets_test"))
 
     #real job; full chain 2 mins...just data is 50 seconds
-    nsplit = 7
+    nsplit = 14
+    split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     inputtasks = []
-    # inputtasks.append(pack_input("ttbar_comb_test"))
-    # inputtasks.append(pack_input("zjets_test"))
-    # for i, mass in enumerate(CONF.mass_lst):
-    #     inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
-    for i in range(nsplit):
-        inputtasks.append(pack_input("data_test", inputsplit=i))
-    #parallel compute!
+    for split_file in split_list:
+        for i in range(nsplit):
+            inputtasks.append(pack_input(split_file, inputsplit=i))    
+    inputtasks.append(pack_input("zjets_test"))
+    for i, mass in enumerate(CONF.mass_lst):
+        inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+    ##if reweight, reweight everything
+    # #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
-    pool = mp.Pool(npool)
+    pool  = mp.Pool(npool)
     pool.map(analysis, inputtasks)
+    
     #all the other extra set of MCs
-    targetpath = outputpath + "data_test/"
-    targetfiles = glob.glob(targetpath + "hist_*.root")
-    haddcommand = ["hadd", "-f", targetpath + "hist.root"]
-    haddcommand += targetfiles
-    #print haddcommand
-    subprocess.call(haddcommand)
+    for split_file in split_list:
+        targetpath = outputpath + split_file + "/"
+        targetfiles = []
+        for i in range(nsplit):
+            targetfiles += glob.glob(targetpath + ("hist-MiniNTuple_%s"% str(i)) + ".root")
+        haddcommand = ["hadd", "-f", targetpath + "hist-MiniNTuple" + ".root"]
+        haddcommand += targetfiles
+        #print haddcommand
+        subprocess.call(haddcommand)
+
+
     #analysis("data_test") #2 mins! 4 mins with expanded...
     #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))

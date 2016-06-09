@@ -10,7 +10,10 @@ import time
 import config as CONF
 
 ROOT.gROOT.SetBatch(True)
-from ROOT import gStyle    
+from ROOT import *    
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.gROOT.LoadMacro("AtlasLabels.C")
+
 
 def options():
     parser = argparse.ArgumentParser()
@@ -32,21 +35,33 @@ def main():
         os.makedirs(outputpath)
 
     #side band shapes
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", noteword="PhysMain", prename="Sideband", Xrange=[0, 320], Yrange=[0, 320])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", noteword="PhysMain", prename="Control", Xrange=[50, 200], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[0, 320], Yrange=[0, 320])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[50, 200], Yrange=[50, 200])
+    #correlations of the jet mass and jet pT
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #for study only
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
 
-    #signalregion shape comparison
+    # #signalregion shape comparison
     inputroot = "sum_" + inputdir + ".root"
     DrawSRcomparison(inputroot, inputdata="ttbar")
     DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
     DrawSRcomparison(inputroot, inputdata="qcd_est")
     DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
-    #draw the mhh before and after scale
+    # #draw the mhh before and after scale
     DrawScalecomparison(inputroot, norm=False)
     DrawScalecomparison(inputroot, norm=True, Logy=1)
 
-def DrawSignalPlot(inputname, inputdir, keyword="_", noteword="PhysMain", prename="", Xrange=[0, 0], Yrange=[0, 0]):
+def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
     inputroot.cd(inputdir)
@@ -78,8 +93,34 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", noteword="PhysMain", prenam
                 wm.SetNDC()
                 wm.Draw()
 
+            #draw the correlation factor
+            if temp_hist.InheritsFrom("TH2"):
+                myText(0.2, 0.97, 1, "Coor = %s" % str(('%.2g' % temp_hist.GetCorrelationFactor())), 22)
+
             canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
+
+            #produce profile plot if 2D
+            if temp_hist.InheritsFrom("TH2"):
+                #profile x
+                temp_prox = temp_hist.ProfileX()
+                temp_prox.GetYaxis().SetTitle(temp_hist.GetYaxis().GetTitle())
+                temp_prox.SetMaximum(temp_prox.GetMaximum() * 1.5)
+                canv.Clear()
+                temp_prox.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_profx.pdf")
+                #profile y
+                canv.Clear()
+                temp_proy = temp_hist.ProfileY()
+                temp_proy.GetYaxis().SetTitle(temp_hist.GetXaxis().GetTitle())
+                temp_proy.SetMaximum(temp_proy.GetMaximum() * 1.5)
+                temp_proy.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_profy.pdf")
             canv.Close()
+            #done
     inputroot.Close()
 
 def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):

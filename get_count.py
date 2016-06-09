@@ -77,7 +77,7 @@ def main():
 
     #set the input tasks!
     inputtasks = []
-    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test.root", "histname":"ttbar"})
+    inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "histname":"ttbar"})
     inputtasks.append({"inputdir":inputpath + "zjets_test/hist-MiniNTuple.root", "histname":"zjet"})
     inputtasks.append({"inputdir":inputpath + "data_test/hist-MiniNTuple.root", "histname":"data"})
     for mass in mass_lst:
@@ -106,8 +106,8 @@ def main():
     print "Start Fit!"
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-        inputpath + "ttbar_comb_test.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = "leadHCand_Mass", whichFunc = "XhhBoosted", output = inputpath, NRebin=2, BKG_model=background_model)
+        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+        distributionName = ["leadHCand_Mass", "sublHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est"))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
@@ -283,8 +283,11 @@ def GetDiff(dic1, dic2, histname=""):
         for j, region in enumerate(region_lst):
             if dic2[cut][region]!= 0:
             	cutcounts[region] = (dic1[cut][region] - dic2[cut][region])/dic2[cut][region] * 100
+                cutcounts[region + "_err"] = helpers.ratioerror(dic1[cut][region], dic2[cut][region], \
+                    dic1[cut][region + "_err"], dic2[cut][region + "_err"]) * 100
             else:
             	cutcounts[region] = 0
+                cutcounts[region + "_err"] = 0
             result[cut] = cutcounts
     return {histname:result}
 
@@ -333,7 +336,9 @@ def WriteEvtCount(inputdic, outFile, samplename="region"):
         for j, region in enumerate(region_lst):
             #get the mass plot
             outstr += " & "
-            outstr += str(round(inputdic[cut][region], 4))
+            outstr += str(helpers.round_sig(inputdic[cut][region], 2))
+            outstr += " $\\pm$ "
+            outstr += str(helpers.round_sig(inputdic[cut][region + "_err"], 2))
         outstr+="\\\\"
         tableList.append(outstr)
 

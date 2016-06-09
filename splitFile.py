@@ -12,7 +12,7 @@ ROOT.gROOT.SetBatch(True)
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--nfiles", default=7)
+    parser.add_argument("--nfiles", default=14)
     return parser.parse_args()
 
 
@@ -56,12 +56,17 @@ def split(targetpath="data_test"):
         cutflow.Write()
         outfile[i].Close()
     f.Close()
+    del(t)
+    del(outtree)
+    del(cutflow_weight)
+    del(cutflow)
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
 
 def main():
     split(targetpath="data_test")
+    split(targetpath="ttbar_comb_test")
     split(targetpath="signal_QCD")
 
 #def clearbranches():
