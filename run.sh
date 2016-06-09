@@ -9,6 +9,7 @@ for ch in ${channels[@]}; do
 	#python get_count.py --inputdir $ch #--full True
 	python test.py --inputdir $ch --full True
 	python plot.py --inputdir $ch
+	python reweight.py --inputdir $ch
 	python plot_trigeff.py --inputdir $ch
 	python plot_sigeff.py --inputdir $ch
 	python plot_prediction.py --inputdir $ch

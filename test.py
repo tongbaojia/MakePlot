@@ -57,7 +57,7 @@ def main():
     global plt_lst
     plt_lst = ["mHH_l", "mHH_pole", "leadHCand_Mass", "sublHCand_Mass", \
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
-    plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi", "hCand_Pt_assy",\
+    plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi", "hCand_Pt_assy", "Rhh",\
         "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
         "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
@@ -321,6 +321,9 @@ def Getqcd(inputdic, histname=""):
                 htemp_qcd.Add(htemp_ttbar, -1)
                 htemp_qcd.Add(htemp_zjet, -1)
                 htemp_qcd.Write()
+                del(htemp_qcd)
+                del(htemp_zjet)
+                del(htemp_ttbar)
             #get qcd prediction shapes
             plttemp = outroot.Get("qcd" + "_" + cut + "_" + region + plt_m)
             if ("Signal" in region) & ("NoTag" not in cut) & blind:
@@ -425,7 +428,7 @@ def GetEvtCount(config):
                 hst_temp.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 outroot.cd()
                 hst_temp.Write()
-
+                del(hst_temp)
             #get the mass plot
             plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
             if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
@@ -437,7 +440,6 @@ def GetEvtCount(config):
                 cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
                 err = float(err) #convert it back...so that python likes it
                 cutcounts[region + "_err"] = err
-                
         #finish the for loop
         eventcounts[cut] = cutcounts
 

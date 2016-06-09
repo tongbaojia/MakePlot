@@ -56,6 +56,10 @@ def split(targetpath="data_test"):
         cutflow.Write()
         outfile[i].Close()
     f.Close()
+    del(t)
+    del(outtree)
+    del(cutflow_weight)
+    del(cutflow)
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"

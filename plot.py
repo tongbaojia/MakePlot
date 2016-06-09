@@ -182,7 +182,10 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         RSG1_2500.Rebin(rebin)
 
     #get QS scores
-    ks   = data.KolmogorovTest(data_est, "QU")
+    if "Signal" in cut and blinded:
+        ks = 0
+    else:
+        ks   = data.KolmogorovTest(data_est, "QU")
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
     percentdiff   = (int_data_est - int_data)/int_data * 100.0
