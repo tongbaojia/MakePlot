@@ -18,6 +18,9 @@ ROOT.gROOT.SetBatch(True)
 outputdir = CONF.outplotpath
 mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 
+# whether to use PlotAll() or main()
+plotall = True
+
 def main():
 
     # create output file
@@ -38,6 +41,36 @@ def main():
     channel_strs = ["bad h matching"] + channel_strs
 
     DrawMatchingStats(output, "TEST", cut, channel_strs, "hsublead-b-matching.pdf")
+    output.Close()
+
+# plots matching stats for h's and both pairs's of bs
+def PlotAll():
+    # create output file
+    output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
+    print output
+
+    # first the higgs
+    hcut = "truth_2j_2trk/h0h1_jet_match"
+    hsingle_channel = ["h%d no match  ", "h%d match     ", "h%d mismatch ", "h%d 2 match  "]
+
+    h0_channel = [s % 0 for s in hsingle_channel]
+    h1_channel = [s % 1 for s in hsingle_channel]
+    hchannel_strs = [x+y for y in h1_channel for x in h0_channel]
+    DrawMatchingStats(output, "TEST", hcut, hchannel_strs, "higgs-matching.pdf")
+
+    # now do the pairs of b's
+    bpairs = [("truth_2j_2trk/b0b1_tj_match", "hlead-b-matching.pdf") 
+	     ,("truth_2j_2trk/b2b3_tj_match", "hsublead-b-matching.pdf")]
+    single_channel = ["b%s no match ", "b%s match ", "b%s mismatch ", "b%s 2 match ", "b%s miss "]
+
+    for bcut, sfile in bpairs:
+        p0_channel = [s % "hi" for s in single_channel]
+        p1_channel = [s % "lo" for s in single_channel]
+        channel_strs = [x+y for y in p1_channel for x in p0_channel]
+        channel_strs = ["bad h matching"] + channel_strs
+
+        DrawMatchingStats(output, "TEST", bcut, channel_strs, sfile)
+        
     output.Close()
 
 
@@ -93,19 +126,7 @@ def DrawMatchingStats(outputroot, inputdir, cut, channel_strs, outputfile, norma
     legend.SetTextSize(0.02)
     legend.Draw()
 
-    # draw watermarks
-    xatlas, yatlas = 0.35, 0.87
-    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
-    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    watermarks = [atlas, hh4b, lumi]
-
-    for wm in watermarks:
-       	wm.SetTextAlign(22)
-	wm.SetTextSize(0.04)
-        wm.SetTextFont(42)
-        wm.SetNDC()
-        wm.Draw()
+    wm = helpers.DrawWatermarks()
 
     canv.SaveAs(outputdir + outputfile)
     canv.Close()
@@ -177,19 +198,7 @@ def DrawJetTruthComp(outputroot, inputdir, outputname, normalization=0):
 		    n.Draw()
 		"""
 
-        	# draw watermarks
-        	xatlas, yatlas = 0.35, 0.87
-        	atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
-        	hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-        	lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-        	watermarks = [atlas, hh4b, lumi]
-
-        	for wm in watermarks:
-        	    wm.SetTextAlign(22)
-		    wm.SetTextSize(0.04)
-	            wm.SetTextFont(42)
-	            wm.SetNDC()
-	            wm.Draw()
+		wm = helpers.DrawWatermarks()
 
         	# finish up
         	outputroot.cd()
@@ -233,22 +242,12 @@ def DrawJetTruthComp(outputroot, inputdir, outputname, normalization=0):
         legend.SetTextSize(0.04)
         legend.Draw()
 
-        # draw watermarks
-        xatlas, yatlas = 0.35, 0.87
-        atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
-        hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-        lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-        watermarks = [atlas, hh4b, lumi]
-
-        for wm in watermarks:
-       	    wm.SetTextAlign(22)
-	    wm.SetTextSize(0.04)
-            wm.SetTextFont(42)
-            wm.SetNDC()
-            wm.Draw()
-
+	wm2 = helpers.DrawWatermarks()
         canv.SaveAs(outputdir + "matching-h%i-dR%i.pdf" % (higgs_ind, dR*10 ) )
         canv.Close()
 
 if __name__ == "__main__":
-    main()
+    if plotall:
+	PlotAll()
+    else:
+        main()

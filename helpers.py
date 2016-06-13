@@ -765,3 +765,24 @@ def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
     gr.GetYaxis().SetTitle(hist.GetYaxis().GetTitle())
     return gr
 
+# Gray's function
+# NOTE: you __must__ store the return variable from this function and keep it in scope
+# until you save the associated canvas, otherwise python will grabage collect the 
+# watermakrs and they will __not__ show up on your canvas
+def DrawWatermarks():
+    # draw watermarks
+    xatlas, yatlas = 0.35, 0.87
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
+    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
+    watermarks = [atlas, hh4b, lumi]
+
+    for wm in watermarks:
+        wm.SetTextAlign(22)
+        wm.SetTextSize(0.04)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
+
+    return watermarks
+
