@@ -285,7 +285,7 @@ for c in cutList:
 watermarks = []
 
 xatlas, yatlas = 0.2, 0.88
-atlas = ROOT.TLatex(xatlas,   yatlas,      "ATLAS Simulation Internal")
+atlas = ROOT.TLatex(xatlas,   yatlas,      "ATLAS")
 watermarks += [atlas]
 #internal = ROOT.TLatex(xatlas+0.17,   yatlas,      "Internal")
 #internal = ROOT.TLatex(xatlas+0.24,   yatlas,      "Internal")

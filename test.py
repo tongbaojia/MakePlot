@@ -39,7 +39,7 @@ def options():
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="reweight_0")
     parser.add_argument("--reweight", default="no")
-    parser.add_argument("--full", default=True) #4times more time
+    parser.add_argument("--full", default=False) #4times more time
     return parser.parse_args()
 
 def main():
@@ -113,7 +113,7 @@ def main():
     masterinfo.update(GetdataEst(masterinfo, "data_est_nofit"))
     #WriteEvtCount(masterinfo["data_est_nofit"], output, "data Est nofit")
     masterinfo.update(GetDiff(masterinfo["data_est_nofit"], masterinfo["data"], "dataEstDiffnofit"))
-    WriteEvtCount(masterinfo["dataEstDiffnofit"], output, "Data Est no fit Diff Percentage")
+    #WriteEvtCount(masterinfo["dataEstDiffnofit"], output, "Data Est no fit Diff Percentage")
     ####################################################
     #Do qcd background estimation from the fit
     print "Start Fit!"
@@ -129,7 +129,7 @@ def main():
     #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo.update(GetdataEst(masterinfo, "data_est"))
-    #WriteEvtCount(masterinfo["data_est"], output, "data Est")
+    WriteEvtCount(masterinfo["data_est"], output, "data Est")
     # # #Do data estimation Difference comparision in control and ZZ region
     masterinfo.update(GetDiff(masterinfo["data_est"], masterinfo["data"], "dataEstDiff"))
     WriteEvtCount(masterinfo["dataEstDiff"], output, "Data Est Diff Percentage")

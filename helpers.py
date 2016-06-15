@@ -765,3 +765,8 @@ def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
     gr.GetYaxis().SetTitle(hist.GetYaxis().GetTitle())
     return gr
 
+def syst_adderror(a, b, ea = 0, eb = 0, cov=0):
+    if ea != 0 and eb != 0:
+        return ROOT.TMath.Sqrt((a * ea) ** 2 + (b * eb) ** 2 + a * b * ea * eb * cov)
+    else:
+        return ROOT.TMath.Sqrt((a * ROOT.TMath.Sqrt(a)) ** 2 + (b * ROOT.TMath.Sqrt(b)) ** 2 + (a**1.5) * (b**1.5) * cov)

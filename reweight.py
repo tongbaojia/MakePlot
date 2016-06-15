@@ -8,7 +8,7 @@ import config as CONF
 from ROOT import *
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
-SetAtlasStyle()
+ROOT.SetAtlasStyle()
 
 #other setups
 TH1.AddDirectory(False)
@@ -69,7 +69,7 @@ def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
 # function to build data/bkgd ratios
 def makeDataRatio(data, bkg):
     # ratio set to one with error band 
-    gRatioBand = data.Clone("gRatioBand")
+    gRatioBand = data.Clone(data.GetName() + "_gRatioBand")
     for i in range(0, data.GetN()):
         gRatioBand.SetPoint(i, data.GetX()[i], 1.0)
         if bkg.GetY()[i] > 0:
@@ -78,7 +78,7 @@ def makeDataRatio(data, bkg):
             gRatioBand.SetPointEXhigh(i, bkg.GetErrorXhigh(i)) 
             gRatioBand.SetPointEXlow(i, bkg.GetErrorXlow(i))             
     # ratio set to data/bkg with data stat errors only
-    gRatioDataBkg = data.Clone("gRatioDataBkg")
+    gRatioDataBkg = data.Clone(data.GetName() + "_gRatioDataBkg")
     for i in range(0, data.GetN()):
         if data.GetY()[i]>0 and bkg.GetY()[i]>0:
             gRatioDataBkg.SetPoint(i, data.GetX()[i], data.GetY()[i] / bkg.GetY()[i])
@@ -86,8 +86,8 @@ def makeDataRatio(data, bkg):
             gRatioDataBkg.SetPointEYlow(i, data.GetErrorYlow(i) / bkg.GetY()[i])
             gRatioDataBkg.SetPointEXhigh(i, data.GetErrorXhigh(i)) 
             gRatioDataBkg.SetPointEXlow(i, data.GetErrorXlow(i))             
-        else:
-            gRatioDataBkg.SetPoint(i, 0.0, -1000)
+        #else:
+            #gRatioDataBkg.SetPoint(i, 0.0, -1000)
 
     return [gRatioBand,gRatioDataBkg]
 
@@ -112,7 +112,7 @@ def graphFromHist(hist):
         dataGr.SetPointError(i, binWidthOver2, binWidthOver2, thisYErrLow, thisYErrUp)
     return dataGr
 
-def do_variable_rebinning(hist,bins, scale=1.0):
+def do_variable_rebinning(hist, bins, scale=1.0):
     a=hist.GetXaxis()
     newhist=ROOT.TH1F(hist.GetName()+"_rebinned",
                       hist.GetTitle()+";"+hist.GetXaxis().GetTitle()+";"+hist.GetYaxis().GetTitle(),
@@ -134,12 +134,6 @@ def do_variable_rebinning(hist,bins, scale=1.0):
         newhist.SetBinContent(newb,val)
         newhist.SetBinError(newb,err)
     return newhist
-
-def rebinData(dataHist, rebin, scale=1.0):
-    dataHist = dataHist.Clone()
-    dataHistNew = do_variable_rebinning(dataHist, rebin, scale)
-    return dataHistNew
-    #return graphFromHist(dataHistNew)
 
 ####################################################################################
 #plot
@@ -192,14 +186,14 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         RSG1_2500.Rebin(rebin)
 
     if rebinarry != []:
-        data = data.Rebin(len(rebinarry) - 1, data.GetName() + "_rebin", rebinarry)
-        data_est = data_est.Rebin(len(rebinarry) - 1, data_est.GetName() + "_rebin", rebinarry)
-        qcd  = qcd.Rebin(len(rebinarry) - 1, qcd.GetName() + "_rebin", rebinarry)
-        ttbar  = ttbar.Rebin(len(rebinarry) - 1, ttbar.GetName() + "_rebin", rebinarry)
-        zjet  = zjet.Rebin(len(rebinarry) - 1, zjet.GetName() + "_rebin", rebinarry)
-        RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName() + "_rebin", rebinarry)
-        RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName() + "_rebin", rebinarry)
-        RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName() + "_rebin", rebinarry)
+        data      = do_variable_rebinning(data, rebinarry)
+        data_est  = do_variable_rebinning(data_est, rebinarry)
+        qcd       = do_variable_rebinning(qcd, rebinarry)
+        ttbar     = do_variable_rebinning(ttbar, rebinarry)
+        zjet      = do_variable_rebinning(zjet, rebinarry)
+        RSG1_1000 = do_variable_rebinning(RSG1_1000, rebinarry)
+        RSG1_1500 = do_variable_rebinning(RSG1_1500, rebinarry)
+        RSG1_2500 = do_variable_rebinning(RSG1_2500, rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -394,7 +388,8 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         else:
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
             testfit.SetParameters(0.8, 0.0001, -0.000001, 0)
-            #testfit.FixParameter(2, 0) #do a 1D fit really
+            testfit.FixParameter(2, 0) #do a 1D fit really
+            testfit.FixParameter(3, 0) #do a 1D fit really
         #testfit.SetParLimits(0, -1, 2)
         #testfit.SetParLimits(1, -1, 1)
         #testfit.SetParLimits(1, -1, 1)
@@ -415,7 +410,6 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
             f_reweight.write("par2: " + str('%.3g' % fitresult[2]) + " \n")
             f_reweight.write("par3: " + str('%.3g' % fitresult[3]) + " \n")
             f_reweight.close()
-
 
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
@@ -481,24 +475,31 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     del(RSG1_1500)
     del(RSG1_2500)
 
+    if ("Sideband" in cut and True):
+        outputroot.cd()
+        ratios[1].SetName(cut)
+        ratios[1].Write()
 
 def dumpRegion(config):
-    array_leadtrk = array('d', range(0, 450, 15) + [450, 480, 510, 550, 600, 700, 800, 1000, 1500, 2000])
+    array_leadtrk = array('d', [0, 60] + range(60, 450, 30) + [450, 480, 510, 550, 650, 800, 1300, 2000])
     array_subltrk = array('d', range(0, 150, 15) + [160, 200, 240, 400])
     array_leadpt = array('d', range(200, 1400, 40) + range(1400, 2200, 100))
     array_sublpt = array('d', range(200, 1200, 40) + range(1200, 2000, 100))
-    #if "FourTag" in config["cut"]:
-        #array_leadtrk = array('d', range(0, 500, 20) + [500, 550, 600, 700, 800, 1000, 1500, 2000])
-        #array_subltrk = array('d', range(0, 160, 20) + [240, 400])
+    if "ThreeTag" in config["cut"]:
+        array_leadtrk = array('d', [0, 25, 50] + range(50, 300, 25) + [300, 330, 360, 400, 450, 550, 800, 1500, 2000])
+        array_subltrk = array('d', range(0, 160, 20) + [240, 400])
+    if "FourTag" in config["cut"]:
+        array_leadtrk = array('d', range(0, 500, 50) + [500, 1000, 2000])
+        array_subltrk = array('d', range(0, 160, 20) + [240, 400])
 
 
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1, fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1, fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=array_leadtrk, fitrange=[25, 2000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=array_leadtrk, fitrange=[25, 2000])
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebin=2, fitrange=[700, 3000])
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebin=2, Logy=1, fitrange=[700, 3000])
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebin=2, fitrange=[700, 3000])
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebin=2, Logy=1, fitrange=[700, 3000])
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=array_leadtrk, fitrange=[25, 1000])
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=array_leadtrk, fitrange=[25, 1000])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=array_subltrk, fitrange=[0, 400])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=array_subltrk, fitrange=[0, 400])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2, fitrange=[50, 200])
@@ -552,7 +553,8 @@ def main():
     reweightfolder = inputpath + "Reweight/"
     helpers.checkpath(reweightfolder)
 
-
+    global outputroot
+    outputroot = ROOT.TFile(reweightfolder + "reweights.root", "recreate")
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
@@ -583,8 +585,10 @@ def main():
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
     #for debug
-    #dumpRegion(inputtasks[0])
-    
+    # dumpRegion(inputtasks[0])
+    # dumpRegion(inputtasks[1])
+    # dumpRegion(inputtasks[2])
+    outputroot.Close()
     print("--- %s seconds ---" % (time.time() - start_time))
 
     
