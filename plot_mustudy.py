@@ -1,5 +1,6 @@
 import ROOT, rootlogon
-import argparse, array, copy, glob, os, sys, time, json
+import argparse, array, copy, glob, os, sys, time
+import simplejson as json
 import helpers
 import config as CONF
 from ROOT import *
@@ -18,7 +19,7 @@ def main():
     inputdir = ops.inputdir
 
     global channels
-    channels=["SB48", "SB58", "SB68", "SB78", "SB88", "SB98", "SB108", "SB128", "SB168", "SB999"]#, "b70", "b77", "b80", "b85", "b90"]
+    channels=["SB53", "SB58", "SB63", "SB68", "SB73", "SB78", "SB88", "SB98", "SB108", "SB128", "SB168"]#, "b70", "b77", "b80", "b85", "b90"]
 
     global region_lst
     region_lst = ["Sideband", "Control", "ZZ", "Signal"]
@@ -38,9 +39,12 @@ def main():
     DrawFitParameters("Nb=2s")
     DrawFitParameters("Nb=2")
     DrawFitParameters("Nb=1")
-    DrawUncertaintyCompare("FourTag")
-    DrawUncertaintyCompare("ThreeTag")
-    DrawUncertaintyCompare("TwoTag split")
+
+    for types in ["qcd_est", "ttbar_est", "data_est"]:
+        DrawUncertaintyCompare("FourTag", types)
+        DrawUncertaintyCompare("ThreeTag", types)
+        DrawUncertaintyCompare("TwoTag_split", types)
+
 
     # Finish the work
     print("--- %s seconds ---" % (time.time() - start_time))
@@ -100,41 +104,38 @@ def DrawFitParameters(region="4b"):
 
 
 ### 
-def DrawUncertaintyCompare(Tags="FourTag"):
+def DrawUncertaintyCompare(cut="FourTag", Types="qcd_est"):
+    #very slow...needs to imporve performance...yeah...
     outputroot.cd()
-    canv = ROOT.TCanvas(Tags.replace(" ", "_") + "_" + "sigma_compare", "sigma_compare", 800, 800)
+    canv = ROOT.TCanvas(Types + "_" + cut.replace(" ", "_") + "_" + "sigma_compare", "sigma_compare", 800, 800)
     xleg, yleg = 0.62, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
     h_lst = []
 
     temp_h_max = 1
     for j, region in enumerate(region_lst):
-        h_muqcd = ROOT.TH1D(Tags + "_" + region + "_" + "sigma_compare_SB", "sigma_compare;SB size",1,1,2)
+        h_muqcd = ROOT.TH1D(cut + "_" + region + "_" + "sigma_compare_SB", "sigma_compare;SB size",1,1,2)
         
         for i, ch in enumerate(channels):
-            inputtex = inputpath + ch + "/" + "sum_" + ch + ".tex"
+            inputtex = inputpath + ch + "/" + "sum_" + ch + ".txt"
             f1 = open(inputtex, 'r')
-            for line in f1: 
-                #print line
-                #very stupid protection to distinguish 2b and 2bs
-                if (Tags) in line:
-                    templine = line.split("&")
-                    #print templine
-                    tempqcd = templine[j + 1].split(" ")
-                    tempqcd_syst_err =  tempqcd[5].split("\\\\") #this is the fit uncertainty
-                    muqcd = float(tempqcd[1]) #this is the number of events
-                    muqcd_err = float(tempqcd_syst_err[0]) #this is the fit uncertainty
-                    #print tempqcd
-                    h_muqcd.SetMarkerStyle(20 + j)
-                    h_muqcd.SetMarkerColor(CONF.clr_lst[j])
-                    h_muqcd.SetLineColor(CONF.clr_lst[j])
-                    h_muqcd.SetMarkerSize(1)
-                    h_muqcd.GetYaxis().SetTitle("#sigma_{Fit Syst}/#sigma_{Stat}")
-                    h_muqcd.Fill(ch, muqcd_err/ROOT.TMath.Sqrt(muqcd))
-                    h_muqcd.SetBinError(h_muqcd.GetXaxis().FindBin(ch), helpers.ratioerror(ROOT.TMath.Sqrt(muqcd), muqcd) * muqcd_err/ROOT.TMath.Sqrt(muqcd))
+            masterdic = json.load(f1)
+            
+            #print templine
+            muqcd = masterdic[Types][cut][region] #this is the number of events
+            muqcd_err =  masterdic[Types][cut][region + "_syst_muqcd_fit_up"] #this is the fit uncertainty
+            #print tempqcd
+            h_muqcd.Fill(ch, muqcd_err/ROOT.TMath.Sqrt(muqcd))
+            h_muqcd.SetBinError(h_muqcd.GetXaxis().FindBin(ch), 1/(ROOT.TMath.Sqrt(muqcd) + 1) * muqcd_err/ROOT.TMath.Sqrt(muqcd))
 
+            del(masterdic)
             f1.close()
         temp_h_max = max(temp_h_max, h_muqcd.GetMaximum())
+        h_muqcd.SetMarkerStyle(20 + j)
+        h_muqcd.SetMarkerColor(CONF.clr_lst[j])
+        h_muqcd.SetLineColor(CONF.clr_lst[j])
+        h_muqcd.SetMarkerSize(1)
+        h_muqcd.GetYaxis().SetTitle(Types.replace("_", " ") + ", #sigma_{Fit Syst}/#sigma_{Stat}")
         legend.AddEntry(h_muqcd, region, "apl")
         h_lst.append(h_muqcd)
 
@@ -142,7 +143,7 @@ def DrawUncertaintyCompare(Tags="FourTag"):
         h_muqcd.SetMaximum(temp_h_max * 1.5)
         h_muqcd.Draw("EPL" if j== 0 else "same EPL")
 
-    #myText(0.5, 0.87, 1, "Region: %s" % region, 42)
+    myText(0.2, 0.87, 1, "%s" % cut.replace("_", " "), 42)
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
     legend.SetTextSize(0.04)

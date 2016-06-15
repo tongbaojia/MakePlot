@@ -1,7 +1,7 @@
 import ROOT, rootlogon, helpers
 import config as CONF
 import argparse, copy, glob, os, sys, time
-import json, pickle
+import simplejson as json
 from Xhh4bUtils.BkgFit.BackgroundFit_Ultimate import BackgroundFit
 import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 #for parallel processing!
@@ -183,8 +183,8 @@ def GetdataEst(inputdic, histname="", dosyst=False):
             #start systematics
             if (dosyst):
                 if (region + "_syst_muqcd_fit_up") in inputdic["qcd_est"][cut].keys():
-                    cutcounts[region + "_syst_muqcd_fit_up"]   = 0 #inputdic["qcd_est"][cut][region + "_syst_muqcd_fit_up"], inputdic["ttbar_est"][cut][region + "_syst_muqcd_fit_up"])
-                    cutcounts[region + "_syst_muqcd_fit_down"] = 0 #inputdic["qcd_est"][cut][region + "_syst_muqcd_fit_down"], inputdic["ttbar_est"][cut][region + "_syst_muqcd_fit_down"])
+                    cutcounts[region + "_syst_muqcd_fit_up"]   = helpers.syst_adderror(inputdic["qcd_est"][cut][region + "_syst_muqcd_fit_up"], inputdic["ttbar_est"][cut][region + "_syst_muqcd_fit_up"], corr=inputdic["qcd_est"][cut][region + "_corr"])
+                    cutcounts[region + "_syst_muqcd_fit_down"] = helpers.syst_adderror(inputdic["qcd_est"][cut][region + "_syst_muqcd_fit_down"], inputdic["ttbar_est"][cut][region + "_syst_muqcd_fit_down"], corr=inputdic["qcd_est"][cut][region + "_corr"])
                     
                     cutcounts[region + "_syst_up"]   = cutcounts[region + "_syst_muqcd_fit_up"]
                     cutcounts[region + "_syst_down"] = cutcounts[region + "_syst_muqcd_fit_down"]
@@ -206,7 +206,7 @@ def fitestimation(histname=""):
             #start the histogram as a dumb holder
             Ftransfer = 1.0
             Ftransfer_err = 0.0
-            Ftransfer_cov = 0.0
+            Ftransfer_corr = 0.0
             Ntransfer = 1.0
             #define where the qcd come from
             ref_cut = numb_dict[background_model]
@@ -235,9 +235,9 @@ def fitestimation(histname=""):
                 if word_dict[cut] < len(fitresult["mu" + histname.replace("_est", "")]):
                     Ftransfer = fitresult["mu" + histname.replace("_est", "")][word_dict[cut]]
                     Ftransfer_err = fitresult["mu" + histname.replace("_est", "") + "_e"][word_dict[cut]]
-                    cov_temp = fitresult["cov_m"][word_dict[cut]]
-                    Ftransfer_cov = cov_temp[word_dict[cut] + len(cov_temp)/2]
-                    #print "cov is, ", fitresult["cov_m"], Ftransfer_cov, cut, histname, word_dict[cut]
+                    corr_temp = fitresult["corr_m"][word_dict[cut]]
+                    Ftransfer_corr = corr_temp[word_dict[cut] + len(corr_temp)/2]
+                    #print "cor is, ", fitresult["corr_m"], Ftransfer_corr, cut, histname, word_dict[cut]
             #print histname, Ftransfer
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
@@ -262,7 +262,7 @@ def fitestimation(histname=""):
             cutcounts[region + "_syst_muqcd_fit_up"] = Ftransfer_err * Ntransfer
             cutcounts[region + "_syst_muqcd_fit_down"] = -Ftransfer_err * Ntransfer
             cutcounts[region + "_scale_factor"] = Ftransfer
-            cutcounts[region + "_cov"] = Ftransfer_cov
+            cutcounts[region + "_corr"] = Ftransfer_corr
             #print cut, region, Ntransfer, Ftransfer_err, cutcounts[region + "_syst_muqcd_fit_up"]
             del(plttemp)
         est[cut] = cutcounts
