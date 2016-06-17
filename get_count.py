@@ -1,7 +1,10 @@
 import ROOT, rootlogon, helpers
 import config as CONF
 import argparse, copy, glob, os, sys, time
-import simplejson as json
+try:
+    import simplejson as json                 
+except ImportError:
+    import json        
 from Xhh4bUtils.BkgFit.BackgroundFit_Ultimate import BackgroundFit
 import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 #for parallel processing!
@@ -38,7 +41,7 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
-    parser.add_argument("--full", default=False) #4times more time
+    parser.add_argument("--full", default=True) #4times more time
     return parser.parse_args()
 
 def main():
@@ -84,7 +87,11 @@ def main():
     for mass in mass_lst:
         inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG1_%i" % mass})
 
+
+    #setup multiprocessing
     #start calculating the dictionary
+    #for result in pool.map(GetEvtCount, inputtasks):
+        #masterinfo.update(result)
     for task in inputtasks:
         masterinfo.update(GetEvtCount(task))
     # #WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
@@ -119,7 +126,7 @@ def main():
     WriteEvtCount(masterinfo["data_est"], output, "data Est")
     # # #Do data estimation Difference comparision in control and ZZ region
     masterinfo.update(GetDiff(masterinfo["data_est"], masterinfo["data"], "dataEstDiff"))
-    # WriteEvtCount(masterinfo["dataEstDiff"], output, "Data Est Diff Percentage")
+    #WriteEvtCount(masterinfo["dataEstDiff"], output, "Data Est Diff Percentage")
     # masterinfo["ttbarEstDiff"] = GetDiff(masterinfo["ttbar_est"], masterinfo["ttbar"])
     # WriteEvtCount(masterinfo["ttbarEstDiff"], output, "top Est Diff Percentage")
 
@@ -132,11 +139,14 @@ def main():
         WriteYield(masterinfo, yield_tex, tag)
 
     ##Do overlay signal region predictions
-    # for mass in mass_lst:
-    #     masterinfo.update(GetSignificance(masterinfo, mass, "RSG1_" + str(mass)))
-    #     #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
-    # # #produce the significance plots
-    # DumpSignificance(masterinfo)
+    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)
+    pool  = mp.Pool(npool)
+    for result in pool.map(GetSignificance, mass_lst):
+        masterinfo.update(result)
+        #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
+    ##produce the significance plots
+    DumpSignificance(masterinfo)
     
         
     #finish and quit
@@ -418,7 +428,7 @@ def WriteYield(inputdic, outFile, cut="Signal"):
     ###
     tableList.append("\\begin{footnotesize}")
     tableList.append("\\begin{tabular}{c|c|c|c}")
-    tableList.append("%s & Sideband & Control & Signal \\\\")
+    tableList.append("%s & Sideband & Control & Signal \\\\" % cut.replace("_", " "))
     tableList.append("\\hline\\hline")
     tableList.append("& & & \\\\")
 
@@ -432,14 +442,14 @@ def WriteYield(inputdic, outFile, cut="Signal"):
             outstr += str(helpers.round_sig(inputdic[file][cut][region], 2))
             outstr += " $\\pm$ "
             outstr += str(helpers.round_sig(inputdic[file][cut][region+"_err"], 2))
-            if region + "_syst_up" in inputdic[file][cut].keys():
-                outstr += " $\\substack{"
-                outstr += "+ " + str(helpers.round_sig(inputdic[file][cut][region+"_syst_up"], 2))
-                outstr += "\\\\"
-                outstr += "- " + str(helpers.round_sig(inputdic[file][cut][region+"_syst_down"], 2))
-                outstr += "}$ "
-            else:
-                outstr += " $\\pm$ sys"
+            # if region + "_syst_up" in inputdic[file][cut].keys():
+            #     outstr += " $\\substack{"
+            #     outstr += "+ " + str(helpers.round_sig(inputdic[file][cut][region+"_syst_up"], 2))
+            #     outstr += "\\\\"
+            #     outstr += "- " + str(helpers.round_sig(inputdic[file][cut][region+"_syst_down"], 2))
+            #     outstr += "}$ "
+            # else:
+            outstr += " $\\pm$ sys"
 
 
         outstr+="\\\\"
@@ -530,7 +540,7 @@ def GetSensitivity(h_signal, h_bkg):
         # get peak position
         maxBin = h_signal.GetMaximumBin()
         maxMass = h_signal.GetBinCenter(maxBin)
-        integralbin_min, integralbin_max = GetMassWindow(h_signal, 0.68)   # or 0.95
+        integralbin_min, integralbin_max = GetMassWindow(h_signal, 0.68)   # or 0.95; the width contorl here
 
         S_err = ROOT.Double(0.)
         S = h_signal.IntegralAndError(integralbin_min, integralbin_max, S_err)
@@ -550,7 +560,8 @@ def GetSensitivity(h_signal, h_bkg):
         return (sensitivity, sensitivity_err, S, B)
 
 ### 
-def GetSignificance(inputdic, mass, histname=""):    
+def GetSignificance(mass):   
+    histname =  "RSG1_" + str(mass)
     eventcounts = {}
     eventcounts_err = {}
     ### 
@@ -571,10 +582,10 @@ def GetSignificance(inputdic, mass, histname=""):
             del(plttemp_bkg)
         eventcounts[cut] = cutcounts
         eventcounts_err[cut] = cutcounts_err 
-    return {histname + "sig_est": eventcounts, histname + "sig_est_err": eventcounts_err}
+    return {histname + "_sig_est": eventcounts, histname + "_sig_est_err": eventcounts_err}
 
 ### 
-def DumpSignificance(inputdic, samplename="region"):    
+def DumpSignificance(inputdic):    
     ###
     outroot.cd()
     for i, cut in enumerate(cut_lst):
@@ -583,8 +594,8 @@ def DumpSignificance(inputdic, samplename="region"):
             #for all the mass points:
             temp_plt = ROOT.TH1D("%s_%s_Significance" % (cut, region), ";mass, GeV; Significance", 32, -50, 3150)
             for mass in mass_lst:
-                temp_plt.SetBinContent(temp_plt.GetXaxis().FindBin(mass), inputdic["RSG1_" + str(mass) + "sig_est"][cut][region])
-                temp_plt.SetBinError(temp_plt.GetXaxis().FindBin(mass), inputdic["RSG1_" + str(mass) + "sig_est_err"][cut][region])
+                temp_plt.SetBinContent(temp_plt.GetXaxis().FindBin(mass), inputdic["RSG1_" + str(mass) + "_sig_est"][cut][region])
+                temp_plt.SetBinError(temp_plt.GetXaxis().FindBin(mass), inputdic["RSG1_" + str(mass) + "_sig_est_err"][cut][region])
             temp_plt.Write()
             del(temp_plt)
     return 0

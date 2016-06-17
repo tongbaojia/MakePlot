@@ -54,7 +54,7 @@ def main():
         masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, "RSG1_%i" % mass)
 
     #Get ttbar samples
-    masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test.root", "ttbar")
+    masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "ttbar")
     # # Get Zjet samples
     masterinfo["zjet"] = GetEvtCount(inputpath + "zjets_test/hist-MiniNTuple.root", "zjet")
     # # Get Signal samples; do not unblind now

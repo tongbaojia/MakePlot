@@ -49,10 +49,10 @@ def main():
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
     # For cuts that don't exist in the cutflow plot
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
-    #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
 
 
 def options():
@@ -86,6 +86,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             cutflow_mc = input_mc.Get("CutFlowNoWeight").Clone() #notice here we use no weight for now!
             cutflow_mc_w = input_mc.Get("CutFlowWeight").Clone()
             if dorel:
+                maxbincontent = 1.0
                 if i > 0:
                     normalization = cut_lst[i - 1]
             totevt_mc = cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin(normalization))

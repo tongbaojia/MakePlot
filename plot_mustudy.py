@@ -143,6 +143,13 @@ def DrawUncertaintyCompare(cut="FourTag", Types="qcd_est"):
         h_muqcd.SetMaximum(temp_h_max * 1.5)
         h_muqcd.Draw("EPL" if j== 0 else "same EPL")
 
+
+    xline05 = ROOT.TLine(1, 0.5, 13, 0.5)
+    xline05.SetLineStyle(3)
+    xline05.Draw()
+    xline03 = ROOT.TLine(1, 0.33, 13, 0.33)
+    xline03.SetLineStyle(3)
+    xline03.Draw()
     myText(0.2, 0.87, 1, "%s" % cut.replace("_", " "), 42)
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)

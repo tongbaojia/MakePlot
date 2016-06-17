@@ -139,6 +139,8 @@ def do_variable_rebinning(hist, bins, scale=1.0):
 #plot
 
 def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, outputFolder="", rebinarry=[], fitrange=[0, 0]):
+    #debug
+    #print filepath, filename, cut
 
     gStyle.SetErrorX(0)
     gStyle.SetHatchesSpacing(0.7)
@@ -475,10 +477,11 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     del(RSG1_1500)
     del(RSG1_2500)
 
-    if ("Sideband" in cut and True):
-        outputroot.cd()
-        ratios[1].SetName(cut)
-        ratios[1].Write()
+    ##should only be run non-parellel.
+    #if ("Sideband" in cut and True):
+        #outputroot.cd()
+        #ratios[1].SetName(cut)
+        #ratios[1].Write()
 
 def dumpRegion(config):
     array_leadtrk = array('d', [0, 60] + range(60, 450, 30) + [450, 480, 510, 550, 650, 800, 1300, 2000])
@@ -504,7 +507,7 @@ def dumpRegion(config):
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=array_subltrk, fitrange=[0, 400])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2, fitrange=[50, 200])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass",     xTitle="J1 m [GeV]", rebin=2, fitrange=[50, 200])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "Rhh",                xTitle="Rhh", rebin=2, fitrange=[35, 110])
+    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "Rhh",                xTitle="Rhh", rebin=2)
     
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2, fitrange=[1, 3.7])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2, fitrange=[0, 1.7])
@@ -523,7 +526,7 @@ def dumpRegion(config):
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk", fitrange=[0, 5])
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy", fitrange=[0, 0.5])
+    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy", fitrange=[0, 0.5])
 
     print config["outputdir"], "done!"
 
@@ -584,7 +587,7 @@ def main():
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
-    #for debug
+    ##for debug
     # dumpRegion(inputtasks[0])
     # dumpRegion(inputtasks[1])
     # dumpRegion(inputtasks[2])

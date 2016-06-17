@@ -35,8 +35,8 @@ def main():
         os.makedirs(outputpath)
 
     #side band shapes
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[0, 320], Yrange=[0, 320])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[50, 200], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
     #correlations of the jet mass and jet pT
     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
