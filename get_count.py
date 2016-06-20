@@ -39,7 +39,6 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--full", default=True) #4times more time
     return parser.parse_args()

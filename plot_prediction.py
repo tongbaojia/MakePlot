@@ -213,11 +213,14 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     pad1.Draw()
     pad1.cd()
     for j in range(1, temp_ratio.GetNbinsX()+1):
-        if temp_ref.GetBinContent(j) > 0:
+        try:
             temp_ratio.SetBinContent(j, temp_all.GetBinContent(j) / temp_ref.GetBinContent(j))
             temp_ratio.SetBinError(j, helpers.ratioerror(\
                 temp_all.GetBinContent(j), temp_ref.GetBinContent(j), \
                 temp_all.GetBinError(j), temp_ref.GetBinError(j)))
+        except ZeroDivisionError:
+            pass
+            #print "Divide by zero! Check bin content in", canv.GetName()
 
     temp_ratio.SetMarkerStyle(20)
     temp_ratio.SetMarkerColor(1)
