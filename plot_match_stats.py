@@ -19,7 +19,15 @@ outputdir = CONF.outplotpath
 mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 
 # whether to use PlotAll() or main()
-plotall = True
+plotall = False
+
+# names for the legend
+# bsingle_channel = ["b%s no match ", "b%s match ", "b%s mismatch ", "b%s 2 match ", "b%s miss "]
+# bsingle_channel = ["b%s no match ", "b%s match 0 ", "b%s match 1 ", "b%s match 0,1 ", "b%s match 2 ", "b%s match 0,2 ", "b%s match 1,2 ", "b%s match 0,1,2 ", "b%s miss "]
+bsingle_channel = ["b%s no match ", "b%s match-n ", "b%s match-b ", "b%s miss "]
+hsingle_channel = ["h%d no match  ", "h%d match     ", "h%d mismatch ", "h%d 2 match  "]
+
+inpsubdir = "TEST"
 
 def main():
 
@@ -29,18 +37,15 @@ def main():
     print output
 
     # set up to draw
-    # cut = "truth_2j_2trk/h0h1_jet_match"
-    # single_channel = ["h%d no match  ", "h%d match     ", "h%d mismatch ", "h%d 2 match  "]
+    # cut = "truth_general_data/h0h1_jet_match"
+    cut = "truth_general_data/b2b3_tj_match"
 
-    cut = "truth_2j_2trk/b2b3_tj_match"
-    single_channel = ["b%s no match ", "b%s match ", "b%s mismatch ", "b%s 2 match ", "b%s miss "]
-
-    p0_channel = [s % "hi" for s in single_channel]
-    p1_channel = [s % "lo" for s in single_channel]
+    p0_channel = [s % 0 for s in hsingle_channel]
+    p1_channel = [s % 1 for s in hsingle_channel]
     channel_strs = [x+y for y in p1_channel for x in p0_channel]
-    channel_strs = ["bad h matching"] + channel_strs
+    # channel_strs = ["bad h matching"] + channel_strs
 
-    DrawMatchingStats(output, "TEST", cut, channel_strs, "hsublead-b-matching.pdf")
+    DrawMatchingStats(output, inpsubdir, cut, channel_strs, "b-matching-all-sublead.pdf", cutoff=.01)
     output.Close()
 
 # plots matching stats for h's and both pairs's of bs
@@ -50,39 +55,44 @@ def PlotAll():
     print output
 
     # first the higgs
-    hcut = "truth_2j_2trk/h0h1_jet_match"
-    hsingle_channel = ["h%d no match  ", "h%d match     ", "h%d mismatch ", "h%d 2 match  "]
+    hcut = "truth_general_data/h0h1_jet_match"
 
     h0_channel = [s % 0 for s in hsingle_channel]
     h1_channel = [s % 1 for s in hsingle_channel]
     hchannel_strs = [x+y for y in h1_channel for x in h0_channel]
-    DrawMatchingStats(output, "TEST", hcut, hchannel_strs, "higgs-matching.pdf")
+    DrawMatchingStats(output, inpsubdir, hcut, hchannel_strs, "higgs-matching.pdf")
 
     # now do the pairs of b's
-    bpairs = [("truth_2j_2trk/b0b1_tj_match", "hlead-b-matching.pdf") 
-	     ,("truth_2j_2trk/b2b3_tj_match", "hsublead-b-matching.pdf")]
-    single_channel = ["b%s no match ", "b%s match ", "b%s mismatch ", "b%s 2 match ", "b%s miss "]
+    bpairs = [("truth_general_data/b0b1_tj_match", "hlead-b-matching-btag.pdf", 0.01) 
+	     ,("truth_general_data/b2b3_tj_match", "hsublead-b-matching-btag.pdf", 0.03)]
 
-    for bcut, sfile in bpairs:
-        p0_channel = [s % "hi" for s in single_channel]
-        p1_channel = [s % "lo" for s in single_channel]
+    for bcut, sfile, cutoff in bpairs:
+        p0_channel = [s % "hi" for s in bsingle_channel]
+        p1_channel = [s % "lo" for s in bsingle_channel]
         channel_strs = [x+y for y in p1_channel for x in p0_channel]
         channel_strs = ["bad h matching"] + channel_strs
 
-        DrawMatchingStats(output, "TEST", bcut, channel_strs, sfile)
+        DrawMatchingStats(output, inpsubdir, bcut, channel_strs, sfile, cutoff)
         
     output.Close()
 
 
-def DrawMatchingStats(outputroot, inputdir, cut, channel_strs, outputfile, normalization=0):
-    cutoff = .02
-    channels = np.zeros( [len(mass_lst), len(channel_strs)] )
+def DrawMatchingStats(outputroot, inputdir, cut, channel_strs, outputfile, cutoff = 0.001, normalization=0):
+    channels = np.zeros( [len(mass_lst), 26] )
 
     canv = ROOT.TCanvas(inputdir + "_" + str(normalization), "Efficinecy", 1000, 1000)
 
     for i,mass in enumerate(mass_lst):
 	inp = ROOT.TFile.Open(CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
-	hist = inp.Get(cut).Clone()
+	try:
+	    hist = inp.Get(cut).Clone()
+	except:
+	    if inp is None:
+		print mass
+	    print CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass
+	    print cut
+	    raise
+
 	# normalize
 	hist.Scale(1/hist.Integral())
 
@@ -94,14 +104,61 @@ def DrawMatchingStats(outputroot, inputdir, cut, channel_strs, outputfile, norma
     # now generate the lines
     lines = []
     strlist = []
+    """
     for i in range(len(channel_strs)):
 	data = np.copy(channels[:,i]).astype("float64")
 	if np.any(data[3:] > cutoff):
 	    lines.append( ROOT.TGraph(len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
 	    strlist.append(channel_strs[i])
+    # bsingle_channel = ["b%s no match ", "b%s match ", "b%s mismatch ", "b%s 2 match ", "b%s miss "]
+    # bsingle channel = ["b no match", " bno b-tag", " b btag", "b miss"]
+    bdata = np.zeros([3, channels.shape[0] ])
+    bdata[0,:] = (channels[:,6]).astype("float64") 
+    bdata[1,:] = (channels[:,7] + channels[:,10]).astype("float64") 
+    bdata[2,:] =  (channels[:,11]).astype("float64") 
+    norm = np.sum(bdata, axis=0)
+    print bdata
+    bdata = bdata/norm
+
+    print norm
+
+    data = bdata[0,:]
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "Neither b b-tagged" )
+
+    data = bdata[1,:]
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "One b b-tagged" )
+
+    data = bdata[2,:]
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "Both b's b-tagged" )
+
+    """
+    data = (channels[:,0]).astype("float64")
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "Bad Higgs Matching" ) 
+    
+    data = (channels[:,7] + channels[:,13]).astype("float64") 
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "Each b Matched to Unique Jet" )
+
+    data = (channels[:,12] + channels[:,8]).astype("float64")
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "Both b's Matched to Same Jet" )
+
+    data = (channels[:,9] + channels[:,14] + channels[:,17] + channels[:,18]).astype("float64")
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "One b Matched to 2 Jets. One Matched to 1" ) 
+
+    data = (channels[:,2] + channels[:,3] + channels[:,6] + channels[:,11]).astype("float64")
+    lines.append( ROOT.TGraph( len(mass_lst), np.array(mass_lst, dtype="float64"), data) )
+    strlist.append( "One b Matched to 1 Jet. One Not Matched." )
+
+    print (channels[:,1] + channels[:,4] + channels[:,5], channels[:,10] + channels[:,15] + channels[:,16] + np.sum(channels[:,19:-1], axis=1))
 
     # add legend
-    xleg, yleg = 0.55, 0.7
+    xleg, yleg = 0.49, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
  
     graph = ROOT.TMultiGraph()
@@ -109,11 +166,12 @@ def DrawMatchingStats(outputroot, inputdir, cut, channel_strs, outputfile, norma
 	line.SetMarkerStyle(20+j)
 	# line.SetMarkerColor(1+j)
 	line.SetMarkerColor(CONF.clr_lst[j])
+	line.SetLineColor(CONF.clr_lst[j])
 	line.SetMarkerSize(1)
 	graph.Add(line)
 	legend.AddEntry(line, s, "apl")
 
-    graph.SetMaximum(1.2) 
+    graph.SetMaximum(1.3) 
     graph.Draw("apc")
 
     # set axes

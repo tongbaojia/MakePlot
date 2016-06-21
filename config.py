@@ -11,7 +11,7 @@ inputpath  =  "~/public/Xhh45/Output/"
 #output top directory for the output plots/root files
 outputpath =  "~/public/Xhh45/Output/"
 #output top directory for only plots
-outplotpath =  "~/public/Xhh45/Plots/"
+outplotpath =  "~/public/Xhh45/Note-Plots/"
 #MC mass points
 mass_lst   = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 #plot color variables
