@@ -385,7 +385,7 @@ def main():
     ops = options()
 
     global inputpath
-    inputpath = CONF.inputpath + "TEST/"
+    inputpath = CONF.inputpath + "TEST-15/"
     global iter_reweight #iterative reweight or not
     iter_reweight = int(ops.iter)
     global turnon_reweight #reweight or not
@@ -393,7 +393,7 @@ def main():
     if iter_reweight > 0:
         turnon_reweight = True
     global outputpath
-    outputpath = CONF.outputpath + "reweight/"
+    outputpath = CONF.outputpath + "b77_c00/"
     #outputpath = CONF.outputpath + "reweight_" + str(iter_reweight) + "/"
     helpers.checkpath(outputpath)
     #for testing

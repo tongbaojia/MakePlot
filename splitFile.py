@@ -16,16 +16,15 @@ def options():
     return parser.parse_args()
 
 
-
 def split(targetpath="data_test"):
     start_time = time.time()
 
     ops = options()
     nfiles = ops.nfiles
     global inputpath
-    inputpath = CONF.inputpath + "TEST/" + targetpath
+    inputpath = CONF.inputpath + "TEST-15/" + targetpath
     global outputpath
-    outputpath = CONF.inputpath + "TEST/" +  targetpath
+    outputpath = CONF.inputpath + "TEST-15/" +  targetpath
     helpers.checkpath(outputpath)
 
     f = ROOT.TFile(inputpath + "/" + "hist-MiniNTuple.root", "read")
@@ -64,10 +63,11 @@ def split(targetpath="data_test"):
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
 
+
 def main():
     split(targetpath="data_test")
     split(targetpath="ttbar_comb_test")
-    split(targetpath="signal_QCD")
+    #split(targetpath="signal_QCD")
 
 #def clearbranches():
 if __name__ == "__main__":

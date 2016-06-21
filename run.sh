@@ -1,7 +1,7 @@
 #channels=(b70 b77 b80 b85 b90)
 #channels=(jl400 jl425 jl450 jl400js275 jl425js275 jl450js275 jl400js300 jl425js300 jl450js300)
 #channels=(SB48 SB53 SB58 SB63 SB68 SB73 SB78 SB88 SB98 SB108 SB128 SB168)
-channels=(reweight)
+channels=(TEST)
 #channels=(reweight_3)
 #for gather tables and histograms
 
