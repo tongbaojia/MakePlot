@@ -372,7 +372,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
     # top right, a bit left
     ATLASLabel(0.19, 0.91, StatusLabel)
-    myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 3.2 fb^{-1}", 22)
+    myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 0.67 fb^{-1}", 22)
     myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
     leg.SetNColumns(2)
@@ -435,8 +435,8 @@ def dumpRegion(config):
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
+    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
 
     print config["outputdir"], "done!"
 

@@ -12,6 +12,8 @@ import numpy as np
 #end of import for now
 
 ROOT.gROOT.SetBatch(True)
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.SetAtlasStyle()
 
 #set global variables
 #set output directory

@@ -786,3 +786,9 @@ def DrawWatermarks():
 
     return watermarks
 
+#needs further fix
+def syst_adderror(a, b, ea = 0, eb = 0, corr=0):
+    if ea != 0 and eb != 0:
+        return ROOT.TMath.Sqrt((a * ea) ** 2 + (b * eb) ** 2 + a * b * ea * eb * corr)
+    else:
+        return ROOT.TMath.Sqrt((a) ** 2 + (b) ** 2 + 2 * (a * b * corr))
