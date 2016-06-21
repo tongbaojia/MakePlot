@@ -6,11 +6,22 @@ currpath    = os.path.abspath(os.curdir)
 #change this to your home directory of everything; should be where the code is checked out
 toppath     =  os.path.dirname(currpath)
 #input top directory for the root files
-inputpath  =  "~/public/Xhh45/Output/"
+inputpath   =  toppath + "/Output/"
+helpers.checkpath(inputpath)
 #output top directory for the output plots/root files
-outputpath =  "~/public/Xhh45/Output/"
+outputpath  =  toppath +"/Output/"
+helpers.checkpath(outputpath)
 #output top directory for only plots
-outplotpath =  "~/public/Xhh45/Plots/"
+outplotpath =  toppath +"/Plot/"
+helpers.checkpath(outplotpath)
+#check if reference folder exists
+refpath     =  toppath +"/Output/ref/"
+if not os.path.exists(outputpath):
+	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
+else:
+	pass
+
+#setup all the other constants
 #MC mass points
 mass_lst   = [300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 #plot color variables
