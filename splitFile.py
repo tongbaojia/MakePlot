@@ -22,11 +22,12 @@ def split(targetpath="data_test"):
     ops = options()
     nfiles = ops.nfiles
     global inputpath
-    inputpath = CONF.inputpath + "TEST-15/" + targetpath
+    inputpath = CONF.inputpath + "TEST-16/" + targetpath
     global outputpath
-    outputpath = CONF.inputpath + "TEST-15/" +  targetpath
+    outputpath = CONF.inputpath + "TEST-16/" +  targetpath
     helpers.checkpath(outputpath)
 
+    print "split! target: ", targetpath
     f = ROOT.TFile(inputpath + "/" + "hist-MiniNTuple.root", "read")
     #load the target tree
     t = f.Get("TinyTree")

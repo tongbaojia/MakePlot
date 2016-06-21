@@ -52,9 +52,9 @@ def dump(finaldis="l"):
         cut = c + "_Signal_mHH" + pltname
         #cut = c + "_Signal_mHH_pole"
         savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
-        tempdic["data_est"] = savehist(ifile, "data_est_" + cut,  "totalbkg_hh", dosmooth=True)
-        tempdic["qcd_est"] = savehist(ifile, "qcd_est_" + cut,   "qcd_hh", dosmooth=True)
-        tempdic["ttbar_est"] = savehist(ifile, "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 2500), smoothfunc="Dijet")
+        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True)
+        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True)
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1050, 2300), smoothfunc="Dijet")
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -72,8 +72,9 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3200), smoothfunc="Dijet"):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3000), smoothfunc="Dijet"):
     hist  = inputroot.Get(inname).Clone()
+    print inname, smoothrange ##for debug
     if dosmooth:
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
             makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath)

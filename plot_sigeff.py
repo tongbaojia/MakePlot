@@ -49,10 +49,10 @@ def main():
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
     # For cuts that don't exist in the cutflow plot
+    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
+    #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
-    DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
-    DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
 
 
 def options():

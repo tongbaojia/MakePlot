@@ -16,7 +16,7 @@ outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
-if not os.path.exists(outputpath):
+if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
 else:
 	pass

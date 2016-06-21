@@ -38,8 +38,8 @@ def main():
     # Draw the efficiency plot relative to the all normalization
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="PreSel")
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="All")
-    # Draw pT dependent trig efficiency
-    DrawPtEff(inputdir, outputname="trig")
+    # Draw pT dependent trig efficiency; needs fix...
+    #DrawPtEff(inputdir, outputname="trig")
     #output.Close()
 
 def options():
