@@ -125,7 +125,7 @@ def main():
     WriteEvtCount(masterinfo["data_est"], output, "data Est")
     # # #Do data estimation Difference comparision in control and ZZ region
     masterinfo.update(GetDiff(masterinfo["data_est"], masterinfo["data"], "dataEstDiff"))
-    #WriteEvtCount(masterinfo["dataEstDiff"], output, "Data Est Diff Percentage")
+    WriteEvtCount(masterinfo["dataEstDiff"], output, "Data Est Diff Percentage")
     # masterinfo["ttbarEstDiff"] = GetDiff(masterinfo["ttbar_est"], masterinfo["ttbar"])
     # WriteEvtCount(masterinfo["ttbarEstDiff"], output, "top Est Diff Percentage")
 
