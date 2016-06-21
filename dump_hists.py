@@ -54,7 +54,7 @@ def dump(finaldis="l"):
         savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
         tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True)
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True)
-        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1050, 2300), smoothfunc="Dijet")
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 2300), smoothfunc="Dijet_ttbar")
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -72,7 +72,7 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3000), smoothfunc="Dijet"):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3200), smoothfunc="Dijet"):
     hist  = inputroot.Get(inname).Clone()
     print inname, smoothrange ##for debug
     if dosmooth:
