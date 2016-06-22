@@ -19,7 +19,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default="b77_c10-15")
     parser.add_argument("--inputroot", default="sum")
     return parser.parse_args()
 
@@ -156,12 +156,13 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
     # input file
     ifile = ROOT.TFile(filepath + filename + ".root")
+    ifile_ref = ROOT.TFile(CONF.inputpath + "ref" + "/" + "sum_ref" + ".root")
 
     # read stuff
     data = ifile.Get("data_" + cut )
     if "Signal" in cut and blinded:
         data = ifile.Get("data_est_" + cut )
-    data_est = ifile.Get("data_est_" + cut )
+    data_est = ifile_ref.Get("data_" + cut )
     qcd = ifile.Get("qcd_est_" + cut )
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
@@ -203,7 +204,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
 
     data = makeTotBkg([data])[1]
-    bkg = makeTotBkg([ttbar,qcd,zjet])
+    bkg = makeTotBkg([data_est])
     # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
     ratios = makeDataRatio(data, bkg[1])
 
@@ -260,12 +261,12 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     ttbar.SetLineWidth(2)
     ttbar.SetLineColor(ROOT.kBlack)
     ttbar.SetFillColor(ROOT.kAzure-9)
-    ttbar.Draw("HISTO SAME")
+    #ttbar.Draw("HISTO SAME")
 
     zjet.SetLineWidth(2)
     zjet.SetLineColor(ROOT.kBlack)
     zjet.SetFillColor(ROOT.kGreen+4)
-    zjet.Draw("HISTO SAME")
+    #zjet.Draw("HISTO SAME")
 
     # RSG1_1000.SetLineWidth(2)
     # RSG1_1000.SetLineStyle(2)
@@ -276,14 +277,14 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     RSG1_1500.SetLineWidth(2)
     RSG1_1500.SetLineStyle(2)
     RSG1_1500.SetLineColor(ROOT.kPink+7)
-    RSG1_1500.Draw("HISTO SAME")
+    #RSG1_1500.Draw("HISTO SAME")
 
 
     RSG1_2500.Scale(1000)
     RSG1_2500.SetLineWidth(2)
     RSG1_2500.SetLineStyle(2)
     RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    RSG1_2500.Draw("HISTO SAME")
+    #RSG1_2500.Draw("HISTO SAME")
 
     zeroXerror(data)
     data.SetMarkerStyle(20)
@@ -306,7 +307,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
     hratio.GetYaxis().SetTitleSize(28)
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
-    hratio.GetYaxis().SetTitle("Data / Bkgd")
+    hratio.GetYaxis().SetTitle("20.7 / 20.1")
     hratio.GetYaxis().SetRangeUser(0.001, 2.5) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
@@ -380,20 +381,20 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
     myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
-    leg.SetNColumns(2)
+    #leg.SetNColumns(2)
     leg.SetTextFont(43)
     leg.SetTextSize(15)
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
-    leg.AddEntry(data, "Data", "PE")
-    leg.AddEntry(bkg[0], "Multijet", "F")
-    leg.AddEntry(ttbar, "t#bar{t}","F")
-    leg.AddEntry(zjet, "Z+jets","F")
+    leg.AddEntry(data, "Data 20.7", "PE")
+    leg.AddEntry(bkg[0], "Data 20.1", "F")
+    #leg.AddEntry(ttbar, "t#bar{t}","F")
+    #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
-    leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 25", "F")
-    leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 1000", "F")
+    #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 25", "F")
+    #leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 1000", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
@@ -415,14 +416,14 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
 def dumpRegion(config):
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1, rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]")
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebin=8)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebin=8)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebin=2)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebin=4)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebin=4)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebin=4)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebin=4)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
@@ -432,8 +433,8 @@ def dumpRegion(config):
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass_s",   xTitle="J0 m [GeV]", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2, Logy=1)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=4)
+    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=4, Logy=1)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=2)
     plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass_s",   xTitle="J1 m [GeV]", rebin=2)
@@ -479,7 +480,7 @@ def main():
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        outputFolder = inputpath + inputroot + "Plot/" + region
+        outputFolder = inputpath + inputroot + "Plot_compref/" + region
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
 
@@ -490,6 +491,7 @@ def main():
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
             inputtasks.append(config)
+    #dumpRegion(inputtasks[0])
     #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)

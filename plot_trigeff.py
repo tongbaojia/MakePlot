@@ -39,7 +39,7 @@ def main():
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="PreSel")
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="All")
     # Draw pT dependent trig efficiency; needs fix...
-    #DrawPtEff(inputdir, outputname="trig")
+    DrawPtEff(inputdir, outputname="trig")
     #output.Close()
 
 def options():

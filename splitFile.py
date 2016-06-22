@@ -12,6 +12,7 @@ ROOT.gROOT.SetBatch(True)
 #define functions
 def options():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--inputdir", default="TEST")
     parser.add_argument("--nfiles", default=14)
     return parser.parse_args()
 
@@ -21,20 +22,23 @@ def split(targetpath="data_test"):
 
     ops = options()
     nfiles = ops.nfiles
+    inputdir = ops.inputdir
     global inputpath
-    inputpath = CONF.inputpath + "TEST-16/" + targetpath
+    inputpath = CONF.inputpath + inputdir + "/" + targetpath
     global outputpath
-    outputpath = CONF.inputpath + "TEST-16/" +  targetpath
+    outputpath = CONF.inputpath + inputdir + "/" +  targetpath
     helpers.checkpath(outputpath)
 
     print "split! target: ", targetpath
     f = ROOT.TFile(inputpath + "/" + "hist-MiniNTuple.root", "read")
     #load the target tree
     t = f.Get("TinyTree")
-    cutflow_weight = f.Get("CutFlowWeight").Clone()
-    cutflow = f.Get("CutFlowNoWeight").Clone()
-    cutflow_weight.Scale(1.0/(nfiles * 1.0))
-    cutflow.Scale(1.0/(nfiles * 1.0))
+    #load the histograms
+    hist_list = ["CutFlowWeight", "CutFlowNoWeight", "h_leadHCand_pT_pre_trig", "h_leadHCand_pT_aft_trig"]
+    temp_hist_list = []
+    for j, hist in enumerate(hist_list):
+        temp_hist_list.append(f.Get(hist).Clone())
+        temp_hist_list[j].Scale(1.0/(nfiles * 1.0))
 
     outfile = []
     outtree = []
@@ -52,14 +56,13 @@ def split(targetpath="data_test"):
     for i in range(nfiles):
         outfile[i].cd()
         outtree[i].Write()
-        cutflow_weight.Write()
-        cutflow.Write()
+        for j, hist in enumerate(temp_hist_list):
+            hist.Write()
         outfile[i].Close()
     f.Close()
     del(t)
     del(outtree)
-    del(cutflow_weight)
-    del(cutflow)
+    del(temp_hist_list)
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"

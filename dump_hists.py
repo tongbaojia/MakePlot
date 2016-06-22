@@ -8,6 +8,14 @@ ROOT.gROOT.SetBatch()
 
 treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
+#setup fit initial values; tricky for the fits...
+init_dic = {"l":{"FourTag":{"ttbar":[-30, -20, -10], "qcd":[60, 50, -5]}, \
+"ThreeTag":{"ttbar":[-30, -20, -10], "qcd":[60, 50, -5]},\
+"TwoTag_split":{"ttbar":[10, 60, 0], "qcd":[60, 50, -5]}}, \
+    "pole":{"FourTag":{"ttbar":[100, 360, 30], "qcd":[20, 100, 5]}, \
+"ThreeTag":{"ttbar":[100, 360, 30], "qcd":[20, 100, 5]},\
+"TwoTag_split":{"ttbar":[-10, 35, -5], "qcd":[20, 100, 5]}}}
+
 
 #define functions
 def options():
@@ -43,6 +51,7 @@ def dump(finaldis="l"):
         os.makedirs(outtablepath)
 
     masterdic = {}
+
     for c in cut_lst:
         print "start ", c, " file conversion "
         global outfile
@@ -52,9 +61,9 @@ def dump(finaldis="l"):
         cut = c + "_Signal_mHH" + pltname
         #cut = c + "_Signal_mHH_pole"
         savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
-        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True)
-        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True)
-        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 2300), smoothfunc="Dijet_ttbar")
+        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, initpar=init_dic[finaldis][c]["qcd"])
+        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, initpar=init_dic[finaldis][c]["qcd"])
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1150, 2500), initpar=init_dic[finaldis][c]["ttbar"])
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -72,12 +81,12 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3200), smoothfunc="Dijet"):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3200), smoothfunc="Dijet", initpar=[]):
     hist  = inputroot.Get(inname).Clone()
-    print inname, smoothrange ##for debug
     if dosmooth:
+        print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
-            makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath)
+            makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
         hist = smoothfit.MakeSmoothHistoWithError(hist, sm)
     hist.SetName(outname)
     hist.SetTitle(outname)
