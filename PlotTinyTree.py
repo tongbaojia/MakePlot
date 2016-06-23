@@ -4,7 +4,7 @@
 ###For a more proper anlaysis, do the c++ standard way please
 import ROOT, rootlogon, helpers
 import config as CONF
-import time, os, subprocess, glob, argparse
+import time, os, subprocess, glob, argparse, compiler
 #for parallel processing!
 import multiprocessing as mp
 #import tree configuration
@@ -14,9 +14,10 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="TEST")
+    parser.add_argument("--inputdir",  default="TEST_c10-cb")
     parser.add_argument("--outputdir", default="test")
-    parser.add_argument("--iter", default=0)
+    parser.add_argument("--dosyst",    default=None)
+    parser.add_argument("--iter",      default=0)
     return parser.parse_args()
 
 #returns a dictionary of weights
@@ -58,14 +59,20 @@ def calc_reweight(dic, event):
         totalweight = 1 + maxscale
     return totalweight
 
-class eventHists:
+#get Xhh and Rhh values; for variations's sake
+def GetExp(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCenterY=115., RhhCut=35.8):
+    #XhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s" % (XhhCenterX, XhhCenterY, XhhCut)
+    RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
+    return RhhExp
 
-    fullhist = True # will take 3 minutes to generate all histograms; 3 times more time...
+class eventHists:
+    # will take 3 minutes to generate all histograms; 3 times more time...
 
     def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
+        self.fullhist =  ops.dosyst is None
         self.region = region
         self.reweight = reweight
         #add in all the histograms
@@ -169,49 +176,41 @@ class eventHists:
             self.h1_trkpt_diff.Write()
 
 class massregionHists:
+    #these are the regions and cuts;
     def __init__(self, region, outputroot, reweight=False):
-        self.Incl = eventHists(region + "_" + "Incl", outputroot)
-        self.Sideband = eventHists(region + "_" + "Sideband", outputroot, reweight)
-        self.Control = eventHists(region + "_" + "Control", outputroot, reweight)
-        self.Signal = eventHists(region + "_" + "Signal", outputroot, reweight)
-        self.ZZ = eventHists(region + "_" + "ZZ", outputroot, reweight)
-        #for specific studies!
-        self.studylst = []
-        # for i, cut in enumerate(range(20, 160, 20)):
-        #     for j, masssplit in enumerate([" and event.j0_m > 125 and event.j1_m > 114",\
-        #     " and event.j0_m < 125 and event.j1_m > 114",\
-        #     " and event.j0_m < 125 and event.j1_m < 114",\
-        #     " and event.j0_m > 125 and event.j1_m < 114"]):
-        #         tempdic = {}
-        #         tempdic["histname"] = region + "_" + "r" + str(j) + "_" + "Rhh" + str(cut)
-        #         tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot)
-        #         tempdic["evencondition"] = "event.Xhh > 1.6 and event.Rhh < " + str(cut) + " and event.Rhh > " + str(cut - 20) + masssplit
-        #         self.studylst.append(tempdic)
+        #define control/sb variations
+        self.boundDict = {
+            "Signal"   : "event.Xhh < 1.6",
+            "Control"  : CR_cut,
+            "Sideband" : SB_cut,
+            "ZZ"       : "event.Xzz < 2.1",
+        }
+        self.RegionDict = {
+            "Incl"     : "True",
+            "Signal"   : self.boundDict["Signal"],
+            "Control"  : "not " + self.boundDict["Signal"]  + " and " + self.boundDict["Control"],
+            "Sideband" : "not " + self.boundDict["Control"] + " and " + self.boundDict["Sideband"],
+            "ZZ"       : "not " + self.boundDict["Signal"]  + " and " + self.boundDict["ZZ"],
+        }
+        self.regionlst = []
+        #for specific studies; for systemtaics
+        for name, cut in self.RegionDict.items():
+            tempdic = {}
+            tempdic["name"] = name
+            tempdic["histname"] = region + "_" + name
+            tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot, reweight)
+            tempdic["evencondition"] = compiler.compile(cut, '<string>', 'eval')
+            self.regionlst.append(tempdic)
 
     def Fill(self, event, weight=-1):
-        self.Incl.Fill(event)
-        if event.Xhh < 1.6:
-            self.Signal.Fill(event, weight)
-        elif event.Rhh < 35.8:
-            self.Control.Fill(event, weight)
-        elif event.Rhh < 63:
-            self.Sideband.Fill(event, weight)
-        if event.Xhh > 1.6 and event.Xzz < 2.1:
-            self.ZZ.Fill(event, weight)
         #for specific studies!
-        for tempdic in self.studylst:
+        for tempdic in self.regionlst:
             if eval(tempdic["evencondition"]):
                 tempdic["eventHists"].Fill(event, weight)
 
-
     def Write(self, outputroot):
-        self.Incl.Write(outputroot)
-        self.Sideband.Write(outputroot)
-        self.Control.Write(outputroot)
-        self.Signal.Write(outputroot)
-        self.ZZ.Write(outputroot)
         #for specific studies!
-        for tempdic in self.studylst:
+        for tempdic in self.regionlst:
             tempdic["eventHists"].Write(outputroot)
 
 #reweighting is done here: what a genius design
@@ -229,14 +228,14 @@ class trkregionHists:
             self.Trk3_dic = {}
             self.Trk4_dic = {}
             #setup all the reweighting parameters here
-            tempname_lead_pt = "(event.j0_pt)"
-            tempname_subl_pt = "(event.j1_pt)"
-            tempname_lead_trk0_pt = "(event.j0_trk0_pt)"
-            tempname_subl_trk0_pt = "(event.j1_trk0_pt)"
-            tempname_lead_trk1_pt = "(event.j0_trk1_pt)"
-            tempname_subl_trk1_pt = "(event.j1_trk1_pt)"
-            tempname_lead_trkasy = "(event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt)"
-            tempname_subl_trkasy = "(event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt)"
+            tempname_lead_pt = compiler.compile("(event.j0_pt)", '<string>', 'eval')
+            tempname_subl_pt = compiler.compile("(event.j1_pt)", '<string>', 'eval')
+            tempname_lead_trk0_pt = compiler.compile("(event.j0_trk0_pt)", '<string>', 'eval')
+            tempname_subl_trk0_pt = compiler.compile("(event.j1_trk0_pt)", '<string>', 'eval')
+            tempname_lead_trk1_pt = compiler.compile("(event.j0_trk1_pt)", '<string>', 'eval')
+            tempname_subl_trk1_pt = compiler.compile("(event.j1_trk1_pt)", '<string>', 'eval')
+            tempname_lead_trkasy = compiler.compile("(event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt)", '<string>', 'eval')
+            tempname_subl_trkasy = compiler.compile("(event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt)", '<string>', 'eval')
             #for 2tag split region
             #self.Trk2s_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_Rhh.txt")
             #self.Trk2s_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt")
@@ -334,7 +333,6 @@ def analysis(inputconfig, DEBUG=False):
     outputroot = inputconfig["outputroot"]
     DEBUG = inputconfig["DEBUG"]
 
-    helpers.checkpath(outputpath + inputfile)
     outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
     AllHists = regionHists(outroot, turnon_reweight)
     #read the input file
@@ -379,10 +377,13 @@ def pack_input(inputfile, inputsplit=-1):
     dic["inputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit  >= 0 else "") + ".root"
     dic["outputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ".root"
     dic["DEBUG"] = False
+    #make sure the output directory exist here; resolve the conflicts
+    helpers.checkpath(outputpath + inputfile)
     return dic
 
 def main():
     start_time = time.time()
+    global ops
     ops = options()
     global inputpath
     inputpath = CONF.inputpath + ops.inputdir + "/"
@@ -393,11 +394,38 @@ def main():
     if iter_reweight > 0:
         turnon_reweight = True
     global outputpath
-    outputpath = CONF.outputpath + ops.outputdir + "/"
+    outputpath = CONF.outputpath + ops.outputdir + ("_" + ops.dosyst if (ops.dosyst is not None) else "") +  "/"
     #outputpath = CONF.outputpath + "reweight_" + str(iter_reweight) + "/"
     helpers.checkpath(outputpath)
+    #setup control region size, and sideband region size
+    global Syst_cut
+    CR_size = 35.8
+    SB_size = 63
+    Syst_cut = {
+        "CR"         : "event.Rhh < %s" % str(CR_size) ,
+        "SB"         : "event.Rhh < %s" % str(SB_size) ,
+        "CR_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
+        "CR_Low"     : GetExp(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=CR_size),
+        "CR_Small"   : "event.Xhh > 2.0 and event.Rhh < %s" % str(CR_size) ,
+        "SB_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=SB_size),
+        "SB_Low"     : GetExp(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=SB_size),
+        "SB_Large"   : "event.Rhh < %s" % str(SB_size + 5) ,
+        "SB_Small"   : "event.Rhh < %s" % str(SB_size - 5) ,
+        }
+    global CR_cut
+    CR_cut = Syst_cut["CR"]
+    global SB_cut
+    SB_cut = Syst_cut["SB"]
+    if ops.dosyst is not None:
+        if "CR" in ops.dosyst:
+            CR_cut = Syst_cut[ops.dosyst]
+        elif "SB" in ops.dosyst:
+            SB_cut = Syst_cut[ops.dosyst]
+
     #for testing
-    #analysis(pack_input("zjets_test"))
+    analysis(pack_input("zjets_test"))
+    print("--- %s seconds ---" % (time.time() - start_time))
+    return
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = 14

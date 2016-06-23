@@ -138,10 +138,14 @@ def do_variable_rebinning(hist, bins, scale=1.0):
 ####################################################################################
 #plot
 
-def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, outputFolder="", rebinarry=[], fitrange=[0, 0]):
+def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebin=None, rebinarry=[], fitrange=[0, 0]):
+    #load configurations from config file
+    filepath = config["root"] 
+    filename = config["inputdir"] 
+    outputFolder= config["outputdir"]
+    #print config, filepath, filename
     #debug
     #print filepath, filename, cut
-
     gStyle.SetErrorX(0)
     gStyle.SetHatchesSpacing(0.7)
     gStyle.SetHatchesLineWidth(1)
@@ -367,11 +371,11 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
 
         if ("trk0_Pt" in cut): #for the leading track jet fit
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.58, 0.0067, -0.000027, -0.000000027)
+            testfit.SetParameters(0.51, 0.0076, -0.000027, -0.000000027)
             #testfit.FixParameter(3, 0) #do a 1D fit really
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.47, 0.015, -0.00006, -0.000000027)
+            testfit.SetParameters(0.77, 0.059, -0.00002, -0.000000027)
             testfit.FixParameter(3, 0) #do a 1D fit really
         elif ("trk_pt_diff" in cut): #for the subleading track jet fit
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
@@ -389,7 +393,7 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
             testfit.FixParameter(3, 0) #do a 1D fit really
         else:
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.8, 0.0001, -0.000001, 0)
+            testfit.SetParameters(0.9, 0.001, -0.000001, 0)
             testfit.FixParameter(2, 0) #do a 1D fit really
             testfit.FixParameter(3, 0) #do a 1D fit really
         #testfit.SetParLimits(0, -1, 2)
@@ -484,49 +488,43 @@ def plotRegion(filepath, filename, cut, xTitle, yTitle="N Events", Logy=0, label
         #ratios[1].Write()
 
 def dumpRegion(config):
-    array_leadtrk = array('d', [0, 60] + range(60, 450, 30) + [450, 480, 510, 550, 650, 800, 1300, 2000])
-    array_subltrk = array('d', range(0, 150, 15) + [160, 200, 240, 400])
-    array_leadpt = array('d', range(200, 1400, 40) + range(1400, 2200, 100))
-    array_sublpt = array('d', range(200, 1200, 40) + range(1200, 2000, 100))
-    if "ThreeTag" in config["cut"]:
-        array_leadtrk = array('d', [0, 25, 50] + range(50, 300, 25) + [300, 330, 360, 400, 450, 550, 800, 1500, 2000])
-        array_subltrk = array('d', range(0, 160, 20) + [240, 400])
-    if "FourTag" in config["cut"]:
-        array_leadtrk = array('d', range(0, 500, 50) + [500, 1000, 2000])
-        array_subltrk = array('d', range(0, 160, 20) + [240, 400])
-
-
+    rebin_dic = {}
+    rebin_dic["mHH_l"]      = array('d', range(0, 2000, 50) + range(2000, 3000, 100) + [3000, 3500, 4000])
+    rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 50) + range(2000, 3000, 100) + [3000, 3500, 4000])
+    rebin_dic["j0_Pt"]      = array('d', range(0, 800, 30) + [800, 1000, 1300, 2000])
+    rebin_dic["j1_Pt"]      = array('d', range(0, 600, 30) + [600, 700, 800, 1000, 1300, 2000])
+    rebin_dic["trk0_Pt"]    = array('d', range(0, 600, 30) + [600, 700, 800, 1000, 1300, 2000])
+    rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebin=2, fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebin=2, Logy=1, fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebin=2, fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebin=2, Logy=1, fitrange=[700, 3000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=array_leadtrk, fitrange=[25, 1000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=array_leadtrk, fitrange=[25, 1000])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=array_subltrk, fitrange=[0, 400])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=array_subltrk, fitrange=[0, 400])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2, fitrange=[50, 200])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Mass",     xTitle="J1 m [GeV]", rebin=2, fitrange=[50, 200])
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "Rhh",                xTitle="Rhh", rebin=2)
-    
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2, fitrange=[1, 3.7])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2, fitrange=[0, 1.7])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2, rebinarry=array_leadpt, fitrange=[450, 1700])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebin=2, rebinarry=array_leadpt, Logy=1, fitrange=[450, 1700])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta", rebin=2, fitrange=[-2, 2])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=2, fitrange=[-3, 3])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2, fitrange=[0.2, 1.2])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2, rebinarry=array_sublpt, fitrange=[400, 1700])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebin=2, rebinarry=array_sublpt, Logy=1, fitrange=[400, 1700])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=2, fitrange=[-2, 2])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=2, fitrange=[-3, 3])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2, fitrange=[0.2, 1.2])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk", fitrange=[0, 5])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk", fitrange=[0, 5])
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
-    plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
-    #plotRegion(config["root"], config["inputdir"], outputFolder=config["outputdir"], cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy", fitrange=[0, 0.5])
+    plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], fitrange=[900, 2000])
+    plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1, fitrange=[900, 2000])
+    plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], fitrange=[900, 2000])
+    plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], Logy=1, fitrange=[900, 2000])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[0, 600])
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[0, 600])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])
+    plotRegion(config, cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2, fitrange=[60, 170])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Mass",     xTitle="J1 m [GeV]", rebin=2, fitrange=[60, 170])
+    #plotRegion(config, cut=config["cut"] + "Rhh",                xTitle="Rhh", rebin=2)
+    plotRegion(config, cut=config["cut"] + "hCandDr",            xTitle="#Delta R", rebin=2, fitrange=[2, 3.6])
+    plotRegion(config, cut=config["cut"] + "hCandDeta",          xTitle="#Delta #eta", rebin=2, fitrange=[0, 1.7])
+    plotRegion(config, cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
+    plotRegion(config, cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebinarry=rebin_dic["j0_Pt"], fitrange=[500, 800])
+    plotRegion(config, cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebinarry=rebin_dic["j0_Pt"], Logy=1, fitrange=[500, 800])
+    plotRegion(config, cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta", rebin=2, fitrange=[-2, 2])
+    plotRegion(config, cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=2, fitrange=[-3, 3])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2, fitrange=[0.2, 1.2])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebinarry=rebin_dic["j1_Pt"], fitrange=[300, 800])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebinarry=rebin_dic["j1_Pt"], Logy=1, fitrange=[300, 800])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=2, fitrange=[-2, 2])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=2, fitrange=[-3, 3])
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2, fitrange=[0.2, 1.2])
+    plotRegion(config, cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk", fitrange=[1, 6])
+    plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk", fitrange=[1, 6])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+    #plotRegion(config, cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy", fitrange=[0, 0.5])
 
     print config["outputdir"], "done!"
 
@@ -588,7 +586,7 @@ def main():
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
     ##for debug
-    # dumpRegion(inputtasks[0])
+    #dumpRegion(inputtasks[0])
     # dumpRegion(inputtasks[1])
     # dumpRegion(inputtasks[2])
     outputroot.Close()

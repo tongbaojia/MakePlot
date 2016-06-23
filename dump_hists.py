@@ -9,9 +9,9 @@ ROOT.gROOT.SetBatch()
 treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 #setup fit initial values; tricky for the fits...
-init_dic = {"l":{"FourTag":{"ttbar":[-30, -20, -10], "qcd":[60, 50, -5]}, \
-"ThreeTag":{"ttbar":[-30, -20, -10], "qcd":[60, 50, -5]},\
-"TwoTag_split":{"ttbar":[10, 60, 0], "qcd":[60, 50, -5]}}, \
+init_dic = {"l":{"FourTag":{"ttbar":[-30, -20, -10], "qcd":[40, 100, 5]}, \
+"ThreeTag":{"ttbar":[-30, -20, 0], "qcd":[40, 100, 5]},\
+"TwoTag_split":{"ttbar":[10, 60, 0], "qcd":[40, 100, 5]}}, \
     "pole":{"FourTag":{"ttbar":[100, 360, 30], "qcd":[20, 100, 5]}, \
 "ThreeTag":{"ttbar":[100, 360, 30], "qcd":[20, 100, 5]},\
 "TwoTag_split":{"ttbar":[-10, 35, -5], "qcd":[20, 100, 5]}}}
@@ -63,7 +63,7 @@ def dump(finaldis="l"):
         savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
         tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, initpar=init_dic[finaldis][c]["qcd"])
-        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1150, 2500), initpar=init_dic[finaldis][c]["ttbar"])
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1200, 2500), initpar=init_dic[finaldis][c]["ttbar"])
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -81,7 +81,7 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3200), smoothfunc="Dijet", initpar=[]):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1400, 3500), smoothfunc="Dijet", initpar=[]):
     hist  = inputroot.Get(inname).Clone()
     if dosmooth:
         print inname, smoothrange, initpar ##for debug
