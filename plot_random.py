@@ -13,6 +13,7 @@ ROOT.gROOT.SetBatch(True)
 from ROOT import *    
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
+SetAtlasStyle()
 
 
 def options():

@@ -36,6 +36,10 @@ def get_reweight(folder, filename):
             par_weight["par2"] = float(lstline[1])
         if "par3" in line:
             par_weight["par3"] = float(lstline[1])
+        if "low" in line:
+            par_weight["low"] = float(lstline[1])
+        if "high" in line:
+            par_weight["high"] = float(lstline[1])
     #print par_weight
     f_reweight.close()
     return par_weight
@@ -45,8 +49,11 @@ def calc_reweight(dic, event):
     totalweight = 1
     maxscale = 0.5 #this means the maximum correction is this for each reweighting
     for x, v in dic.iteritems():
+        value = eval(x)
+        if (v["low"] > value) or (v["high"] < value): #outside fit range, don't fix!!!
+            continue
         tempweight = 1
-        tempweight = v["par0"] + v["par1"] * eval(x) + v["par2"] * eval(x) ** 2 + v["par3"] * eval(x) ** 3
+        tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         if tempweight < maxscale:
             tempweight = maxscale
         if tempweight > 1 + maxscale:
@@ -72,7 +79,7 @@ class eventHists:
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
-        self.fullhist =  ops.dosyst is None
+        self.fullhist =  True #ops.dosyst is None ##option to turn it off
         self.region = region
         self.reweight = reweight
         #add in all the histograms
@@ -179,18 +186,12 @@ class massregionHists:
     #these are the regions and cuts;
     def __init__(self, region, outputroot, reweight=False):
         #define control/sb variations
-        self.boundDict = {
-            "Signal"   : "event.Xhh < 1.6",
-            "Control"  : CR_cut,
-            "Sideband" : SB_cut,
-            "ZZ"       : "event.Xzz < 2.1",
-        }
         self.RegionDict = {
             "Incl"     : "True",
-            "Signal"   : self.boundDict["Signal"],
-            "Control"  : "not " + self.boundDict["Signal"]  + " and " + self.boundDict["Control"],
-            "Sideband" : "not " + self.boundDict["Control"] + " and " + self.boundDict["Sideband"],
-            "ZZ"       : "not " + self.boundDict["Signal"]  + " and " + self.boundDict["ZZ"],
+            "Signal"   : SR_cut,
+            "Control"  : CR_cut,
+            "Sideband" : SB_cut,
+            "ZZ"       : "not " + SR_cut  + " and " + "event.Xzz < 2.1",
         }
         self.regionlst = []
         #for specific studies; for systemtaics
@@ -239,31 +240,31 @@ class trkregionHists:
             #for 2tag split region
             #self.Trk2s_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_Rhh.txt")
             #self.Trk2s_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt")
-            self.Trk2s_dic[tempname_subl_trk0_pt] = get_reweight("b77_c00-15", "r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt")
+            #self.Trk2s_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt")
             #self.Trk2s_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt")
-            self.Trk2s_dic[tempname_subl_trk1_pt] = get_reweight("b77_c00-15", "r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
-            #self.Trk2s_dic[tempname_lead_pt] = get_reweight("reweight_2", "r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt")
-            #self.Trk2s_dic[tempname_subl_pt] = get_reweight("reweight_2", "r0_TwoTag_split_Sideband_sublHCand_Pt_m.txt")
+            #self.Trk2s_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk2s_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt")
+            self.Trk2s_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_Pt_m.txt")
             #self.Trk2s_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt")
             #self.Trk2s_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt")
             #for 4tag region
             #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_Rhh.txt")
             #self.Trk3_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt")
-            self.Trk3_dic[tempname_subl_trk0_pt] = get_reweight("b77_c00-15", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
+            #self.Trk3_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
             #self.Trk3_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt")
-            self.Trk3_dic[tempname_subl_trk1_pt] = get_reweight("b77_c00-15", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
-            #self.Trk3_dic[tempname_lead_pt] = get_reweight("reweight_2", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
-            #self.Trk3_dic[tempname_subl_pt] = get_reweight("reweight_2", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
+            #self.Trk3_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk3_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
+            self.Trk3_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
             #self.Trk3_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
             #self.Trk3_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
             #for 4tag region
             #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_FourTag_Sideband_Rhh.txt")
             #self.Trk4_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk0_Pt.txt")
-            self.Trk4_dic[tempname_subl_trk0_pt] = get_reweight("b77_c00-15", "r0_FourTag_Sideband_sublHCand_trk0_Pt.txt")
+            #self.Trk4_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk0_Pt.txt")
             #self.Trk4_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_FourTag_Sideband_leadHCand_trk1_Pt.txt")
-            self.Trk4_dic[tempname_subl_trk1_pt] = get_reweight("b77_c00-15", "r0_FourTag_Sideband_sublHCand_trk1_Pt.txt")
-            #self.Trk4_dic[tempname_lead_pt] = get_reweight("reweight_2", "r0_FourTag_Sideband_leadHCand_Pt_m.txt")
-            #self.Trk4_dic[tempname_subl_pt] = get_reweight("reweight_2", "r0_FourTag_Sideband_sublHCand_Pt_m.txt")
+            #self.Trk4_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk1_Pt.txt")
+            self.Trk4_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
+            self.Trk4_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
             #self.Trk4_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
             #self.Trk4_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
             #print self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic
@@ -364,7 +365,7 @@ def analysis(inputconfig, DEBUG=False):
 
     #write all the output
     AllHists.Write(outroot)
-    print "DONE with the " + inputfile,  outputroot  + " analysis!"
+    print "DONE with the " + inputfile,  outputroot  + " analysis!", N, " events!"
     #close the input file;
     del(t)
     outroot.Close()
@@ -402,6 +403,7 @@ def main():
     CR_size = 35.8
     SB_size = 63
     Syst_cut = {
+        "SR"         : "event.Xhh < 1.6",
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
         "SB"         : "event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
@@ -412,20 +414,24 @@ def main():
         "SB_Large"   : "event.Rhh < %s" % str(SB_size + 5) ,
         "SB_Small"   : "event.Rhh < %s" % str(SB_size - 5) ,
         }
+    global SR_cut
+    SR_cut = Syst_cut["SR"]
     global CR_cut
-    CR_cut = Syst_cut["CR"]
+    CR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut["CR"]
     global SB_cut
-    SB_cut = Syst_cut["SB"]
+    SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut["SB"]
     if ops.dosyst is not None:
         if "CR" in ops.dosyst:
-            CR_cut = Syst_cut[ops.dosyst]
+            CR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut[ops.dosyst]
+            if "Small" in ops.dosyst: #sepecial treatment for this asshole
+                SB_cut = "%s < event.Rhh < %s" % (str(CR_size), str(SB_size))
         elif "SB" in ops.dosyst:
-            SB_cut = Syst_cut[ops.dosyst]
+            SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut[ops.dosyst]
 
-    #for testing
-    analysis(pack_input("zjets_test"))
-    print("--- %s seconds ---" % (time.time() - start_time))
-    return
+    # #for testing
+    # analysis(pack_input("zjets_test"))
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # return
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = 14

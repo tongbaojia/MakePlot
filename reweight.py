@@ -19,7 +19,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="reweight_0")
+    parser.add_argument("--inputdir", default="b77_c10-cb")
     parser.add_argument("--inputroot", default="sum")
     parser.add_argument("--iter", default=0)
     return parser.parse_args()
@@ -383,7 +383,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             #testfit.FixParameter(3, 0) #do a 1D fit really
         elif ("Pt_m" in cut): #for the subleading track jet fit
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.9, 0.0001, -1, 0)
+            testfit.SetParameters(0.9, 0.0005, -1, 0)
             testfit.FixParameter(2, 0) #do a 1D fit really
             testfit.FixParameter(3, 0) #do a 1D fit really
         elif ("Rhh" in cut): #for the subleading track jet fit
@@ -415,6 +415,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             f_reweight.write("par1: " + str('%.3g' % fitresult[1]) + " \n")
             f_reweight.write("par2: " + str('%.3g' % fitresult[2]) + " \n")
             f_reweight.write("par3: " + str('%.3g' % fitresult[3]) + " \n")
+            f_reweight.write("low:  " + str('%.3g' % fitMin) + " \n")
+            f_reweight.write("high: " + str('%.3g' % fitMax) + " \n")
             f_reweight.close()
 
     # draw the ratio 1 line
