@@ -1,0 +1,1056 @@
+@(#)CERN job starter $Date: 2010/06/23 14:22:16 $
+Working directory is </pool/lsf/btong/818110103.9> on <b6cb7e16a3.cern.ch>
+
+the input file is  /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/MakePlot/Batch/reweight_1.txt
+/pool/spool/1467065740.818110103.9.shell: line 19: [: ==: unary operator expected
+[7mlsetup              [0m lsetup <tool1> [ <tool2> ...] (see lsetup -h):
+[7m lsetup agis        [0m  (or localSetupAGIS) to use AGIS
+[7m lsetup asetup      [0m  (or asetup) to use an Athena release
+[7m lsetup atlantis    [0m  (or localSetupAtlantis) to use Atlantis
+[7m lsetup dq2         [0m  (or localSetupDQ2Client) to use DQ2Client
+[7m lsetup eiclient    [0m  (or localSetupEIClient) to use EIClient
+[7m lsetup emi         [0m  (or localSetupEmi) to use  emi
+[7m lsetup fax         [0m  (or localSetupFAX) to use FAX
+[7m lsetup ganga       [0m  (or localSetupGanga) to use Ganga
+[7m lsetup lcgenv      [0m  to use lcgenv
+[7m lsetup panda       [0m  (or localSetupPandaClient) to use Panda Client
+[7m lsetup pod         [0m  (or localSetupPoD) to use Proof-on-Demand
+[7m lsetup pyami       [0m  (or localSetupPyAMI) to use pyAMI
+[7m lsetup rcsetup     [0m  (or rcSetup) to setup an ASG release
+[7m lsetup root        [0m  (or localSetupROOT) to use ROOT
+[7m lsetup rucio       [0m  (or localSetupRucioClients) to use rucio-clients
+[7m lsetup sft         [0m  (or localSetupSFT) to use SFT packages
+[7m lsetup xrootd      [0m  (or localSetupXRootD) to use XRootD
+[7madvancedTools       [0m for advanced tools
+[7mdiagnostics         [0m for diagnostic tools
+[7mhelpMe              [0m more help
+[7mprintMenu           [0m show this menu
+[7mshowVersions        [0m show versions of installed software
+mktemp: failed to create file via template `/tmp/btong/.alrb/checkGridUse.XXXXXX': No such file or directory
+
+[1m[4m19 Jan 2016[0m 
+  DQ2 clients are deprecated and no longer supported. 
+   Soon they will be completely removed from the ALRB setup. 
+   Please use Rucio instead:
+       lsetup rucio
+   For more info: https://twiki.cern.ch/twiki/bin/view/AtlasComputing/RucioClientsHowTo
+
+
+[1m[4m24 Jun 2016[0m 
+  Standalone ROOT version 6.04.18 available for Linux (gcc49) and for MacOSX.
+   (Usage: showVersions root).  
+
+lsetup: invalid option -- 'u'
+'lsetup --help' for more information
+ If it is an option for a tool, you need to put it in double quotes.
+************************************************************************
+Requested:  rcsetup ... 
+ Setting up [4mrcsetup 00-04-16[0m ... 
+In current directory, found previous release with config=x86_64-slc6-gcc49-opt at the following location, going to set up its env: 
+	/cvmfs/atlas.cern.ch/repo/sw/ASG/AnalysisBase/2.4.11
+Going to set up ROOT-6.04.16-x86_64-slc6-gcc49-opt from cvmfs
+>>>>>>>>>>>>>>>>>>>>>>>>> Information for user <<<<<<<<<<<<<<<<<<<<<<<<<
+************************************************************************
+************************************************************************
+Requested:  sft ... 
+ Setting up [4mgcc gcc493_x86_64_slc6[0m ... 
+  Skipping: gcc493 already setup.
+ Setting up [4mpython 2.7.4-x86_64-slc6-gcc48[0m ... 
+  Skipping: python 2.7 x86_64 already setup.
+ Setting up [4msft  pyanalysis[0m ... 
+  Setting up pyanalysis 1.5_python2.7-d641e ...
+>>>>>>>>>>>>>>>>>>>>>>>>> Information for user <<<<<<<<<<<<<<<<<<<<<<<<<
+ sft:
+  pyanalysis:
+    The env $SFT_HOME_pyanalysis is the home dir
+************************************************************************
+re:j0_pT-j1_trk0_pT:re
+doing reweighting on:  j0_pT-j1_trk0_pT
+Using /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/MakePlot/rootlogon.pyc
+ Running 49 jobs on 15 cores
+hadd Target file: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root
+hadd Source file 1: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_0.root
+hadd Source file 2: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_1.root
+hadd Source file 3: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_2.root
+hadd Source file 4: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_3.root
+hadd Source file 5: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_4.root
+hadd Source file 6: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_5.root
+hadd Source file 7: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_6.root
+hadd Source file 8: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_7.root
+hadd Source file 9: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_8.root
+hadd Source file 10: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_9.root
+hadd Source file 11: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_10.root
+hadd Source file 12: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_11.root
+hadd Source file 13: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_12.root
+hadd Source file 14: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple_13.root
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_3Trk_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/NoTag_4Trk_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/OneTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/OneTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/OneTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/OneTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/OneTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/TwoTag_split_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/ThreeTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/ThreeTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/ThreeTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/ThreeTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/ThreeTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/FourTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/FourTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/FourTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/FourTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/data_test/hist-MiniNTuple.root:/FourTag_ZZ
+hadd Target file: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root
+hadd Source file 1: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_0.root
+hadd Source file 2: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_1.root
+hadd Source file 3: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_2.root
+hadd Source file 4: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_3.root
+hadd Source file 5: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_4.root
+hadd Source file 6: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_5.root
+hadd Source file 7: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_6.root
+hadd Source file 8: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_7.root
+hadd Source file 9: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_8.root
+hadd Source file 10: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_9.root
+hadd Source file 11: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_10.root
+hadd Source file 12: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_11.root
+hadd Source file 13: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_12.root
+hadd Source file 14: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple_13.root
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_ZZ
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_ZZ
+[ >                    ] 0.00%
+[ ====>                ] 23.95%
+[ =========>           ] 47.89%
+[ ==============>      ] 71.84%
+[ ===================> ] 95.78%
+DONE with the data_test hist-MiniNTuple_0.root analysis! 83521  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M500 hist-MiniNTuple.root analysis! 1431  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M1300 hist-MiniNTuple.root analysis! 13121  events!
+[ >                    ] 0.00%
+[ ====>                ] 23.95%
+[ =========>           ] 47.89%
+[ ==============>      ] 71.84%
+[ ===================> ] 95.78%
+DONE with the data_test hist-MiniNTuple_1.root analysis! 83521  events!
+[ >                    ] 0.00%
+[ =================>   ] 85.94%
+DONE with the zjets_test hist-MiniNTuple.root analysis! 23273  events!
+[ >                    ] 0.00%
+[ ====>                ] 23.95%
+[ =========>           ] 47.89%
+[ ==============>      ] 71.84%
+[ ===================> ] 95.79%
+DONE with the data_test hist-MiniNTuple_8.root analysis! 83520  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M300 hist-MiniNTuple.root analysis! 527  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M900 hist-MiniNTuple.root analysis! 18698  events!
+--- 219.603551149 seconds ---
+Finish!
+Using /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/MakePlot/rootlogon.pyc
+
+Applying ATLAS style settings...
+
+input is /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/
+***** estimation *****
+Start Fit!
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+Sample & $\mu_{qcd}$ & $\alpha_{t\bar{t}}$ & $\rho(\mu_{qcd}, \alpha_{t\bar{t}})$ \\
+\hline\hline
+& & & \\
+SB, Nb=4 & 0.00047 $\pm$ 5.1e-05 & 3.06 $\pm$ 1.38 & -0.44\\
+SB, Nb=3 & 0.007 $\pm$ 0.00019 & 1.98 $\pm$ 0.21 & -0.47\\
+SB, Nb=2s & 0.032 $\pm$ 0.00049 & 1.53 $\pm$ 0.08 & -0.6\\
+SB, Nb=2 & 0.038 $\pm$ 0.0006 & 2.66 $\pm$ 0.56 & -0.75\\
+SB, Nb=1 & 0.34 $\pm$ 0.002 & 2.39 $\pm$ 0.16 & -0.79\\
+& & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+End of Fit!
+***** estimation *****
+***** estimation *****
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c|c}
+data Est & Sideband & Control & ZZ & Signal \\
+\hline\hline
+& & & & \\
+NoTag & 233466.0 $\pm$ 484.7 $\substack{+ 0\\- 0}$  & 70652.0 $\pm$ 266.81 $\substack{+ 0\\- 0}$  & 49200.0 $\pm$ 223.01 $\substack{+ 0\\- 0}$  & 27428.0 $\pm$ 166.05 $\substack{+ 0\\- 0}$ \\
+OneTag & 85569.6 $\pm$ 172.44 $\substack{+ 279.63\\- 279.63}$  & 25720.0 $\pm$ 94.31 $\substack{+ 85.28\\- 85.28}$  & 17472.79 $\pm$ 78.62 $\substack{+ 69.56\\- 69.56}$  & 9986.14 $\pm$ 58.57 $\substack{+ 33.24\\- 33.24}$ \\
+TwoTag & 9515.72 $\pm$ 23.97 $\substack{+ 92.2\\- 92.2}$  & 2883.04 $\pm$ 13.46 $\substack{+ 27.79\\- 27.79}$  & 1957.67 $\pm$ 10.46 $\substack{+ 22.49\\- 22.49}$  & 1113.82 $\pm$ 8.08 $\substack{+ 10.85\\- 10.85}$ \\
+TwoTag split & 9289.86 $\pm$ 22.99 $\substack{+ 95.11\\- 95.11}$  & 2762.83 $\pm$ 12.35 $\substack{+ 28.28\\- 28.28}$  & 1712.41 $\pm$ 8.88 $\substack{+ 21.21\\- 21.21}$  & 1101.54 $\pm$ 7.84 $\substack{+ 11.31\\- 11.31}$ \\
+ThreeTag & 1994.32 $\pm$ 9.61 $\substack{+ 43.01\\- 43.01}$  & 593.73 $\pm$ 4.93 $\substack{+ 12.64\\- 12.64}$  & 364.88 $\pm$ 2.59 $\substack{+ 8.81\\- 8.81}$  & 234.4 $\pm$ 3.28 $\substack{+ 5.04\\- 5.04}$ \\
+FourTag & 113.61 $\pm$ 1.36 $\substack{+ 9.88\\- 9.88}$  & 36.08 $\pm$ 0.84 $\substack{+ 3.05\\- 3.05}$  & 21.26 $\pm$ 0.16 $\substack{+ 1.97\\- 1.97}$  & 15.84 $\pm$ 1.13 $\substack{+ 1.38\\- 1.38}$ \\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c|c}
+Data Est Diff Percentage & Sideband & Control & ZZ & Signal \\
+\hline\hline
+& & & & \\
+NoTag & 0 $\pm$ 0.41 $\substack{+ 0\\- 0}$  & 0 $\pm$ 0.75 $\substack{+ 0\\- 0}$  & 0 $\pm$ 0.9 $\substack{+ 0\\- 0}$  & 4.2e-13 $\pm$ 1.21 $\substack{+ 0\\- 0}$ \\
+OneTag & -0.0016 $\pm$ 0.54 $\substack{+ 0.33\\- 0.33}$  & -3.15 $\pm$ 0.95 $\substack{+ 0.32\\- 0.32}$  & -1.51 $\pm$ 1.18 $\substack{+ 0.39\\- 0.39}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+TwoTag & -0.003 $\pm$ 1.28 $\substack{+ 0.97\\- 0.97}$  & -5.51 $\pm$ 2.15 $\substack{+ 0.91\\- 0.91}$  & 0.29 $\pm$ 2.81 $\substack{+ 1.15\\- 1.15}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+TwoTag split & -0.0015 $\pm$ 1.29 $\substack{+ 1.02\\- 1.02}$  & -4.47 $\pm$ 2.2 $\substack{+ 0.98\\- 0.98}$  & -1.87 $\pm$ 2.86 $\substack{+ 1.22\\- 1.22}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+ThreeTag & 0.016 $\pm$ 2.72 $\substack{+ 2.16\\- 2.16}$  & -0.88 $\pm$ 4.87 $\substack{+ 2.11\\- 2.11}$  & 10.23 $\pm$ 6.84 $\substack{+ 2.66\\- 2.66}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+FourTag & 0.54 $\pm$ 10.66 $\substack{+ 8.74\\- 8.74}$  & 12.76 $\pm$ 22.56 $\substack{+ 9.53\\- 9.53}$  & -7.58 $\pm$ 19.97 $\substack{+ 8.58\\- 8.58}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+ Running 23 jobs on 15 cores
+--- 52.6648001671 seconds ---
+Using /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/MakePlot/rootlogon.pyc
+
+Applying ATLAS style settings...
+
+input root file is:  /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/sum_
+ Running 12 jobs on 15 cores
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/ZZ done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/ZZ done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/Sideband done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot/Control done!
+--- 23.7258610725 seconds ---
+Using /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/MakePlot/rootlogon.pyc
+
+Applying ATLAS style settings...
+
+input root file is:  /afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/sum_
+ Running 12 jobs on 15 cores
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/ZZ done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/Control done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/ZZ done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/Control done!
+/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/b77_c10-cb_j0_pT-j1_trk0_pT/Plot_r0/Control done!
+--- 28.115267992 seconds ---
+Directory '' does not have a description file 'shortdescription.txt'
+for hh4b plots
+Directory 'reweight' does not have a description file 'shortdescription.txt'
+Directory 'b77_c10-cb' does not have a description file 'shortdescription.txt'
+b77_c10-cb contains 0 directories
+Directory 'b77_c10-cb-alltrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb-alltrk contains 0 directories
+Directory 'b77_c10-cb-alltrk-allj' does not have a description file 'shortdescription.txt'
+b77_c10-cb-alltrk-allj contains 0 directories
+Directory 'b77_c10-cb-j0_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb-j0_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_rj1' does not have a description file 'shortdescription.txt'
+b77_c10-cb_rj1 contains 0 directories
+Directory 'b77_c10-cb_rmhh' does not have a description file 'shortdescription.txt'
+b77_c10-cb_rmhh contains 0 directories
+Directory 'b77_c10-cb_j0_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_ntrk contains 0 directories
+Directory 'b77_c10-cb_j0_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_dr contains 0 directories
+Directory 'b77_c10-cb_j1_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_dr contains 0 directories
+Directory 'b77_c10-cb_j0_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_j0_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j1_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT contains 0 directories
+Directory 'b77_c10-cb_j1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_pT contains 0 directories
+Directory 'b77_c10-cb_j1_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_j1_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_ntrk contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_ntrk contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_ntrk contains 0 directories
+Directory 'b77_c10-cb_alltrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_alltrk contains 0 directories
+Directory 'b77_c10-cb_alltrk-j0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_alltrk-j0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_dr contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_dr contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_trk0_pT contains 0 directories
+reweight contains 27 directories
+Directory 'plot' does not have a description file 'shortdescription.txt'
+Directory 'b77_c10-cb-alltrk-allj' does not have a description file 'shortdescription.txt'
+b77_c10-cb-alltrk-allj contains 0 directories
+Directory 'b77_c10-cb' does not have a description file 'shortdescription.txt'
+b77_c10-cb contains 0 directories
+Directory 'b77_c10-cb_j0_ntrk.txt' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_ntrk.txt contains 0 directories
+Directory 'b77_c10-cb_j0_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_ntrk contains 0 directories
+Directory 'b77_c10-cb_j0_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_dr contains 0 directories
+Directory 'b77_c10-cb_j1_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_dr contains 0 directories
+Directory 'b77_c10-cb_j0_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_j0_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j1_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT contains 0 directories
+Directory 'b77_c10-cb_j1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_pT contains 0 directories
+Directory 'b77_c10-cb_j1_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_j1_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j1_ntrk contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_ntrk contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_ntrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_ntrk contains 0 directories
+Directory 'b77_c10-cb_alltrk' does not have a description file 'shortdescription.txt'
+b77_c10-cb_alltrk contains 0 directories
+Directory 'b77_c10-cb_alltrk-j0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_alltrk-j0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_dr contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_dr' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_dr contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j0_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j0_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_trk0_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_trk0_pT contains 0 directories
+Directory 'b77_c10-cb_j0_pT-j1_trk1_pT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_j0_pT-j1_trk1_pT contains 0 directories
+Directory 'b77_c10-cb_alltrk-j0_pT-allpT' does not have a description file 'shortdescription.txt'
+b77_c10-cb_alltrk-j0_pT-allpT contains 0 directories
+plot contains 26 directories
+hh4b contains 2 directories
+for slides sharing
+
+slides contains 0 directories
+ contains 2 directories
+calling .htmlSubDirectoryTree 
+.htmlSubDirectoryTree(relativeTo=)
+adding 'hh4b' --> 'hh4b/index.html'
+calling htmlSubDirectoryTree for daughter 'hh4b' with relativeTo='/hh4b'
+calling hh4b.htmlSubDirectoryTree 
+hh4b.htmlSubDirectoryTree(relativeTo=/hh4b)
+adding 'plot' --> 'hh4b/plot/index.html'
+calling htmlSubDirectoryTree for daughter 'plot' with relativeTo='/hh4b/plot'
+calling plot.htmlSubDirectoryTree 
+plot.htmlSubDirectoryTree(relativeTo=/hh4b/plot)
+adding 'b77_c10-cb' --> 'hh4b/plot/b77_c10-cb/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb' with relativeTo='/hh4b/plot/b77_c10-cb'
+calling b77_c10-cb.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk-allj' --> 'hh4b/plot/b77_c10-cb-alltrk-allj/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk-allj' with relativeTo='/hh4b/plot/b77_c10-cb-alltrk-allj'
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk' --> 'hh4b/plot/b77_c10-cb_alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk' with relativeTo='/hh4b/plot/b77_c10-cb_alltrk'
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT' --> 'hh4b/plot/b77_c10-cb_alltrk-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_alltrk-j0_pT'
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT-allpT' --> 'hh4b/plot/b77_c10-cb_alltrk-j0_pT-allpT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT-allpT' with relativeTo='/hh4b/plot/b77_c10-cb_alltrk-j0_pT-allpT'
+calling b77_c10-cb_alltrk-j0_pT-allpT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_dr' --> 'hh4b/plot/b77_c10-cb_j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_dr' with relativeTo='/hh4b/plot/b77_c10-cb_j0_dr'
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk' --> 'hh4b/plot/b77_c10-cb_j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk' with relativeTo='/hh4b/plot/b77_c10-cb_j0_ntrk'
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk.txt' --> 'hh4b/plot/b77_c10-cb_j0_ntrk.txt/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk.txt' with relativeTo='/hh4b/plot/b77_c10-cb_j0_ntrk.txt'
+calling b77_c10-cb_j0_ntrk.txt.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT'
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_dr' --> 'hh4b/plot/b77_c10-cb_j0_pT-j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_dr' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j0_dr'
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_ntrk' --> 'hh4b/plot/b77_c10-cb_j0_pT-j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_ntrk' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j0_ntrk'
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j0_pT'
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk0_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j0_trk0_pT'
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk1_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT-j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk1_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j0_trk1_pT'
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_dr' --> 'hh4b/plot/b77_c10-cb_j0_pT-j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_dr' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j1_dr'
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_ntrk' --> 'hh4b/plot/b77_c10-cb_j0_pT-j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_ntrk' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j1_ntrk'
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT-j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j1_pT'
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk0_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT-j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j1_trk0_pT'
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk1_pT' --> 'hh4b/plot/b77_c10-cb_j0_pT-j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk1_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_pT-j1_trk1_pT'
+calling b77_c10-cb_j0_pT-j1_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk0_pT' --> 'hh4b/plot/b77_c10-cb_j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_trk0_pT'
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk1_pT' --> 'hh4b/plot/b77_c10-cb_j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk1_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j0_trk1_pT'
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_dr' --> 'hh4b/plot/b77_c10-cb_j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_dr' with relativeTo='/hh4b/plot/b77_c10-cb_j1_dr'
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_ntrk' --> 'hh4b/plot/b77_c10-cb_j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_ntrk' with relativeTo='/hh4b/plot/b77_c10-cb_j1_ntrk'
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_pT' --> 'hh4b/plot/b77_c10-cb_j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j1_pT'
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk0_pT' --> 'hh4b/plot/b77_c10-cb_j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk0_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j1_trk0_pT'
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk1_pT' --> 'hh4b/plot/b77_c10-cb_j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk1_pT' with relativeTo='/hh4b/plot/b77_c10-cb_j1_trk1_pT'
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+adding 'reweight' --> 'hh4b/reweight/index.html'
+calling htmlSubDirectoryTree for daughter 'reweight' with relativeTo='/hh4b/reweight'
+calling reweight.htmlSubDirectoryTree 
+reweight.htmlSubDirectoryTree(relativeTo=/hh4b/reweight)
+adding 'b77_c10-cb' --> 'hh4b/reweight/b77_c10-cb/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb' with relativeTo='/hh4b/reweight/b77_c10-cb'
+calling b77_c10-cb.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk' --> 'hh4b/reweight/b77_c10-cb-alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk' with relativeTo='/hh4b/reweight/b77_c10-cb-alltrk'
+calling b77_c10-cb-alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk-allj' --> 'hh4b/reweight/b77_c10-cb-alltrk-allj/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk-allj' with relativeTo='/hh4b/reweight/b77_c10-cb-alltrk-allj'
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+adding 'b77_c10-cb-j0_trk0_pT' --> 'hh4b/reweight/b77_c10-cb-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-j0_trk0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb-j0_trk0_pT'
+calling b77_c10-cb-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk' --> 'hh4b/reweight/b77_c10-cb_alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk' with relativeTo='/hh4b/reweight/b77_c10-cb_alltrk'
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT' --> 'hh4b/reweight/b77_c10-cb_alltrk-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_alltrk-j0_pT'
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_dr' --> 'hh4b/reweight/b77_c10-cb_j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_dr' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_dr'
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk' --> 'hh4b/reweight/b77_c10-cb_j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_ntrk'
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT' --> 'hh4b/reweight/b77_c10-cb_j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT'
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_dr' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_dr' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j0_dr'
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_ntrk' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_ntrk' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j0_ntrk'
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_pT' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j0_pT'
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk0_pT' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j0_trk0_pT'
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk1_pT' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk1_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j0_trk1_pT'
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_dr' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_dr' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j1_dr'
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_ntrk' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_ntrk' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j1_ntrk'
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_pT' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j1_pT'
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk0_pT' --> 'hh4b/reweight/b77_c10-cb_j0_pT-j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_pT-j1_trk0_pT'
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk0_pT' --> 'hh4b/reweight/b77_c10-cb_j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_trk0_pT'
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk1_pT' --> 'hh4b/reweight/b77_c10-cb_j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk1_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j0_trk1_pT'
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_dr' --> 'hh4b/reweight/b77_c10-cb_j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_dr' with relativeTo='/hh4b/reweight/b77_c10-cb_j1_dr'
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_ntrk' --> 'hh4b/reweight/b77_c10-cb_j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_ntrk' with relativeTo='/hh4b/reweight/b77_c10-cb_j1_ntrk'
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_pT' --> 'hh4b/reweight/b77_c10-cb_j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j1_pT'
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk0_pT' --> 'hh4b/reweight/b77_c10-cb_j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk0_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j1_trk0_pT'
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk1_pT' --> 'hh4b/reweight/b77_c10-cb_j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk1_pT' with relativeTo='/hh4b/reweight/b77_c10-cb_j1_trk1_pT'
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_rj1' --> 'hh4b/reweight/b77_c10-cb_rj1/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_rj1' with relativeTo='/hh4b/reweight/b77_c10-cb_rj1'
+calling b77_c10-cb_rj1.htmlSubDirectoryTree 
+adding 'b77_c10-cb_rmhh' --> 'hh4b/reweight/b77_c10-cb_rmhh/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_rmhh' with relativeTo='/hh4b/reweight/b77_c10-cb_rmhh'
+calling b77_c10-cb_rmhh.htmlSubDirectoryTree 
+adding 'slides' --> 'slides/index.html'
+calling htmlSubDirectoryTree for daughter 'slides' with relativeTo='/slides'
+calling slides.htmlSubDirectoryTree 
+ 0 images
+calling hh4b.htmlSubDirectoryTree 
+hh4b.htmlSubDirectoryTree(relativeTo=hh4b)
+adding 'plot' --> 'plot/index.html'
+calling htmlSubDirectoryTree for daughter 'plot' with relativeTo='hh4b/plot'
+calling plot.htmlSubDirectoryTree 
+plot.htmlSubDirectoryTree(relativeTo=hh4b/plot)
+adding 'b77_c10-cb' --> 'plot/b77_c10-cb/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb' with relativeTo='hh4b/plot/b77_c10-cb'
+calling b77_c10-cb.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk-allj' --> 'plot/b77_c10-cb-alltrk-allj/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk-allj' with relativeTo='hh4b/plot/b77_c10-cb-alltrk-allj'
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk' --> 'plot/b77_c10-cb_alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk' with relativeTo='hh4b/plot/b77_c10-cb_alltrk'
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT' --> 'plot/b77_c10-cb_alltrk-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT' with relativeTo='hh4b/plot/b77_c10-cb_alltrk-j0_pT'
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT-allpT' --> 'plot/b77_c10-cb_alltrk-j0_pT-allpT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT-allpT' with relativeTo='hh4b/plot/b77_c10-cb_alltrk-j0_pT-allpT'
+calling b77_c10-cb_alltrk-j0_pT-allpT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_dr' --> 'plot/b77_c10-cb_j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_dr' with relativeTo='hh4b/plot/b77_c10-cb_j0_dr'
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk' --> 'plot/b77_c10-cb_j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk' with relativeTo='hh4b/plot/b77_c10-cb_j0_ntrk'
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk.txt' --> 'plot/b77_c10-cb_j0_ntrk.txt/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk.txt' with relativeTo='hh4b/plot/b77_c10-cb_j0_ntrk.txt'
+calling b77_c10-cb_j0_ntrk.txt.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT' --> 'plot/b77_c10-cb_j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT'
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_dr' --> 'plot/b77_c10-cb_j0_pT-j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_dr' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j0_dr'
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_ntrk' --> 'plot/b77_c10-cb_j0_pT-j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_ntrk' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j0_ntrk'
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_pT' --> 'plot/b77_c10-cb_j0_pT-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j0_pT'
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk0_pT' --> 'plot/b77_c10-cb_j0_pT-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk0_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j0_trk0_pT'
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk1_pT' --> 'plot/b77_c10-cb_j0_pT-j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk1_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j0_trk1_pT'
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_dr' --> 'plot/b77_c10-cb_j0_pT-j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_dr' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j1_dr'
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_ntrk' --> 'plot/b77_c10-cb_j0_pT-j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_ntrk' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j1_ntrk'
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_pT' --> 'plot/b77_c10-cb_j0_pT-j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j1_pT'
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk0_pT' --> 'plot/b77_c10-cb_j0_pT-j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk0_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j1_trk0_pT'
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk1_pT' --> 'plot/b77_c10-cb_j0_pT-j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk1_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_pT-j1_trk1_pT'
+calling b77_c10-cb_j0_pT-j1_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk0_pT' --> 'plot/b77_c10-cb_j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk0_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_trk0_pT'
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk1_pT' --> 'plot/b77_c10-cb_j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk1_pT' with relativeTo='hh4b/plot/b77_c10-cb_j0_trk1_pT'
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_dr' --> 'plot/b77_c10-cb_j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_dr' with relativeTo='hh4b/plot/b77_c10-cb_j1_dr'
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_ntrk' --> 'plot/b77_c10-cb_j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_ntrk' with relativeTo='hh4b/plot/b77_c10-cb_j1_ntrk'
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_pT' --> 'plot/b77_c10-cb_j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_pT' with relativeTo='hh4b/plot/b77_c10-cb_j1_pT'
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk0_pT' --> 'plot/b77_c10-cb_j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk0_pT' with relativeTo='hh4b/plot/b77_c10-cb_j1_trk0_pT'
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk1_pT' --> 'plot/b77_c10-cb_j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk1_pT' with relativeTo='hh4b/plot/b77_c10-cb_j1_trk1_pT'
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+adding 'reweight' --> 'reweight/index.html'
+calling htmlSubDirectoryTree for daughter 'reweight' with relativeTo='hh4b/reweight'
+calling reweight.htmlSubDirectoryTree 
+reweight.htmlSubDirectoryTree(relativeTo=hh4b/reweight)
+adding 'b77_c10-cb' --> 'reweight/b77_c10-cb/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb' with relativeTo='hh4b/reweight/b77_c10-cb'
+calling b77_c10-cb.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk' --> 'reweight/b77_c10-cb-alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk' with relativeTo='hh4b/reweight/b77_c10-cb-alltrk'
+calling b77_c10-cb-alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk-allj' --> 'reweight/b77_c10-cb-alltrk-allj/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk-allj' with relativeTo='hh4b/reweight/b77_c10-cb-alltrk-allj'
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+adding 'b77_c10-cb-j0_trk0_pT' --> 'reweight/b77_c10-cb-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-j0_trk0_pT' with relativeTo='hh4b/reweight/b77_c10-cb-j0_trk0_pT'
+calling b77_c10-cb-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk' --> 'reweight/b77_c10-cb_alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk' with relativeTo='hh4b/reweight/b77_c10-cb_alltrk'
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT' --> 'reweight/b77_c10-cb_alltrk-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_alltrk-j0_pT'
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_dr' --> 'reweight/b77_c10-cb_j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_dr' with relativeTo='hh4b/reweight/b77_c10-cb_j0_dr'
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk' --> 'reweight/b77_c10-cb_j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk' with relativeTo='hh4b/reweight/b77_c10-cb_j0_ntrk'
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT' --> 'reweight/b77_c10-cb_j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT'
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_dr' --> 'reweight/b77_c10-cb_j0_pT-j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_dr' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j0_dr'
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_ntrk' --> 'reweight/b77_c10-cb_j0_pT-j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_ntrk' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j0_ntrk'
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_pT' --> 'reweight/b77_c10-cb_j0_pT-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j0_pT'
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk0_pT' --> 'reweight/b77_c10-cb_j0_pT-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j0_trk0_pT'
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk1_pT' --> 'reweight/b77_c10-cb_j0_pT-j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk1_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j0_trk1_pT'
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_dr' --> 'reweight/b77_c10-cb_j0_pT-j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_dr' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j1_dr'
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_ntrk' --> 'reweight/b77_c10-cb_j0_pT-j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_ntrk' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j1_ntrk'
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_pT' --> 'reweight/b77_c10-cb_j0_pT-j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j1_pT'
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk0_pT' --> 'reweight/b77_c10-cb_j0_pT-j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_pT-j1_trk0_pT'
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk0_pT' --> 'reweight/b77_c10-cb_j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_trk0_pT'
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk1_pT' --> 'reweight/b77_c10-cb_j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk1_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j0_trk1_pT'
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_dr' --> 'reweight/b77_c10-cb_j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_dr' with relativeTo='hh4b/reweight/b77_c10-cb_j1_dr'
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_ntrk' --> 'reweight/b77_c10-cb_j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_ntrk' with relativeTo='hh4b/reweight/b77_c10-cb_j1_ntrk'
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_pT' --> 'reweight/b77_c10-cb_j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j1_pT'
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk0_pT' --> 'reweight/b77_c10-cb_j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk0_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j1_trk0_pT'
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk1_pT' --> 'reweight/b77_c10-cb_j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk1_pT' with relativeTo='hh4b/reweight/b77_c10-cb_j1_trk1_pT'
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_rj1' --> 'reweight/b77_c10-cb_rj1/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_rj1' with relativeTo='hh4b/reweight/b77_c10-cb_rj1'
+calling b77_c10-cb_rj1.htmlSubDirectoryTree 
+adding 'b77_c10-cb_rmhh' --> 'reweight/b77_c10-cb_rmhh/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_rmhh' with relativeTo='hh4b/reweight/b77_c10-cb_rmhh'
+calling b77_c10-cb_rmhh.htmlSubDirectoryTree 
+hh4b 0 images
+calling plot.htmlSubDirectoryTree 
+plot.htmlSubDirectoryTree(relativeTo=plot)
+adding 'b77_c10-cb' --> 'b77_c10-cb/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb' with relativeTo='plot/b77_c10-cb'
+calling b77_c10-cb.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk-allj' --> 'b77_c10-cb-alltrk-allj/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk-allj' with relativeTo='plot/b77_c10-cb-alltrk-allj'
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk' --> 'b77_c10-cb_alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk' with relativeTo='plot/b77_c10-cb_alltrk'
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT' --> 'b77_c10-cb_alltrk-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT' with relativeTo='plot/b77_c10-cb_alltrk-j0_pT'
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT-allpT' --> 'b77_c10-cb_alltrk-j0_pT-allpT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT-allpT' with relativeTo='plot/b77_c10-cb_alltrk-j0_pT-allpT'
+calling b77_c10-cb_alltrk-j0_pT-allpT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_dr' --> 'b77_c10-cb_j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_dr' with relativeTo='plot/b77_c10-cb_j0_dr'
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk' --> 'b77_c10-cb_j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk' with relativeTo='plot/b77_c10-cb_j0_ntrk'
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk.txt' --> 'b77_c10-cb_j0_ntrk.txt/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk.txt' with relativeTo='plot/b77_c10-cb_j0_ntrk.txt'
+calling b77_c10-cb_j0_ntrk.txt.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT' --> 'b77_c10-cb_j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT' with relativeTo='plot/b77_c10-cb_j0_pT'
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_dr' --> 'b77_c10-cb_j0_pT-j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_dr' with relativeTo='plot/b77_c10-cb_j0_pT-j0_dr'
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_ntrk' --> 'b77_c10-cb_j0_pT-j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_ntrk' with relativeTo='plot/b77_c10-cb_j0_pT-j0_ntrk'
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_pT' --> 'b77_c10-cb_j0_pT-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_pT' with relativeTo='plot/b77_c10-cb_j0_pT-j0_pT'
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk0_pT' --> 'b77_c10-cb_j0_pT-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk0_pT' with relativeTo='plot/b77_c10-cb_j0_pT-j0_trk0_pT'
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk1_pT' --> 'b77_c10-cb_j0_pT-j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk1_pT' with relativeTo='plot/b77_c10-cb_j0_pT-j0_trk1_pT'
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_dr' --> 'b77_c10-cb_j0_pT-j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_dr' with relativeTo='plot/b77_c10-cb_j0_pT-j1_dr'
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_ntrk' --> 'b77_c10-cb_j0_pT-j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_ntrk' with relativeTo='plot/b77_c10-cb_j0_pT-j1_ntrk'
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_pT' --> 'b77_c10-cb_j0_pT-j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_pT' with relativeTo='plot/b77_c10-cb_j0_pT-j1_pT'
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk0_pT' --> 'b77_c10-cb_j0_pT-j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk0_pT' with relativeTo='plot/b77_c10-cb_j0_pT-j1_trk0_pT'
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk1_pT' --> 'b77_c10-cb_j0_pT-j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk1_pT' with relativeTo='plot/b77_c10-cb_j0_pT-j1_trk1_pT'
+calling b77_c10-cb_j0_pT-j1_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk0_pT' --> 'b77_c10-cb_j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk0_pT' with relativeTo='plot/b77_c10-cb_j0_trk0_pT'
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk1_pT' --> 'b77_c10-cb_j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk1_pT' with relativeTo='plot/b77_c10-cb_j0_trk1_pT'
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_dr' --> 'b77_c10-cb_j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_dr' with relativeTo='plot/b77_c10-cb_j1_dr'
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_ntrk' --> 'b77_c10-cb_j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_ntrk' with relativeTo='plot/b77_c10-cb_j1_ntrk'
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_pT' --> 'b77_c10-cb_j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_pT' with relativeTo='plot/b77_c10-cb_j1_pT'
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk0_pT' --> 'b77_c10-cb_j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk0_pT' with relativeTo='plot/b77_c10-cb_j1_trk0_pT'
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk1_pT' --> 'b77_c10-cb_j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk1_pT' with relativeTo='plot/b77_c10-cb_j1_trk1_pT'
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+plot 0 images
+calling b77_c10-cb.htmlSubDirectoryTree 
+b77_c10-cb 150 images
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+b77_c10-cb-alltrk-allj 150 images
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+b77_c10-cb_alltrk 150 images
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+b77_c10-cb_alltrk-j0_pT 150 images
+calling b77_c10-cb_alltrk-j0_pT-allpT.htmlSubDirectoryTree 
+b77_c10-cb_alltrk-j0_pT-allpT 0 images
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+b77_c10-cb_j0_dr 150 images
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j0_ntrk 0 images
+calling b77_c10-cb_j0_ntrk.txt.htmlSubDirectoryTree 
+b77_c10-cb_j0_ntrk.txt 0 images
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT 0 images
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_dr 0 images
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_ntrk 0 images
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_pT 0 images
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_trk0_pT 0 images
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_trk1_pT 0 images
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_dr 0 images
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_ntrk 0 images
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_pT 0 images
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_trk0_pT 0 images
+calling b77_c10-cb_j0_pT-j1_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_trk1_pT 0 images
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_trk0_pT 0 images
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_trk1_pT 0 images
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+b77_c10-cb_j1_dr 150 images
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j1_ntrk 150 images
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j1_pT 0 images
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j1_trk0_pT 0 images
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j1_trk1_pT 0 images
+calling reweight.htmlSubDirectoryTree 
+reweight.htmlSubDirectoryTree(relativeTo=reweight)
+adding 'b77_c10-cb' --> 'b77_c10-cb/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb' with relativeTo='reweight/b77_c10-cb'
+calling b77_c10-cb.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk' --> 'b77_c10-cb-alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk' with relativeTo='reweight/b77_c10-cb-alltrk'
+calling b77_c10-cb-alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb-alltrk-allj' --> 'b77_c10-cb-alltrk-allj/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-alltrk-allj' with relativeTo='reweight/b77_c10-cb-alltrk-allj'
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+adding 'b77_c10-cb-j0_trk0_pT' --> 'b77_c10-cb-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb-j0_trk0_pT' with relativeTo='reweight/b77_c10-cb-j0_trk0_pT'
+calling b77_c10-cb-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk' --> 'b77_c10-cb_alltrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk' with relativeTo='reweight/b77_c10-cb_alltrk'
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_alltrk-j0_pT' --> 'b77_c10-cb_alltrk-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_alltrk-j0_pT' with relativeTo='reweight/b77_c10-cb_alltrk-j0_pT'
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_dr' --> 'b77_c10-cb_j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_dr' with relativeTo='reweight/b77_c10-cb_j0_dr'
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_ntrk' --> 'b77_c10-cb_j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_ntrk' with relativeTo='reweight/b77_c10-cb_j0_ntrk'
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT' --> 'b77_c10-cb_j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT' with relativeTo='reweight/b77_c10-cb_j0_pT'
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_dr' --> 'b77_c10-cb_j0_pT-j0_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_dr' with relativeTo='reweight/b77_c10-cb_j0_pT-j0_dr'
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_ntrk' --> 'b77_c10-cb_j0_pT-j0_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_ntrk' with relativeTo='reweight/b77_c10-cb_j0_pT-j0_ntrk'
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_pT' --> 'b77_c10-cb_j0_pT-j0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_pT' with relativeTo='reweight/b77_c10-cb_j0_pT-j0_pT'
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk0_pT' --> 'b77_c10-cb_j0_pT-j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk0_pT' with relativeTo='reweight/b77_c10-cb_j0_pT-j0_trk0_pT'
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j0_trk1_pT' --> 'b77_c10-cb_j0_pT-j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j0_trk1_pT' with relativeTo='reweight/b77_c10-cb_j0_pT-j0_trk1_pT'
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_dr' --> 'b77_c10-cb_j0_pT-j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_dr' with relativeTo='reweight/b77_c10-cb_j0_pT-j1_dr'
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_ntrk' --> 'b77_c10-cb_j0_pT-j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_ntrk' with relativeTo='reweight/b77_c10-cb_j0_pT-j1_ntrk'
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_pT' --> 'b77_c10-cb_j0_pT-j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_pT' with relativeTo='reweight/b77_c10-cb_j0_pT-j1_pT'
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_pT-j1_trk0_pT' --> 'b77_c10-cb_j0_pT-j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_pT-j1_trk0_pT' with relativeTo='reweight/b77_c10-cb_j0_pT-j1_trk0_pT'
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk0_pT' --> 'b77_c10-cb_j0_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk0_pT' with relativeTo='reweight/b77_c10-cb_j0_trk0_pT'
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j0_trk1_pT' --> 'b77_c10-cb_j0_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j0_trk1_pT' with relativeTo='reweight/b77_c10-cb_j0_trk1_pT'
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_dr' --> 'b77_c10-cb_j1_dr/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_dr' with relativeTo='reweight/b77_c10-cb_j1_dr'
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_ntrk' --> 'b77_c10-cb_j1_ntrk/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_ntrk' with relativeTo='reweight/b77_c10-cb_j1_ntrk'
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_pT' --> 'b77_c10-cb_j1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_pT' with relativeTo='reweight/b77_c10-cb_j1_pT'
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk0_pT' --> 'b77_c10-cb_j1_trk0_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk0_pT' with relativeTo='reweight/b77_c10-cb_j1_trk0_pT'
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_j1_trk1_pT' --> 'b77_c10-cb_j1_trk1_pT/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_j1_trk1_pT' with relativeTo='reweight/b77_c10-cb_j1_trk1_pT'
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+adding 'b77_c10-cb_rj1' --> 'b77_c10-cb_rj1/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_rj1' with relativeTo='reweight/b77_c10-cb_rj1'
+calling b77_c10-cb_rj1.htmlSubDirectoryTree 
+adding 'b77_c10-cb_rmhh' --> 'b77_c10-cb_rmhh/index.html'
+calling htmlSubDirectoryTree for daughter 'b77_c10-cb_rmhh' with relativeTo='reweight/b77_c10-cb_rmhh'
+calling b77_c10-cb_rmhh.htmlSubDirectoryTree 
+reweight 0 images
+calling b77_c10-cb.htmlSubDirectoryTree 
+b77_c10-cb 81 images
+calling b77_c10-cb-alltrk.htmlSubDirectoryTree 
+b77_c10-cb-alltrk 81 images
+calling b77_c10-cb-alltrk-allj.htmlSubDirectoryTree 
+b77_c10-cb-alltrk-allj 81 images
+calling b77_c10-cb-j0_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb-j0_trk0_pT 81 images
+calling b77_c10-cb_alltrk.htmlSubDirectoryTree 
+b77_c10-cb_alltrk 81 images
+calling b77_c10-cb_alltrk-j0_pT.htmlSubDirectoryTree 
+b77_c10-cb_alltrk-j0_pT 81 images
+calling b77_c10-cb_j0_dr.htmlSubDirectoryTree 
+b77_c10-cb_j0_dr 81 images
+calling b77_c10-cb_j0_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j0_ntrk 81 images
+calling b77_c10-cb_j0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT 81 images
+calling b77_c10-cb_j0_pT-j0_dr.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_dr 81 images
+calling b77_c10-cb_j0_pT-j0_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_ntrk 81 images
+calling b77_c10-cb_j0_pT-j0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_pT 81 images
+calling b77_c10-cb_j0_pT-j0_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_trk0_pT 81 images
+calling b77_c10-cb_j0_pT-j0_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j0_trk1_pT 81 images
+calling b77_c10-cb_j0_pT-j1_dr.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_dr 81 images
+calling b77_c10-cb_j0_pT-j1_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_ntrk 81 images
+calling b77_c10-cb_j0_pT-j1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_pT 81 images
+calling b77_c10-cb_j0_pT-j1_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_pT-j1_trk0_pT 81 images
+calling b77_c10-cb_j0_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_trk0_pT 81 images
+calling b77_c10-cb_j0_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j0_trk1_pT 81 images
+calling b77_c10-cb_j1_dr.htmlSubDirectoryTree 
+b77_c10-cb_j1_dr 81 images
+calling b77_c10-cb_j1_ntrk.htmlSubDirectoryTree 
+b77_c10-cb_j1_ntrk 81 images
+calling b77_c10-cb_j1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j1_pT 81 images
+calling b77_c10-cb_j1_trk0_pT.htmlSubDirectoryTree 
+b77_c10-cb_j1_trk0_pT 81 images
+calling b77_c10-cb_j1_trk1_pT.htmlSubDirectoryTree 
+b77_c10-cb_j1_trk1_pT 81 images
+calling b77_c10-cb_rj1.htmlSubDirectoryTree 
+b77_c10-cb_rj1 81 images
+calling b77_c10-cb_rmhh.htmlSubDirectoryTree 
+b77_c10-cb_rmhh 81 images
+calling slides.htmlSubDirectoryTree 
+slides 3 images
+Done!
+DONE!!!
+
+Job finished at Tue Jun 28 00:38:18 CEST 2016 on node 
+ under linux version Scientific Linux CERN SLC release 6.8 (Carbon)
+
+CERN statistics: This process used approximately : 1:00:30 KSI2K hours (3630 KSI2K seconds)
+                 This process corresponds to     : 3:55:57 HS06  hours (14157 HS06  seconds)

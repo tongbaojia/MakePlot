@@ -1,46 +1,24 @@
-#channels=(b70 b77 b80 b85 b90 SB58 SB68 SB78 SB88 SB98 SB108 SB128 SB168 SB999 jl400)
-channels=(jl425 jl450 jl400js275 jl425js275 jl450js275 jl400js300 jl425js300 jl450js300)
-#channels=(SB58 SB68 SB78 SB88 SB98 SB108 SB128 SB168 SB999)
-#channels=(ref)
-#channels=(b77)
-#for gather tables and histograms
+re=alltrk-alltrk-j0_pT-j0_pT-alltrk-j0_pT-j0_pT
+inch=TEST_c10-cb
+ch=b77_c10-cb$"_"$re
+#ch=b77_c10-cb_alltrk
+homepath="/afs/cern.ch/user/b/btong/"
+workpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
+python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight "test" #$re
+python get_count.py --inputdir $ch
+python plot.py --inputdir $ch
+python reweight.py --inputdir $ch
 
-for ch in ${channels[@]}; do
-	python get_count.py --inputdir $ch
-	#python plot.py --inputdir $ch
-	#python plot_trigeff.py --inputdir $ch
-	#python plot_sigeff.py --inputdir $ch
-	python plot_prediction.py --inputdir $ch
-	#python dump_hists.py --inputdir $ch
-	#python plot_random.py --inputdir $ch
-	#python plot_smooth.py --inputdir $ch
-done
-
-
-#specify the paths to gather!
-inputpath="/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Output/"
-plotpath="/Plot/SigEff/"
-plotname="_relsig_0_3100_1.pdf"
-tablepath="/Plot/Tables/"
-tablename="normfit.tex"
-outputpath="/afs/cern.ch/work/b/btong/bbbb/NewAnalysis/Plot/"
-#pick scipt
-for ch in ${channels[@]}; do
-	cp $inputpath$ch$plotpath$ch$plotname $outputpath$"/."
-	#cp $inputpath$ch$tablepath$tablename $outputpath$"/"$ch$"_"$tablename
-	echo $ch
-	#more $inputpath$ch$tablepath$tablename
-	more $inputpath$ch$"/sum_"$ch$".tex"
-done
-
-# for distributions, old
-# python plot_boosted.py --plotter=boosted_data_qcd_4b.yml --inputdir b70 > log_4b_70.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_4b.yml --inputdir b77 > log_4b_77.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_4b.yml --inputdir b80 > log_4b_80.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_4b.yml --inputdir b85 > log_4b_85.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_4b.yml --inputdir b90 > log_4b_90.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_3b.yml --inputdir b70 > log_3b_70.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_3b.yml --inputdir b77 > log_3b_77.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_3b.yml --inputdir b80 > log_3b_80.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_3b.yml --inputdir b85 > log_3b_85.txt
-# python plot_boosted.py --plotter=boosted_data_qcd_3b.yml --inputdir b90 > log_3b_90.txt
+##publish online
+if [ ! -d $homepath"/www/share/hh4b/reweight/"$ch ]; then
+  mkdir $homepath"/www/share/hh4b/reweight/"$ch
+fi
+if [ ! -d $homepath"/www/share/hh4b/plot/"$ch ]; then
+  mkdir $homepath"/www/share/hh4b/plot/"$ch
+fi
+find $workpath$ch$"/Plot_r0/Sideband/" -name '*.png' -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
+find $workpath$ch$"/Plot/Sideband/" -name '*.png' -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;
+find $workpath$ch$"/Plot/Control/" -name '*.png' -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;
+cd $homepath"/www/share/"
+python createHtmlOverview.py
+echo "Done!"

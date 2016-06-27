@@ -1,0 +1,14 @@
+##must follow the following rules!
+##channel variable inputfolder reweightfile
+
+
+#iteration 1
+2bs event.j0_pt b77_c10-cb r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+3b event.j0_pt b77_c10-cb r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+4b event.j0_pt b77_c10-cb r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+
+#iteration 2
+2bs event.j0_nTrk b77_c10-cb_j0_pT  r0_TwoTag_split_Sideband_leadHCand_ntrk.txt
+3b event.j0_nTrk b77_c10-cb_j0_pT  r0_ThreeTag_Sideband_leadHCand_ntrk.txt
+4b event.j0_nTrk b77_c10-cb_j0_pT  r0_FourTag_Sideband_leadHCand_ntrk.txt

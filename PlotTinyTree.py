@@ -17,8 +17,35 @@ def options():
     parser.add_argument("--inputdir",  default="TEST_c10-cb")
     parser.add_argument("--outputdir", default="test")
     parser.add_argument("--dosyst",    default=None)
-    parser.add_argument("--iter",      default=0)
+    parser.add_argument("--reweight",  default=None)
     return parser.parse_args()
+
+#returns a dictionary of weights
+def get_parameter(filename="test.txt"):
+    #the input file need to be the following format; change to lists of tuples
+    #Ntrk; parameter; inputfolder; parameterfile
+    def get_info(lstline):
+        return compiler.compile(lstline[1], '<string>', 'eval'), get_reweight(lstline[2], lstline[3])
+
+    f_reweight = open("script/" + filename + ".txt", "r")
+    TwoTagDic = []
+    ThreeTagDic = []
+    FourTagDic = []
+    for line in f_reweight:
+        if "#" in line:
+            continue
+        lstline =  line.split()
+        if "2bs" in line:
+            TwoTagDic.append(get_info(lstline))
+        if "3b" in line:
+            ThreeTagDic.append(get_info(lstline))
+        if "4b" in line:
+            FourTagDic.append(get_info(lstline))
+    #print par_weight
+    f_reweight.close()
+    #print TwoTagDic
+    return (TwoTagDic, ThreeTagDic, FourTagDic)
+
 
 #returns a dictionary of weights
 def get_reweight(folder, filename):
@@ -48,7 +75,7 @@ def get_reweight(folder, filename):
 def calc_reweight(dic, event):
     totalweight = 1
     maxscale = 0.5 #this means the maximum correction is this for each reweighting
-    for x, v in dic.iteritems():
+    for x, v in dic:
         value = eval(x)
         if (v["low"] > value) or (v["high"] < value): #outside fit range, don't fix!!!
             continue
@@ -59,6 +86,7 @@ def calc_reweight(dic, event):
         if tempweight > 1 + maxscale:
             tempweight = 1 + maxscale
         totalweight *= tempweight
+    #print totalweight
     #also contrain the totalweight
     if totalweight < maxscale:
         totalweight = maxscale
@@ -225,49 +253,53 @@ class trkregionHists:
         self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
         if self.reweight:
-            self.Trk2s_dic = {}
-            self.Trk3_dic = {}
-            self.Trk4_dic = {}
-            #setup all the reweighting parameters here
-            tempname_lead_pt = compiler.compile("(event.j0_pt)", '<string>', 'eval')
-            tempname_subl_pt = compiler.compile("(event.j1_pt)", '<string>', 'eval')
-            tempname_lead_trk0_pt = compiler.compile("(event.j0_trk0_pt)", '<string>', 'eval')
-            tempname_subl_trk0_pt = compiler.compile("(event.j1_trk0_pt)", '<string>', 'eval')
-            tempname_lead_trk1_pt = compiler.compile("(event.j0_trk1_pt)", '<string>', 'eval')
-            tempname_subl_trk1_pt = compiler.compile("(event.j1_trk1_pt)", '<string>', 'eval')
-            tempname_lead_trkasy = compiler.compile("(event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt)", '<string>', 'eval')
-            tempname_subl_trkasy = compiler.compile("(event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt)", '<string>', 'eval')
-            #for 2tag split region
-            #self.Trk2s_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_Rhh.txt")
-            #self.Trk2s_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt")
-            #self.Trk2s_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt")
-            #self.Trk2s_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt")
-            #self.Trk2s_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
-            self.Trk2s_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt")
-            self.Trk2s_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_Pt_m.txt")
-            #self.Trk2s_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt")
-            #self.Trk2s_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt")
-            #for 4tag region
-            #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_Rhh.txt")
-            #self.Trk3_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt")
-            #self.Trk3_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
-            #self.Trk3_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt")
-            #self.Trk3_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
-            self.Trk3_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
-            self.Trk3_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
-            #self.Trk3_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
-            #self.Trk3_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
-            #for 4tag region
-            #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_FourTag_Sideband_Rhh.txt")
-            #self.Trk4_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk0_Pt.txt")
-            #self.Trk4_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk0_Pt.txt")
-            #self.Trk4_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_FourTag_Sideband_leadHCand_trk1_Pt.txt")
-            #self.Trk4_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk1_Pt.txt")
-            self.Trk4_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
-            self.Trk4_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
-            #self.Trk4_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
-            #self.Trk4_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
-            #print self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic
+            self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic = get_parameter(filename=ops.reweight)
+            # self.Trk3_dic = {}
+            # self.Trk4_dic = {}
+            # #setup all the reweighting parameters here
+            # tempname_mHH     = compiler.compile("(event.mHH)", '<string>', 'eval')
+            # tempname_lead_pt = compiler.compile("(event.j0_pt)", '<string>', 'eval')
+            # tempname_subl_pt = compiler.compile("(event.j1_pt)", '<string>', 'eval')
+            # tempname_lead_trk0_pt = compiler.compile("(event.j0_trk0_pt)", '<string>', 'eval')
+            # tempname_subl_trk0_pt = compiler.compile("(event.j1_trk0_pt)", '<string>', 'eval')
+            # tempname_lead_trk1_pt = compiler.compile("(event.j0_trk1_pt)", '<string>', 'eval')
+            # tempname_subl_trk1_pt = compiler.compile("(event.j1_trk1_pt)", '<string>', 'eval')
+            # tempname_lead_trkasy = compiler.compile("(event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt)", '<string>', 'eval')
+            # tempname_subl_trkasy = compiler.compile("(event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt)", '<string>', 'eval')
+            # #for 2tag split region
+            # #self.Trk2s_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_Rhh.txt")
+            # #self.Trk2s_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt")
+            # #self.Trk2s_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt")
+            # #self.Trk2s_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt")
+            # #self.Trk2s_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
+            # #self.Trk2s_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt")
+            # #self.Trk2s_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_Pt_m.txt")
+            # self.Trk2s_dic[tempname_mHH] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_mHH_l.txt")
+            # #self.Trk2s_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt")
+            # #self.Trk2s_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt")
+            # #for 4tag region
+            # #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_Rhh.txt")
+            # #self.Trk3_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt")
+            # #self.Trk3_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
+            # #self.Trk3_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt")
+            # #self.Trk3_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
+            # #self.Trk3_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
+            # #self.Trk3_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
+            # self.Trk3_dic[tempname_mHH]     = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_mHH_l.txt")
+            # #self.Trk3_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
+            # #self.Trk3_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
+            # #for 4tag region
+            # #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_FourTag_Sideband_Rhh.txt")
+            # #self.Trk4_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk0_Pt.txt")
+            # #self.Trk4_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk0_Pt.txt")
+            # #self.Trk4_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_FourTag_Sideband_leadHCand_trk1_Pt.txt")
+            # #self.Trk4_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk1_Pt.txt")
+            # #self.Trk4_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
+            # #self.Trk4_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
+            # self.Trk4_dic[tempname_mHH]     = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_mHH_l.txt")
+            # #self.Trk4_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
+            # #self.Trk4_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
+            # #print self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic
 
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, weight)
@@ -388,12 +420,12 @@ def main():
     ops = options()
     global inputpath
     inputpath = CONF.inputpath + ops.inputdir + "/"
-    global iter_reweight #iterative reweight or not
-    iter_reweight = int(ops.iter)
+    #for reweight options
     global turnon_reweight #reweight or not
     turnon_reweight = False
-    if iter_reweight > 0:
+    if ops.reweight is not None:
         turnon_reweight = True
+
     global outputpath
     outputpath = CONF.outputpath + ops.outputdir + ("_" + ops.dosyst if (ops.dosyst is not None) else "") +  "/"
     #outputpath = CONF.outputpath + "reweight_" + str(iter_reweight) + "/"
@@ -460,6 +492,11 @@ def main():
         haddcommand += targetfiles
         #print haddcommand
         subprocess.call(haddcommand)
+        #clean up the sub process outputs
+        for i in range(nsplit):
+            hrmcommand = ["rm"]
+            hrmcommand += glob.glob(targetpath + ("hist-MiniNTuple_%s"% str(i)) + ".root")
+            subprocess.call(hrmcommand)
 
 
     #analysis("data_test") #2 mins! 4 mins with expanded...

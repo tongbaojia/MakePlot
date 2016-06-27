@@ -82,6 +82,9 @@ def skim(targetpath=""):
     for file in files:
         temp_dic = {}
         temp_dic["file"] = file
+        #add skimming selection now
+        if "16_13TeV" not in file:
+            continue
         #only do skimming once for now!
         if not os.path.isfile(temp_dic["file"] + "_skim"):
             config.append(temp_dic)

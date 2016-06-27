@@ -189,9 +189,9 @@ void TinyTree::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
-   fChain->SetBranchAddress("runNumber", &runNumber, &b_runNumber);
-   fChain->SetBranchAddress("lbNumber", &lbNumber, &b_lbNumber);
-   fChain->SetBranchAddress("eventNumber", &eventNumber, &b_eventNumber);
+   //fChain->SetBranchAddress("runNumber", &runNumber, &b_runNumber);
+   //fChain->SetBranchAddress("lbNumber", &lbNumber, &b_lbNumber);
+   //fChain->SetBranchAddress("eventNumber", &eventNumber, &b_eventNumber);
    fChain->SetBranchAddress("mHH", &mHH, &b_mHH);
    fChain->SetBranchAddress("mHH_pole", &mHH_pole, &b_mHH_pole);
    fChain->SetBranchAddress("detaHH", &detaHH, &b_detaHH);
@@ -230,11 +230,11 @@ void TinyTree::Init(TTree *tree)
    fChain->SetBranchAddress("j1_trk1_phi", &j1_trk1_phi, &b_j1_trk1_phi);
    fChain->SetBranchAddress("j1_trk1_Mv2", &j1_trk1_Mv2, &b_j1_trk1_Mv2);
    fChain->SetBranchAddress("Xzz", &Xzz, &b_Xzz);
-   fChain->SetBranchAddress("Xww", &Xww, &b_Xww);
+   //fChain->SetBranchAddress("Xww", &Xww, &b_Xww);
    fChain->SetBranchAddress("Xhh", &Xhh, &b_Xhh);
    fChain->SetBranchAddress("Rhh", &Rhh, &b_Rhh);
-   fChain->SetBranchAddress("Xtt", &Xtt, &b_Xtt);
-   fChain->SetBranchAddress("nresj", &nresj, &b_nresj);
+   //fChain->SetBranchAddress("Xtt", &Xtt, &b_Xtt);
+   //fChain->SetBranchAddress("nresj", &nresj, &b_nresj);
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    Notify();
 }
