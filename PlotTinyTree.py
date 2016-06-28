@@ -423,10 +423,10 @@ def main():
     nsplit = 14
     split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     inputtasks = []
-    #for split_file in split_list:
-        #for i in range(nsplit):
-            #inputtasks.append(pack_input(split_file, inputsplit=i))    
-    #inputtasks.append(pack_input("zjets_test"))
+    for split_file in split_list:
+        for i in range(nsplit):
+            inputtasks.append(pack_input(split_file, inputsplit=i))    
+    inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight:
