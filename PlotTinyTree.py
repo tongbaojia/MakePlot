@@ -7,6 +7,7 @@ import config as CONF
 import time, os, subprocess, glob, argparse
 #for parallel processing!
 import multiprocessing as mp
+import numpy as np
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
@@ -17,6 +18,7 @@ def options():
     parser.add_argument("--inputdir", default="TEST")
     parser.add_argument("--outputdir", default="test")
     parser.add_argument("--iter", default=0)
+    parser.add_argument("--cut_ind", default=0)
     return parser.parse_args()
 
 #returns a dictionary of weights
@@ -327,8 +329,45 @@ class regionHists:
         self.ThreeTag.Write(outputroot)
         self.FourTag.Write(outputroot)
 
+cut_types = ["ALL-TIGHT", "ALL_LOOSE", "BTAG-TIGHT", "NONE", "HALF"]
+cut_type = ""
+def pass_dRcut(t):
+    if cut_type == "NONE":
+        return True
+    # first check if all the jets are valid
+    for j_pt in [t.j0_trk0_pt, t.j0_trk1_pt, t.j1_trk0_pt, t.j1_trk1_pt]:
+	if j_pt < 10:
+	    return True
+
+    j0_deltaR = helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi)
+    j1_deltaR = helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi)
+    mass = t.mHH
+    j0pt = t.j0_pt
+    j1pt = t.j1_pt
+
+    def c0(pt, dR):
+	if pt > 1000:
+	    return True
+	else:
+	    return abs(285.0/pt - dR) < 0.125
+    def c1(pt, dR):
+	if pt > 1000:
+	    return True
+	else:
+	    return abs(265.0/pt - dR) < 0.125
+    
+    if "BTAG" in cut_type:
+        chk0 = t.j0_nb == 2
+        chk1 = t.j1_nb == 2
+    else:
+        chk0 = chk1 = True
+
+    return ( (c0(j0pt,j0_deltaR) or not chk0) and (c1(j1pt, j1_deltaR) or not chk1))
 
 def analysis(inputconfig, DEBUG=False):
+    predR = 0
+    postdR = 0
+
     inputfile = inputconfig["inputfile"]
     inputroot = inputconfig["inputroot"]
     outputroot = inputconfig["outputroot"]
@@ -362,6 +401,11 @@ def analysis(inputconfig, DEBUG=False):
         #place a cut if necessary
         if ((t.j0_pt) < 450.0):
             continue
+	predR = predR + 1
+	# dR cut
+	if not pass_dRcut(t):
+	    continue
+	postdR = postdR + 1
         AllHists.Fill(t)
 
     #write all the output
@@ -371,6 +415,9 @@ def analysis(inputconfig, DEBUG=False):
     del(t)
     outroot.Close()
     del(AllHists)
+
+    print("PRE DR CUT: %d\n POST DR CUT: %d\n" % (predR, postdR))
+
 
 #pack the input into a configuration dictionary
 def pack_input(inputfile, inputsplit=-1):
@@ -398,6 +445,13 @@ def main():
     helpers.checkpath(outputpath)
     #for testing
     #analysis(pack_input("zjets_test"))
+
+    # set the cut_type
+    # global cut_type
+    # cut_type = cut_types[int(ops.cut_ind)]
+
+    print "OUTPUTDIR: " + outputpath
+    print "CUT: " + cut_type
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = 14
@@ -432,6 +486,7 @@ def main():
     #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
+
 
 #def clearbranches():
 if __name__ == "__main__":

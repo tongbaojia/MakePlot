@@ -28,9 +28,11 @@ def main():
     print output
     # select the cuts
     cut_lst = [path + data for path in ["truth_general_data/"]
-		for data in ["h0_tj_m_dR", "h1_tj_m_dR", "h0_tj_match_m_dR", "h1_tj_match_m_dR"]] 
+		# for data in ["h0_tj_pt_dR", "h1_tj_pt_dR"]]
+		for data in ["h0_tj_pt_dR", "h1_tj_pt_dR", "h0_tj_match_pt_dR", "h1_tj_match_pt_dR"]] 
+
     # # Draw the efficiency plot relative to the all normalization
-    DrawHists(output, cut_lst, "BTAG_TEST", "truth_")
+    DrawHists(output, cut_lst, "TEST", "MC_")
     output.Close()
 
 def DrawHists(outputroot, cut_lst, inputdir, outputname="", normalization=0):
@@ -52,26 +54,28 @@ def DrawHists(outputroot, cut_lst, inputdir, outputname="", normalization=0):
 	bigmc = ROOT.TH2F(cut, "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
 	temp_mcs = []
 	ROOT.SetOwnership(bigmc, False)
-        for j, mass in enumerate(mass_lst):
+
+	dir_list = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
+	# dir_list = ["/data_test/hist-MiniNTuple.root"]
+        for j, d in enumerate(dir_list):
             #here could be changed to have more options
-            input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
+            input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + d)
 	    if not input_mc:
-		print CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass
+		print CONF.inputpath + inputdir + d
 	    try:
 		temp_mcs.append( input_mc.Get(cut).Clone() )
 		# temp_mcs[j].Scale(1/temp_mcs[j].Integral())
 		bigmc.Add( temp_mcs[j] )
 	    except:
-		print CONF.inputpath + inputdir + "/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass
+		print CONF.inputpath + inputdir + d
 		print cut
-		print mass
 		raise
 
             input_mc.Close()
 
         # bigmc.Scale(1/bigmc.Integral())
         canv.cd()
-	canv.SetLogz()
+	canv.SetLogz(1)
         bigmc.Draw("colz")
         # finish up
         outputroot.cd()

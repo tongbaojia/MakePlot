@@ -769,22 +769,27 @@ def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
 # NOTE: you __must__ store the return variable from this function and keep it in scope
 # until you save the associated canvas, otherwise python will grabage collect the 
 # watermakrs and they will __not__ show up on your canvas
-def DrawWatermarks():
+def DrawWatermarks(xatlas=0.35, yatlas=0.87):
     # draw watermarks
-    xatlas, yatlas = 0.35, 0.87
+    # xatlas, yatlas = 0.35, 0.87
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    watermarks = [atlas, hh4b, lumi]
+    # watermarks = [atlas, hh4b, lumi]
 
-    for wm in watermarks:
-        wm.SetTextAlign(22)
-        wm.SetTextSize(0.04)
-        wm.SetTextFont(42)
-        wm.SetNDC()
-        wm.Draw()
+    return DrawWords(atlas, hh4b, lumi)
 
-    return watermarks
+# Draws a list of initialized ROOT.TLatex objects
+# returns them to ease dealing w/ pointers
+def DrawWords(*words):
+    for w in words:
+        w.SetTextAlign(22)
+        w.SetTextSize(0.04)
+        w.SetTextFont(42)
+        w.SetNDC()
+        w.Draw()
+
+    return words
 
 #needs further fix
 def syst_adderror(a, b, ea = 0, eb = 0, corr=0):

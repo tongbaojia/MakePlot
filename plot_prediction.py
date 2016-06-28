@@ -112,7 +112,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     temp_all = input_mc.Get(cut_lst[0] + histname).Clone()
     temp_all.SetName("Combined")
 
-    input_mc_ref = ROOT.TFile.Open(CONF.inputpath +"ref/" + "sum_ref" + ".root")
+    input_mc_ref = ROOT.TFile.Open(CONF.inputpath +"b77_c00-15-nocut/" + "sum_b77_c00-15-nocut" + ".root")
     temp_ref = input_mc_ref.Get(cut_lst[0] + histname).Clone()
     temp_ref.SetName("Run2-ref")
 
