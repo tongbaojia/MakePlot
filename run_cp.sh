@@ -1,12 +1,12 @@
-#re=
-inch=TEST_c10-cb
-#ch=b77_c10-cb$"_"$re
-ch=b77_c10-cb
+re=trkpt-j0pt-trkpt-j0pt-j0pt
+inch=F_c10-cb
+ch=f_c10-cb$"_"$re
+ch=f_c10-cb
 homepath="/afs/cern.ch/user/b/btong/"
 workpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
-python PlotTinyTree.py --inputdir $inch --outputdir $ch #--reweight "test" #$re
-python get_count.py --inputdir $ch
-python plot.py --inputdir $ch
+#python PlotTinyTree.py --inputdir $inch --outputdir $ch #--reweight "test" #$re
+#python get_count.py --inputdir $ch
+#python plot.py --inputdir $ch
 python reweight.py --inputdir $ch
 
 ##publish online

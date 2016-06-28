@@ -126,8 +126,8 @@ class eventHists:
             self.h_dphi       = ROOT.TH1F("hCandDphi",          "hCand #Delta#phi",  66, -3.3,  3.3)
             self.h_dr         = ROOT.TH1F("hCandDr",            "hCand #Deltar",     100,   0,    5)
             self.h_pt_assy    = ROOT.TH1F("hCand_Pt_assy",      ";hCand p_{T} assym", 22, -0.05, 1.05)
-            self.h0_m_s       = ROOT.TH1F("leadHCand_Mass_s",   ";Mass [GeV]",       40,   70,  170)
-            self.h1_m_s       = ROOT.TH1F("sublHCand_Mass_s",   ";Mass [GeV]",       40,   70,  170)
+            self.h0_m_s       = ROOT.TH1F("leadHCand_Mass_s",   ";Mass [GeV]",       14,   60,  200)
+            self.h1_m_s       = ROOT.TH1F("sublHCand_Mass_s",   ";Mass [GeV]",       14,   60,  200)
             self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
             self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
             self.h0_eta       = ROOT.TH1F("leadHCand_Eta",      ";#Eta",             42, -2.1,  2.1)
@@ -138,8 +138,8 @@ class eventHists:
             self.h1_trk_dr    = ROOT.TH1F("sublHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
             self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
             self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
-            self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.05, 1.05)
-            self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 22, -0.05, 1.05)
+            self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
+            self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  300,  50,  50,  300)
 
     def Fill(self, event, weight=-1):
@@ -174,8 +174,8 @@ class eventHists:
             self.h1_trk_dr.Fill(helpers.dR(event.j1_trk0_eta, event.j1_trk0_phi, event.j1_trk1_eta, event.j1_trk1_phi), weight) 
             self.h0_ntrk.Fill(event.j0_nTrk, weight)    
             self.h1_ntrk.Fill(event.j1_nTrk, weight)    
-            self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt), weight)
-            self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt), weight)
+            self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
+            self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
 
     def Write(self, outputroot):
         outputroot.cd(self.region)
@@ -254,52 +254,6 @@ class trkregionHists:
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
         if self.reweight:
             self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic = get_parameter(filename=ops.reweight)
-            # self.Trk3_dic = {}
-            # self.Trk4_dic = {}
-            # #setup all the reweighting parameters here
-            # tempname_mHH     = compiler.compile("(event.mHH)", '<string>', 'eval')
-            # tempname_lead_pt = compiler.compile("(event.j0_pt)", '<string>', 'eval')
-            # tempname_subl_pt = compiler.compile("(event.j1_pt)", '<string>', 'eval')
-            # tempname_lead_trk0_pt = compiler.compile("(event.j0_trk0_pt)", '<string>', 'eval')
-            # tempname_subl_trk0_pt = compiler.compile("(event.j1_trk0_pt)", '<string>', 'eval')
-            # tempname_lead_trk1_pt = compiler.compile("(event.j0_trk1_pt)", '<string>', 'eval')
-            # tempname_subl_trk1_pt = compiler.compile("(event.j1_trk1_pt)", '<string>', 'eval')
-            # tempname_lead_trkasy = compiler.compile("(event.j0_trk0_pt - event.j0_trk1_pt)/(event.j0_trk0_pt + event.j0_trk1_pt)", '<string>', 'eval')
-            # tempname_subl_trkasy = compiler.compile("(event.j1_trk0_pt - event.j1_trk1_pt)/(event.j1_trk0_pt + event.j1_trk1_pt)", '<string>', 'eval')
-            # #for 2tag split region
-            # #self.Trk2s_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_Rhh.txt")
-            # #self.Trk2s_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt")
-            # #self.Trk2s_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt")
-            # #self.Trk2s_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt")
-            # #self.Trk2s_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt")
-            # #self.Trk2s_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt")
-            # #self.Trk2s_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_sublHCand_Pt_m.txt")
-            # self.Trk2s_dic[tempname_mHH] = get_reweight("b77_c10-cb", "r0_TwoTag_split_Sideband_mHH_l.txt")
-            # #self.Trk2s_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt")
-            # #self.Trk2s_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt")
-            # #for 4tag region
-            # #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_Rhh.txt")
-            # #self.Trk3_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt")
-            # #self.Trk3_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt")
-            # #self.Trk3_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt")
-            # #self.Trk3_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt")
-            # #self.Trk3_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
-            # #self.Trk3_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
-            # self.Trk3_dic[tempname_mHH]     = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_mHH_l.txt")
-            # #self.Trk3_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
-            # #self.Trk3_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
-            # #for 4tag region
-            # #self.Trk3_dic["(event.Rhh)"] = get_reweight("reweight_0", "r0_FourTag_Sideband_Rhh.txt")
-            # #self.Trk4_dic[tempname_lead_trk0_pt] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk0_Pt.txt")
-            # #self.Trk4_dic[tempname_subl_trk0_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk0_Pt.txt")
-            # #self.Trk4_dic[tempname_lead_trk1_pt] = get_reweight("reweight_1", "r0_FourTag_Sideband_leadHCand_trk1_Pt.txt")
-            # #self.Trk4_dic[tempname_subl_trk1_pt] = get_reweight("b77_c10-cb", "r0_FourTag_Sideband_sublHCand_trk1_Pt.txt")
-            # #self.Trk4_dic[tempname_lead_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_leadHCand_Pt_m.txt")
-            # #self.Trk4_dic[tempname_subl_pt] = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_sublHCand_Pt_m.txt")
-            # self.Trk4_dic[tempname_mHH]     = get_reweight("b77_c10-cb", "r0_ThreeTag_Sideband_mHH_l.txt")
-            # #self.Trk4_dic[tempname_lead_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt")
-            # #self.Trk4_dic[tempname_subl_trkasy] = get_reweight("reweight_0", "r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt")
-            # #print self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic
 
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, weight)
@@ -383,16 +337,16 @@ def analysis(inputconfig, DEBUG=False):
     N = t.fChain.GetEntries()
     for i in range(N):
     # get the next tree in the chain and verify
-        if DEBUG & (i > 100000):
-            break
-        if i %20000 == 0:
+        # if DEBUG & (i > 100000):
+        #     break
+        if i % 20000 == 0:
             helpers.drawProgressBar(i/(N*1.0))
-            #print i, " events done!"
+
         t.fChain.GetEntry(i)
         #print t.Xzz
         #place a cut if necessary
-        if ((t.j0_pt) < 450.0):
-            continue
+        # if ((t.j0_pt) < 450.0):
+        #     continue
         AllHists.Fill(t)
 
     #write all the output
@@ -474,7 +428,17 @@ def main():
             inputtasks.append(pack_input(split_file, inputsplit=i))    
     inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
-        inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+        #do not reweight signal samples; create links to the original files instead
+        if not turnon_reweight:
+            inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+        else:#if reweight, creat the folders and the links to the files
+            print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
+            helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
+            ori_link = CONF.outputpath + ops.outputdir + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            if os.path.islink(dst_link):
+                os.unlink(dst_link)
+            os.symlink(ori_link, dst_link)
     ##if reweight, reweight everything
     # #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
