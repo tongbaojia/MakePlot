@@ -423,10 +423,10 @@ def main():
     nsplit = 14
     split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     inputtasks = []
-    for split_file in split_list:
-        for i in range(nsplit):
-            inputtasks.append(pack_input(split_file, inputsplit=i))    
-    inputtasks.append(pack_input("zjets_test"))
+    #for split_file in split_list:
+        #for i in range(nsplit):
+            #inputtasks.append(pack_input(split_file, inputsplit=i))    
+    #inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight:
@@ -434,7 +434,7 @@ def main():
         else:#if reweight, creat the folders and the links to the files
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            ori_link = CONF.outputpath + ops.outputdir + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            ori_link = inputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             if os.path.islink(dst_link):
                 os.unlink(dst_link)
