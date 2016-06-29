@@ -140,6 +140,9 @@ class eventHists:
             self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
             self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
+            self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      500,  0,   2000)
+            self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      500,  0,   2000)
+            self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      500,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  300,  50,  50,  300)
 
     def Fill(self, event, weight=-1):
@@ -174,6 +177,14 @@ class eventHists:
             self.h1_trk_dr.Fill(helpers.dR(event.j1_trk0_eta, event.j1_trk0_phi, event.j1_trk1_eta, event.j1_trk1_phi), weight) 
             self.h0_ntrk.Fill(event.j0_nTrk, weight)    
             self.h1_ntrk.Fill(event.j1_nTrk, weight)    
+            self.h0_trks_pt.Fill(event.j0_trk0_pt, weight)
+            self.h0_trks_pt.Fill(event.j0_trk1_pt, weight)
+            self.h1_trks_pt.Fill(event.j1_trk0_pt, weight)
+            self.h1_trks_pt.Fill(event.j1_trk1_pt, weight)
+            self.trks_pt.Fill(event.j0_trk0_pt, weight)
+            self.trks_pt.Fill(event.j0_trk1_pt, weight)
+            self.trks_pt.Fill(event.j1_trk0_pt, weight)
+            self.trks_pt.Fill(event.j1_trk1_pt, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
 
@@ -207,6 +218,9 @@ class eventHists:
             self.h1_trk_dr.Write() 
             self.h0_ntrk.Write()   
             self.h1_ntrk.Write()   
+            self.h0_trks_pt.Write() 
+            self.h1_trks_pt.Write()   
+            self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
 
@@ -434,7 +448,8 @@ def main():
         else:#if reweight, creat the folders and the links to the files
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            ori_link = inputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #this is a really bad practice and temp fix now!
+            ori_link = inputpath.replace("F_c10", "f_c10") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             if os.path.islink(dst_link):
                 os.unlink(dst_link)

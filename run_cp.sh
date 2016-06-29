@@ -1,4 +1,4 @@
-re=j0pT-assy-j0pT
+re=trks-trks-j0pT-trks
 inch=F_c10-cb
 ch=f_c10-cb$"_"$re
 #ch=f_c10-cb

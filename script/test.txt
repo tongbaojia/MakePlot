@@ -1,25 +1,81 @@
 ##must follow the following rules!
 ##channel variable inputfolder reweightfile
 
-#iteration 1
-2bs event.j0_pt f_c10-cb r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
-3b event.j0_pt f_c10-cb r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
-4b event.j0_pt f_c10-cb r0_FourTag_Sideband_leadHCand_Pt_m.txt
 
-#iteration 2
-2bs (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt
-3b (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt
-4b (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt
+##iteration 1
+2bs event.j0_trk0_pt f_c10-cb r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j0_trk0_pt f_c10-cb r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j0_trk0_pt f_c10-cb r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j1_trk0_pt f_c10-cb r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j1_trk0_pt f_c10-cb r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j1_trk0_pt f_c10-cb r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j0_trk1_pt f_c10-cb r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j0_trk1_pt f_c10-cb r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j0_trk1_pt f_c10-cb r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j1_trk1_pt f_c10-cb r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j1_trk1_pt f_c10-cb r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j1_trk1_pt f_c10-cb r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+
+##iteration 2
+2bs event.j0_trk0_pt f_c10-cb_trks r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j0_trk0_pt f_c10-cb_trks r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j0_trk0_pt f_c10-cb_trks r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j1_trk0_pt f_c10-cb_trks r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j1_trk0_pt f_c10-cb_trks r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j1_trk0_pt f_c10-cb_trks r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j0_trk1_pt f_c10-cb_trks r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j0_trk1_pt f_c10-cb_trks r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j0_trk1_pt f_c10-cb_trks r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j1_trk1_pt f_c10-cb_trks r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j1_trk1_pt f_c10-cb_trks r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j1_trk1_pt f_c10-cb_trks r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+
+##iteration 3
+2bs event.j0_pt f_c10-cb_trks-trks r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+3b event.j0_pt f_c10-cb_trks-trks r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+4b event.j0_pt f_c10-cb_trks-trks r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+
+##iteration 4
+2bs event.j0_trk0_pt f_c10-cb_trks-trks-j0pT r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j0_trk0_pt f_c10-cb_trks-trks-j0pT r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j0_trk0_pt f_c10-cb_trks-trks-j0pT r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j1_trk0_pt f_c10-cb_trks-trks-j0pT r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j1_trk0_pt f_c10-cb_trks-trks-j0pT r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j1_trk0_pt f_c10-cb_trks-trks-j0pT r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j0_trk1_pt f_c10-cb_trks-trks-j0pT r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j0_trk1_pt f_c10-cb_trks-trks-j0pT r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j0_trk1_pt f_c10-cb_trks-trks-j0pT r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
+2bs event.j1_trk1_pt f_c10-cb_trks-trks-j0pT r0_TwoTag_split_Sideband_trks_Pt.txt
+3b event.j1_trk1_pt f_c10-cb_trks-trks-j0pT r0_ThreeTag_Sideband_sublHCand_trks_Pt.txt
+4b event.j1_trk1_pt f_c10-cb_trks-trks-j0pT r0_FourTag_Sideband_sublHCand_trks_Pt.txt
+
 #
-2bs (event.j1_trk0_pt-event.j1_trk1_pt) f_c10-cb_j0pT r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt
-3b (event.j1_trk0_pt-event.j1_trk1_pt) f_c10-cb_j0pT r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt
-4b (event.j1_trk0_pt-event.j1_trk1_pt) f_c10-cb_j0pT r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt
-
-
-#iteration 3
-2bs event.j0_pt f_c10-cb_j0pT-assy r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
-3b event.j0_pt f_c10-cb_j0pT-assy r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
-4b event.j0_pt f_c10-cb_j0pT-assy r0_FourTag_Sideband_leadHCand_Pt_m.txt
+##iteration 2
+#2bs (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt
+#3b (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_ThreeTag_Sideband_leadHCand_trk_pt_diff_frac.txt
+#4b (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_FourTag_Sideband_leadHCand_trk_pt_diff_frac.txt
+##
+#2bs (event.j1_trk0_pt-event.j1_trk1_pt) f_c10-cb_j0pT r0_TwoTag_split_Sideband_sublHCand_trk_pt_diff_frac.txt
+#3b (event.j1_trk0_pt-event.j1_trk1_pt) f_c10-cb_j0pT r0_ThreeTag_Sideband_sublHCand_trk_pt_diff_frac.txt
+#4b (event.j1_trk0_pt-event.j1_trk1_pt) f_c10-cb_j0pT r0_FourTag_Sideband_sublHCand_trk_pt_diff_frac.txt
+#
+#
+##iteration 3
+#2bs event.j0_pt f_c10-cb_j0pT-assy r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+#3b event.j0_pt f_c10-cb_j0pT-assy r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+#4b event.j0_pt f_c10-cb_j0pT-assy r0_FourTag_Sideband_leadHCand_Pt_m.txt
 
 
 #2bs (event.j0_trk0_pt-event.j0_trk1_pt) f_c10-cb_j0pT r0_TwoTag_split_Sideband_leadHCand_trk_pt_diff_frac.txt

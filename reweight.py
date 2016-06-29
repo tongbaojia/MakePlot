@@ -376,7 +376,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
             testfit.SetParameters(0.77, 0.059, -0.00002, -0.000000027)
-            testfit.FixParameter(3, 0) #do a 1D fit really
+        elif ("trks_Pt" in cut): #for the subleading track jet fit
+            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
+            testfit.SetParameters(0.82, 0.004, -2E-5, -2E-8)
         elif ("trk_pt_diff" in cut): #for the subleading track jet fit
             testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
             testfit.SetParameters(1, 0.001, -0.000001, -0.00000001)
@@ -511,6 +513,7 @@ def dumpRegion(config):
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
+        rebin_dic["trks_Pt"]    = array('d', range(0, 400, 20) + [400, 450, 500, 550, 600, 800, 1000, 1300, 2000])
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
@@ -520,6 +523,7 @@ def dumpRegion(config):
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 100] + range(100, 500, 50) + [500, 600, 800])
+        rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 500, 600, 1000, 2000])
     if "FourTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
@@ -529,6 +533,7 @@ def dumpRegion(config):
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 40) + [200, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 20, 50, 80, 110, 150, 190, 250, 300, 400, 800])
+        rebin_dic["trks_Pt"]    = array('d', range(0, 100, 50) + range(100, 500, 100) + [500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
     plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], fitrange=[800, 2000])
     plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1, fitrange=[800, 2000])
@@ -558,6 +563,9 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk", fitrange=([1, 6] if "TwoTag" in config["cut"] else [2, 4]))
     plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebinarry=rebin_dic["trk_pT_diff"], fitrange=[0, 600])
     plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebinarry=rebin_dic["trk_pT_diff"], fitrange=[0, 600])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trks_Pt",  xTitle="J0 trks p_{T} [GeV]", rebinarry=rebin_dic["trks_Pt"], fitrange=[0, 600])
+    plotRegion(config, cut=config["cut"] + "sublHCand_trks_Pt",  xTitle="J1 trks p_{T} [GeV]", rebinarry=rebin_dic["trks_Pt"], fitrange=[0, 600])
+    plotRegion(config, cut=config["cut"] + "trks_Pt",            xTitle="Jets trks p_{T} [GeV]", rebinarry=rebin_dic["trks_Pt"], fitrange=[0, 600])
     #plotRegion(config, cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy", fitrange=[0, 0.5])
 
     print config["outputdir"], "done!"
