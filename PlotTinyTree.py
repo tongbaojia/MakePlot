@@ -2,7 +2,7 @@
 ###Performance is not garanteened. The way to register hists are slow
 ###For a quick on the fly anaysis, great.
 ###For a more proper anlaysis, do the c++ standard way please
-import ROOT, rootlogon, helpers
+import ROOT, helpers
 import config as CONF
 import time, os, subprocess, glob, argparse, compiler
 #for parallel processing!
@@ -18,14 +18,15 @@ def options():
     parser.add_argument("--outputdir", default="test")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
+    parser.add_argument("--iter",      default=0)
     return parser.parse_args()
 
 #returns a dictionary of weights
 def get_parameter(filename="test.txt"):
     #the input file need to be the following format; change to lists of tuples
-    #Ntrk; parameter; inputfolder; parameterfile
+    #iteration; Ntrk; parameter; inputfolder; parameterfile
     def get_info(lstline):
-        return compiler.compile(lstline[1], '<string>', 'eval'), get_reweight(lstline[2], lstline[3])
+        return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[3], lstline[4])
 
     f_reweight = open("script/" + filename + ".txt", "r")
     TwoTagDic = []
@@ -35,17 +36,21 @@ def get_parameter(filename="test.txt"):
         if "#" in line:
             continue
         lstline =  line.split()
+        #check which iteration it is; don't go beyond! start with 1
+        #print lstline[0], ops.iter
+        if int(lstline[0]) > int(ops.iter):
+            continue
+        #now proceed normally
         if "2bs" in line:
             TwoTagDic.append(get_info(lstline))
-        if "3b" in line:
+        elif "3b" in line:
             ThreeTagDic.append(get_info(lstline))
-        if "4b" in line:
+        elif "4b" in line:
             FourTagDic.append(get_info(lstline))
     #print par_weight
     f_reweight.close()
     #print TwoTagDic
     return (TwoTagDic, ThreeTagDic, FourTagDic)
-
 
 #returns a dictionary of weights
 def get_reweight(folder, filename):
@@ -53,19 +58,19 @@ def get_reweight(folder, filename):
     f_reweight = open(reweightfolder + filename, "r")
     par_weight = {}
     for line in f_reweight:
-        lstline =  line.split()
+        lstline =  line.split()#default split by space
         #print lstline
         if "par0" in line:
             par_weight["par0"] = float(lstline[1])
-        if "par1" in line:
+        elif "par1" in line:
             par_weight["par1"] = float(lstline[1])
-        if "par2" in line:
+        elif "par2" in line:
             par_weight["par2"] = float(lstline[1])
-        if "par3" in line:
+        elif "par3" in line:
             par_weight["par3"] = float(lstline[1])
-        if "low" in line:
+        elif "low" in line:
             par_weight["low"] = float(lstline[1])
-        if "high" in line:
+        elif "high" in line:
             par_weight["high"] = float(lstline[1])
     #print par_weight
     f_reweight.close()
@@ -74,24 +79,31 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 0.5 #this means the maximum correction is this for each reweighting
-    for x, v in dic:
+    maxscale = 1.8 #this means the maximum correction is this for each reweighting
+    minscale = 0.2 #this means the minimum correction is this for each reweighting
+    for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
-        if (v["low"] > value) or (v["high"] < value): #outside fit range, don't fix!!!
-            continue
+        #outside fit range, do the end point value extrapolation
+        if (v["low"] > value):
+            value =  v["low"] 
+        elif (v["high"] < value): 
+            value =  v["high"]
+        #start calculated reweight factor
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
-        if tempweight < maxscale:
-            tempweight = maxscale
-        if tempweight > 1 + maxscale:
-            tempweight = 1 + maxscale
+        #this protects each individual weight
+        if tempweight < 0.5:
+            tempweight = 0.5
+        elif tempweight > 1.5:
+            tempweight = 1.5
         totalweight *= tempweight
+
     #print totalweight
     #also contrain the totalweight
-    if totalweight < maxscale:
+    if totalweight < minscale:
+        totalweight = minscale
+    elif totalweight > maxscale:
         totalweight = maxscale
-    if totalweight > 1 + maxscale:
-        totalweight = 1 + maxscale
     return totalweight
 
 #get Xhh and Rhh values; for variations's sake
@@ -99,6 +111,8 @@ def GetExp(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     #XhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s" % (XhhCenterX, XhhCenterY, XhhCut)
     RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
     return RhhExp
+
+
 
 class eventHists:
     # will take 3 minutes to generate all histograms; 3 times more time...
@@ -224,6 +238,9 @@ class eventHists:
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
 
+
+
+#split things in to mass regions, also possible systematic variation
 class massregionHists:
     #these are the regions and cuts;
     def __init__(self, region, outputroot, reweight=False):
@@ -255,6 +272,7 @@ class massregionHists:
         #for specific studies!
         for tempdic in self.regionlst:
             tempdic["eventHists"].Write(outputroot)
+
 
 #reweighting is done here: what a genius design
 class trkregionHists:
@@ -328,11 +346,10 @@ class regionHists:
         self.FourTag.Write(outputroot)
 
 
-def analysis(inputconfig, DEBUG=False):
+def analysis(inputconfig):
     inputfile = inputconfig["inputfile"]
     inputroot = inputconfig["inputroot"]
     outputroot = inputconfig["outputroot"]
-    DEBUG = inputconfig["DEBUG"]
 
     outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
     AllHists = regionHists(outroot, turnon_reweight)
@@ -377,13 +394,15 @@ def pack_input(inputfile, inputsplit=-1):
     dic["inputfile"] = inputfile
     dic["inputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit  >= 0 else "") + ".root"
     dic["outputroot"] = "hist-MiniNTuple" + ("_" + str(inputsplit) if inputsplit >= 0 else "") + ".root"
-    dic["DEBUG"] = False
     #make sure the output directory exist here; resolve the conflicts
     helpers.checkpath(outputpath + inputfile)
     return dic
 
 def main():
+    print "Start TinyTree--->Plots!"
     start_time = time.time()
+    global DEBUG
+    DEBUG = False
     global ops
     ops = options()
     global inputpath
@@ -393,12 +412,12 @@ def main():
     turnon_reweight = False
     if ops.reweight is not None:
         turnon_reweight = True
-
+    #set the output directory of all the hist-files
     global outputpath
     outputpath = CONF.outputpath + ops.outputdir + ("_" + ops.dosyst if (ops.dosyst is not None) else "") +  "/"
-    #outputpath = CONF.outputpath + "reweight_" + str(iter_reweight) + "/"
     helpers.checkpath(outputpath)
-    #setup control region size, and sideband region size
+
+    ##setup control region size, and sideband region size
     global Syst_cut
     CR_size = 35.8
     SB_size = 63
@@ -428,10 +447,11 @@ def main():
         elif "SB" in ops.dosyst:
             SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut[ops.dosyst]
 
-    # #for testing
-    # analysis(pack_input("zjets_test"))
-    # print("--- %s seconds ---" % (time.time() - start_time))
-    # return
+    ##for testing
+    if (DEBUG):
+        analysis(pack_input("zjets_test"))
+        print("--- %s seconds ---" % (time.time() - start_time))
+        return
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = 14

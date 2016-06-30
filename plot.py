@@ -424,7 +424,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
-    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".eps")
 

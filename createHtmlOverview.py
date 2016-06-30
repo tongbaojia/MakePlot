@@ -177,8 +177,8 @@ class Directory:
         thumbHeight=400
         #thumbHeight=400
         imgFiles = self.findImages()
-        #if self.verbose_: 
-        print "%s %d images" % (self.name_,len(imgFiles))
+        if self.verbose_: 
+            print "%s %d images" % (self.name_,len(imgFiles))
         if not len(imgFiles): return ""
         htmlBody = ""    
         htmlBody += "<table cellspacing=\"10\">\n"
@@ -253,6 +253,6 @@ if __name__ == '__main__':
     if len(sys.argv) == 3:
         nColumns = int(sys.argv[2])
     #print topDirPath
-    topDir = Directory(topDirPath,verbose=True)
+    topDir = Directory(topDirPath,verbose=False)
     #print topDir
     topDir.createHtmlIndex(nColumns = nColumns)

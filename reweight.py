@@ -9,7 +9,6 @@ from ROOT import *
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
 ROOT.SetAtlasStyle()
-
 #other setups
 TH1.AddDirectory(False)
 StatusLabel="Internal"
@@ -19,7 +18,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77_c10-cb")
+    parser.add_argument("--inputdir", default="f_c10-cb")
     parser.add_argument("--inputroot", default="sum")
     parser.add_argument("--iter", default=0)
     return parser.parse_args()
@@ -286,24 +285,6 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #zjet.SetFillColor(ROOT.kGreen+4)
     #zjet.Draw("HISTO SAME")
 
-    # RSG1_1000.SetLineWidth(2)
-    # RSG1_1000.SetLineStyle(2)
-    # RSG1_1000.SetLineColor(ROOT.kViolet+7)
-    # RSG1_1000.Draw("HISTO SAME")
-
-    RSG1_1500.Scale(25)
-    RSG1_1500.SetLineWidth(2)
-    RSG1_1500.SetLineStyle(2)
-    RSG1_1500.SetLineColor(ROOT.kPink+7)
-    RSG1_1500.Draw("HISTO SAME")
-
-
-    RSG1_2500.Scale(1000)
-    RSG1_2500.SetLineWidth(2)
-    RSG1_2500.SetLineStyle(2)
-    RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    RSG1_2500.Draw("HISTO SAME")
-
     zeroXerror(data)
     data.SetMarkerStyle(20)
     data.SetMarkerSize(1)
@@ -360,6 +341,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     # qcd_fitUp.Draw("SAME")
     # qcd_fitDown.Draw("SAME")
 
+    testfit={}
     # Fit the ratio with a TF1
     if not ("Signal" in cut and blinded):
         if fitrange == [0, 0]:
@@ -369,45 +351,56 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             fitMin = fitrange[0]
             fitMax = fitrange[1]
 
+        #enable smart fit~! will pick the highest prob fit
+        #no 0 order polynomial!!!
+        for iter_fit in range(1, 4):
+            testfit[iter_fit] = ROOT.TF1("testfit" + str(iter_fit), "pol" + str(iter_fit), xMin, xMax)
+        #initialization of parameters
         if ("trk0_Pt" in cut): #for the leading track jet fit
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.6, 0.0005, -0.000004, -0.00000005)
-            #testfit.FixParameter(3, 0) #do a 1D fit really
+            testfit[3].SetParameters(0.6, 0.0005, -0.000004, -0.00000005)
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.77, 0.059, -0.00002, -0.000000027)
+            testfit[3].SetParameters(0.77, 0.059, -0.00002, -0.000000027)
         elif ("trks_Pt" in cut): #for the subleading track jet fit
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.82, 0.004, -2E-5, -2E-8)
+            testfit[3].SetParameters(0.82, 0.004, -2E-5, -2E-8)
         elif ("trk_pt_diff" in cut): #for the subleading track jet fit
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(1, 0.001, -0.000001, -0.00000001)
-            #testfit.FixParameter(3, 0) #do a 1D fit really
+            testfit[3].SetParameters(1, 0.001, -0.000001, -0.00000001)
         elif ("Pt_m" in cut): #for the subleading track jet fit
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.9, 0.0005, -1, 0)
-            testfit.FixParameter(2, 0) #do a 1D fit really
-            testfit.FixParameter(3, 0) #do a 1D fit really
+            testfit[1].SetParameters(0.9, 0.0005)
         elif ("Rhh" in cut): #for the subleading track jet fit
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(1, 0.7, -1, 0)
-            testfit.FixParameter(2, 0) #do a 1D fit really
-            testfit.FixParameter(3, 0) #do a 1D fit really
-        else:
-            testfit = ROOT.TF1("testfit", "pol3", xMin, xMax)
-            testfit.SetParameters(0.9, 0.001, -0.000001, 0)
-            testfit.FixParameter(2, 0) #do a 1D fit really
-            testfit.FixParameter(3, 0) #do a 1D fit really
-        #testfit.SetParLimits(0, -1, 2)
-        #testfit.SetParLimits(1, -1, 1)
-        #testfit.SetParLimits(1, -1, 1)
-        ratios[1].Fit("testfit", "QWLR", "", fitMin, fitMax)
-        testfit.SetLineColor(kRed)
-        testfit.Draw("SAME")
-        fitresult = testfit.GetParameters()
-        fitprob = float(testfit.GetProb())
-        myText(0.05, 0.17, 1, "y=%s + %s x + %sx^2 + %sx^3, prob:%s" % (str('%.2g' % fitresult[0]), \
-            str('%.2g' % fitresult[1]), str('%.2g' % fitresult[2]), str('%.2g' % fitresult[3]), str('%.2g' % fitprob)), 22)
+            testfit[1].SetParameters(1, 0.7)
+        #for the other distributions
+        testfit[1].SetParameters(0.9, 0.001)
+        testfit[2].SetParameters(1.0, 0.0, 0.0)
+        testfit[3].SetParameters(1.0, 0.0, 0.0, 0.0)
+
+        #do the 3 fits and save the output
+        testfitprob = [0]
+        for iter_fit in range(1, 4):
+            ratios[1].Fit("testfit" + str(iter_fit), "QWLR0I", "", fitMin, fitMax)
+            testfitprob.append(float(testfit[iter_fit].GetProb()))
+
+        best_iter = testfitprob.index(max(testfitprob))
+        fitprob = max(testfitprob)
+        fitresult = testfit[best_iter].GetParameters()
+        if len(fitresult) < 4:#fill in 0 if there are less than 3 paramters
+            fitresult += [int(0)] * (4 - len(fitresult))
+        testfit[best_iter].SetLineColor(kRed)
+        testfit[best_iter].SetLineStyle(9)
+        testfit[best_iter].Draw("SAME")
+        myText(0.05, 0.17, 1, "y=%s + %s x + %sx^2 + %sx^3, prob:%s" % 
+            (str('%.2g' % fitresult[0]),
+            str('%.2g' % fitresult[1]), 
+            str('%.2g' % fitresult[2]), 
+            str('%.2g' % fitresult[3]), 
+            str('%.2g' % fitprob))
+            , 22)
+        #draw the line for stat and end of the fit
+        ystart = ROOT.TLine(fitMin, 0.60, fitMin, 1.40)
+        ystart.SetLineStyle(5)
+        ystart.Draw()
+        yend = ROOT.TLine(fitMax, 0.60, fitMax, 1.40)
+        yend.SetLineStyle(5)
+        yend.Draw()
 
         #write out the reweighting parameteres; for things in the sideband only
         if ("Sideband" in cut and True):
@@ -421,6 +414,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             f_reweight.write("high: " + str('%.3g' % fitMax) + " \n")
             f_reweight.close()
 
+        #done with the fit!!
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
     line.SetLineStyle(1)
@@ -458,25 +452,23 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
     leg.AddEntry(data, "Data", "PE")
-    leg.AddEntry(bkg[0], "Multijet", "F")
-    leg.AddEntry(ttbar, "t#bar{t}","F")
-    leg.AddEntry(zjet, "Z+jets","F")
+    leg.AddEntry(bkg[0], "Multijet Est", "F")
+    #leg.AddEntry(ttbar, "t#bar{t}","F")
+    #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
-    leg.AddEntry(RSG1_1500, "RSG1, 1.5TeV * 25", "F")
-    leg.AddEntry(RSG1_2500, "RSG1, 2.5TeV * 1000", "F")
+    #leg.AddEntry(RSG1_1500, "RSG1, 1.5TeV * 25", "F")
+    #leg.AddEntry(RSG1_2500, "RSG1, 2.5TeV * 1000", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
     leg.Draw()
 
-
-
     # save
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
-    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".eps")
 
@@ -491,6 +483,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     del(RSG1_1000)
     del(RSG1_1500)
     del(RSG1_2500)
+    del(testfit)
 
     ##should only be run non-parellel.
     #if ("Sideband" in cut and True):
@@ -603,7 +596,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Sideband", "Control"]
+    region_lst = ["Sideband", "Control", "Signal"]
     cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
 
     #create master list
@@ -622,13 +615,13 @@ def main():
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
             inputtasks.append(config)
-    #parallel compute!
+    # #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
     ##for debug
-    #dumpRegion(inputtasks[0])
+    # dumpRegion(inputtasks[0])
     # dumpRegion(inputtasks[1])
     # dumpRegion(inputtasks[2])
     outputroot.Close()
