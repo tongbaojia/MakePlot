@@ -6,7 +6,7 @@
 # #ch=f_c10-cb
 # homepath="/afs/cern.ch/user/b/btong/"
 # workpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
-# python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight "j0pT-alltrk" --iter 0 #$re
+# python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter 0 #$re
 # python get_count.py --inputdir $ch
 # python plot.py --inputdir $ch
 # python reweight.py --inputdir $ch
@@ -41,7 +41,7 @@ do
 	homepath="/afs/cern.ch/user/b/btong/"
 	workpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
 	echo $ch, "is the channel and iteration!"
-	python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight "j0pT-alltrk" --iter $iter #$re
+	python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
 	python get_count.py --inputdir $ch
 	python plot.py --inputdir $ch
 	python reweight.py --inputdir $ch
