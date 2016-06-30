@@ -4,7 +4,7 @@ workpath="/afs/cern.ch/work/g/gputnam/public/Output/"
 inch=F_c10-cb
 
 ## iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
-for i in {0..4}
+for i in {5..7}
 do
 	re=$1
 	iter=$i

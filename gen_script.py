@@ -19,7 +19,7 @@ def options():
     return parser.parse_args()
 
 #currently reweighting all of them at once...may not be optimal...
-def write_reweight(fname="TEST", reweight_dic={}):
+def write_reweight(fname="TEST", reweight_dic={}, split=True):
     motherfolder="f_c10-cb"
     helpers.checkpath("script")
     #building the inputdictionary
@@ -31,20 +31,21 @@ def write_reweight(fname="TEST", reweight_dic={}):
     f.truncate()
     f.write( "#reweighting script for hh4b analysis \n")
     #iteration; Ntrk; parameter; inputfolder; parameterfile
-    iteration = 8
     for i in range(iteration):
         f.write( "#iteration:" + str(i) + "\n")
         #space is very important!!!!
         for region, region_fname in region_dic.iteritems():
             for var, var_fname in reweight_dic.iteritems():
+                if split:
+                    if "j0_pt" in var and i%2 == 0: #for even skip j0_pt
+                        continue
+                    elif "j0_pt" not in var and i%2 != 0: #for odd, skip other
+                        continue
                 templine = ""
                 templine += str(i) + " " #iteration
                 templine += region + " " #Ntrk
                 templine += "event." + var + " " #parameter
-                if i == 0:
-                    templine += motherfolder + " " #look for the original iteration
-                else:
-                    templine += motherfolder + "_" + fname + "_" + str(i-1) + " " #look for the first iteration
+                templine += motherfolder + ("_" + fname + "_" + str(i-1) if i!= 0 else "") + " " #look for the original iteration
                 templine += "r0_" + region_fname + "_Sideband_" + var_fname + ".txt" + " " #parameterfile;
                 templine += "\n"
                 print templine
@@ -54,6 +55,8 @@ def write_reweight(fname="TEST", reweight_dic={}):
 
 #do everything in one main?
 def main():
+    global iteration
+    iteration = 16
     #next one; alltrk
     reweight_dic = {
         "j0_trk0_pt":"leadHCand_trk0_Pt",
