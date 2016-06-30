@@ -79,8 +79,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 1.8 #this means the maximum correction is this for each reweighting
-    minscale = 0.2 #this means the minimum correction is this for each reweighting
+    maxscale = 2.0 #this means the maximum correction is this for each reweighting
+    minscale = 0.1 #this means the minimum correction is this for each reweighting
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -154,10 +154,10 @@ class eventHists:
             self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
             self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
-            self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      500,  0,   2000)
-            self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      500,  0,   2000)
-            self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      500,  0,   2000)
-            self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  300,  50,  50,  300)
+            self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+            self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+            self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
+            self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!

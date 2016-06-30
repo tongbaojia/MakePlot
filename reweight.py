@@ -357,9 +357,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             testfit[iter_fit] = ROOT.TF1("testfit" + str(iter_fit), "pol" + str(iter_fit), xMin, xMax)
         #initialization of parameters
         if ("trk0_Pt" in cut): #for the leading track jet fit
-            testfit[3].SetParameters(0.6, 0.0005, -0.000004, -0.00000005)
+            testfit[3].SetParameters(0.82, 0.004, -2E-5, -2E-8)
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
-            testfit[3].SetParameters(0.77, 0.059, -0.00002, -0.000000027)
+            testfit[2].SetParameters(0.82, 0.004, -1E-5)
         elif ("trks_Pt" in cut): #for the subleading track jet fit
             testfit[3].SetParameters(0.82, 0.004, -2E-5, -2E-8)
         elif ("trk_pt_diff" in cut): #for the subleading track jet fit
@@ -378,9 +378,14 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         for iter_fit in range(1, 4):
             ratios[1].Fit("testfit" + str(iter_fit), "QWLR0I", "", fitMin, fitMax)
             testfitprob.append(float(testfit[iter_fit].GetProb()))
-
-        best_iter = testfitprob.index(max(testfitprob))
-        fitprob = max(testfitprob)
+        #pick the best iteration; try to avoid higher order function as much as possible
+        best_iter = 1
+        if testfitprob[2]/(testfitprob[best_iter] + 1E-5) > 2:
+            best_iter = 2
+        if testfitprob[3]/(testfitprob[best_iter] + 1E-5) > 2:
+            best_iter = 3
+        #proceed with saving parameters
+        fitprob = testfitprob[best_iter]
         fitresult = testfit[best_iter].GetParameters()
         if len(fitresult) < 4:#fill in 0 if there are less than 3 paramters
             fitresult += [int(0)] * (4 - len(fitresult))
@@ -502,11 +507,12 @@ def dumpRegion(config):
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
         rebin_dic["j0_Pt"]      = array('d', [400, 450, 470, 490, 520, 540, 570, 600, 650, 750, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 1000, 1300, 2000])
+        rebin_dic["trk0_Pt"]    = array('d', range(0, 300, 30) + [300, 330, 360, 400, 450, 500, 550, 600, 800, 1000, 1300, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
-        rebin_dic["trks_Pt"]    = array('d', range(0, 400, 20) + [400, 450, 500, 550, 600, 800, 1000, 1300, 2000])
+        rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40
+            ) + [400, 450, 500, 550, 600, 800, 1000, 1300, 2000])
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
@@ -530,8 +536,8 @@ def dumpRegion(config):
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
     plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], fitrange=[800, 3000])
     plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1, fitrange=[800, 3000])
-    plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], fitrange=[800, 3000])
-    plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], Logy=1, fitrange=[800, 3000])
+    #plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], fitrange=[800, 3000])
+    #plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], Logy=1, fitrange=[800, 3000])
     plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[50, 1000])
     plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[50, 1000])
     plotRegion(config, cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])

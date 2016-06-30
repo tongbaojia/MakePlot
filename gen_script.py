@@ -19,18 +19,10 @@ def options():
     return parser.parse_args()
 
 #currently reweighting all of them at once...may not be optimal...
-def write_reweight(fname="TEST"):
+def write_reweight(fname="TEST", reweight_dic={}):
     motherfolder="f_c10-cb"
     helpers.checkpath("script")
     #building the inputdictionary
-    reweight_dic = {
-        "j0_trk0_pt":"leadHCand_trk0_Pt",
-        "j0_trk1_pt":"leadHCand_trk1_Pt",
-        "j1_trk0_pt":"sublHCand_trk0_Pt",
-        "j1_trk1_pt":"sublHCand_trk1_Pt",
-        "j0_pt":"leadHCand_Pt_m",
-        }
-
     region_dic = {"2bs":"TwoTag_split", "3b":"ThreeTag", "4b":"FourTag"}
     #creat an empty dictionary
     #ready to dump file
@@ -39,7 +31,7 @@ def write_reweight(fname="TEST"):
     f.truncate()
     f.write( "#reweighting script for hh4b analysis \n")
     #iteration; Ntrk; parameter; inputfolder; parameterfile
-    iteration = 5
+    iteration = 8
     for i in range(iteration):
         f.write( "#iteration:" + str(i) + "\n")
         #space is very important!!!!
@@ -62,7 +54,38 @@ def write_reweight(fname="TEST"):
 
 #do everything in one main?
 def main():
-    write_reweight("j0pT-alltrk")
+    #next one; alltrk
+    reweight_dic = {
+        "j0_trk0_pt":"leadHCand_trk0_Pt",
+        "j0_trk1_pt":"leadHCand_trk1_Pt",
+        "j1_trk0_pt":"sublHCand_trk0_Pt",
+        "j1_trk1_pt":"sublHCand_trk1_Pt",
+        "j0_pt":"leadHCand_Pt_m",
+        }
+    write_reweight("j0pT-alltrk", reweight_dic)
+    #next one; leadtrk
+    reweight_dic = {
+        "j0_trk0_pt":"leadHCand_trk0_Pt",
+        "j1_trk0_pt":"sublHCand_trk0_Pt",
+        "j0_pt":"leadHCand_Pt_m",
+        }
+    write_reweight("j0pT-leadtrk", reweight_dic)
+    #next one; subltrk
+    reweight_dic = {
+        "j0_trk1_pt":"leadHCand_trk1_Pt",
+        "j1_trk1_pt":"sublHCand_trk1_Pt",
+        "j0_pt":"leadHCand_Pt_m",
+        }
+    write_reweight("j0pT-subltrk", reweight_dic)
+    #next one; trks_Pt
+    reweight_dic = {
+        "j0_trk0_pt":"trks_Pt",
+        "j0_trk1_pt":"trks_Pt",
+        "j1_trk0_pt":"trks_Pt",
+        "j1_trk1_pt":"trks_Pt",
+        "j0_pt":"leadHCand_Pt_m",
+        }
+    write_reweight("j0pT-trks", reweight_dic)
     print "DONE"
 ### end
 if __name__ == "__main__":
