@@ -5,6 +5,7 @@ import ROOT, helpers, os
 currpath    = os.path.abspath(os.curdir)
 #change this to your home directory of everything; should be where the code is checked out
 toppath     =  os.path.dirname(currpath)
+toppath     =  "/afs/cern.ch/work/g/gputnam/public/"
 #input top directory for the root files
 inputpath   =  toppath + "/Output/"
 helpers.checkpath(inputpath)
@@ -12,7 +13,7 @@ helpers.checkpath(inputpath)
 outputpath  =  toppath +"/Output/"
 helpers.checkpath(outputpath)
 #output top directory for only plots
-outplotpath =  toppath +"/Plot/"
+outplotpath =  toppath +"/Week5-Plot/"
 helpers.checkpath(outplotpath)
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"

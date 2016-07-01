@@ -6,11 +6,11 @@ inch=F_c10-cb
 re=$1
 
 ## iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
-for i in {0..8}
+for i in {0..10}
 do
 	re=$1
 	iter=$i
-	ch=f_c10-cb-15-$"_"$re"_"$iter
+	ch=f_c10-cb-iter$"_"$re"_"$iter
 	#ch=f_c10-cb
 	echo $ch, "is the channel and iteration!"
 	python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
