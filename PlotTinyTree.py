@@ -91,11 +91,11 @@ def calc_reweight(dic, event):
         #start calculated reweight factor
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
-        #this protects each individual weight
-        if tempweight < 0.5:
-            tempweight = 0.5
-        elif tempweight > 1.5:
-            tempweight = 1.5
+        #this protects each individual weight; tight this up a bit
+        if tempweight < 0.7:
+            tempweight = 0.7
+        elif tempweight > 1.3:
+            tempweight = 1.3
         totalweight *= tempweight
 
     #print totalweight
@@ -125,8 +125,8 @@ class eventHists:
         self.region = region
         self.reweight = reweight
         #add in all the histograms
-        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        76,  200, 4000)
-        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        76,  200, 4000)
+        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        78,  200, 4000)
+        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        78,  200, 4000)
         self.h0_m         = ROOT.TH1F("leadHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h1_m         = ROOT.TH1F("sublHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h0_trk0_pt   = ROOT.TH1F("leadHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
@@ -375,9 +375,9 @@ def analysis(inputconfig):
 
         t.fChain.GetEntry(i)
         #print t.Xzz
-        #place a cut if necessary
-        # if ((t.j0_pt) < 450.0):
-        #     continue
+        ##place a cut if necessary
+        ##if ((t.mHH) < 1000.0):
+             ##continue
         AllHists.Fill(t)
 
     #write all the output

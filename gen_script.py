@@ -37,9 +37,9 @@ def write_reweight(fname="TEST", reweight_dic={}, split=True):
         for region, region_fname in region_dic.iteritems():
             for var, var_fname in reweight_dic.iteritems():
                 if split:
-                    if "j0_pt" in var and i%2 == 0: #for even skip j0_pt
+                    if "j0_pt" in var and i%2 != 0: #for even skip j0_pt
                         continue
-                    elif "j0_pt" not in var and i%2 != 0: #for odd, skip other
+                    elif "j0_pt" not in var and i%2 == 0: #for odd, skip other
                         continue
                 templine = ""
                 templine += str(i) + " " #iteration
