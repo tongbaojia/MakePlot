@@ -91,8 +91,9 @@ def makeDataRatio(data, bkg):
 
     return [gRatioBand,gRatioDataBkg]
 
-def do_variable_rebinning(hist,bins, scale=1.0):
+def do_variable_rebinning(hist,bins, scale=1):
     a=hist.GetXaxis()
+
     newhist=ROOT.TH1F(hist.GetName()+"_rebinned",
                       hist.GetTitle()+";"+hist.GetXaxis().GetTitle()+";"+hist.GetYaxis().GetTitle(),
                       len(bins)-1,
@@ -100,19 +101,21 @@ def do_variable_rebinning(hist,bins, scale=1.0):
 
     newhist.Sumw2()
     newa=newhist.GetXaxis()
-
-    for b in range(1, hist.GetNbinsX()+1):
+    #print "check size ", hist.GetNbinsX(), newhist.GetNbinsX()
+    for b in range(0, hist.GetNbinsX()+1):
         newb             = newa.FindBin(a.GetBinCenter(b))
 
         # Get existing new content (if any)                                                                                                              
         val              = newhist.GetBinContent(newb)
         err              = newhist.GetBinError(newb)
-
         # Get content to add
         ratio_bin_widths = scale*newa.GetBinWidth(newb)/a.GetBinWidth(b)
         #print "ratio_bin_widths",ratio_bin_widths
-        val              = val+hist.GetBinContent(b)/ratio_bin_widths
-        err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
+        #val              = val+hist.GetBinContent(b)/ratio_bin_widths
+        #err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
+        val              = val+hist.GetBinContent(b)
+        err              = math.sqrt(err*err+hist.GetBinError(b)*hist.GetBinError(b))
+        #print "bin", newb, " new value ", val, " change ", hist.GetBinContent(b)
         newhist.SetBinContent(newb,val)
         newhist.SetBinError(newb,err)
 
@@ -141,7 +144,7 @@ def graphFromHist(hist):
         dataGr.SetPointError(i, binWidthOver2, binWidthOver2, thisYErrLow, thisYErrUp)
     return dataGr
 
-def rebinData(ifile, rebin, scale=1.0):
+def rebinData(ifile, rebin, scale=1):
     dataHist = ifile.Get("data_hh_hist")    
     dataHistNew = do_variable_rebinning(dataHist, rebin, scale)
     return graphFromHist(dataHistNew)
@@ -486,6 +489,7 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebinarry=rebin_dic["trk_dr"])
     plotRegion(config, cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
     plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
+    
     #plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
     #plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
 

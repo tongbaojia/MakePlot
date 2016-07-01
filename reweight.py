@@ -111,27 +111,34 @@ def graphFromHist(hist):
         dataGr.SetPointError(i, binWidthOver2, binWidthOver2, thisYErrLow, thisYErrUp)
     return dataGr
 
-def do_variable_rebinning(hist, bins, scale=1.0):
+def do_variable_rebinning(hist,bins, scale=1):
     a=hist.GetXaxis()
+
     newhist=ROOT.TH1F(hist.GetName()+"_rebinned",
                       hist.GetTitle()+";"+hist.GetXaxis().GetTitle()+";"+hist.GetYaxis().GetTitle(),
                       len(bins)-1,
                       array('d',bins))
+
     newhist.Sumw2()
     newa=newhist.GetXaxis()
-
-    for b in range(1, hist.GetNbinsX()+1):
+    #print "check size ", hist.GetNbinsX(), newhist.GetNbinsX()
+    for b in range(0, hist.GetNbinsX()+1):
         newb             = newa.FindBin(a.GetBinCenter(b))
+
         # Get existing new content (if any)                                                                                                              
         val              = newhist.GetBinContent(newb)
         err              = newhist.GetBinError(newb)
         # Get content to add
         ratio_bin_widths = scale*newa.GetBinWidth(newb)/a.GetBinWidth(b)
         #print "ratio_bin_widths",ratio_bin_widths
-        val              = val+hist.GetBinContent(b)/ratio_bin_widths
-        err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
+        #val              = val+hist.GetBinContent(b)/ratio_bin_widths
+        #err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
+        val              = val+hist.GetBinContent(b)
+        err              = math.sqrt(err*err+hist.GetBinError(b)*hist.GetBinError(b))
+        #print "bin", newb, " new value ", val, " change ", hist.GetBinContent(b)
         newhist.SetBinContent(newb,val)
         newhist.SetBinError(newb,err)
+
     return newhist
 
 ####################################################################################
@@ -505,7 +512,7 @@ def dumpRegion(config):
     if "TwoTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
-        rebin_dic["j0_Pt"]      = array('d', [400, 450, 470, 490, 520, 540, 570, 600, 650, 750, 1000, 2000])
+        rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 420, 500, 600, 800, 1300, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
@@ -515,7 +522,7 @@ def dumpRegion(config):
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 200) + range(2000, 4000, 400))
-        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 650, 700, 800, 1000, 2000])
+        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])

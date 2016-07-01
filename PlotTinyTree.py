@@ -125,8 +125,8 @@ class eventHists:
         self.region = region
         self.reweight = reweight
         #add in all the histograms
-        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        78,  200, 4000)
-        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        78,  200, 4000)
+        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        400,  0, 4000)
+        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        400,  0, 4000)
         self.h0_m         = ROOT.TH1F("leadHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h1_m         = ROOT.TH1F("sublHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h0_trk0_pt   = ROOT.TH1F("leadHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
