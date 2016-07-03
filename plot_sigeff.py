@@ -46,13 +46,13 @@ def main():
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", dorel=True)
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All")
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True)
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
-    # For cuts that don't exist in the cutflow plot
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
-    #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
+    # For cuts that don't exist in the cutflow plot; only run this on original sample!
+    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
+    #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
+    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
+    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
 
 
 def options():

@@ -1,15 +1,15 @@
 homepath="/afs/cern.ch/user/b/btong/"
 workpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
-# ### Testing
-# # re=$1
+#### Testing
+# re=$1
 # inch=F_c10-cb
 # # # iter=$i
 # # # ch=f_c10-cb$"_"$re"_"$iter
-# ch=f_re-cb
+# ch=f_fin-cb
 # echo $ch, "is the channel and iteration!"
-# #python PlotTinyTree.py --inputdir $inch --outputdir $ch #--reweight $re --iter $iter #$re
-# #python get_count.py --inputdir $ch
-# #python plot.py --inputdir $ch
+# python PlotTinyTree.py --inputdir $inch --outputdir $ch #--reweight $re --iter $iter #$re
+# python get_count.py --inputdir $ch
+# python plot.py --inputdir $ch
 # python reweight.py --inputdir $ch
 
 # #publish online
@@ -38,13 +38,13 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
 # echo "Done!"
 
 
-## iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
-for i in {0..1}
+# iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
+for i in {11..19}
 do
 	re=$1
 	inch=F_c10-cb
 	iter=$i
-	ch=f_re-cb$"_"$re"_"$iter
+	ch=f_fin-cb$"_"$re"_"$iter
 	#ch=f_c10-cb
 	echo $ch, "is the channel and iteration!"
 	python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re

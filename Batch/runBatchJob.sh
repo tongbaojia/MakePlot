@@ -45,16 +45,21 @@ INOPTION=`sed -n "$LSB_JOBINDEX"p $filenamelist`
 echo $INOPTION
 #OUTFILE=Tony_test.$LSB_JOBINDEX.root
 # # # # # # # # # # # # # #
-
+#setup inputs with reweights
+inch=$"F_c10-cb"
+re=$"j0pT-leadtrk-fin"
+iter=$"19"
+#setup channels
 ch=$(grep -o -P '(?<=ch:).*(?=:ch)' <<< $INOPTION)
 echo "plotting channel: " $ch
 syst=$(grep -o -P '(?<=syst:).*(?=:syst)' <<< $INOPTION)
 echo "plotting syst: " $syst
+ch=$ch$"_"$re"_"$iter
 inputdir=$ch$"_"$syst
 
 if [ $dopythonrun == "true" ]; then
 	cd MakePlot
-	python PlotTinyTree.py --inputdir $ch --outputdir $ch --dosyst $syst
+	python PlotTinyTree.py --inputdir $inch --outputdir $ch --dosyst $syst --reweight $re --iter $iter
 	python get_count.py --inputdir $inputdir --full True
 	python plot.py --inputdir $inputdir
 fi

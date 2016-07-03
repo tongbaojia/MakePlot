@@ -69,7 +69,7 @@ def get_reweight(folder, filename):
         elif "par3" in line:
             par_weight["par3"] = float(lstline[1])
         elif "low" in line:
-            par_weight["low"] = float(lstline[1])
+            par_weight["low"]  = float(lstline[1])
         elif "high" in line:
             par_weight["high"] = float(lstline[1])
     #print par_weight
@@ -79,8 +79,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 2.0 #this means the maximum correction is this for each reweighting
-    minscale = 0.1 #this means the minimum correction is this for each reweighting
+    maxscale = 1.5 #this means the maximum correction is this for each reweighting
+    minscale = 0.5 #this means the minimum correction is this for each reweighting
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -92,10 +92,10 @@ def calc_reweight(dic, event):
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         #this protects each individual weight; tight this up a bit
-        if tempweight < 0.7:
-            tempweight = 0.7
-        elif tempweight > 1.3:
-            tempweight = 1.3
+        if tempweight < 0.8:
+            tempweight = 0.8
+        elif tempweight > 1.2:
+            tempweight = 1.2
         totalweight *= tempweight
 
     #print totalweight
@@ -463,19 +463,21 @@ def main():
     inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead
-        if not turnon_reweight:
+        if not turnon_reweight or ops.dosyst is not None :
             inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
         else:#if reweight, creat the folders and the links to the files
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            #this is a really bad practice and temp fix now!
-            ori_link = inputpath.replace("F_c10", "f_c10") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #this is a really bad practice and temp fix now! need to watch this very carfully...
+            ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #print ori_link, dst_link
             if os.path.islink(dst_link):
                 os.unlink(dst_link)
             os.symlink(ori_link, dst_link)
+
     ##if reweight, reweight everything
-    # #parallel compute!
+    #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool  = mp.Pool(npool)

@@ -1,6 +1,10 @@
 import ROOT, rootlogon, helpers
 import argparse, array, copy, glob,  os, sys, time
 import config as CONF
+try:
+    import simplejson as json                 
+except ImportError:
+    import json  
 
 ROOT.gROOT.SetBatch(True)
 
@@ -26,8 +30,6 @@ def main():
     lowmass = 650
     global highmass
     highmass = 3150
-    #create the cutflow dictionary
-    masterinfo = {}
     # select the cuts
     global evtsel_lst, evtsel_dic
     evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
@@ -49,16 +51,11 @@ def main():
     mcsel_dic = {"All":"Mini-ntuple Skimming", "Pass2FatJets":"2 large-R jets", "PassDetaHH":"$|\Delta\eta(JJ)|<1.7$", "PassSignal":"Signal Region", \
     "TwoTag_split":"2b split Signal Region", "ThreeTag":"3b Signal Region", "FourTag":"4b Signal Region"}
 
-    #Get MC signal samples
-    for mass in mass_lst:
-        masterinfo["RSG1_" + str(mass)] = GetEvtCount(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, "RSG1_%i" % mass)
-
-    #Get ttbar samples
-    masterinfo["ttbar"] = GetEvtCount(inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "ttbar")
-    # # Get Zjet samples
-    masterinfo["zjet"] = GetEvtCount(inputpath + "zjets_test/hist-MiniNTuple.root", "zjet")
-    # # Get Signal samples; do not unblind now
-    masterinfo["data"] = GetEvtCount(inputpath + "data_test/hist-MiniNTuple.root", "data")
+    #Get Materinfo
+    #create the cutflow dictionary
+    inputtex = inputpath + "/" + "sum_" + inputdir + ".txt"
+    f1 = open(inputtex, 'r')
+    masterinfo = json.load(f1)
 
     # Draw the efficiency plot relative to the all normalization
     # print masterinfo
@@ -69,6 +66,8 @@ def main():
     MC_outtex = open(outputpath + "SignalEffTable_RSG_c10.tex", "w")
     MCCutFlow(masterinfo, MC_outtex)
     # Finish the work
+    del(masterinfo)
+    f1.close()
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def options():
@@ -93,8 +92,9 @@ def DataCutFlow(inputdic, outFile, samplename="region"):
         outstr += datasel_dic[cut]
         for k, sample in enumerate(sample_lst):
             outstr += " & "
-            value = inputdic[sample][cut]
-            outstr += str(helpers.round_sig(value, 2))
+            outstr += str(helpers.round_sig(inputdic[sample][cut], 2))
+            outstr += " $\\pm$ "
+            outstr += str(helpers.round_sig(inputdic[sample][cut+"_err"], 2))
         outstr+="\\\\"
         tableList.append(outstr)
     ### do the cuts based on the number of entries in each plot
@@ -106,12 +106,14 @@ def DataCutFlow(inputdic, outFile, samplename="region"):
             #get the mass plot
             for k, sample in enumerate(sample_lst):
                 outstr += " & "
-                value = inputdic[sample][cut][region]
+                #print sample, cut, region
                 if sample == "data" and region == "Signal" and (("TwoTag_split" in cut) \
                 or ("ThreeTag" in cut) or ("FourTag" in cut)) and blind:
                     outstr += " blinded "
                 else:
-                    outstr += str(helpers.round_sig(value, 2))
+                    outstr += str(helpers.round_sig(inputdic[sample][cut][region], 2))
+                    outstr += " $\\pm$ "
+                    outstr += str(helpers.round_sig(inputdic[sample][cut][region + "_err"], 2))
 
             outstr+="\\\\"
             tableList.append(outstr)
@@ -127,36 +129,6 @@ def DataCutFlow(inputdic, outFile, samplename="region"):
         print line
         outFile.write(line+" \n")
 
-
-### 
-def GetEvtCount(inputdir, histname=""):
-    #get input file
-    input_f = ROOT.TFile.Open(inputdir, "read")
-    cutflow_temp = input_f.Get("CutFlowWeight") #notice here we use no weight for now!
-    ###
-    eventcounts = {}
-    ### do the cuts based on the cutflow plot
-    for i, cut in enumerate(evtsel_lst):
-        eventcounts[cut] = cutflow_temp.GetBinContent(cutflow_temp.GetXaxis().FindBin(cut))
-    ### do the cuts based on the number of entries in each plot
-    for i, cut in enumerate(cut_lst):
-        #get the corresponding region
-        cutcounts = {}
-        for j, region in enumerate(region_lst):
-            #get the mass plot
-            mHH_temp = input_f.Get(cut + "_" + region + "/" + "mHH_l").Clone()
-            if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
-                or ("ThreeTag" in cut) or ("FourTag" in cut)) & blind & (histname == "data"):
-                cutcounts[region] = 0
-            else:
-                cutcounts[region] = mHH_temp.Integral(0, mHH_temp.GetXaxis().GetNbins()+1)
-        #finish the for loop
-        eventcounts[cut] = cutcounts
-
-    #close the file before exit
-    input_f.Close()
-    #return the table
-    return eventcounts
 
 ### 
 def MCCutFlow(inputdic, outFile, samplename="region"):
@@ -178,11 +150,16 @@ def MCCutFlow(inputdic, outFile, samplename="region"):
         for k, cut in enumerate(mcsel_lst):
             outstr += " & "
             value = 0
+            value_err = 0
             if type(inputdic["RSG1_%i" % mass][cut]) is dict:
                 value = inputdic["RSG1_%i" % mass][cut]["Signal"]
+                value_err = inputdic["RSG1_%i" % mass][cut]["Signal"+"_err"]
             else:
                 value = inputdic["RSG1_%i" % mass][cut]
+                value_err = inputdic["RSG1_%i" % mass][cut+"_err"]
             outstr += str(helpers.round_sig(value, 2))
+            outstr += " $\\pm$ "
+            outstr += str(helpers.round_sig(value_err, 2))
         outstr+="\\\\"
         tableList.append(outstr)
 

@@ -142,6 +142,7 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
 
                 temp_hist = ROOT.gDirectory.Get(kname)
                 #print temp_hist.GetName()
+                temp_hist.Rebin(10) #since the binning is changed!!!
                 temp_hist.SetLineColor(2 + i)
                 temp_hist.SetMarkerStyle(20 + i)
                 temp_hist.SetMarkerColor(2 + i)
@@ -209,6 +210,7 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
                     #print kname
                     temp_hist = ROOT.gDirectory.Get(kname)
                     #print temp_hist.GetName()
+                    temp_hist.Rebin(10)
                     temp_hist.SetLineColor(2 + j)
                     temp_hist.SetMarkerStyle(20 + j)
                     if "pole" in kname: temp_hist.SetMarkerStyle(20 + j + len(inputdata))
@@ -236,7 +238,7 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
 
         legend.SetBorderSize(0)
         legend.SetMargin(0.3)
-        legend.SetTextSize(0.04)
+        legend.SetTextSize(0.03)
         legend.Draw()
 
         # draw watermarks
