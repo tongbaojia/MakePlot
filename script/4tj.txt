@@ -1,0 +1,20 @@
+##must follow the following rules!
+##channel variable inputfolder reweightfile
+
+#iteration 1
+2bs event.j0_trk0_pt b77_c10-cb r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+3b event.j0_trk0_pt b77_c10-cb r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+4b event.j0_trk0_pt b77_c10-cb r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+2bs event.j1_trk0_pt b77_c10-cb-tj00 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+3b event.j1_trk0_pt b77_c10-cb-tj00 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+4b event.j1_trk0_pt b77_c10-cb-tj00 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+
+2bs event.j0_trk1_pt b77_c10-cb-tj1 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt
+3b event.j0_trk1_pt b77_c10-cb-tj1 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt
+4b event.j0_trk1_pt b77_c10-cb-tj1 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt
+
+2bs event.j1_trk1_pt b77_c10-cb-tj2 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt
+3b event.j1_trk1_pt b77_c10-cb-tj2 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt
+4b event.j1_trk1_pt b77_c10-cb-tj2 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt
+

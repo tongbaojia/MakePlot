@@ -1,0 +1,71 @@
+##must follow the following rules!
+##channel variable inputfolder reweightfile
+
+#iteration 1
+2bs event.j0_pt f_c10-cb r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+3b event.j0_pt f_c10-cb r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+4b event.j0_pt f_c10-cb r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+#iteration 2
+2bs event.j0_trk0_pt f_c10-cb-4-0 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+3b event.j0_trk0_pt f_c10-cb-4-0 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+4b event.j0_trk0_pt f_c10-cb-4-0 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+2bs event.j1_trk0_pt f_c10-cb-4-0 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+3b event.j1_trk0_pt f_c10-cb-4-0 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+4b event.j1_trk0_pt f_c10-cb-4-0 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+
+2bs event.j0_trk1_pt f_c10-cb-4-0 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt
+3b event.j0_trk1_pt f_c10-cb-4-0 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt
+4b event.j0_trk1_pt f_c10-cb-4-0 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt
+
+2bs event.j1_trk1_pt f_c10-cb-4-0 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt
+3b event.j1_trk1_pt f_c10-cb-4-0 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt
+4b event.j1_trk1_pt f_c10-cb-4-0 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt
+
+#iteration 3
+2bs event.j0_pt f_c10-cb-4-1 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+3b event.j0_pt f_c10-cb-4-1 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+4b event.j0_pt f_c10-cb-4-1 r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+#iteration 4
+2bs event.j0_trk0_pt f_c10-cb-4-2 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+3b event.j0_trk0_pt f_c10-cb-4-2 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+4b event.j0_trk0_pt f_c10-cb-4-2 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+2bs event.j1_trk0_pt f_c10-cb-4-2 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+3b event.j1_trk0_pt f_c10-cb-4-2 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+4b event.j1_trk0_pt f_c10-cb-4-2 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+
+2bs event.j0_trk1_pt f_c10-cb-4-2 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt
+3b event.j0_trk1_pt f_c10-cb-4-2 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt
+4b event.j0_trk1_pt f_c10-cb-4-2 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt
+
+2bs event.j1_trk1_pt f_c10-cb-4-2 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt
+3b event.j1_trk1_pt f_c10-cb-4-2 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt
+4b event.j1_trk1_pt f_c10-cb-4-2 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt
+
+#iteration 5
+#2bs event.j0_pt f_c10-cb-4-3 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+#3b event.j0_pt f_c10-cb-4-3 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+#4b event.j0_pt f_c10-cb-4-3 r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+#iteration 6
+#2bs event.j0_trk0_pt f_c10-cb-4-4 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+#3b event.j0_trk0_pt f_c10-cb-4-4 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+#4b event.j0_trk0_pt f_c10-cb-4-4 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+#2bs event.j1_trk0_pt f_c10-cb-4-4 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+#3b event.j1_trk0_pt f_c10-cb-4-4 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+#4b event.j1_trk0_pt f_c10-cb-4-4 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+
+#2bs event.j0_trk1_pt f_c10-cb-4-4 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt
+#3b event.j0_trk1_pt f_c10-cb-4-4 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt
+#4b event.j0_trk1_pt f_c10-cb-4-4 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt
+
+#2bs event.j1_trk1_pt f_c10-cb-4-4 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt
+#3b event.j1_trk1_pt f_c10-cb-4-4 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt
+#4b event.j1_trk1_pt f_c10-cb-4-4 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt
+
+
+

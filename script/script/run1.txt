@@ -1,0 +1,48 @@
+##must follow the following rules!
+##channel variable inputfolder reweightfile
+
+#iteration 1
+2bs event.j0_pt f_c10-cb r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+3b event.j0_pt f_c10-cb r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+4b event.j0_pt f_c10-cb r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+# iteration 2
+2bs event.j0_trk0_pt f_c10-cb-1-0 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+3b event.j0_trk0_pt f_c10-cb-1-0 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+4b event.j0_trk0_pt f_c10-cb-1-0 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+# iteration 3
+2bs event.j1_trk0_pt f_c10-cb-1-1 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+3b event.j1_trk0_pt f_c10-cb-1-1 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+4b event.j1_trk0_pt f_c10-cb-1-1 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+
+#iteration 4
+2bs event.j0_pt f_c10-cb-1-2 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+3b event.j0_pt f_c10-cb-1-2 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+4b event.j0_pt f_c10-cb-1-2 r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+# iteration 5
+2bs event.j0_trk0_pt f_c10-cb-1-3 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+3b event.j0_trk0_pt f_c10-cb-1-3 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+4b event.j0_trk0_pt f_c10-cb-1-3 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+# iteration 6
+2bs event.j1_trk0_pt f_c10-cb-1-4 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+3b event.j1_trk0_pt f_c10-cb-1-4 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+4b event.j1_trk0_pt f_c10-cb-1-4 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+
+#iteration 7
+#2bs event.j0_pt f_c10-cb-1-5 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt
+#3b event.j0_pt f_c10-cb-1-5 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt
+#4b event.j0_pt f_c10-cb-1-5 r0_FourTag_Sideband_leadHCand_Pt_m.txt
+
+# iteration 8
+#2bs event.j0_trk0_pt f_c10-cb-1-6 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt
+#3b event.j0_trk0_pt f_c10-cb-1-6 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt
+#4b event.j0_trk0_pt f_c10-cb-1-6 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt
+
+# iteration 9
+#2bs event.j1_trk0_pt f_c10-cb-1-7 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt
+#3b event.j1_trk0_pt f_c10-cb-1-7 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt
+#4b event.j1_trk0_pt f_c10-cb-1-7 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt
+

@@ -40,6 +40,9 @@ def main():
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="All")
     # Draw pT dependent trig efficiency; needs fix...
     DrawPtEff(inputdir, outputname="trig")
+    # Draw the pT dependent independently for 2015 and 2016
+    #DrawPtEff(inputdir, outputname="trig_15")
+    #DrawPtEff(inputdir, outputname="trig_16")
     #output.Close()
 
 def options():
@@ -143,11 +146,12 @@ def DrawPtEff(inputdir, outputname=""):
     graph_lst = []
     maxbincontent = 1
     minbincontent = -0.01
+    year = (outputname.split("_")[1] if "_" in outputname else "")
     file_lst = ["data_test", "signal_G_hh_c10_M1000", "signal_G_hh_c10_M1100", "signal_G_hh_c10_M1200"]
-    leg_lst  = ["Data16",    "RSG 1TeV", "RSG 1.1TeV", "RSG 1.2TeV"]
+    leg_lst  = ["Data" + year,    "RSG 1TeV", "RSG 1.1TeV", "RSG 1.2TeV"]
     for i, file in enumerate(file_lst):
 
-        input_mc  = ROOT.TFile.Open(inputpath + file + "/hist-MiniNTuple.root")
+        input_mc  = ROOT.TFile.Open(inputpath + file + "/hist-MiniNTuple" + (year if "data" in file else "") + ".root")
         hist_tag  = input_mc.Get("h_leadHCand_pT_pre_trig").Clone() #hist before trigger
         hist_prob = input_mc.Get("h_leadHCand_pT_aft_trig").Clone() #hist after trigger
 
@@ -192,6 +196,9 @@ def DrawPtEff(inputdir, outputname=""):
     xline98 = ROOT.TLine(xMin, 0.98, xMax, 0.98)
     xline98.SetLineStyle(5)
     xline98.Draw()
+    yline45 = ROOT.TLine(450, 0.00, 450, 1.00)
+    yline45.SetLineStyle(5)
+    yline45.Draw()
     
     # draw watermarks
     xatlas, yatlas = 0.35, 0.87

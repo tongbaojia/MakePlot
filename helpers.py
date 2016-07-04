@@ -1,13 +1,12 @@
 import copy
 import math
 import ROOT
-import os
+import os, sys
 from array import array
-ROOT.gROOT.SetBatch(True)
-import helpers
 import time
 import glob
 
+ROOT.gROOT.SetBatch(True)
 canv = None
 
 #
@@ -726,6 +725,7 @@ def drawProgressBar(percent, barLen = 20):
         else:
             progress += " "
     print ("[ %s ] %.2f%%" % (progress, percent * 100))
+    #sys.stdout.write("[ %s ] %.2f%%" % (progress, percent * 100) + "\r")
 
 
 def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):

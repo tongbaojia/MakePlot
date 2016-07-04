@@ -26,13 +26,12 @@ def main():
     output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
 
     print output
-    # select the cuts
-    cut_lst = [path + data for path in ["truth_general_data/"]
-		# for data in ["h0_tj_pt_dR", "h1_tj_pt_dR"]]
-		for data in ["h0_tj_pt_dR", "h1_tj_pt_dR", "h0_tj_match_pt_dR", "h1_tj_match_pt_dR"]] 
+    cut_lst = [path + data for path in ["Alltag/"]
+		for data in ["h0_tj_pt_dR", "h1_tj_pt_dR"]]
+		#for data in ["h0_tj_pt_dR", "h1_tj_pt_dR", "h0_tj_match_pt_dR", "h1_tj_match_pt_dR"]] 
 
     # # Draw the efficiency plot relative to the all normalization
-    DrawHists(output, cut_lst, "TEST", "MC_")
+    DrawHists(output, cut_lst, "DATA-15", "data_")
     output.Close()
 
 def DrawHists(outputroot, cut_lst, inputdir, outputname="", normalization=0):
@@ -55,28 +54,59 @@ def DrawHists(outputroot, cut_lst, inputdir, outputname="", normalization=0):
 	temp_mcs = []
 	ROOT.SetOwnership(bigmc, False)
 
-	dir_list = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
-	# dir_list = ["/data_test/hist-MiniNTuple.root"]
-        for j, d in enumerate(dir_list):
+	#tfiles = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
+	tfiles = ["/data_test/hist-MiniNTuple.root"]
+
+        for j, tf in enumerate(tfiles):
             #here could be changed to have more options
-            input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + d)
+            input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + tf)
 	    if not input_mc:
-		print CONF.inputpath + inputdir + d
+		print CONF.inputpath + inputdir + tf
 	    try:
 		temp_mcs.append( input_mc.Get(cut).Clone() )
-		# temp_mcs[j].Scale(1/temp_mcs[j].Integral())
+		temp_mcs[j].Scale(1/temp_mcs[j].Integral())
 		bigmc.Add( temp_mcs[j] )
 	    except:
-		print CONF.inputpath + inputdir + d
+		print CONF.inputpath + inputdir + tf
 		print cut
 		raise
 
             input_mc.Close()
 
+        bigmc.GetYaxis().SetRangeUser(0.2,1)
+	bigmc.GetXaxis().SetRangeUser(450, 2000)
+	bigmc.GetXaxis().SetLabelSize (0.035)
+	bigmc.GetXaxis().SetTitle("Higgs pT [MeV]")
+	bigmc.GetYaxis().SetTitle("Trackjet #DeltaR")
+	# set contour
+	# contours = np.array(reversed([1.0/(10^i) for i in range(6)]))
+        # bigmc.SetContour(6, contours)
+	bigmc.GetZaxis().SetRangeUser(1e-7, 1e-2)
+
+	# cut line
+	xs = np.linspace(450, 1000, 56)
+	ys = np.array([285.0/x + 0.125 for x in xs])
+	cutline = ROOT.TPolyLine(61, xs, ys)
+	cutline.SetLineWidth(4)
+
+	xs2 = np.linspace(450, 1000, 56)
+	ys2 = np.array([max(285.0/x - 0.125, 0.2) for x in xs2])
+	cutline2 = ROOT.TPolyLine(61, xs2, ys2)
+	cutline2.SetLineWidth(4)
+
+	# cut line two
+	dashline = ROOT.TLine(1000.0, 0.2, 1000.0, 1.0)
+	dashline.SetLineWidth(4)
+	dashline.SetLineStyle(9)
+
         # bigmc.Scale(1/bigmc.Integral())
         canv.cd()
 	canv.SetLogz(1)
         bigmc.Draw("colz")
+
+	cutline.Draw()
+	cutline2.Draw()
+	dashline.Draw()
         # finish up
         outputroot.cd()
 	canv.SetRightMargin(0.15)

@@ -1,0 +1,7 @@
+##must follow the following rules!
+##channel variable inputfolder reweightfile
+
+#iteration 1
+2bs helpers.dR(event.j0_trk0_eta,event.j0_trk0_phi,event.j0_trk1_eta,event.j0_trk1_phi) b77_c10-cb r0_TwoTag_split_Sideband_leadHCand_trk_dr.txt
+3b helpers.dR(event.j0_trk0_eta,event.j0_trk0_phi,event.j0_trk1_eta,event.j0_trk1_phi) b77_c10-cb r0_ThreeTag_Sideband_leadHCand_trk_dr.txt
+4b helpers.dR(event.j0_trk0_eta,event.j0_trk0_phi,event.j0_trk1_eta,event.j0_trk1_phi) b77_c10-cb r0_FourTag_Sideband_leadHCand_trk_dr.txt
