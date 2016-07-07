@@ -1,7 +1,8 @@
-ch:TEST_c10-cb:ch syst:CR_High:syst
-ch:TEST_c10-cb:ch syst:CR_Low:syst
-ch:TEST_c10-cb:ch syst:CR_Small:syst
-ch:TEST_c10-cb:ch syst:SB_High:syst
-ch:TEST_c10-cb:ch syst:SB_Low:syst
-ch:TEST_c10-cb:ch syst:SB_Large:syst
-ch:TEST_c10-cb:ch syst:SB_Small:syst
+ch:f_fin-cb:ch syst:CR_High:syst
+ch:f_fin-cb:ch syst:CR_Low:syst
+ch:f_fin-cb:ch syst:CR_Small:syst
+ch:f_fin-cb:ch syst:SB_High:syst
+ch:f_fin-cb:ch syst:SB_Low:syst
+ch:f_fin-cb:ch syst:SB_Large:syst
+ch:f_fin-cb:ch syst:SB_Small:syst
+ch:f_fin-cb:ch syst:ZZ:syst

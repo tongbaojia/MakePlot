@@ -1,6 +1,7 @@
-import argparse, array, copy, os, sys, glob
+import argparse, copy, os, sys, glob, math
+from array import array
 import ROOT, rootlogon
-import Xhh4bUtils.BkgFit.smoothfit as smoothfit
+import Xhh4bUtils.BkgFit.smoothfit_Ultimate as smoothfit
 from helpers import round_sig
 import config as CONF
 ROOT.gROOT.SetBatch()
@@ -10,11 +11,11 @@ treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 #setup fit initial values; tricky for the fits...
 init_dic = {"l":{"FourTag":{"ttbar":[-30, -6, -10], "qcd":[2, 40, 0]}, \
-"ThreeTag":{"ttbar":[-30, -6, -10], "qcd":[5, 40, 0]},\
+"ThreeTag":{"ttbar":[-30, -6, -10], "qcd":[1, 20, -5]},\
 "TwoTag_split":{"ttbar":[-30, -6, -10], "qcd":[1, 20, -5]}}, \
-    "pole":{"FourTag":{"ttbar":[33, 160, 10], "qcd":[10, 60, 5]}, \
-"ThreeTag":{"ttbar":[33, 160, 10], "qcd":[8, 50, 0]},\
-"TwoTag_split":{"ttbar":[-10, 30, -10], "qcd":[2, 30, -2]}}}
+    "pole":{"FourTag":{"ttbar":[33, 160, 10], "qcd":[10, 40, 5]}, \
+"ThreeTag":{"ttbar":[33, 160, 10], "qcd":[8, 40, 0]},\
+"TwoTag_split":{"ttbar":[-10, 30, -10], "qcd":[2, 20, -2]}}}
 
 
 #define functions
@@ -59,11 +60,14 @@ def dump(finaldis="l"):
         #get the mass plot
         tempdic = {}
         cut = c + "_Signal_mHH" + pltname
+        smoothrange = (1200, 3300)
+        if "FourTag" in cut:
+            smoothrange = (1100, 3000)
         #cut = c + "_Signal_mHH_pole"
         savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
-        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, initpar=init_dic[finaldis][c]["qcd"])
-        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, initpar=init_dic[finaldis][c]["qcd"])
-        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 2500), initpar=init_dic[finaldis][c]["ttbar"])
+        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
+        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 3000), initpar=init_dic[finaldis][c]["ttbar"])
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -81,10 +85,11 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3000), smoothfunc="Dijet", initpar=[], Rebin=2):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3300), smoothfunc="Dijet", initpar=[], Rebin=True):
     hist  = inputroot.Get(inname).Clone()
-    if Rebin is not None:
-        hist.Rebin(Rebin)
+    #print inname, smoothrange, initpar
+    if Rebin:
+        hist = do_variable_rebinning(hist, array('d', range(0, 3000, 100) + range(3000, 4000, 200)))
     if dosmooth:
         print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
@@ -207,6 +212,34 @@ def makeSmoothedMJJPlots( infileName, outfileName):
 
     return
 
+def do_variable_rebinning(hist,bins, scale=1):
+    a=hist.GetXaxis()
+
+    newhist=ROOT.TH1F(hist.GetName()+"_rebinned",
+                      hist.GetTitle()+";"+hist.GetXaxis().GetTitle()+";"+hist.GetYaxis().GetTitle(),
+                      len(bins)-1,
+                      array('d',bins))
+
+    newhist.Sumw2()
+    newa=newhist.GetXaxis()
+    #print "check size ", hist.GetNbinsX(), newhist.GetNbinsX()
+    for b in range(0, hist.GetNbinsX()+1):
+        newb             = newa.FindBin(a.GetBinCenter(b))
+
+        # Get existing new content (if any)                                                                                                              
+        val              = newhist.GetBinContent(newb)
+        err              = newhist.GetBinError(newb)
+        # Get content to add
+        ratio_bin_widths = scale*newa.GetBinWidth(newb)/a.GetBinWidth(b)
+        #print "ratio_bin_widths",ratio_bin_widths
+        #val              = val+hist.GetBinContent(b)/ratio_bin_widths
+        #err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
+        val              = val+hist.GetBinContent(b)
+        err              = math.sqrt(err*err+hist.GetBinError(b)*hist.GetBinError(b))
+        #print "bin", newb, " new value ", val, " change ", hist.GetBinContent(b)
+        newhist.SetBinContent(newb,val)
+        newhist.SetBinError(newb,err)
+    return newhist
 
 if __name__ == '__main__': 
     main()

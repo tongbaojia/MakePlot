@@ -20,7 +20,7 @@ def options():
 
 #currently reweighting all of them at once...may not be optimal...
 def write_reweight(fname="TEST", reweight_dic={}, split=True):
-    motherfolder="f_c10-cb"
+    motherfolder="f_fin-cb"
     helpers.checkpath("script")
     #building the inputdictionary
     region_dic = {"2bs":"TwoTag_split", "3b":"ThreeTag", "4b":"FourTag"}
@@ -37,10 +37,14 @@ def write_reweight(fname="TEST", reweight_dic={}, split=True):
         for region, region_fname in region_dic.iteritems():
             for var, var_fname in reweight_dic.iteritems():
                 if split:
-                    if "j0_pt" in var and i%2 != 0: #for even skip j0_pt
+                    if "j0_pt" in var and i%2 == 1: #for even skip j0_pt
                         continue
-                    elif "j0_pt" not in var and i%2 == 0: #for odd, skip other
+                    elif "j0_pt" not in var and i%2 != 1: #for odd, skip other
                         continue
+                    # if "j0_pt" in var and i%4 > 1: #for even skip j0_pt
+                    #     continue
+                    # elif "j0_pt" not in var and i%4 <= 1: #for odd, skip other
+                    #     continue
                 templine = ""
                 templine += str(i) + " " #iteration
                 templine += region + " " #Ntrk
@@ -56,7 +60,7 @@ def write_reweight(fname="TEST", reweight_dic={}, split=True):
 #do everything in one main?
 def main():
     global iteration
-    iteration = 16
+    iteration = 20
     #next one; alltrk
     reweight_dic = {
         "j0_trk0_pt":"leadHCand_trk0_Pt",
@@ -65,21 +69,21 @@ def main():
         "j1_trk1_pt":"sublHCand_trk1_Pt",
         "j0_pt":"leadHCand_Pt_m",
         }
-    write_reweight("j0pT-alltrk", reweight_dic)
+    write_reweight("j0pT-alltrk-fin", reweight_dic)
     #next one; leadtrk
     reweight_dic = {
         "j0_trk0_pt":"leadHCand_trk0_Pt",
         "j1_trk0_pt":"sublHCand_trk0_Pt",
         "j0_pt":"leadHCand_Pt_m",
         }
-    write_reweight("j0pT-leadtrk", reweight_dic)
+    write_reweight("j0pT-leadtrk-fin", reweight_dic)
     #next one; subltrk
     reweight_dic = {
         "j0_trk1_pt":"leadHCand_trk1_Pt",
         "j1_trk1_pt":"sublHCand_trk1_Pt",
         "j0_pt":"leadHCand_Pt_m",
         }
-    write_reweight("j0pT-subltrk", reweight_dic)
+    write_reweight("j0pT-subltrk-fin", reweight_dic)
     #next one; trks_Pt
     reweight_dic = {
         "j0_trk0_pt":"trks_Pt",
@@ -88,7 +92,7 @@ def main():
         "j1_trk1_pt":"trks_Pt",
         "j0_pt":"leadHCand_Pt_m",
         }
-    write_reweight("j0pT-trks", reweight_dic)
+    write_reweight("j0pT-trks-fin", reweight_dic)
     print "DONE"
 ### end
 if __name__ == "__main__":

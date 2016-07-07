@@ -70,7 +70,7 @@ def get_reweight(folder, filename):
         elif "par3" in line:
             par_weight["par3"] = float(lstline[1])
         elif "low" in line:
-            par_weight["low"] = float(lstline[1])
+            par_weight["low"]  = float(lstline[1])
         elif "high" in line:
             par_weight["high"] = float(lstline[1])
     #print par_weight
@@ -80,8 +80,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 2.0 #this means the maximum correction is this for each reweighting
-    minscale = 0.1 #this means the minimum correction is this for each reweighting
+    maxscale = 1.5 #this means the maximum correction is this for each reweighting
+    minscale = 0.5 #this means the minimum correction is this for each reweighting
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -93,10 +93,10 @@ def calc_reweight(dic, event):
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         #this protects each individual weight; tight this up a bit
-        if tempweight < 0.7:
-            tempweight = 0.7
-        elif tempweight > 1.3:
-            tempweight = 1.3
+        if tempweight < 0.8:
+            tempweight = 0.8
+        elif tempweight > 1.2:
+            tempweight = 1.2
         totalweight *= tempweight
 
     #print totalweight
@@ -126,8 +126,8 @@ class eventHists:
         self.region = region
         self.reweight = reweight
         #add in all the histograms
-        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        78,  200, 4000)
-        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        78,  200, 4000)
+        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        400,  0, 4000)
+        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        400,  0, 4000)
         self.h0_m         = ROOT.TH1F("leadHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h1_m         = ROOT.TH1F("sublHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h0_trk0_pt   = ROOT.TH1F("leadHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
@@ -151,8 +151,8 @@ class eventHists:
             self.h1_phi       = ROOT.TH1F("sublHCand_Phi",      ";#Phi",             64, -3.2,  3.2)
             self.h0_trk_dr    = ROOT.TH1F("leadHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
             self.h1_trk_dr    = ROOT.TH1F("sublHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
-            self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
-            self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
+            self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
+            self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
             self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
@@ -251,7 +251,6 @@ class massregionHists:
             "Signal"   : SR_cut,
             "Control"  : CR_cut,
             "Sideband" : SB_cut,
-            "ZZ"       : "not " + SR_cut  + " and " + "event.Xzz < 2.1",
         }
         self.regionlst = []
         #for specific studies; for systemtaics
@@ -325,17 +324,25 @@ class regionHists:
         self.FourTag = massregionHists("FourTag", outputroot)
 
     def Fill(self, event):
-        if event.j0_nb + event.j1_nb == 4:
+        b_tagging_cut = 0.3706 #0.3706 as 77% default value
+        nb_j0 = 0
+        nb_j1 = 0
+        nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
+        nb_j0 += 1 if event.j0_trk1_Mv2 > b_tagging_cut else 0
+        nb_j1 += 1 if event.j1_trk0_Mv2 > b_tagging_cut else 0
+        nb_j1 += 1 if event.j1_trk1_Mv2 > b_tagging_cut else 0
+
+        if nb_j0 + nb_j1 == 4:
             self.FourTag.Fill(event)
-        elif event.j0_nb + event.j1_nb == 3:
+        elif nb_j0 + nb_j1 == 3:
             self.ThreeTag.Fill(event)
-        elif event.j0_nb == 1 and event.j1_nb == 1:
+        elif nb_j0 == 1 and nb_j1 == 1:
             self.TwoTag_split.Fill(event)
-        elif event.j0_nb + event.j1_nb == 2:
+        elif nb_j0 + nb_j1 == 2:
             self.TwoTag.Fill(event)
-        elif event.j0_nb + event.j1_nb == 1:
+        elif nb_j0 + nb_j1 == 1:
             self.OneTag.Fill(event)
-        elif event.j0_nb + event.j1_nb == 0:
+        elif nb_j0 + nb_j1 == 0:
             self.NoTag.Fill(event, event.weight)
 
     def Write(self, outputroot):
@@ -474,6 +481,7 @@ def main():
         "SB_Low"     : GetExp(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=SB_size),
         "SB_Large"   : "event.Rhh < %s" % str(SB_size + 5) ,
         "SB_Small"   : "event.Rhh < %s" % str(SB_size - 5) ,
+        "ZZ"         : "event.Xzz < 2.1" ,
         }
     global SR_cut
     SR_cut = Syst_cut["SR"]
@@ -488,6 +496,11 @@ def main():
                 SB_cut = "%s < event.Rhh < %s" % (str(CR_size), str(SB_size))
         elif "SB" in ops.dosyst:
             SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut[ops.dosyst]
+        elif "ZZ" in ops.dosyst:
+            SR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut["ZZ"]
+            CR_cut = "not " + Syst_cut["SR"] + " and not " + Syst_cut["ZZ"] + " and " + Syst_cut["CR"]
+            SB_cut = "not " + Syst_cut["CR"] + " and not " + Syst_cut["ZZ"] + " and " + Syst_cut["SB"]
+
 
     ##for testing
     if (DEBUG):
@@ -507,19 +520,21 @@ def main():
     inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead
-        if not turnon_reweight:
+        if not turnon_reweight or ops.dosyst is not None :
             inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
         else:#if reweight, creat the folders and the links to the files
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            #this is a really bad practice and temp fix now!
-            ori_link = inputpath.replace("F_c10", "f_c10") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #this is a really bad practice and temp fix now! need to watch this very carfully...
+            ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #print ori_link, dst_link
             if os.path.islink(dst_link):
                 os.unlink(dst_link)
             os.symlink(ori_link, dst_link)
+
     ##if reweight, reweight everything
-    # #parallel compute!
+    #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool  = mp.Pool(npool)

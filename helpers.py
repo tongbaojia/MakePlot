@@ -769,19 +769,26 @@ def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
 # NOTE: you __must__ store the return variable from this function and keep it in scope
 # until you save the associated canvas, otherwise python will grabage collect the 
 # watermakrs and they will __not__ show up on your canvas
-def DrawWatermarks(xatlas=0.35, yatlas=0.87):
-    # draw watermarks
-    # xatlas, yatlas = 0.35, 0.87
-    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
-    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    # watermarks = [atlas, hh4b, lumi]
+def DrawWatermarks(xatlas=0.35, yatlas=0.87, deltay=0.6, deltax=None, watermarks=None):
+    if deltax is not None:
+        deltay = 0.0
+	if watermarks is None:
+	    assert len(deltax) == 2
+  	else:
+	    assert len(deltax) == len(watermarks) -1
 
-    return DrawWords(atlas, hh4b, lumi)
+    if watermarks is None:
+        atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+        hh4b  = ROOT.TLatex(xatlas+deltax[0], yatlas-deltay, "RSG c=1.0")
+        lumi  = ROOT.TLatex(xatlas+deltax[1], yatlas-deltay*2, "MC #sqrt{s} = 13 TeV")
+        watermarks = [atlas, hh4b, lumi]
+    else:
+	deltax = [0] + deltax
+	watermarks = [ROOT.TLatex(xatlas + deltax[i], yatlas - deltay*(i-1), s) for i,s in enumerate(watermarks)]	
 
-# Draws a list of initialized ROOT.TLatex objects
-# returns them to ease dealing w/ pointers
-def DrawWords(*words):
+    return DrawWords(*watermarks)
+
+def DrawWords(*words)
     for w in words:
         w.SetTextAlign(22)
         w.SetTextSize(0.04)

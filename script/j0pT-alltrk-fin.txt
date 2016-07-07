@@ -1,0 +1,171 @@
+#reweighting script for hh4b analysis 
+#iteration:0
+0 3b event.j0_pt f_fin-cb r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+0 2bs event.j0_pt f_fin-cb r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+0 4b event.j0_pt f_fin-cb r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:1
+1 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_0 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+1 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_0 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+1 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_0 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+1 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_0 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+1 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_0 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+1 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_0 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+1 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_0 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+1 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_0 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+1 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_0 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+1 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_0 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+1 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_0 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+1 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_0 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:2
+2 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_1 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+2 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_1 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+2 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_1 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:3
+3 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_2 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+3 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_2 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+3 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_2 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+3 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_2 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+3 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_2 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+3 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_2 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+3 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_2 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+3 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_2 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+3 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_2 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+3 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_2 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+3 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_2 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+3 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_2 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:4
+4 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_3 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+4 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_3 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+4 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_3 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:5
+5 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_4 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+5 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_4 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+5 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_4 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+5 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_4 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+5 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_4 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+5 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_4 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+5 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_4 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+5 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_4 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+5 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_4 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+5 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_4 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+5 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_4 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+5 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_4 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:6
+6 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_5 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+6 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_5 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+6 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_5 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:7
+7 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_6 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+7 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_6 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+7 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_6 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+7 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_6 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+7 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_6 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+7 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_6 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+7 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_6 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+7 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_6 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+7 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_6 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+7 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_6 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+7 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_6 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+7 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_6 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:8
+8 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_7 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+8 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_7 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+8 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_7 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:9
+9 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_8 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+9 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_8 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+9 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_8 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+9 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_8 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+9 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_8 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+9 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_8 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+9 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_8 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+9 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_8 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+9 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_8 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+9 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_8 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+9 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_8 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+9 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_8 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:10
+10 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_9 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+10 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_9 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+10 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_9 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:11
+11 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_10 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+11 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_10 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+11 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_10 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+11 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_10 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+11 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_10 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+11 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_10 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+11 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_10 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+11 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_10 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+11 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_10 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+11 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_10 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+11 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_10 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+11 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_10 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:12
+12 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_11 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+12 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_11 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+12 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_11 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:13
+13 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_12 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+13 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_12 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+13 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_12 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+13 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_12 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+13 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_12 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+13 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_12 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+13 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_12 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+13 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_12 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+13 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_12 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+13 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_12 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+13 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_12 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+13 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_12 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:14
+14 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_13 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+14 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_13 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+14 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_13 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:15
+15 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_14 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+15 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_14 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+15 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_14 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+15 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_14 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+15 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_14 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+15 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_14 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+15 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_14 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+15 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_14 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+15 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_14 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+15 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_14 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+15 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_14 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+15 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_14 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:16
+16 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_15 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+16 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_15 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+16 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_15 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:17
+17 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_16 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+17 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_16 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+17 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_16 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+17 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_16 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+17 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_16 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+17 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_16 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+17 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_16 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+17 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_16 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+17 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_16 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+17 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_16 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+17 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_16 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+17 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_16 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 
+#iteration:18
+18 3b event.j0_pt f_fin-cb_j0pT-alltrk-fin_17 r0_ThreeTag_Sideband_leadHCand_Pt_m.txt 
+18 2bs event.j0_pt f_fin-cb_j0pT-alltrk-fin_17 r0_TwoTag_split_Sideband_leadHCand_Pt_m.txt 
+18 4b event.j0_pt f_fin-cb_j0pT-alltrk-fin_17 r0_FourTag_Sideband_leadHCand_Pt_m.txt 
+#iteration:19
+19 3b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_18 r0_ThreeTag_Sideband_leadHCand_trk0_Pt.txt 
+19 3b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_18 r0_ThreeTag_Sideband_leadHCand_trk1_Pt.txt 
+19 3b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_18 r0_ThreeTag_Sideband_sublHCand_trk1_Pt.txt 
+19 3b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_18 r0_ThreeTag_Sideband_sublHCand_trk0_Pt.txt 
+19 2bs event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_18 r0_TwoTag_split_Sideband_leadHCand_trk0_Pt.txt 
+19 2bs event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_18 r0_TwoTag_split_Sideband_leadHCand_trk1_Pt.txt 
+19 2bs event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_18 r0_TwoTag_split_Sideband_sublHCand_trk1_Pt.txt 
+19 2bs event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_18 r0_TwoTag_split_Sideband_sublHCand_trk0_Pt.txt 
+19 4b event.j0_trk0_pt f_fin-cb_j0pT-alltrk-fin_18 r0_FourTag_Sideband_leadHCand_trk0_Pt.txt 
+19 4b event.j0_trk1_pt f_fin-cb_j0pT-alltrk-fin_18 r0_FourTag_Sideband_leadHCand_trk1_Pt.txt 
+19 4b event.j1_trk1_pt f_fin-cb_j0pT-alltrk-fin_18 r0_FourTag_Sideband_sublHCand_trk1_Pt.txt 
+19 4b event.j1_trk0_pt f_fin-cb_j0pT-alltrk-fin_18 r0_FourTag_Sideband_sublHCand_trk0_Pt.txt 

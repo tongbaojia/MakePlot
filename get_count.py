@@ -1,4 +1,4 @@
-import ROOT, rootlogon, helpers
+import ROOT, helpers
 import config as CONF
 import argparse, copy, glob, os, sys, time
 try:
@@ -20,6 +20,8 @@ ROOT.gROOT.SetBatch(True)
 #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
 #     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 # input are exclusive trkjets
+
+evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 "OneTag", \
@@ -27,8 +29,8 @@ cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
-region_lst = ["Sideband", "Control", "ZZ", "Signal"]
-blind=True
+region_lst = ["Sideband", "Control", "Signal"]
+blind=False
 #set list of dumping yields
 yield_lst = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
 yield_dic = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
@@ -60,8 +62,8 @@ def main():
         "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
         "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
         "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
-        "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac",
-        "leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
+        "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
+        #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
     global plt_m
     plt_m = "_mHH_l"
     #set fast test version, with all the significance output still
@@ -148,7 +150,6 @@ def main():
     ##produce the significance plots
     DumpSignificance(masterinfo)
     
-        
     #finish and quit
     with open(inputpath + "sum%s_%s.txt" % ("" if background_model==0 else str(background_model), inputdir), "w") as f:
         json.dump(masterinfo, f)
@@ -472,10 +473,16 @@ def GetEvtCount(config):
     histname = config["histname"]
     #get input file
     input_f = ROOT.TFile.Open(inputdir, "read")
+    cutflow_temp = input_f.Get("CutFlowWeight")
     ###
     eventcounts = {}
     ###
     #outdir = outroot.mkdir(histname)
+    #get things from cutflow table
+    for i, cut in enumerate(evtsel_lst):
+        eventcounts[cut] = cutflow_temp.GetBinContent(cutflow_temp.GetXaxis().FindBin(cut))
+        eventcounts[cut+"_err"] = cutflow_temp.GetBinError(cutflow_temp.GetXaxis().FindBin(cut))
+
     for i, cut in enumerate(cut_lst):
         #get the corresponding region
         cutcounts = {}
@@ -505,6 +512,7 @@ def GetEvtCount(config):
         eventcounts[cut] = cutcounts
 
     #close the file before exit
+    del(cutflow_temp)
     input_f.Close()
     #return the table
     return {histname: eventcounts}
@@ -570,9 +578,12 @@ def GetSignificance(mass):
         cutcounts = {}
         cutcounts_err = {}
         for j, region in enumerate(region_lst):
-            #nees fix!!!
-            plttemp_sig = outroot.Get("RSG1_" + str(mass) + "_" + cut + "_" + region + plt_m)
-            plttemp_bkg = outroot.Get("data_est" + "_" + cut + "_" + region + plt_m)
+            #needs fix!!!
+            plttemp_sig = outroot.Get("RSG1_" + str(mass) + "_" + cut + "_" + region + plt_m).Clone()
+            plttemp_bkg = outroot.Get("data_est" + "_" + cut + "_" + region + plt_m).Clone()
+            #needs to rebin here!!! use 50 GeV binning at least...
+            plttemp_sig.Rebin(5)
+            plttemp_bkg.Rebin(5)
             cutcounts[region], cutcounts_err[region], S, B = GetSensitivity(plttemp_sig, plttemp_bkg)
             #print mass, cut, region, " sig ", cutcounts[region], " sigerr ", cutcounts_err[region], " Nsig ", S, " Nbkg ", B
             #get the mass plot

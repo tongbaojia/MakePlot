@@ -1,6 +1,9 @@
 import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
-import simplejson as json
+try:
+    import simplejson as json                 
+except ImportError:
+    import json  
 import helpers
 import config as CONF
 from ROOT import *
@@ -22,7 +25,7 @@ def main():
     channels=["SB53", "SB58", "SB63", "SB68", "SB73", "SB78", "SB88", "SB98", "SB108", "SB128", "SB168"]#, "b70", "b77", "b80", "b85", "b90"]
 
     global region_lst
-    region_lst = ["Sideband", "Control", "ZZ", "Signal"]
+    region_lst = ["Sideband", "Control", "Signal"]
 
     global inputpath
     inputpath = CONF.inputpath
