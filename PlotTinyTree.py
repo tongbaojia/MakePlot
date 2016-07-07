@@ -150,8 +150,8 @@ class eventHists:
             self.h1_phi       = ROOT.TH1F("sublHCand_Phi",      ";#Phi",             64, -3.2,  3.2)
             self.h0_trk_dr    = ROOT.TH1F("leadHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
             self.h1_trk_dr    = ROOT.TH1F("sublHCand_trk_dr",   ";trkjet #Deltar",   42, -0.1,    2)
-            self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
-            self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  7,  -0.5, 6.5)
+            self.h0_ntrk      = ROOT.TH1F("leadHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
+            self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
             self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
@@ -250,7 +250,6 @@ class massregionHists:
             "Signal"   : SR_cut,
             "Control"  : CR_cut,
             "Sideband" : SB_cut,
-            "ZZ"       : "not " + SR_cut  + " and " + "event.Xzz < 2.1",
         }
         self.regionlst = []
         #for specific studies; for systemtaics
@@ -324,17 +323,25 @@ class regionHists:
         self.FourTag = massregionHists("FourTag", outputroot)
 
     def Fill(self, event):
-        if event.j0_nb + event.j1_nb == 4:
+        b_tagging_cut = 0.3706 #0.3706 as 77% default value
+        nb_j0 = 0
+        nb_j1 = 0
+        nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
+        nb_j0 += 1 if event.j0_trk1_Mv2 > b_tagging_cut else 0
+        nb_j1 += 1 if event.j1_trk0_Mv2 > b_tagging_cut else 0
+        nb_j1 += 1 if event.j1_trk1_Mv2 > b_tagging_cut else 0
+
+        if nb_j0 + nb_j1 == 4:
             self.FourTag.Fill(event)
-        elif event.j0_nb + event.j1_nb == 3:
+        elif nb_j0 + nb_j1 == 3:
             self.ThreeTag.Fill(event)
-        elif event.j0_nb == 1 and event.j1_nb == 1:
+        elif nb_j0 == 1 and nb_j1 == 1:
             self.TwoTag_split.Fill(event)
-        elif event.j0_nb + event.j1_nb == 2:
+        elif nb_j0 + nb_j1 == 2:
             self.TwoTag.Fill(event)
-        elif event.j0_nb + event.j1_nb == 1:
+        elif nb_j0 + nb_j1 == 1:
             self.OneTag.Fill(event)
-        elif event.j0_nb + event.j1_nb == 0:
+        elif nb_j0 + nb_j1 == 0:
             self.NoTag.Fill(event, event.weight)
 
     def Write(self, outputroot):
@@ -432,6 +439,7 @@ def main():
         "SB_Low"     : GetExp(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=SB_size),
         "SB_Large"   : "event.Rhh < %s" % str(SB_size + 5) ,
         "SB_Small"   : "event.Rhh < %s" % str(SB_size - 5) ,
+        "ZZ"         : "event.Xzz < 2.1" ,
         }
     global SR_cut
     SR_cut = Syst_cut["SR"]
@@ -446,6 +454,11 @@ def main():
                 SB_cut = "%s < event.Rhh < %s" % (str(CR_size), str(SB_size))
         elif "SB" in ops.dosyst:
             SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut[ops.dosyst]
+        elif "ZZ" in ops.dosyst:
+            SR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut["ZZ"]
+            CR_cut = "not " + Syst_cut["SR"] + " and not " + Syst_cut["ZZ"] + " and " + Syst_cut["CR"]
+            SB_cut = "not " + Syst_cut["CR"] + " and not " + Syst_cut["ZZ"] + " and " + Syst_cut["SB"]
+
 
     ##for testing
     if (DEBUG):

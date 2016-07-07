@@ -178,7 +178,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
+    RSG1_1500.Scale(25)
     RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
+    RSG1_2500.Scale(1000)
 
     if not rebin == None:
         data.Rebin(rebin)
@@ -192,14 +194,14 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
     #use array to rebin histgrams
     if not rebinarry == None:
-        data      = do_variable_rebinning(data, rebinarry)
-        data_est  = do_variable_rebinning(data_est, rebinarry)
-        qcd       = do_variable_rebinning(qcd, rebinarry)
-        ttbar     = do_variable_rebinning(ttbar, rebinarry)
-        zjet      = do_variable_rebinning(zjet, rebinarry)
-        RSG1_1000 = do_variable_rebinning(RSG1_1000, rebinarry)
-        RSG1_1500 = do_variable_rebinning(RSG1_1500, rebinarry)
-        RSG1_2500 = do_variable_rebinning(RSG1_2500, rebinarry)
+        data      = data.Rebin(len(rebinarry) - 1, data.GetName()+"_rebinned", rebinarry)
+        data_est  = data_est.Rebin(len(rebinarry) - 1, data_est.GetName()+"_rebinned", rebinarry)
+        qcd       = qcd.Rebin(len(rebinarry) - 1, qcd.GetName()+"_rebinned", rebinarry)
+        ttbar     = ttbar.Rebin(len(rebinarry) - 1, ttbar.GetName()+"_rebinned", rebinarry)
+        zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
+        RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
+        RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
+        RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -224,8 +226,13 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
     data = makeTotBkg([data])[1]
     bkg = makeTotBkg([ttbar,qcd,zjet])
-    # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
+    # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
     ratios = makeDataRatio(data, bkg[1])
+
+    # stack signal on background
+    RSG1_1000.Add(bkg[0]) 
+    RSG1_1500.Add(bkg[0]) 
+    RSG1_2500.Add(bkg[0]) 
 
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
@@ -271,6 +278,21 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
+    # RSG1_1000.SetLineWidth(2)
+    # RSG1_1000.SetLineStyle(2)
+    # RSG1_1000.SetLineColor(ROOT.kViolet+7)
+    # RSG1_1000.Draw("HISTO SAME")
+
+    RSG1_1500.SetLineWidth(2)
+    RSG1_1500.SetLineStyle(2)
+    RSG1_1500.SetLineColor(ROOT.kPink+7)
+    RSG1_1500.Draw("HISTO SAME")
+
+    RSG1_2500.SetLineWidth(2)
+    RSG1_2500.SetLineStyle(2)
+    RSG1_2500.SetLineColor(ROOT.kGreen+4)
+    RSG1_2500.Draw("HISTO SAME")
+
     bkg[1].SetFillColor(ROOT.kBlue)
     bkg[1].SetLineColor(ROOT.kBlue)
     bkg[1].SetFillStyle(3345)
@@ -286,24 +308,6 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     zjet.SetLineColor(ROOT.kBlack)
     zjet.SetFillColor(ROOT.kGreen+4)
     zjet.Draw("HISTO SAME")
-
-    # RSG1_1000.SetLineWidth(2)
-    # RSG1_1000.SetLineStyle(2)
-    # RSG1_1000.SetLineColor(ROOT.kViolet+7)
-    # RSG1_1000.Draw("HISTO SAME")
-
-    RSG1_1500.Scale(25)
-    RSG1_1500.SetLineWidth(2)
-    RSG1_1500.SetLineStyle(2)
-    RSG1_1500.SetLineColor(ROOT.kPink+7)
-    RSG1_1500.Draw("HISTO SAME")
-
-
-    RSG1_2500.Scale(1000)
-    RSG1_2500.SetLineWidth(2)
-    RSG1_2500.SetLineStyle(2)
-    RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    RSG1_2500.Draw("HISTO SAME")
 
     zeroXerror(data)
     data.SetMarkerStyle(20)
@@ -438,8 +442,8 @@ def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
     if "TwoTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
+        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
@@ -448,8 +452,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
+        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
         rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -458,8 +462,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
+        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
         rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
@@ -508,7 +512,7 @@ def main():
     start_time = time.time()
     ops = options()
     global blinded
-    blinded = True
+    blinded = False
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
@@ -524,7 +528,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Sideband", "Control","Signal", "ZZ"]
+    region_lst = ["Sideband", "Control","Signal"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]#, "OneTag", "TwoTag"]
 
     #create master list

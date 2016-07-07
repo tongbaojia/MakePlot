@@ -35,9 +35,12 @@ def main():
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 
+    #region shape comparisons
     #side band shapes
     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
+    DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
     #correlations of the jet mass and jet pT
     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
@@ -62,6 +65,59 @@ def main():
     DrawScalecomparison(inputroot, norm=False)
     DrawScalecomparison(inputroot, norm=True, Logy=1)
 
+
+def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
+    region_lst = ["Signal", "Control", "Sideband"]
+    region_dic = {"Sideband":1, "Control":2, "Signal":3}
+    #print inputdir
+    inputroot = ROOT.TFile.Open(inputpath + inputname)
+
+    canv = ROOT.TCanvas(inputdir + "_" +  keyword, " ", 800, 800)
+    temp_hist_lst = []
+    for i, region in enumerate(region_lst):
+        #print inputdir + "_" + region + "/" + keyword
+        temp_hist_lst.append(inputroot.Get(inputdir + "_" + region + "/" + keyword).Clone())
+        if Xrange != [0, 0]:
+            temp_hist_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
+        if Yrange != [0, 0]:
+            temp_hist_lst[i].GetYaxis().SetRangeUser(Yrange[0], Yrange[1])
+            temp_hist_lst[i].GetYaxis().SetTitleOffset(1.4)
+        for xbin in range(0, temp_hist_lst[i].GetXaxis().GetNbins()+1):
+            for ybin in range(0, temp_hist_lst[i].GetYaxis().GetNbins()+1):
+                if temp_hist_lst[i].GetBinContent(xbin, ybin) > 0:
+                    temp_hist_lst[i].SetBinContent(xbin, ybin, region_dic[region])
+
+        temp_hist_lst[i].GetZaxis().Set(3, 0.5, 3.5)
+        temp_hist_lst[i].GetZaxis().SetRangeUser(0.5, 3.5)
+        temp_hist_lst[i].GetZaxis().SetLabelSize(0.07)
+        temp_hist_lst[i].GetZaxis().SetLabelOffset(-0.03)
+        temp_hist_lst[i].GetZaxis().SetBinLabel(1, "SB")
+        temp_hist_lst[i].GetZaxis().SetBinLabel(2, "CR")
+        temp_hist_lst[i].GetZaxis().SetBinLabel(3, "SR")
+
+        #ROOT.gStyle.SetPadRightMargin(0.15)
+        temp_hist_lst[i].Draw("colz " + ("" if i == 0 else " same "))
+
+    xatlas, yatlas = 0.35, 0.87
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
+    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "Data #sqrt{s} = 13 TeV")
+    watermarks = [atlas, hh4b, lumi]
+    for wm in watermarks:
+        wm.SetTextAlign(22)
+        wm.SetTextSize(0.04)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
+
+    canv.cd()
+    ROOT.gStyle.SetPadRightMargin(0.1)
+    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
+
+    #done
+    del(temp_hist_lst)
+    inputroot.Close()
+
 def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
@@ -70,7 +126,6 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
         kname = key.GetName()
         if keyword in kname:
 
-            ROOT.gStyle.SetPadRightMargin(0.15)
 
             temp_hist = ROOT.gDirectory.Get(kname).Clone()
             canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
@@ -78,7 +133,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
                 temp_hist.GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
             if Yrange != [0, 0]:
                 temp_hist.GetYaxis().SetRangeUser(Yrange[0], Yrange[1])
-                temp_hist.GetYaxis().SetTitleOffset(1.8)
+                temp_hist.GetYaxis().SetTitleOffset(1.4)
 
             temp_hist.Draw("colz")
 
@@ -96,6 +151,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
 
             #draw the correlation factor
             if temp_hist.InheritsFrom("TH2"):
+                ROOT.gStyle.SetPadRightMargin(0.15)
                 myText(0.2, 0.97, 1, "Coor = %s" % str(('%.2g' % temp_hist.GetCorrelationFactor())), 22)
 
             canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")

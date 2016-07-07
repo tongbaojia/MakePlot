@@ -1,7 +1,7 @@
 import argparse, copy, os, sys, glob, math
 from array import array
 import ROOT, rootlogon
-import Xhh4bUtils.BkgFit.smoothfit as smoothfit
+import Xhh4bUtils.BkgFit.smoothfit_Ultimate as smoothfit
 from helpers import round_sig
 import config as CONF
 ROOT.gROOT.SetBatch()

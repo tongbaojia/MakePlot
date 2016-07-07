@@ -47,6 +47,9 @@ def main():
         Dump_Compare(tag=tag, title="CR_Varations", region="Control")
         Dump_BKGCompare(tag=tag, title="SR_Varations", region="Signal")
 
+    #for ZZ unblinding
+    Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal")
+
     # Finish the work
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -94,7 +97,6 @@ def Dump_Compare(tag="FourTag", title="CR_Varations", region="Control"):
     for line in tableList:
         print line
         outFile.write(line+" \n")
-
 
 def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
 
@@ -146,6 +148,48 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
         print line
         outFile.write(line+" \n")
 
+
+def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal"):
+
+    texoutpath = inputpath + inputdir + "/" + "Plot/Tables/"
+    if not os.path.exists(texoutpath):
+        os.makedirs(texoutpath)
+    outFile = open( texoutpath + title + ".tex", "w")
+    column_lst = ["Data", "Prediction", "(Predict - Data)/Data"]
+    column_key_lst = ["data", "data_est", "dataEstDiff"] #for looping through the objects
+    ### 
+    tableList = []
+    ###
+    add_table_head(tableList, column_lst, title=title)
+
+    for i, tag in enumerate(tag_lst):
+        #get the corresponding region
+        outstr = ""
+        outstr += tag.replace("_", " ") if tag is not "" else "Nominal"
+        inputtex = inputpath + inputdir + ("_ZZ" + "/" + "sum_" + inputdir + "_ZZ" + ".txt")
+        f1 = open(inputtex, 'r')
+        masterdic = json.load(f1)
+        #print masterdic, tag
+        outstr += add_entry(masterdic["data"][tag][region], state=masterdic["data"][tag][region+"_err"])
+        outstr += add_entry(masterdic["data_est"][tag][region], state=masterdic["data_est"][tag][region+"_err"])
+        outstr += add_entry(masterdic["dataEstDiff"][tag][region], state=masterdic["dataEstDiff"][tag][region+"_err"], percent=True)
+        #finish up
+        del(masterdic)
+        f1.close()
+        #finish the current entry
+        outstr+="\\\\"
+        tableList.append(outstr)
+        #add extra line
+        if (tag!=tag_lst[-1]):
+            tableList.append("\\hline")
+
+    #finish the table
+    add_table_tail(tableList, column_lst)
+
+    #return the table
+    for line in tableList:
+        print line
+        outFile.write(line+" \n")
 #three funtions for generating tables!!!
 def add_entry(value, state=None, percent=False):
     temstr = ""
