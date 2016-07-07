@@ -788,7 +788,7 @@ def DrawWatermarks(xatlas=0.35, yatlas=0.87, deltay=0.6, deltax=None, watermarks
 
     return DrawWords(*watermarks)
 
-def DrawWords(*words)
+def DrawWords(*words):
     for w in words:
         w.SetTextAlign(22)
         w.SetTextSize(0.04)
