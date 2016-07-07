@@ -24,16 +24,10 @@ def split(targetpath="data_test"):
     nfiles = ops.nfiles
     inputdir = ops.inputdir
 
-    """
     global inputpath
     inputpath = CONF.inputpath + inputdir + "/" + targetpath
     global outputpath
     outputpath = CONF.inputpath + inputdir + "/" +  targetpath
-    """
-
-    inputpath = CONF.inputpath + "DATA-15/" + targetpath
-    global outputpath
-    outputpath = CONF.inputpath + "DATA-15/" +  targetpath
 
     helpers.checkpath(outputpath)
 

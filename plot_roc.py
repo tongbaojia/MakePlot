@@ -10,21 +10,25 @@ import config as CONF
 from array import array
 import numpy as np
 import sys
+from plot_2dhists import DrawHists 
 
 outputdir = CONF.outplotpath
-basedir = "DATA-15/"
+basedir = "F_c10-cb-b77/"
 signals = []
 data = []
 
 # mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
-mass_lst = [1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000]
+#mass_lst = [1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000]
+mass_lst = [1000, 1100, 1200, 1400, 1500, 2000]
 
 for mass in mass_lst:
     signals.append( basedir + ("signal_G_hh_c10_M%d/hist-MiniNTuple.root" % mass))
 
-data.append( basedir + "data_test/hist-MiniNTuple.root")
+data.append( basedir + "data_test15/hist-MiniNTuple.root")
+data.append( basedir + "data_test16/hist-MiniNTuple.root")
 
-cuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
+scuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
+dcuts = ["Alltag/h0_tj_pt_dR", "Alltag/h1_tj_pt_dR"]
 
 deltas = np.linspace(0, .5, 21)
 masses = np.linspace(225, 325, 21)
@@ -40,7 +44,7 @@ def main():
     # # Draw the efficiency plot relative to the all normalization
     # name of the canvas
     cname = "roc_plot_scaled_lead.pdf"
-    DrawRoc(cuts[0], cuts[0], cname)
+    DrawRoc(output, [scuts[0]], [dcuts[0]], cname)
     output.Close()
 
 def passcut(pt, dR, m, d):
@@ -66,25 +70,32 @@ def cut_eff(m, d, *hists):
 
     return retvals
 
-def DrawRoc(scut, dcut, canv_name):
-    signalmc = ROOT.TH2F(scut, "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
-    datamc = ROOT.TH2F(dcut, "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
+def DrawRoc(outputroot, scuts, dcuts, canv_name):
+    signalmc = ROOT.TH2F(scuts[0], "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
+    datamc = ROOT.TH2F(dcuts[0], "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
 
     sig_mc_list = []
     # iterate over signal files
     for f in signals:
 	input_mc = ROOT.TFile.Open(CONF.inputpath + f)
+	sig_cut_list = []
         if not input_mc: 
             print CONF.inputpath + f
-        try: 
-            sig_mc_list.append( input_mc.Get(scut).Clone() ) 
-	    # scale all mass points equally
-	    sig_mc_list[-1].Scale(1.0/sig_mc_list[-1].Integral())
-            signalmc.Add( sig_mc_list[-1] ) 
-        except: 
-            print CONF.inputpath + f
-            print scut 
-            raise 
+	for scut in scuts:
+            try: 
+                sig_cut_list.append( input_mc.Get(scut).Clone() ) 
+            except: 
+                print CONF.inputpath + f
+                print scut 
+                raise 
+
+	scalefactor = sum([x.Integral() for x in sig_cut_list])
+	# scale all mass points equally
+	for i in range(len(sig_cut_list)):
+	    sig_cut_list[i].Scale(1/scalefactor)
+            signalmc.Add( sig_cut_list[i] ) 
+
+	sig_mc_list += sig_cut_list
 
 	input_mc.Close()
 
@@ -93,16 +104,23 @@ def DrawRoc(scut, dcut, canv_name):
     data_mc_list = []
     for f in data:
 	input_mc = ROOT.TFile.Open(CONF.inputpath + f)
+	data_cut_list = []
         if not input_mc: 
             print CONF.inputpath + f
-        try: 
-            data_mc_list.append( input_mc.Get(dcut).Clone() ) 
-            datamc.Add( data_mc_list[-1] ) 
-        except: 
-            print CONF.inputpath + f
-            print dcut 
-            raise 
-   
+	for dcut in dcuts:
+            try: 
+                data_cut_list.append( input_mc.Get(scut).Clone() ) 
+            except: 
+                print CONF.inputpath + f
+                print dcut 
+                raise 
+	
+	# don't scale for data
+	for i in range(len(data_cut_list)):
+	    datamc.Add( data_cut_list[-1] )
+
+	data_mc_list += data_cut_list
+
 	input_mc.Close()
 
     # rebin for speed
@@ -177,6 +195,16 @@ def DrawRoc(scut, dcut, canv_name):
 
     canv.SaveAs(outputdir + canv_name)
     canv.Close()
+
+    # decide on the histogram range
+    if "h0" in scuts[0]:
+	pTrange = (450, 2000)
+    elif "h1" in scuts[0]:
+	pTrange = (250, 2000)
+
+    # now draw histograms in signal and data
+    DrawHists(outputroot, scuts, "", signals, "mc_", cutvals=(vmax[0]/2, vmax[1]), Xrange=pTrange)
+    DrawHists(outputroot, dcuts, "", data, "data_", cutvals=(vmax[0]/2, vmax[1]),  Xrange=pTrange) 
 
 def ratioerror(a, b):
     if a > 0:
