@@ -346,11 +346,7 @@ class regionHists:
         self.ThreeTag.Write(outputroot)
         self.FourTag.Write(outputroot)
 
-cut_types = ["ALL-TIGHT", "ALL_LOOSE", "BTAG-TIGHT", "NONE", "HALF"]
-cut_type = ""
 def pass_dRcut(t):
-    if cut_type == "NONE":
-        return True
     # first check if all the jets are valid
     for j_pt in [t.j0_trk0_pt, t.j0_trk1_pt, t.j1_trk0_pt, t.j1_trk1_pt]:
 	if j_pt < 10:
@@ -366,18 +362,14 @@ def pass_dRcut(t):
 	if pt > 1000:
 	    return True
 	else:
-	    return abs(285.0/pt - dR) < 0.125
+	    return abs(270.0/pt - dR) < 0.125
     def c1(pt, dR):
 	if pt > 1000:
 	    return True
 	else:
-	    return abs(265.0/pt - dR) < 0.125
+	    return abs(250.0/pt - dR) < 0.125
     
-    if "BTAG" in cut_type:
-        chk0 = t.j0_nb == 2
-        chk1 = t.j1_nb == 2
-    else:
-        chk0 = chk1 = True
+    chk0 = chk1 = True
 
     return ( (c0(j0pt,j0_deltaR) or not chk0) and (c1(j1pt, j1_deltaR) or not chk1))
 
@@ -415,11 +407,13 @@ def analysis(inputconfig, DEBUG=False):
         #place a cut if necessary
         if ((t.j0_pt) < 450.0):
             continue
+
 	predR = predR + 1
 	# dR cut
 	if not pass_dRcut(t):
 	    continue
 	postdR = postdR + 1
+
         ##place a cut if necessary
         ##if ((t.mHH) < 1000.0):
              ##continue
@@ -501,12 +495,7 @@ def main():
         print("--- %s seconds ---" % (time.time() - start_time))
         return
 
-    # set the cut_type
-    # global cut_type
-    # cut_type = cut_types[int(ops.cut_ind)]
-
     print "OUTPUTDIR: " + outputpath
-    print "CUT: " + cut_type
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = 14
