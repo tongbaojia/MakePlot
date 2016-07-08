@@ -42,6 +42,7 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--dosyst", default=False)
     parser.add_argument("--full", default=True) #4times more time
     return parser.parse_args()
 
@@ -58,17 +59,19 @@ def main():
     #mass_lst = [1000, 2000, 3000]
     mass_lst = CONF.mass_lst
     global plt_lst
-    plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
-        "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
-        "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
-        "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
-        "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
+    plt_lst = []
+    if fullhists is True:
+        plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
+            "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
+            "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
+            "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
+            "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
+    else:
+        plt_lst = ["mHH_l", "mHH_pole"]
         #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
     global plt_m
     plt_m = "_mHH_l"
     #set fast test version, with all the significance output still
-    if not fullhists:
-        plt_lst = ["mHH_l"]
 
     # create output file
     inputpath = CONF.inputpath + inputdir + "/"
@@ -140,15 +143,17 @@ def main():
         yield_tex = open( texoutpath + tag + "_yield.tex", "w")
         WriteYield(masterinfo, yield_tex, tag)
 
-    ##Do overlay signal region predictions
-    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    npool = min(len(inputtasks), mp.cpu_count()-1)
-    pool  = mp.Pool(npool)
-    for result in pool.map(GetSignificance, mass_lst):
-        masterinfo.update(result)
-        #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
-    ##produce the significance plots
-    DumpSignificance(masterinfo)
+    #save time if do systematics
+    if (ops.dosyst is True):
+        ##Do overlay signal region predictions
+        print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+        npool = min(len(inputtasks), mp.cpu_count()-1)
+        pool  = mp.Pool(npool)
+        for result in pool.map(GetSignificance, mass_lst):
+            masterinfo.update(result)
+            #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
+        ##produce the significance plots
+        DumpSignificance(masterinfo)
     
     #finish and quit
     with open(inputpath + "sum%s_%s.txt" % ("" if background_model==0 else str(background_model), inputdir), "w") as f:

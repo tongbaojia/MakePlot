@@ -157,6 +157,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     filepath = config["root"] 
     filename = config["inputdir"] 
     outputFolder= config["outputdir"]
+    blinded = config["blind"]
     #print config, filepath, filename
     #print cut
     gStyle.SetErrorX(0)
@@ -175,19 +176,19 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
     ttbar = ifile.Get("ttbar_est_" + cut )
-    zjet = ifile.Get("zjet_" + cut )
+    #zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
-    RSG1_1500.Scale(25)
+    RSG1_1500.Scale(10)
     RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
-    RSG1_2500.Scale(1000)
+    RSG1_2500.Scale(100)
 
     if not rebin == None:
         data.Rebin(rebin)
         data_est.Rebin(rebin)
         qcd.Rebin(rebin)
         ttbar.Rebin(rebin)
-        zjet.Rebin(rebin)
+        #zjet.Rebin(rebin)
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
@@ -198,7 +199,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         data_est  = data_est.Rebin(len(rebinarry) - 1, data_est.GetName()+"_rebinned", rebinarry)
         qcd       = qcd.Rebin(len(rebinarry) - 1, qcd.GetName()+"_rebinned", rebinarry)
         ttbar     = ttbar.Rebin(len(rebinarry) - 1, ttbar.GetName()+"_rebinned", rebinarry)
-        zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
+        #zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
         RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
@@ -217,6 +218,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
     yMax = data.GetMaximum() * 1.6
+    if ("FourTag" in cut):
+        yMax = data.GetMaximum() * 2.0
     if Logy==1:
         yMax = yMax * 100
     #qcd_fit = ifile.Get("qcd_fit")
@@ -225,7 +228,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
 
     data = makeTotBkg([data])[1]
-    bkg = makeTotBkg([ttbar,qcd,zjet])
+    bkg = makeTotBkg([ttbar,qcd])
+    #bkg = makeTotBkg([ttbar,qcd,zjet])
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
     ratios = makeDataRatio(data, bkg[1])
 
@@ -304,10 +308,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     ttbar.SetFillColor(ROOT.kAzure-9)
     ttbar.Draw("HISTO SAME")
 
-    zjet.SetLineWidth(2)
-    zjet.SetLineColor(ROOT.kBlack)
-    zjet.SetFillColor(ROOT.kGreen+4)
-    zjet.Draw("HISTO SAME")
+    #zjet.SetLineWidth(2)
+    #zjet.SetLineColor(ROOT.kBlack)
+    #zjet.SetFillColor(ROOT.kGreen+4)
+    #zjet.Draw("HISTO SAME")
 
     zeroXerror(data)
     data.SetMarkerStyle(20)
@@ -331,7 +335,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.1, 2.5) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -413,11 +417,11 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.AddEntry(data, "Data", "PE")
     leg.AddEntry(bkg[0], "Multijet", "F")
     leg.AddEntry(ttbar, "t#bar{t}","F")
-    leg.AddEntry(zjet, "Z+jets","F")
+    #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
-    leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 25", "F")
-    leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 1000", "F")
+    leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
+    leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
@@ -442,8 +446,8 @@ def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
     if "TwoTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
+        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
@@ -452,8 +456,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
+        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -462,8 +466,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 100) + range(3000, 4000, 200))
+        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
@@ -511,8 +515,6 @@ def main():
 
     start_time = time.time()
     ops = options()
-    global blinded
-    blinded = False
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
@@ -547,7 +549,13 @@ def main():
             config["inputdir"] = inputdir
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
+            config["blind"] = True
             inputtasks.append(config)
+
+            if "Signal" in region:
+                config["blind"] = False
+                inputtasks.append(config)
+
     #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)

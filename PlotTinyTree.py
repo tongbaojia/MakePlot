@@ -487,8 +487,10 @@ def main():
             #print ori_link, dst_link
             if os.path.islink(dst_link):
                 os.unlink(dst_link)
+            print ori_link, dst_link
             os.symlink(ori_link, dst_link)
 
+    #return
     ##if reweight, reweight everything
     #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)

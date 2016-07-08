@@ -10,11 +10,11 @@ ROOT.gROOT.SetBatch()
 treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 #setup fit initial values; tricky for the fits...
-init_dic = {"l":{"FourTag":{"ttbar":[-30, -6, -10], "qcd":[2, 40, 0]}, \
-"ThreeTag":{"ttbar":[-30, -6, -10], "qcd":[1, 20, -5]},\
+init_dic = {"l":{"FourTag":{"ttbar":[-30, 0, -10], "qcd":[2, 40, 0]}, \
+"ThreeTag":{"ttbar":[-30, 0, -10], "qcd":[1, 20, -5]},\
 "TwoTag_split":{"ttbar":[-30, -6, -10], "qcd":[1, 20, -5]}}, \
-    "pole":{"FourTag":{"ttbar":[33, 160, 10], "qcd":[10, 40, 5]}, \
-"ThreeTag":{"ttbar":[33, 160, 10], "qcd":[8, 40, 0]},\
+    "pole":{"FourTag":{"ttbar":[40, 160, 10], "qcd":[10, 40, 5]}, \
+"ThreeTag":{"ttbar":[40, 160, 10], "qcd":[8, 40, 0]},\
 "TwoTag_split":{"ttbar":[-10, 30, -10], "qcd":[2, 20, -2]}}}
 
 
@@ -29,7 +29,8 @@ def main():
     ops = options()
     global inputdir
     inputdir = ops.inputdir
-    #setup basics
+    #setup basics;
+    #run it, order matters, because the pole file replaces the previous one!
     dump()
     dump("pole")
 
@@ -64,7 +65,7 @@ def dump(finaldis="l"):
         if "FourTag" in cut:
             smoothrange = (1100, 3000)
         #cut = c + "_Signal_mHH_pole"
-        savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now
+        savehist(ifile, "data_" + cut,  "data_hh")#blind data now
         tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 3000), initpar=init_dic[finaldis][c]["ttbar"])
@@ -87,11 +88,12 @@ def dump(finaldis="l"):
 
 def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3300), smoothfunc="Dijet", initpar=[], Rebin=True):
     hist  = inputroot.Get(inname).Clone()
+    ClearNegBin(hist)
     #print inname, smoothrange, initpar
     if Rebin:
-        hist = do_variable_rebinning(hist, array('d', range(0, 3000, 100) + range(3000, 4000, 200)))
+        hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
     if dosmooth:
-        print inname, smoothrange, initpar ##for debug
+        #print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
             makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
         hist = smoothfit.MakeSmoothHistoWithError(hist, sm)
@@ -240,6 +242,13 @@ def do_variable_rebinning(hist,bins, scale=1):
         newhist.SetBinContent(newb,val)
         newhist.SetBinError(newb,err)
     return newhist
+
+def ClearNegBin(hist):
+    for ibin in range(0, hist.GetNbinsX()+1):
+        if hist.GetBinContent(ibin) < 0:
+            hist.SetBinContent(ibin, 0)
+            hist.SetBinError(ibin, 0)
+    return
 
 if __name__ == '__main__': 
     main()
