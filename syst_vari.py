@@ -1,6 +1,9 @@
 import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
-import simplejson as json
+try:
+    import simplejson as json                 
+except ImportError:
+    import json 
 import helpers
 import config as CONF
 #from ROOT import *

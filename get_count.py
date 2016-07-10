@@ -61,12 +61,14 @@ def main():
     global plt_lst
     plt_lst = []
     if fullhists is True:
+        print "here true"
         plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
             "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
             "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
             "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
     else:
+        print "here false"
         plt_lst = ["mHH_l", "mHH_pole"]
         #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
     global plt_m
@@ -122,9 +124,9 @@ def main():
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=background_model)
     print "End of Fit!"
-    masterinfo.update(fitestimation("qcd_est"))
+    masterinfo.update(fitestimation("qcd_est", masterinfo))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
-    masterinfo.update(fitestimation("ttbar_est"))
+    masterinfo.update(fitestimation("ttbar_est", masterinfo))
     #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo.update(GetdataEst(masterinfo, "data_est", dosyst=True))
@@ -144,7 +146,7 @@ def main():
         WriteYield(masterinfo, yield_tex, tag)
 
     #save time if do systematics
-    if (ops.dosyst is True):
+    if (ops.dosyst is False):
         ##Do overlay signal region predictions
         print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
         npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -184,7 +186,7 @@ def GetdataEst(inputdic, histname="", dosyst=False):
                 htemp_qcd   = outroot.Get(optionalqcd + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, 1)
-                htemp_qcd.Add(htemp_zjet, 1)
+                htemp_qcd.Add(htemp_zjet, 1) #disable adding zjets
                 htemp_qcd.Write()
                 del(htemp_qcd)
                 del(htemp_zjet)
@@ -204,12 +206,11 @@ def GetdataEst(inputdic, histname="", dosyst=False):
                     
                     cutcounts[region + "_syst_up"]   = cutcounts[region + "_syst_muqcd_fit_up"]
                     cutcounts[region + "_syst_down"] = cutcounts[region + "_syst_muqcd_fit_down"]
-
         data_est[cut] = cutcounts
     return {histname:data_est}
 
 ### returns the estimation dictionary;
-def fitestimation(histname=""):
+def fitestimation(histname="", inputdic={}):
     #now do the real work
     print "***** estimation *****"
     #do a dump fill first
@@ -254,6 +255,9 @@ def fitestimation(histname=""):
                     corr_temp = fitresult["corr_m"][word_dict[cut]]
                     Ftransfer_corr = corr_temp[word_dict[cut] + len(corr_temp)/2]
                     #print "cor is, ", fitresult["corr_m"], Ftransfer_corr, cut, histname, word_dict[cut]
+                else:
+                    Ftransfer = inputdic["qcd"][cut]["Sideband"]/inputdic["qcd"][ref_cut]["Sideband"]
+                    Ftransfer_err = helpers.ratioerror(inputdic["qcd"][cut]["Sideband"], inputdic["qcd"][ref_cut]["Sideband"])
             #print histname, Ftransfer
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
@@ -455,7 +459,7 @@ def WriteYield(inputdic, outFile, cut="Signal"):
             #     outstr += "- " + str(helpers.round_sig(inputdic[file][cut][region+"_syst_down"], 2))
             #     outstr += "}$ "
             # else:
-            outstr += " $\\pm$ sys"
+            #     outstr += " $\\pm$ sys"
 
 
         outstr+="\\\\"

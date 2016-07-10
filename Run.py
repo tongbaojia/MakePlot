@@ -96,6 +96,7 @@ def main():
     pool.map(syst_pipeline, inputtasks)
     #for i in inputtasks:
         #syst_pipeline(i)
+    #syst_pipeline(inputtasks[0])
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def syst_pipeline(config):
@@ -114,7 +115,7 @@ def syst_pipeline(config):
 
     #start running programs
     #os.system("python get_count.py --dosyst True --full False " + " --inputdir " + t)
-    #os.system("python dump_hists.py " + " --inputdir " + t)
+    os.system("python dump_hists.py " + " --inputdir " + t)
 
 
 if __name__ == '__main__': 

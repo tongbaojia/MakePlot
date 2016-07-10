@@ -10,12 +10,12 @@ ROOT.gROOT.SetBatch()
 treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 #setup fit initial values; tricky for the fits...
-init_dic = {"l":{"FourTag":{"ttbar":[-30, 0, -10], "qcd":[2, 40, 0]}, \
-"ThreeTag":{"ttbar":[-30, 0, -10], "qcd":[1, 20, -5]},\
-"TwoTag_split":{"ttbar":[-30, -6, -10], "qcd":[1, 20, -5]}}, \
-    "pole":{"FourTag":{"ttbar":[40, 160, 10], "qcd":[10, 40, 5]}, \
+init_dic = {"l":{"FourTag":{"ttbar":[-30, -6, -10], "qcd":[2, 40, 0]}, \
+"ThreeTag":{"ttbar":[-30, -6, -10], "qcd":[1, 40, -5]},\
+"TwoTag_split":{"ttbar":[-30, -6, -10], "qcd":[1, 30, -5]}}, \
+    "pole":{"FourTag":{"ttbar":[40, 160, 10], "qcd":[10, 50, 0]}, \
 "ThreeTag":{"ttbar":[40, 160, 10], "qcd":[8, 40, 0]},\
-"TwoTag_split":{"ttbar":[-10, 30, -10], "qcd":[2, 20, -2]}}}
+"TwoTag_split":{"ttbar":[-10, 30, -10], "qcd":[7, 40, 0]}}}
 
 
 #define functions
@@ -31,7 +31,7 @@ def main():
     inputdir = ops.inputdir
     #setup basics;
     #run it, order matters, because the pole file replaces the previous one!
-    dump()
+    #dump("l")
     dump("pole")
 
 def dump(finaldis="l"):
@@ -61,7 +61,7 @@ def dump(finaldis="l"):
         #get the mass plot
         tempdic = {}
         cut = c + "_Signal_mHH" + pltname
-        smoothrange = (1200, 3300)
+        smoothrange = (1100, 3000)
         if "FourTag" in cut:
             smoothrange = (1100, 3000)
         #cut = c + "_Signal_mHH_pole"
@@ -74,9 +74,7 @@ def dump(finaldis="l"):
         for mass in mass_lst:
             savehist(ifile, "RSG1_" + str(mass) + "_" + cut, "signal_RSG_c10_hh_m" + str(mass))
         outfile.Close()
-
         makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c), pltoutputpath + c + pltname + "_smoothed.pdf")
-
         masterdic[c] = tempdic
 
     #print masterdic
@@ -86,17 +84,29 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1200, 3300), smoothfunc="Dijet", initpar=[], Rebin=True):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3000), smoothfunc="Dijet", initpar=[], Rebin=True):
     hist  = inputroot.Get(inname).Clone()
+    if ("totalbkg" in outname):
+        #hist_zjet = inputroot.Get(inname.replace("data_est", "zjet")).Clone()
+        #hist.Add(hist_zjet, -1)
+        hist_qcd = inputroot.Get(inname.replace("data", "qcd")).Clone()
+        hist_ttbar = inputroot.Get(inname.replace("data", "ttbar")).Clone()
+        hist_qcd.Add(hist_ttbar, 1)
+        hist = hist_qcd.Clone(inname)
+    #always clear the negative bins before smoothing!
     ClearNegBin(hist)
+    #rebin is also done here, will be send to limit input
     #print inname, smoothrange, initpar
     if Rebin:
         hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
+
+    #here do smoothing
     if dosmooth:
         #print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
             makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
-        hist = smoothfit.MakeSmoothHistoWithError(hist, sm)
+        #hist = smoothfit.MakeSmoothHistoWithError(hist, sm)
+        hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"])
     hist.SetName(outname)
     hist.SetTitle(outname)
     #hist.SetBins(60, 200, 3200)

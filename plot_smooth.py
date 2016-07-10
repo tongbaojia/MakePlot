@@ -514,8 +514,6 @@ def main():
         outputFolder = inputpath + inputroot + "Plot/Smooth"
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
-
-
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + ".root"
             config = {}
