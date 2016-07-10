@@ -23,6 +23,7 @@ def options():
     return parser.parse_args()
 
 def main():
+    global ops
     ops = options()
     #setup basics;
     global bsyst
@@ -129,7 +130,7 @@ def main():
     ##run it, order matters, because the pole file replaces the previous one!
     # masterdic = {}
     # masterdic.update(merge_method_sys())
-    # masterdic.update(merge_mc_sys(inputtasks[0]))
+    # ##masterdic.update(merge_mc_sys(inputtasks[0]))
     # for task in inputtasks:
     #     masterdic.update(merge_mc_sys(task))
 
@@ -147,6 +148,7 @@ def main():
     summarydic = {}
     for c in cut_lst:
        summarydic[c] = GetTable(masterdic, c)
+       plot_RSG_syst(masterdic, c)
 
     
     #Generate Signal Region table
@@ -392,6 +394,81 @@ def GetSignalTable(masterdic, summarydic):
         print line
         outFile.write(line+" \n")
     outFile.close()
+
+def plot_RSG_syst(masterdic, cut):
+    ### the first argument is the input directory
+    ### the second argument is the output prefix name
+    ### the third argument is relative to what normalization: 0 for total number of events
+    ### 1 for signal mass region
+    canv = ROOT.TCanvas(cut  + "_" +  "RSG" + "_" + "syst", "Sytematics", 800, 800)
+    xleg, yleg = 0.52, 0.7
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
+    # setup basic plot parameters
+    # load input MC file
+    mass_lst = [1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    systag_lst = ["JER", "JMR", "Rtrk", "EFF", "Stat"]
+    systag_dic = {"JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "EFF":"b-tag SF", "Stat":"Stats"}
+    eff_lst = []
+    graph_lst = []
+    maxbincontent = 100.0
+    minbincontent = -0.001
+    lowmass  = 950
+    highmass = 3150
+
+    for i, syst in enumerate(systag_lst):
+        eff_lst.append( ROOT.TH1F(syst, "%s; Mass, GeV; Systematic Percentage" %syst, int((highmass-lowmass)/100), lowmass, highmass) )
+        for mass in mass_lst:
+            if syst is "Stat":
+                for key2 in masterdic[cut]:
+                    if "RSG1_" + str(mass) in key2:
+                        eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), masterdic[cut][key2]["int_err"]/masterdic[cut][key2]["int"] * 100)
+                        eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), 0)
+            else:
+                temp_col_dic = find_syst(masterdic, cut, syst, "RSG1_" + str(mass))
+                syst_eff = add_syst(temp_col_dic) #this is a tuple!
+                eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), syst_eff[0] * 100)
+                eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), 0)
+            #print syst_eff[0]
+            maxbincontent = max(maxbincontent, syst_eff[0])
+        #start the canvas
+        canv.cd()
+        #convert it to a TGraph
+        graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
+        graph_lst[i].SetLineColor(CONF.clr_lst[i])
+        graph_lst[i].SetMarkerStyle(20 + i)
+        graph_lst[i].SetMarkerColor(CONF.clr_lst[i])
+        graph_lst[i].SetMarkerSize(1)
+        graph_lst[i].SetMaximum(maxbincontent * 1.5)
+        graph_lst[i].SetMinimum(minbincontent)
+        legend.AddEntry(graph_lst[i], systag_dic[syst].replace("_", " "), "apl")
+        if syst==systag_lst[0]: 
+            graph_lst[i].Draw("APC")
+            #gr.Draw("same L hist")
+        else: 
+            graph_lst[i].Draw("PC")
+            #gr.Draw("same L hist")
+
+    legend.SetBorderSize(0)
+    legend.SetMargin(0.3)
+    legend.SetTextSize(0.04)
+    legend.Draw()
+    # draw reference lines
+    # draw watermarks
+    xatlas, yatlas = 0.35, 0.87
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
+    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
+    watermarks = [atlas, hh4b, lumi]
+    for wm in watermarks:
+        wm.SetTextAlign(22)
+        wm.SetTextSize(0.04)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
+    # finish up
+    helpers.checkpath(CONF.inputpath + ops.inputdir + "/" + "Plot/Syst/")
+    canv.SaveAs(CONF.inputpath + ops.inputdir + "/" + "Plot/Syst/"  +  canv.GetName() + ".pdf")
+    canv.Close()
 
 if __name__ == '__main__': 
     main()

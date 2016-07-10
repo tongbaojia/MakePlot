@@ -15,7 +15,7 @@ ROOT.gROOT.SetBatch(True)
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="TEST_c10-cb")
+    parser.add_argument("--inputdir", default="f_fin-cb_j0pT-leadtrk-fin_19")
     return parser.parse_args()
 
 #this script is used to plot different mu qcd fit parameters as a funciton of the SB size
@@ -49,6 +49,11 @@ def main():
     for tag in tag_lst:
         Dump_Compare(tag=tag, title="CR_Varations", region="Control")
         Dump_BKGCompare(tag=tag, title="SR_Varations", region="Signal")
+        #for SR region shape variations
+        for inputname in syst_lst:
+            if inputname is not "":
+                #DrawSRcomparison(inputname=inputname, tag=tag, keyword="totalbkg_hh")
+                DrawSRcomparison(inputname=inputname, tag=tag, keyword="qcd_hh")
 
     #for ZZ unblinding
     Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal")
@@ -151,7 +156,6 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
         print line
         outFile.write(line+" \n")
 
-
 def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal"):
 
     texoutpath = inputpath + inputdir + "/" + "Plot/Tables/"
@@ -193,6 +197,117 @@ def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal"):
     for line in tableList:
         print line
         outFile.write(line+" \n")
+
+def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
+    #print inputdir
+    histdir   = inputdir + "_" + inputname
+    inputroot = ROOT.TFile.Open(CONF.inputpath + "/" + histdir +  "/Limitinput/" + histdir + "_limit_" + tag  + ".root")
+    refroot   = ROOT.TFile.Open(CONF.inputpath + "/" + "b77"  + "/Limitinput/" + "b77" + "_limit_" + tag  + ".root")
+    
+    tempname = inputname + "_" + "compare" + "_" + tag + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
+    canv = ROOT.TCanvas(tempname, tempname, 800, 800)
+    canv.SetLogy(Logy)
+    xleg, yleg = 0.5, 0.7
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.15, yleg+0.2)
+    counter = 0
+    maxbincontent = (0.2 if Logy ==0 else 10)
+
+
+    temp_hist = inputroot.Get(keyword)
+    #print temp_hist.GetName()
+    temp_hist.SetLineColor(2)
+    temp_hist.SetMarkerStyle(20)
+    temp_hist.SetMarkerColor(2)
+    temp_hist.SetMarkerSize(1)
+
+    ref_hist = refroot.Get(keyword)
+    #print temp_hist.GetName()
+    ref_hist.SetLineColor(1)
+    ref_hist.SetMarkerStyle(21)
+    ref_hist.SetMarkerColor(1)
+    ref_hist.SetMarkerSize(1)
+
+    #scale to correct normalization diff
+    #temp_hist.Scale(ref_hist.Integral()/temp_hist.Integral())
+
+    #continue
+    maxbincontent = max(maxbincontent, ref_hist.GetMaximum(), temp_hist.GetMaximum())
+    temp_hist.SetMaximum(maxbincontent * 1.5)
+    ref_hist.SetMaximum(maxbincontent * 1.5)
+    legend.AddEntry(temp_hist, inputname.replace("_", " "), "apl")
+    legend.AddEntry(ref_hist, "ref", "apl")
+
+
+    # top pad
+    pad0 = ROOT.TPad("pad0", "pad0", 0.0, 0.31, 1., 1.)
+    pad0.SetRightMargin(0.05)
+    pad0.SetBottomMargin(0.0001)
+    pad0.SetFrameFillColor(0)
+    pad0.SetFrameBorderMode(0)
+    pad0.SetFrameFillColor(0)
+    pad0.SetBorderMode(0)
+    pad0.SetBorderSize(0)
+
+    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.29)
+    pad1.SetRightMargin(0.05)
+    pad1.SetBottomMargin(0.38)
+    pad1.SetTopMargin(0.0001)
+    pad1.SetFrameFillColor(0)
+    pad1.SetFillStyle(0) # transparent
+    pad1.SetFrameBorderMode(0)
+    pad1.SetFrameFillColor(0)
+    pad1.SetBorderMode(0)
+    pad1.SetBorderSize(0)
+
+    canv.cd()
+    pad0.Draw()
+    pad0.cd()
+
+    temp_hist.Draw("")
+    ref_hist.Draw("same")
+
+    legend.SetBorderSize(0)
+    legend.SetMargin(0.3)
+    legend.SetTextSize(0.04)
+    legend.Draw()
+
+    # draw watermarks
+    xatlas, yatlas = 0.35, 0.87
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, tag.replace("_", " "))
+    watermarks = [atlas, hh4b]
+    for wm in watermarks:
+        wm.SetTextAlign(22)
+        wm.SetTextSize(0.04)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
+
+
+    canv.cd()
+    pad1.Draw()
+    pad1.cd()
+
+    #ratio of the two plots
+    ratiohist = temp_hist.Clone()
+    ratiohist.Divide(ref_hist)
+    ratiohist.GetYaxis().SetRangeUser(0.1, 3) #set range for ratio plot
+    ratiohist.GetYaxis().SetTitle("Varaition/Nominal") #set range for ratio plot
+    ratiohist.Draw("")
+
+    xMin = ref_hist.GetXaxis().GetBinLowEdge(1)
+    xMax = ref_hist.GetXaxis().GetBinUpEdge(ref_hist.GetXaxis().GetNbins())
+    line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
+    line.SetLineStyle(1)
+    line.Draw()
+    #canv.SetLogy(1)
+    canv.SaveAs(CONF.inputpath + "/" + "b77"  + "/Plot/Syst/" + canv.GetName() + ".pdf")
+    pad0.Close()
+    pad1.Close()
+    canv.Close()
+    inputroot.Close()
+    refroot.Close()
+
 #three funtions for generating tables!!!
 def add_entry(value, state=None, percent=False):
     temstr = ""

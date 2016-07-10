@@ -18,14 +18,14 @@ for ch in ${channels[@]}; do
 	# cd ../../..
 	#python get_count.py --inputdir $ch --full False
 	#python test.py --inputdir $ch --full True
-	python get_count.py --inputdir $"f_fin-cb_j0pT-leadtrk-fin_19_"$ch --full True
+	# python get_count.py --inputdir $ch --full True
 	# python plot.py --inputdir $ch
 	# python reweight.py --inputdir $ch
 	# python plot_trigeff.py --inputdir $ch
 	# python plot_sigeff.py --inputdir $ch
 	# python plot_cutflow.py --inputdir $ch
 	# python plot_prediction.py --inputdir $ch
-	# python dump_hists.py --inputdir $ch
+	python dump_hists.py --inputdir $"f_fin-cb_j0pT-leadtrk-fin_19_"$ch
 	# python plot_random.py --inputdir $ch
 	# python plot_smooth.py --inputdir $ch
 done

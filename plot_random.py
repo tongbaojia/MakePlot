@@ -285,7 +285,6 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     canv.Close()
     inputroot.Close()
 
-
 def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)

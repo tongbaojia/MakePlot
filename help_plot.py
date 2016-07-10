@@ -795,7 +795,6 @@ def DrawWords(*words):
         w.SetTextFont(42)
         w.SetNDC()
         w.Draw()
-
     return words
 
 #needs further fix
