@@ -9,6 +9,9 @@ from Xhh4bUtils.BkgFit.BackgroundFit_Ultimate import BackgroundFit
 import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 #for parallel processing!
 import multiprocessing as mp
+#import plotting style
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.SetAtlasStyle()
 #end of import for now
 
 ROOT.gROOT.SetBatch(True)
@@ -61,14 +64,14 @@ def main():
     global plt_lst
     plt_lst = []
     if fullhists is True:
-        print "here true"
+        print "full histos: true"
         plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
             "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
             "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
             "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
     else:
-        print "here false"
+        print "full histos: false"
         plt_lst = ["mHH_l", "mHH_pole"]
         #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
     global plt_m

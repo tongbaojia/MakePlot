@@ -13,9 +13,9 @@ cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 init_dic = {"l":{"FourTag":{"ttbar":[-30, -6, -10], "qcd":[2, 40, 0]}, \
 "ThreeTag":{"ttbar":[-30, -6, -10], "qcd":[1, 40, -5]},\
 "TwoTag_split":{"ttbar":[-30, -6, -10], "qcd":[1, 30, -5]}}, \
-    "pole":{"FourTag":{"ttbar":[40, 160, 10], "qcd":[10, 50, 0]}, \
-"ThreeTag":{"ttbar":[40, 160, 10], "qcd":[8, 40, 0]},\
-"TwoTag_split":{"ttbar":[-10, 30, -10], "qcd":[7, 40, 0]}}}
+    "pole":{"FourTag":{"ttbar":[-50, -50, -20], "qcd":[10, 50, 0]}, \
+"ThreeTag":{"ttbar":[-50, -50, -20], "qcd":[8, 40, 0]},\
+"TwoTag_split":{"ttbar":[-14, 10, -10], "qcd":[-1, 20, -3]}}}
 
 
 #define functions
@@ -31,7 +31,7 @@ def main():
     inputdir = ops.inputdir
     #setup basics;
     #run it, order matters, because the pole file replaces the previous one!
-    #dump("l")
+    dump("l")
     dump("pole")
 
 def dump(finaldis="l"):
@@ -57,18 +57,17 @@ def dump(finaldis="l"):
     for c in cut_lst:
         print "start ", c, " file conversion "
         global outfile
-        outfile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c), "RECREATE")
+        outfile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("_pole" if "pole" in finaldis else "")), "RECREATE")
         #get the mass plot
         tempdic = {}
         cut = c + "_Signal_mHH" + pltname
         smoothrange = (1100, 3000)
-        if "FourTag" in cut:
-            smoothrange = (1100, 3000)
-        #cut = c + "_Signal_mHH_pole"
+        if "pole" in finaldis:
+            smoothrange = (1200, 3000)
         savehist(ifile, "data_" + cut,  "data_hh")#blind data now
         tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
-        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = (1100, 3000), initpar=init_dic[finaldis][c]["ttbar"])
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["ttbar"])
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
@@ -115,7 +114,6 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
 
     if dosmooth:
         return sm["res"]
-
 ### 
 def WriteFitResult(inputdic, outFile, npar=3):
     ### 

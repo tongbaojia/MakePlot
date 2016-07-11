@@ -157,7 +157,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     filepath = config["root"] 
     filename = config["inputdir"] 
     outputFolder= config["outputdir"]
-    blinded = config["blind"]
+    blinded  = config["blind"]
+    #print blinded, " blinded!", config["blind"]
     #print config, filepath, filename
     #print cut
     gStyle.SetErrorX(0)
@@ -486,8 +487,6 @@ def main():
 
     start_time = time.time()
     ops = options()
-    global blinded
-    blinded = False
     #setup basics
     inputdir = ops.inputdir
     inputroot = ops.inputroot
@@ -521,11 +520,17 @@ def main():
             config["inputdir"] = inputdir
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
-            config["blind"] = True
+            config["blind"] = False
             inputtasks.append(config)
-
+        for j, cut in enumerate(cut_lst):
+            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + ".root"
+            config = {}
+            config["root"] = rootinputpath
+            config["inputdir"] = inputdir
+            config["outputdir"] = outputFolder
+            config["cut"] = cut + "_" + region + "_"
             if "Signal" in region:
-                config["blind"] = False
+                config["blind"] = True
                 inputtasks.append(config)
 
     for i in inputtasks:

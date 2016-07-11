@@ -125,25 +125,27 @@ def main():
     #create output root files
     global outfiles
     outfiles = {}
+    global finaldis
+    finaldis = "l"
     for c in cut_lst:
-        outfiles[c]  = ROOT.TFile("%s/b77_limit_%s_fullsys.root" % (CONF.inputpath  + "b77/Limitinput", c), "Recreate")
+        outfiles[c]  = ROOT.TFile("%s/b77_limit_%s_fullsys%s.root" % (CONF.inputpath  + "b77/Limitinput", c, "" if "pole" not in finaldis else "_pole"), "Recreate")
     ##run it, order matters, because the pole file replaces the previous one!
-    # masterdic = {}
-    # masterdic.update(merge_method_sys())
-    # ##masterdic.update(merge_mc_sys(inputtasks[0]))
-    # for task in inputtasks:
-    #     masterdic.update(merge_mc_sys(task))
+    masterdic = {}
+    masterdic.update(merge_method_sys())
+    ##masterdic.update(merge_mc_sys(inputtasks[0]))
+    for task in inputtasks:
+        masterdic.update(merge_mc_sys(task))
 
-    # with open(CONF.inputpath + "b77/sum_syst.txt", "w") as f:
-    #      json.dump(masterdic, f)
+    with open(CONF.inputpath + "b77/sum_syst" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
+         json.dump(masterdic, f)
 
-    # keylist = masterdic.keys()
-    # keylist.sort()
-    # for key in keylist:
-    #     print key, masterdic[key]
+    keylist = masterdic.keys()
+    keylist.sort()
+    for key in keylist:
+        print key, masterdic[key]
 
     #Generate systemtics table
-    f1 = open(CONF.inputpath + "b77/sum_syst.txt", 'r')
+    f1 = open(CONF.inputpath + "b77/sum_syst"+ ("" if "pole" not in finaldis else "_pole") + ".txt", 'r')
     masterdic = json.load(f1)
     summarydic = {}
     for c in cut_lst:
@@ -163,7 +165,6 @@ def merge_mc_sys(config):
     inputdir = config["inputdir"]
     print inputdir,
 
-    pltname = "_" + "pole"#here hard coded for now
     inputpath = CONF.inputpath + inputdir 
     outputpath = inputpath + "/Limitinput/"
     global pltoutputpath
@@ -187,15 +188,10 @@ def merge_mc_sys(config):
 
     for c in cut_lst:
         global infile
-        infile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c), "READ")
+        infile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("" if "pole" not in finaldis else "_pole")), "READ")
         #print c
         #get the mass plot
         tempdic = {}
-        cut = c + "_Signal_mHH" + pltname
-        smoothrange = (1200, 3300)
-        if "FourTag" in cut:
-            smoothrange = (1100, 3000)
-        #cut = c + "_Signal_mHH_pole"
         #find the correct outputfile
         outfiles[c].cd()
         histdic = {"data":"data_hh", "totalbkg_est":"totalbkg_hh", "qcd_est":"qcd_hh", "ttbar_est":"ttbar_hh", "zjet_est":"zjet_hh"}

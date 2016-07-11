@@ -3,11 +3,12 @@
 #channels=(SB48 SB53 SB58 SB63 SB68 SB73 SB78 SB88 SB98 SB108 SB128 SB168)
 #channels=(b77_c00-15 b77_c00-16 b77_c10-15 b77_c10-16 ref)
 #channels=(syst_b_0)
-channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ)
-#channels=(ref)
+#channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ)
+channels=(b77)
 #for gather tables and histograms
 
 for ch in ${channels[@]}; do
+	#ch=$"f_fin-cb_j0pT-leadtrk-fin_19_"$ch
 	# cd Output
 	# if [ ! -d $ch$"/data_est" ]; then
 	# 	mkdir $ch$"/data_est"
@@ -18,16 +19,16 @@ for ch in ${channels[@]}; do
 	# cd ../../..
 	#python get_count.py --inputdir $ch --full False
 	#python test.py --inputdir $ch --full True
-	# python get_count.py --inputdir $ch --full True
-	# python plot.py --inputdir $ch
-	# python reweight.py --inputdir $ch
-	# python plot_trigeff.py --inputdir $ch
-	# python plot_sigeff.py --inputdir $ch
-	# python plot_cutflow.py --inputdir $ch
-	# python plot_prediction.py --inputdir $ch
-	python dump_hists.py --inputdir $"f_fin-cb_j0pT-leadtrk-fin_19_"$ch
-	# python plot_random.py --inputdir $ch
-	# python plot_smooth.py --inputdir $ch
+	#python get_count.py --inputdir $ch --full True
+	python plot.py --inputdir $ch
+	python reweight.py --inputdir $ch
+	python plot_trigeff.py --inputdir $ch
+	python plot_sigeff.py --inputdir $ch
+	python plot_cutflow.py --inputdir $ch
+	python plot_prediction.py --inputdir $ch
+	python dump_hists.py --inputdir $ch
+	python plot_random.py --inputdir $ch
+	python plot_smooth.py --inputdir $ch
 done
 
 
