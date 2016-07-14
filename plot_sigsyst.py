@@ -26,6 +26,7 @@ def options():
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--inputroot", default="sum")
+    parser.add_argument("--chosenhist", default="l")
     return parser.parse_args()
 
 # zero the x-errors
@@ -576,7 +577,7 @@ def main():
 
     global finaldis
     #finaldis = "pole"
-    finaldis = "l"
+    finaldis = ops.chosenhist
 
     # plot in the control region #
     # figuresFolder = inputpath + inputroot + "Plot/" + "Sideband"

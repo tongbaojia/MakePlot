@@ -23,6 +23,7 @@ def main():
 
     #total 50 systematics
     bsyst = [
+        "",
         "FT_EFF_Eigen_B_0__1down",
         "FT_EFF_Eigen_B_0__1up",
         "FT_EFF_Eigen_B_1__1down",
@@ -77,6 +78,8 @@ def main():
 
     print len(bsyst)
     inputtasks = []
+    for i in range(1, len(bsyst)):
+        inputtasks.append({"inputdir":"syst_b_" + str(i)})
     inputtasks.append({"inputdir":"syst_JET_JER"})
     inputtasks.append({"inputdir":"syst_JET_JMR"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Baseline_All__1down"})
@@ -87,8 +90,6 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    for i in range(0, 50):
-        inputtasks.append({"inputdir":"syst_b_" + str(i)})
 
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -96,7 +97,7 @@ def main():
     pool.map(syst_pipeline, inputtasks)
     #for i in inputtasks:
         #syst_pipeline(i)
-    #syst_pipeline(inputtasks[0])
+    #syst_pipeline(inputtasks[49])
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def syst_pipeline(config):

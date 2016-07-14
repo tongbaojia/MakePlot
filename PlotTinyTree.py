@@ -79,8 +79,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 1.5 #this means the maximum correction is this for each reweighting
-    minscale = 0.5 #this means the minimum correction is this for each reweighting
+    maxscale = 1.5 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.5 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -91,7 +91,7 @@ def calc_reweight(dic, event):
         #start calculated reweight factor
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
-        #this protects each individual weight; tight this up a bit
+        #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
         if tempweight < 0.8:
             tempweight = 0.8
         elif tempweight > 1.2:
@@ -483,6 +483,7 @@ def main():
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
             #this is a really bad practice and temp fix now! need to watch this very carfully...
             ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             #print ori_link, dst_link
             if os.path.islink(dst_link):
@@ -490,7 +491,7 @@ def main():
             print ori_link, dst_link
             os.symlink(ori_link, dst_link)
 
-    return
+    #return
     ##if reweight, reweight everything
     #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)

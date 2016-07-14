@@ -20,6 +20,7 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--chosenhist", default="l")
     return parser.parse_args()
 
 def main():
@@ -28,6 +29,7 @@ def main():
     #setup basics;
     global bsyst
     bsyst = [
+        "",
         "FT_EFF_Eigen_B_0__1down",
         "FT_EFF_Eigen_B_0__1up",
         "FT_EFF_Eigen_B_1__1down",
@@ -79,6 +81,7 @@ def main():
         "FT_EFF_extrapolation_from_charm__1down",
         "FT_EFF_extrapolation_from_charm__1up",
     ]
+    print len(bsyst)
     global method_qcd_syst
     method_qcd_syst = [
     "smoothQ0up", 
@@ -106,7 +109,6 @@ def main():
     "QCDNormCRup",
     "QCDNormCRdown",
     ]
-
     inputtasks = []
     inputtasks.append({"inputdir":"b77"})
     inputtasks.append({"inputdir":"syst_JET_JER"})
@@ -119,14 +121,14 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    for i in range(0, 50):
+    for i in range(1, len(bsyst)):
         inputtasks.append({"inputdir":"syst_b_" + str(i)})
 
     #create output root files
     global outfiles
     outfiles = {}
     global finaldis
-    finaldis = "l"
+    finaldis = ops.chosenhist
     for c in cut_lst:
         outfiles[c]  = ROOT.TFile("%s/b77_limit_%s_fullsys%s.root" % (CONF.inputpath  + "b77/Limitinput", c, "" if "pole" not in finaldis else "_pole"), "Recreate")
     ##run it, order matters, because the pole file replaces the previous one!
@@ -151,6 +153,7 @@ def main():
     for c in cut_lst:
        summarydic[c] = GetTable(masterdic, c)
        plot_RSG_syst(masterdic, c)
+       plot_RSG_syst_detail(masterdic, c)
 
     
     #Generate Signal Region table
@@ -209,7 +212,7 @@ def merge_mc_sys(config):
 def merge_method_sys():
     #find Michael's file
     infodic = {}
-    inputpath = CONF.toppath + "/MakePlot/Xhh4bUtils/temp"
+    inputpath = CONF.toppath + "/MakePlot/Xhh4bUtils/mHH_" + finaldis
     for c in cut_lst:
         infile  = ROOT.TFile("%s/outfile_boosted_%s.root" % (inputpath, c), "READ")
 
@@ -412,7 +415,7 @@ def plot_RSG_syst(masterdic, cut):
     highmass = 3150
 
     for i, syst in enumerate(systag_lst):
-        eff_lst.append( ROOT.TH1F(syst, "%s; Mass, GeV; Systematic Percentage" %syst, int((highmass-lowmass)/100), lowmass, highmass) )
+        eff_lst.append( ROOT.TH1F(syst, "%s; Mass, GeV; Systematic Percentage Diff" %syst, int((highmass-lowmass)/100), lowmass, highmass) )
         for mass in mass_lst:
             if syst is "Stat":
                 for key2 in masterdic[cut]:
@@ -443,6 +446,87 @@ def plot_RSG_syst(masterdic, cut):
         else: 
             graph_lst[i].Draw("PC")
             #gr.Draw("same L hist")
+
+    legend.SetBorderSize(0)
+    legend.SetMargin(0.3)
+    legend.SetTextSize(0.04)
+    legend.Draw()
+    # draw reference lines
+    # draw watermarks
+    xatlas, yatlas = 0.35, 0.87
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
+    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
+    watermarks = [atlas, hh4b, lumi]
+    for wm in watermarks:
+        wm.SetTextAlign(22)
+        wm.SetTextSize(0.04)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
+    # finish up
+    helpers.checkpath(CONF.inputpath + ops.inputdir + "/" + "Plot/Syst/")
+    canv.SaveAs(CONF.inputpath + ops.inputdir + "/" + "Plot/Syst/"  +  canv.GetName() + ".pdf")
+    canv.Close()
+
+def plot_RSG_syst_detail(masterdic, cut):
+    ### the first argument is the input directory
+    ### the second argument is the output prefix name
+    ### the third argument is relative to what normalization: 0 for total number of events
+    ### 1 for signal mass region
+    canv = ROOT.TCanvas(cut  + "_" +  "RSG" + "_" + "syst_detail", "Sytematics", 800, 800)
+    xleg, yleg = 0.52, 0.7
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
+    # setup basic plot parameters
+    # load input MC file
+    mass_lst = [1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    eff_lst = []
+    graph_lst = []
+    maxbincontent = 100.0
+    minbincontent = -0.001
+    lowmass  = 950
+    highmass = 3150
+
+    #create bsyst list
+    bsyst_lst = []
+    for i in bsyst:
+        if "up" in i:
+            bsyst_lst.append(i.replace("up", ""))
+
+    #now loop
+    draw_counter = 0
+    for i, syst in enumerate(bsyst_lst):
+        eff_lst.append( ROOT.TH1F(syst, "%s; Mass, GeV; Systematic Percentage Diff" %syst, int((highmass-lowmass)/100), lowmass, highmass) )
+        maxsyst = 0.0
+        for mass in mass_lst:
+            temp_col_dic = find_syst(masterdic, cut, syst, "RSG1_" + str(mass))
+            syst_eff = add_syst(temp_col_dic) #this is a tuple!
+            # if (syst_eff[0] * 100 < 3): #if the systematic contribution is less than 3 percent
+            #     continue
+            eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), syst_eff[0] * 100)
+            eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), 0)
+            #print syst, syst_eff[0]
+            maxbincontent = max(maxbincontent, syst_eff[0] * 100)
+            maxsyst = max(maxsyst, syst_eff[0] * 100)
+        #start the canvas
+        canv.cd()
+        #convert it to a TGraph
+        graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
+        if maxsyst < 3:#don't draw everything
+            continue
+        graph_lst[i].SetLineColor(CONF.clr_lst[draw_counter])
+        graph_lst[i].SetMarkerStyle(20 + draw_counter)
+        graph_lst[i].SetMarkerColor(CONF.clr_lst[draw_counter])
+        graph_lst[i].SetMarkerSize(1)
+        graph_lst[i].SetMaximum(maxbincontent * 1.5)
+        graph_lst[i].SetMinimum(minbincontent)
+        legend.AddEntry(graph_lst[i], syst.replace("_", " "), "apl")
+        if draw_counter==0: 
+            graph_lst[i].Draw("APC")
+            draw_counter += 1
+        else: 
+            graph_lst[i].Draw("PC")
+            draw_counter += 1
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
