@@ -156,6 +156,10 @@ class eventHists:
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
             self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+            #self.h0_trk0_eta  = ROOT.TH1F("leadHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
+            #self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
+            #self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
+            #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
 
@@ -199,6 +203,10 @@ class eventHists:
             self.trks_pt.Fill(event.j0_trk1_pt, weight)
             self.trks_pt.Fill(event.j1_trk0_pt, weight)
             self.trks_pt.Fill(event.j1_trk1_pt, weight)
+            #self.h0_trk0_eta.Fill(event.j0_trk0_eta, weight)
+            #self.h0_trk0_phi.Fill(event.j0_trk0_phi, weight)
+            #self.h1_trk0_eta.Fill(event.j1_trk0_eta, weight)
+            #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
 
@@ -237,6 +245,10 @@ class eventHists:
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
+            #self.h0_trk0_eta.Write()
+            #self.h0_trk0_phi.Write()
+            #self.h1_trk0_eta.Write()
+            #self.h1_trk0_phi.Write()
 
 
 
@@ -482,8 +494,8 @@ def main():
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
             #this is a really bad practice and temp fix now! need to watch this very carfully...
-            ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             #print ori_link, dst_link
             if os.path.islink(dst_link):

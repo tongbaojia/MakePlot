@@ -405,7 +405,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     elif "16" in filepath:
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     else:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, 6.6 fb^{-1}", 22)
+        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, 11.78 fb^{-1}", 22)
     myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
     leg.SetNColumns(2)

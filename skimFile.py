@@ -20,7 +20,7 @@ Also be extra careful.
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--nfiles", default=14)
+    parser.add_argument("--file", default="16_13TeV")
     return parser.parse_args()
 
 def selection(config):
@@ -83,7 +83,7 @@ def skim(targetpath=""):
         temp_dic = {}
         temp_dic["file"] = file
         #add skimming selection now
-        if "16_13TeV" not in file:
+        if ops.file not in file:
             continue
         #only do skimming once for now!
         if not os.path.isfile(temp_dic["file"] + "_skim"):
@@ -102,8 +102,11 @@ def skim(targetpath=""):
 
 def main():
     print "make sure you mount eos!"
-    eospath = "/afs/cern.ch/user/b/btong/work/bbbb/CHEPAnalysis/eos/atlas/user/b/btong/bb/"
-    skim(targetpath=eospath + "data/vBT-01-00/gridOutput/MiniNTuple/")
+    #eospath = CONF.toppath + "/eos/atlas/user/b/btong/bb/"
+    #skim(targetpath=eospath + "data/vBT-01-00/gridOutput/MiniNTuple/")
+    eospath = CONF.toppath + "/eos/atlas/user/g/gputnam/bb/"
+    skim(targetpath=eospath + "data/v01-02-03/gridOutput/MiniNTuple/")
+    #skim(targetpath=eospath + "mc/v01-02-or/gridOutput/MiniNTuple/")
     #skim(targetpath="ttbar_comb_test")
     #split(targetpath="signal_QCD")
 

@@ -70,6 +70,7 @@ def main():
             "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
             "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
+            #"leadHCand_trk0_Eta", "leadHCand_trk0_Phi", "sublHCand_trk0_Eta", "sublHCand_trk0_Phi",\
     else:
         print "full histos: false"
         plt_lst = ["mHH_l", "mHH_pole"]
