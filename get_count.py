@@ -27,8 +27,7 @@ ROOT.gROOT.SetBatch(True)
 evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"OneTag", \
-"TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+"OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}

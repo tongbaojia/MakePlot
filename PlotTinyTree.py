@@ -79,8 +79,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 1.5 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.5 #this means the minimum correction is this for each reweighting; used to be 0.5
+    maxscale = 1.6 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.4 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -92,10 +92,10 @@ def calc_reweight(dic, event):
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.8:
-            tempweight = 0.8
-        elif tempweight > 1.2:
-            tempweight = 1.2
+        if tempweight < 0.75:
+            tempweight = 0.75
+        elif tempweight > 1.25:
+            tempweight = 1.25
         totalweight *= tempweight
 
     #print totalweight
@@ -162,6 +162,14 @@ class eventHists:
             #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
+        #save reweight weights
+        if self.reweight:
+            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 20, 0.5, 1.5)
+            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 20, 0.5, 1.5)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 20, 0.5, 1.5)
+            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 20, 0.5, 1.5)
+
+
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
@@ -209,6 +217,11 @@ class eventHists:
             #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
+        if self.reweight:
+            self.mHH_weight.Fill(event.mHH, weight)
+            self.h0_trk0_pt_weight.Fill(event.j0_trk0_pt, weight)
+            self.h1_trk0_pt_weight.Fill(event.j1_trk0_pt, weight)
+            self.h0_pt_m_weight.Fill(event.j0_pt, weight)
 
     def Write(self, outputroot):
         outputroot.cd(self.region)
@@ -249,6 +262,12 @@ class eventHists:
             #self.h0_trk0_phi.Write()
             #self.h1_trk0_eta.Write()
             #self.h1_trk0_phi.Write()
+        if self.reweight:
+            self.mHH_weight.Write()
+            self.h0_trk0_pt_weight.Write()
+            self.h1_trk0_pt_weight.Write()
+            self.h0_pt_m_weight.Write()
+
 
 
 

@@ -364,7 +364,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             testfit[iter_fit] = ROOT.TF1("testfit" + str(iter_fit), "pol" + str(iter_fit), xMin, xMax)
         #initialization of parameters
         if ("trk0_Pt" in cut): #for the leading track jet fit
-            testfit[3].SetParameters(0.6, 0.006, -2E-5, +2E-8)
+            #testfit[3].SetParameters(1, 0.006, -2E-5, +2E-8)
+            testfit[3].SetParLimits(0, 0.6
+                , 1.4)
             #testfit[3].SetParameters(0.6, 0.007, -3E-5, +3E-8); testing version
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
             testfit[2].SetParameters(0.82, 0.004, -1E-5)
@@ -378,13 +380,15 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             testfit[1].SetParameters(1, 0.7)
         #for the other distributions
         testfit[1].SetParameters(0.9, 0.001)
+        #testfit[1].SetParLimits(1, 0.8, 1.2)
         testfit[2].SetParameters(1.0, 0.0, 0.0)
+        #testfit[2].SetParLimits(0, 0.8, 1.2)
         testfit[3].SetParameters(1.0, 0.0, 0.0, 0.0)
 
         #do the 3 fits and save the output
         testfitprob = [0]
         for iter_fit in range(1, 4):
-            ratios[1].Fit("testfit" + str(iter_fit), "QWLR0I", "", fitMin, fitMax)
+            ratios[1].Fit("testfit" + str(iter_fit), "QWLR0IB", "", fitMin, fitMax)
             testfitprob.append(float(testfit[iter_fit].GetProb()))
         #pick the best iteration; try to avoid higher order function as much as possible
         best_iter = 1
@@ -500,10 +504,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     del(testfit)
 
     ##should only be run non-parellel.
-    #if ("Sideband" in cut and True):
-        #outputroot.cd()
-        #ratios[1].SetName(cut)
-        #ratios[1].Write()
+    if ("Sideband" in cut and False):
+        outputroot.cd()
+        ratios[1].SetName(cut)
+        ratios[1].Write()
 
 
 
@@ -515,10 +519,11 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j0_Pt"]      = array('d', range(450, 630, 30) + [630, 660, 690, 730, 770, 810, 860, 910, 980, 1050, 1200, 1500, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]      = array('d', range(450, 630, 30) + [630, 660, 690, 730, 770, 810, 860, 920, 980, 1060, 1200, 1500, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 60, 120, 170] + range(170, 290, 40) + [290, 330, 370, 420, 470, 520, 580, 640, 700, 780, 900, 1300, 2000]) #9.5 version
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 180, 240, 300, 360, 420, 490, 560, 660, 750, 900, 1200, 1500, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 150, 200, 250, 300, 350, 400, 460, 520, 590, 660, 740, 820, 1000, 1300, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
@@ -527,9 +532,10 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
-        rebin_dic["j0_Pt"]      = array('d', [450, 480, 520, 560, 600, 640, 690, 750, 820, 920, 1100, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]      = array('d', [450, 480, 520, 560, 600, 640, 690, 760, 840, 930, 1050, 1300, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 360, 50) + [360, 430, 500, 600, 800, 2000])
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 60] + range(60, 360, 50) + [360, 430, 500, 600, 750, 1000, 2000])
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 60] + range(60, 360, 50) + [360, 430, 500, 600, 750, 1000, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -538,10 +544,11 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
-        rebin_dic["j0_Pt"]      = array('d', [450, 480, 520, 570, 630, 700, 800, 1000, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]      = array('d', [450, 490, 530, 570, 620, 690, 800, 1000, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 70, 120, 170, 220, 280, 350, 450, 600, 2000]) #9.5 version
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 120, 180, 240, 300, 370, 450, 600, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 70, 120, 170, 220, 280, 350, 450, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
@@ -551,8 +558,8 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1, fitrange=[800, 3000])
     #plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], fitrange=[800, 3000])
     #plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], Logy=1, fitrange=[800, 3000])
-    plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[0, 2000])
-    plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[0, 2000])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["j0_trk0_Pt"], fitrange=[0, 2000])
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["j1_trk0_Pt"], fitrange=[0, 2000])
     plotRegion(config, cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])
     plotRegion(config, cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])
     plotRegion(config, cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2, fitrange=[60, 170])
@@ -619,7 +626,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Sideband", "Control", "Signal"]
+    region_lst = ["Sideband"]
     cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
 
     #create master list
@@ -643,7 +650,7 @@ def main():
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
-    ##for debug
+    #for debug
     # dumpRegion(inputtasks[0])
     # dumpRegion(inputtasks[1])
     # dumpRegion(inputtasks[2])
