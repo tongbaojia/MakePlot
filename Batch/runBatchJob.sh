@@ -4,12 +4,12 @@
 
 #################################################
 ## DEFINE INPUT, TESTAREA AND OUTPUT AREA ###
-#Runnumber=$1
-filenamelist=/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/MakePlot/Batch/input.txt ##267638
 echo "the input file is " $filenamelist
 yourtestarea=/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis ## replace with here if you don't have a testarea
+#Runnumber=$1
+filenamelist=$yourtestarea$"/MakePlot/Batch/input.txt" ##267638
 #eosoutputarea=/eos/atlas/user/b/btong/TESTAREA/muonSW/output  ## your output forlder MUST exist
-youroutputarea=/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output ##your output area
+youroutputarea=$yourtestarea$"/Output" ##your output area
 #athenaVer="20.1.X-VAL,rel_1, gcc48 --testarea=$yourtestarea"  ## the release you want to setup
 #################################################
 tmpworkdir=$youroutputarea/run_${Runnumber}_$inputstream_$LSB_JOBID.$LSB_JOBINDEX

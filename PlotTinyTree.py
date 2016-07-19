@@ -61,17 +61,17 @@ def get_reweight(folder, filename):
         lstline =  line.split()#default split by space
         #print lstline
         if "par0" in line:
-            par_weight["par0"] = float(lstline[1])
+            par_weight["par0"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "par1" in line:
-            par_weight["par1"] = float(lstline[1])
+            par_weight["par1"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "par2" in line:
-            par_weight["par2"] = float(lstline[1])
+            par_weight["par2"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "par3" in line:
-            par_weight["par3"] = float(lstline[1])
+            par_weight["par3"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "low" in line:
-            par_weight["low"]  = float(lstline[1])
+            par_weight["low"]  = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "high" in line:
-            par_weight["high"] = float(lstline[1])
+            par_weight["high"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
     #print par_weight
     f_reweight.close()
     return par_weight
@@ -79,8 +79,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 1.6 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.4 #this means the minimum correction is this for each reweighting; used to be 0.5
+    maxscale = 1.7 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.3 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -92,18 +92,20 @@ def calc_reweight(dic, event):
         tempweight = 1
         tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.75:
-            tempweight = 0.75
-        elif tempweight > 1.25:
-            tempweight = 1.25
+        if tempweight < 0.8:
+            tempweight = 0.8
+        elif tempweight > 1.2:
+            tempweight = 1.2
         totalweight *= tempweight
 
     #print totalweight
     #also contrain the totalweight
     if totalweight < minscale:
         totalweight = minscale
+        #print totalweight, tempweight
     elif totalweight > maxscale:
         totalweight = maxscale
+        #print totalweight, tempweight
     return totalweight
 
 #get Xhh and Rhh values; for variations's sake
@@ -112,11 +114,8 @@ def GetExp(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
     return RhhExp
 
-
-
 class eventHists:
     # will take 3 minutes to generate all histograms; 3 times more time...
-
     def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
         outputroot.mkdir(region)
@@ -164,10 +163,10 @@ class eventHists:
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
         #save reweight weights
         if self.reweight:
-            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 20, 0.5, 1.5)
-            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 20, 0.5, 1.5)
-            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 20, 0.5, 1.5)
-            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 20, 0.5, 1.5)
+            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 28, 0.3, 1.7)
+            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 28, 0.3, 1.7)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 28, 0.3, 1.7)
+            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 28, 0.3, 1.7)
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
@@ -517,7 +516,7 @@ def main():
     #return
     ##if reweight, reweight everything
     #parallel compute!
-    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool  = mp.Pool(npool)
     pool.map(analysis, inputtasks)

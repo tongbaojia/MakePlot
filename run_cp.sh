@@ -1,5 +1,6 @@
 homepath="/afs/cern.ch/user/b/btong/"
 workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
+
 # #### Testing
 # re=j0pT-leadtrk-fin
 # inch=TEST
@@ -44,12 +45,12 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
 
 
 ##iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
-for i in {0..19}
+for i in {1..19}
 do
-	re=$1
-	inch=F_c10-cb
+	re=$1	
+	inch=TEST
 	iter=$i
-	ch=f_fin-re$"_"$re"_"$iter
+	ch=DS1_cb$"_"$re"_"$iter
 	#ch=f_c10-cb
 	echo $ch, "is the channel and iteration!"
 	python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
