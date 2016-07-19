@@ -158,6 +158,12 @@ class eventHists:
             self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
+        #save reweight weights
+        if self.reweight:
+            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 20, 0.5, 1.5)
+            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 20, 0.5, 1.5)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 20, 0.5, 1.5)
+            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 20, 0.5, 1.5)
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
@@ -201,6 +207,11 @@ class eventHists:
             self.trks_pt.Fill(event.j1_trk1_pt, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
+        if self.reweight:
+            self.mHH_weight.Fill(event.mHH, weight)
+            self.h0_trk0_pt_weight.Fill(event.j0_trk0_pt, weight)
+            self.h1_trk0_pt_weight.Fill(event.j1_trk0_pt, weight)
+            self.h0_pt_m_weight.Fill(event.j0_pt, weight)
 
     def Write(self, outputroot):
         outputroot.cd(self.region)
@@ -237,8 +248,11 @@ class eventHists:
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
-
-
+        if self.reweight:
+            self.mHH_weight.Write()
+            self.h0_trk0_pt_weight.Write()
+            self.h1_trk0_pt_weight.Write()
+            self.h0_pt_m_weight.Write()
 
 #split things in to mass regions, also possible systematic variation
 class massregionHists:
@@ -277,7 +291,8 @@ class massregionHists:
 class trkregionHists:
     def __init__(self, region, outputroot, reweight=False):
         self.reweight = reweight
-        self.Trk0  = massregionHists(region, outputroot, reweight)
+        #maybe shouldn't reweight this as well, but shouldn't matter...
+        self.Trk0  = massregionHists(region, outputroot, True) 
         #self.Trk1  = massregionHists(region + "_" + "1Trk", outputroot)
         #self.Trk2  = massregionHists(region + "_" + "2Trk", outputroot)
         self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)

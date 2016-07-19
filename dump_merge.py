@@ -122,6 +122,8 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     for i in range(1, len(bsyst)):
+        # if i == 11 or i == 37 or i == 40 or i == 45:
+        #     continue
         inputtasks.append({"inputdir":"syst_b_" + str(i)})
 
     #create output root files
@@ -154,8 +156,10 @@ def main():
        summarydic[c] = GetTable(masterdic, c)
        plot_RSG_syst(masterdic, c)
        plot_RSG_syst_detail(masterdic, c)
-
     
+    #save the summary dic
+    with open(CONF.inputpath + "b77/sum_syst_summary" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
+         json.dump(summarydic, f)
     #Generate Signal Region table
     GetSignalTable(masterdic, summarydic)
     #print masterdic
@@ -254,7 +258,7 @@ def GetTable(masterdic, c):
     texoutpath = CONF.inputpath + "b77" + "/" + "Plot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
-    outFile = open( texoutpath + c + "_fullsyst.tex", "w")
+    outFile = open( texoutpath + c + "_fullsyst" + ("" if "pole" not in finaldis else "_pole") + ".tex", "w")
     tableList = []
     column_lst = ["totalbkg", "qcd", "ttbar", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
     column_dic = {}
