@@ -1,6 +1,6 @@
 homepath="/afs/cern.ch/user/b/btong/"
 workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
-#### Testing
+# #### Testing
 # re=j0pT-leadtrk-fin
 # inch=TEST
 # iter=0
@@ -9,7 +9,7 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
 # echo $ch, "is the channel and iteration!"
 # #python PlotTinyTree.py --inputdir $inch --outputdir $ch #--reweight $re --iter $iter #$re
 # ##this is for the testing round!
-# #ch=DS1_cb$"_"$re"_"$iter
+# ch=DS1_cb$"_"$re"_"$iter
 # echo $ch, "is the channel and iteration!"
 # #python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
 # #python get_count.py --inputdir $ch
@@ -26,7 +26,7 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
 # if [ ! -d $homepath"/www/share/hh4b/express/"$ch ]; then
 #   mkdir $homepath"/www/share/hh4b/express/"$ch
 # fi
-# for plt in leadHCand_Mass mHH_l trk0_Pt trk1_Pt leadHCand_Pt_m sublHCand_Pt; do
+# for plt in leadHCand_Mass_s mHH_l trk0_Pt trk1_Pt leadHCand_Pt_m sublHCand_Pt; do
 # 	find $workpath$ch$"/Plot_r0/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
 # 	find $workpath$ch$"/Plot/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;
 # 	find $workpath$ch$"/Plot/Control/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;
@@ -43,7 +43,7 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
 # echo "Done!"
 
 
-iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
+##iteration of reweighting!!!, takes the first argument as the reweighting configuration file under script
 for i in {0..19}
 do
 	re=$1
@@ -68,7 +68,7 @@ do
 	if [ ! -d $homepath"/www/share/hh4b/express/"$ch ]; then
 	  mkdir $homepath"/www/share/hh4b/express/"$ch
 	fi
-	for plt in leadHCand_Mass mHH_l trk0_Pt trk1_Pt leadHCand_Pt_m sublHCand_Pt; do
+	for plt in leadHCand_Mass_s mHH_l trk0_Pt trk1_Pt leadHCand_Pt_m sublHCand_Pt; do
 		find $workpath$ch$"/Plot_r0/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
 		find $workpath$ch$"/Plot/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;
 		find $workpath$ch$"/Plot/Control/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;

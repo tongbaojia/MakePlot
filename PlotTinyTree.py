@@ -318,7 +318,7 @@ class trkregionHists:
             self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic = get_parameter(filename=ops.reweight)
 
     def Fill(self, event, weight=-1):
-        self.Trk0.Fill(event, weight)
+        self.Trk0.Fill(event, event.weight)
         # if event.j0_nTrk >= 1 or event.j1_nTrk >= 1:
         #     self.Trk1.Fill(event)
         # if event.j0_nTrk >= 2 or event.j1_nTrk >= 2:
