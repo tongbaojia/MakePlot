@@ -159,7 +159,7 @@ def rebinData(ifile, rebin, scale=1.0):
 ####################################################################################
 #plot
 
-def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebinarry=None, outputFolder=""):
+def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=None, rebinarry=None, outputFolder=""):
     #load configurations from config file
     filepath = config["root"] 
     filename = config["inputdir"] 
@@ -257,46 +257,6 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
     ratios = makeDataRatio(data, bkg[1])
 
-    #comput the integrals! and make the table
-    if (not blinded):
-        texoutpath = CONF.inputpath + "b77" + "/" + "Plot/Tables/"
-        if not os.path.exists(texoutpath):
-            os.makedirs(texoutpath)
-        outtexFile = open( texoutpath + cut + "_SR_region_compare" + ("" if "pole" not in finaldis else "_pole") + ".tex", "w")
-        tableList = []
-        int_range_lst = [">1000", ">1500", ">2000", ">2500", ">3000"]
-        help_table.add_table_head(tableList, int_range_lst, title="Mass Range")
-        #get total background
-        outstr = ""
-        outstr += "totalbkg"
-        #print masterdic, systag
-        for int_range in int_range_lst:   
-            err = ROOT.Double(0.)
-            int_range = bkg[2].IntegralAndError(bkg[2].GetXaxis().FindBin(int(int_range.replace(">", ""))), bkg[2].GetXaxis().GetNbins()+1, err)
-            outstr += help_table.add_entry((int_range, float(err)))
-        #finish the current entry
-        outstr+="\\\\"
-        tableList.append(outstr)
-        #get data
-        outstr = ""
-        outstr += "data"
-        #print masterdic, systag
-        temp_data = ifile.Get("data_hh" )
-        for int_range in int_range_lst:
-            err = ROOT.Double(0.)
-            int_range = temp_data.IntegralAndError(temp_data.GetXaxis().FindBin(int(int_range.replace(">", ""))), temp_data.GetXaxis().GetNbins()+1, err)
-            outstr += help_table.add_entry((int_range, float(err)))
-        #finish the current entry
-        outstr+="\\\\"
-        tableList.append(outstr)
-        #finish the table
-        help_table.add_table_tail(tableList, int_range_lst)
-        #return the table
-        for line in tableList:
-            print line
-            outtexFile.write(line+" \n")
-        outtexFile.close()
-
     # stack signal on background
     RSG1_1000.Add(bkg[0]) 
     RSG1_1500.Add(bkg[0]) 
@@ -354,12 +314,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_1500.SetLineWidth(2)
     RSG1_1500.SetLineStyle(2)
     RSG1_1500.SetLineColor(ROOT.kPink+7)
-    RSG1_1500.Draw("HISTO SAME")
+    #RSG1_1500.Draw("HISTO SAME")
 
     RSG1_2500.SetLineWidth(2)
     RSG1_2500.SetLineStyle(2)
     RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    RSG1_2500.Draw("HISTO SAME")
+    #RSG1_2500.Draw("HISTO SAME")
 
     bkg[1].SetFillColor(ROOT.kBlue)
     bkg[1].SetLineColor(ROOT.kBlue)
@@ -453,8 +413,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #
     # Add ks score
     #
-    myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
-    myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
+    #myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
+    #myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
     #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
 
     # labels
@@ -470,7 +430,20 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     else:
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
-    myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
+
+    if cut.find("Signal") > -1:
+        tag = "Signal Region"
+    elif cut.find("Control") > -1:
+        tag = "Control Region"
+    elif cut.find("Sideband") > -1:
+        tag = "Sideband Region"
+    if cut.find("FourTag") > -1:
+        tag += ", Boosted 4-tag"
+    elif cut.find("ThreeTag") > -1:
+        tag += ", Boosted 3-tag"
+    elif cut.find("TwoTag") > -1:
+        tag += ", Boosted 2-tag"
+    myText(0.19, 0.83, 1, tag, 22)
     ##### legend
     leg.SetNColumns(2)
     leg.SetTextFont(43)
@@ -484,8 +457,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat+Syst", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
-    leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
-    leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
+    #leg.AddEntry(RSG1_1500, "G1.5TeV*10", "F")
+    #leg.AddEntry(RSG1_2500, "G2.5TeV*100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
@@ -496,10 +469,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # save
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".pdf")
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".eps")
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".eps")
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".C")
 
     pad0.Close()
     pad1.Close()
@@ -591,7 +564,7 @@ def main():
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        outputFolder = inputpath + inputroot + "Plot/Signal_Syst"
+        outputFolder = inputpath + inputroot + "PaperPlot/Signal"
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
         for j, cut in enumerate(cut_lst):
@@ -603,16 +576,6 @@ def main():
             config["cut"] = cut + "_" + region + "_"
             config["blind"] = False
             inputtasks.append(config)
-        for j, cut in enumerate(cut_lst):
-            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-            config = {}
-            config["root"] = rootinputpath
-            config["inputdir"] = inputdir
-            config["outputdir"] = outputFolder
-            config["cut"] = cut + "_" + region + "_"
-            if "Signal" in region:
-                config["blind"] = True
-                inputtasks.append(config)
 
    
     #dumpRegion(inputtasks[0])

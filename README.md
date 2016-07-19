@@ -12,7 +12,6 @@ Active contributors are Gray Putnam.
 To make it work, Xhh4bUtiles, created by Michael Kagan, is also needed:
 https://github.com/tongbaojia/Xhh4bUtils
 
-
 ###### Introduction to the work flow
 You will need the input file from XhhBoosted first. Contact me to get input files.
 
@@ -30,4 +29,3 @@ You will need the input file from XhhBoosted first. Contact me to get input file
 - To generate other distributions: python plot_random.py
 - To generate smoothed signal region predictions: python plot_smooth.py
 - To generate sysmtatics table: python syst_vari.py
-
