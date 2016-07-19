@@ -1,172 +1,45 @@
 # Tony Tong; baojia.tong@cern.ch
 import os, argparse, sys, math, time
 import config as CONF
+from array import array
+import ROOT as ROOT
+import help_plot as h_plt
+import help_table as h_table
+import helpers
+import rootlogon
 #for parallel processing!
 import multiprocessing as mp
-from array import array
-import ROOT, rootlogon
-from ROOT import *
+#other setups
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
-SetAtlasStyle()
-
-#other setups
-TH1.AddDirectory(False)
+ROOT.SetAtlasStyle()
+ROOT.TH1.AddDirectory(False)
 StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
 
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir",  default="b77")
     parser.add_argument("--inputroot", default="sum")
+    parser.add_argument("--detail",    default=True)
     return parser.parse_args()
 
-# zero the x-errors
-def zeroXerror(g):
-    for i in range(0,g.GetN()):
-        g.SetPointEXlow(i,  0.0)
-        g.SetPointEXhigh(i, 0.0) 
-
-# function to build total background in histograma and graph format
-def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
-    # total bkg histogram
-    hBkg = bkgs[0].Clone("bkg")
-    if len(bkgs)>1:
-        hBkg.Reset()
-        for h in bkgs:
-            hBkg.Add(h)
-    # total bkg graph with errors
-    gBkg = ROOT.TGraphAsymmErrors(bkgs[0].GetNbinsX())
-    # add stat errors
-    for i in range(0, gBkg.GetN()):
-        gBkg.SetPoint(i,       hBkg.GetBinCenter(i+1), hBkg.GetBinContent(i+1))
-        gBkg.SetPointEXlow(i,  hBkg.GetBinWidth(i+1) / 2.)
-        gBkg.SetPointEXhigh(i, hBkg.GetBinWidth(i+1) / 2.)
-        gBkg.SetPointEYlow(i,  hBkg.GetBinError(i+1))
-        gBkg.SetPointEYhigh(i, hBkg.GetBinError(i+1))
-    # add syst errors (if provided)
-    if len(bkgsUp)>0:
-        # loop over points
-        for i in range(0, gBkg.GetN()):
-            ### error up
-            err = math.pow(gBkg.GetErrorYhigh(i),2)
-            # loop over backgrounds
-            for ih in range(0, len(bkgs)):
-                err += math.pow(math.fabs( bkgs[ih].GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2)
-            gBkg.SetPointEYhigh(i, math.sqrt(err))
-            ### error down
-            err = math.pow(gBkg.GetErrorYlow(i),2)
-            # loop over backgrounds
-            for ih in range(0, len(bkgs)):
-                err += math.pow(math.fabs( bkgs[ih].GetBinContent(i+1) - bkgsDown[ih].GetBinContent(i+1) ), 2)
-            gBkg.SetPointEYlow(i, math.sqrt(err))
-
-    return [hBkg, gBkg]
-
-# function to build data/bkgd ratios
-def makeDataRatio(data, bkg):
-    # ratio set to one with error band 
-    gRatioBand = data.Clone("gRatioBand")
-    for i in range(0, data.GetN()):
-        gRatioBand.SetPoint(i, data.GetX()[i], 1.0)
-        if bkg.GetY()[i] > 0:
-            gRatioBand.SetPointEYhigh(i, bkg.GetErrorYhigh(i) / bkg.GetY()[i]) 
-            gRatioBand.SetPointEYlow(i, bkg.GetErrorYlow(i) / bkg.GetY()[i])             
-            gRatioBand.SetPointEXhigh(i, bkg.GetErrorXhigh(i)) 
-            gRatioBand.SetPointEXlow(i, bkg.GetErrorXlow(i))             
-    # ratio set to data/bkg with data stat errors only
-    gRatioDataBkg = data.Clone("gRatioDataBkg")
-    for i in range(0, data.GetN()):
-        if data.GetY()[i]>0 and bkg.GetY()[i]>0:
-            gRatioDataBkg.SetPoint(i, data.GetX()[i], data.GetY()[i] / bkg.GetY()[i])
-            gRatioDataBkg.SetPointEYhigh(i, data.GetErrorYhigh(i) / bkg.GetY()[i])
-            gRatioDataBkg.SetPointEYlow(i, data.GetErrorYlow(i) / bkg.GetY()[i])
-            gRatioDataBkg.SetPointEXhigh(i, data.GetErrorXhigh(i)) 
-            gRatioDataBkg.SetPointEXlow(i, data.GetErrorXlow(i))             
-        else:
-            pass
-            #gRatioDataBkg.SetPoint(i, 0.0, -1000)
-
-    return [gRatioBand,gRatioDataBkg]
-
-def do_variable_rebinning(hist,bins, scale=1):
-    a=hist.GetXaxis()
-
-    newhist=ROOT.TH1F(hist.GetName()+"_rebinned",
-                      hist.GetTitle()+";"+hist.GetXaxis().GetTitle()+";"+hist.GetYaxis().GetTitle(),
-                      len(bins)-1,
-                      array('d',bins))
-
-    newhist.Sumw2()
-    newa=newhist.GetXaxis()
-    #print "check size ", hist.GetNbinsX(), newhist.GetNbinsX()
-    for b in range(0, hist.GetNbinsX()+1):
-        newb             = newa.FindBin(a.GetBinCenter(b))
-
-        # Get existing new content (if any)                                                                                                              
-        val              = newhist.GetBinContent(newb)
-        err              = newhist.GetBinError(newb)
-        # Get content to add
-        ratio_bin_widths = scale*newa.GetBinWidth(newb)/a.GetBinWidth(b)
-        #print "ratio_bin_widths",ratio_bin_widths
-        #val              = val+hist.GetBinContent(b)/ratio_bin_widths
-        #err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
-        val              = val+hist.GetBinContent(b)
-        err              = math.sqrt(err*err+hist.GetBinError(b)*hist.GetBinError(b))
-        #print "bin", newb, " new value ", val, " change ", hist.GetBinContent(b)
-        newhist.SetBinContent(newb,val)
-        newhist.SetBinError(newb,err)
-
-    return newhist
-
-def graphFromHist(hist):
-    hist.SetBinErrorOption(1)
-
-    nBins = hist.GetNbinsX()
-
-    dataGr = ROOT.TGraphAsymmErrors(nBins)
-    dataGr.SetName("data_hh")
-    for i in range(nBins):
-        thisX        = hist.GetBinCenter(i+1)
-        thisY        = hist.GetBinContent(i+1)
-        if thisY:
-            thisYErrLow  = hist.GetBinErrorLow(i+1)
-            thisYErrUp   = hist.GetBinErrorUp(i+1)
-            binWidthOver2  = thisX - hist.GetBinLowEdge(i+1)
-        else:
-            thisYErrLow = 0
-            thisYErrUp  = 0
-            binWidthOver2  = thisX - hist.GetBinLowEdge(i+1)
-        #print i, thisX, thisY, thisYErrLow, thisYErrUp                                                                                                  
-        dataGr.SetPoint(i,thisX, thisY)
-        dataGr.SetPointError(i, binWidthOver2, binWidthOver2, thisYErrLow, thisYErrUp)
-    return dataGr
-
-def rebinData(ifile, rebin, scale=1):
-    dataHist = ifile.Get("data_hh_hist")    
-    dataHistNew = do_variable_rebinning(dataHist, rebin, scale)
-    return graphFromHist(dataHistNew)
-
-####################################################################################
 #plot
-
 def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebinarry=None, outputFolder=""):
     #load configurations from config file
     filepath = config["root"] 
-    filename = config["inputdir"] 
+    filename = config["inputdir"]
     outputFolder= config["outputdir"]
     blinded = config["blind"]
     #print config, filepath, filename
     #print cut
-    gStyle.SetErrorX(0)
-    gStyle.SetHatchesSpacing(0.7)
-    gStyle.SetHatchesLineWidth(1)
+    ROOT.gStyle.SetErrorX(0)
+    ROOT.gStyle.SetHatchesSpacing(0.7)
+    ROOT.gStyle.SetHatchesLineWidth(1)
 
     # input file
     ifile = ROOT.TFile(filepath + filename + ".root")
-
     # read stuff
     data = ifile.Get("data_" + cut )
     if "Signal" in cut and blinded:
@@ -183,6 +56,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
     RSG1_2500.Scale(100)
 
+    #do simple rebin as rebin values
     if not rebin == None:
         data.Rebin(rebin)
         data_est.Rebin(rebin)
@@ -192,7 +66,6 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
-
     #use array to rebin histgrams
     if not rebinarry == None:
         data      = data.Rebin(len(rebinarry) - 1, data.GetName()+"_rebinned", rebinarry)
@@ -215,6 +88,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #chi2 =        data.Chi2Test(data_est, "QU CHI2")
     #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
 
+    #load basic information
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
     yMax = data.GetMaximum() * 1.6
@@ -226,12 +100,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
 
-
-    data = makeTotBkg([data])[1]
-    bkg = makeTotBkg([ttbar,qcd])
-    #bkg = makeTotBkg([ttbar,qcd,zjet])
+    #setup data and bkg estiamtes
+    data = h_plt.makeTotBkg([data])[1]
+    bkg = h_plt.makeTotBkg([ttbar,qcd])
+    #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet])
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
-    ratios = makeDataRatio(data, bkg[1])
+    ratios = h_plt.makeDataRatio(data, bkg[1])
 
     # stack signal on background
     RSG1_1000.Add(bkg[0]) 
@@ -313,7 +187,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #zjet.SetFillColor(ROOT.kGreen+4)
     #zjet.Draw("HISTO SAME")
 
-    zeroXerror(data)
+    h_plt.zeroXerror(data)
     data.SetMarkerStyle(20)
     data.SetMarkerSize(1)
     data.SetLineWidth(2)
@@ -350,11 +224,11 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #
     # Add stat uncertianty
     #
-    ratios[0].SetFillColor(kBlue)
+    ratios[0].SetFillColor(ROOT.kBlue)
     ratios[0].SetFillStyle(3345)
     ratios[0].Draw("E2")
 
-    #zeroXerror(ratios[1])
+    #h_plt.zeroXerror(ratios[1])
     ratios[1].SetMarkerStyle(20)
     ratios[1].SetMarkerSize(1)
     ratios[1].SetLineWidth(2)
@@ -384,14 +258,16 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
     line.SetLineStyle(1)
     line.Draw()
-
     c0.cd()
+
     #
     # Add ks score
     #
-    myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
-    myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
-    #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
+    if (ops.detail):
+        ROOT.myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
+        ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % 
+            (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
+        #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
 
     # labels
     legHunit=0.05
@@ -399,14 +275,14 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     legW=0.4
     leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
     # top right, a bit left
-    ATLASLabel(0.19, 0.91, StatusLabel)
+    ROOT.ATLASLabel(0.19, 0.91, StatusLabel)
     if "15" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
     elif "16" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     else:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
-    myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
+    ROOT.myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
     leg.SetNColumns(2)
     leg.SetTextFont(43)
@@ -434,12 +310,14 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".pdf")
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + ".eps")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".eps")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".C")
 
+    #close and quit
     pad0.Close()
     pad1.Close()
     c0.Close()
+    del(leg)
 
 def dumpRegion(config):
     #setup the rebin arrays
@@ -510,13 +388,13 @@ def dumpRegion(config):
 
 ##################################################################################################
 # Main
-
 def main():
-
+    #start time
     start_time = time.time()
+    global ops
     ops = options()
     #setup basics
-    inputdir = ops.inputdir
+    inputdir  = ops.inputdir
     inputroot = ops.inputroot
     inputpath = CONF.inputpath + inputdir + "/"
     rootinputpath = inputpath + inputroot + "_"
@@ -524,15 +402,12 @@ def main():
 
     global StatusLabel
     StatusLabel = "Internal" ##StatusLabel = "Preliminary"
-
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
-
     region_lst = ["Sideband", "Control","Signal"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]#, "OneTag", "TwoTag"]
-
     #create master list
     inputtasks = []
     #fill the task list

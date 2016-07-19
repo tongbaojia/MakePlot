@@ -162,7 +162,7 @@ class eventHists:
         if self.reweight:
             self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 20, 0.5, 1.5)
             self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 20, 0.5, 1.5)
-            self.h1_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 20, 0.5, 1.5)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 20, 0.5, 1.5)
             self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 20, 0.5, 1.5)
 
     def Fill(self, event, weight=-1):
