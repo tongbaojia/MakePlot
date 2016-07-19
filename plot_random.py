@@ -25,8 +25,6 @@ def options():
 def main():
 
     ops = options()
-
-    ops = options()
     inputdir = ops.inputdir
     global inputpath
     inputpath = CONF.inputpath + inputdir + "/"
@@ -36,38 +34,49 @@ def main():
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 
-    # paper plot
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    # # paper plot
+    # DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
 
-    #region shape comparisons
-    #side band shapes
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
-    DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
-    #correlations of the jet mass and jet pT
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    #for study only
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    # #region shape comparisons
+    # #side band shapes
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
+    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    # #correlations of the jet mass and jet pT
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    # #for study only
+    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    # #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    # #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
 
-    # #signalregion shape comparison
-    inputroot = "sum_" + inputdir + ".root"
-    DrawSRcomparison(inputroot, inputdata="ttbar")
-    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    DrawSRcomparison(inputroot, inputdata="qcd_est")
-    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    # # #signalregion shape comparison
+    # inputroot = "sum_" + inputdir + ".root"
+    # DrawSRcomparison(inputroot, inputdata="ttbar")
+    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    # DrawSRcomparison(inputroot, inputdata="qcd_est")
+    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
-    # #draw the mhh before and after scale
-    DrawScalecomparison(inputroot, norm=False)
-    DrawScalecomparison(inputroot, norm=True, Logy=1)
+    # # #draw the mhh before and after scale
+    # DrawScalecomparison(inputroot, norm=False)
+    # DrawScalecomparison(inputroot, norm=True, Logy=1)
+
+    # #draw the reweighted 2D distributions; works conditionally!
+    inputpath = CONF.inputpath + "f_fin-re_j0pT-leadtrk-fin_19" + "/"
+    outputpath = CONF.inputpath + "f_fin-re_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
+    if not os.path.exists(outputpath):
+        os.makedirs(outputpath)
+    for i in ["2Trk_split", "3Trk", "4Trk"]:
+        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
+        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
+        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
@@ -130,7 +139,6 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
         kname = key.GetName()
         if keyword in kname:
 
-
             temp_hist = ROOT.gDirectory.Get(kname).Clone()
             canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
             if Xrange != [0, 0]:
@@ -144,8 +152,11 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
             xatlas, yatlas = 0.35, 0.87
             atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
             hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-            lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "Data #sqrt{s} = 13 TeV")
-            watermarks = [atlas, hh4b, lumi]
+            lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "#sqrt{s} = 13 TeV")
+            if "data" in inputname:
+                watermarks = [atlas, lumi]
+            else:
+                watermarks = [atlas, hh4b, lumi]
             for wm in watermarks:
                 wm.SetTextAlign(22)
                 wm.SetTextSize(0.04)
@@ -163,6 +174,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
             #produce profile plot if 2D
             if temp_hist.InheritsFrom("TH2"):
                 #profile x
+                canv.Clear()
                 temp_prox = temp_hist.ProfileX()
                 temp_prox.GetYaxis().SetTitle(temp_hist.GetYaxis().GetTitle())
                 temp_prox.SetMaximum(temp_prox.GetMaximum() * 1.5)
@@ -180,6 +192,27 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
                 for wm in watermarks:
                     wm.Draw()
                 canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_profy.pdf")
+                #profile x
+                canv.Clear()
+                temp_projx = temp_hist.ProjectionX()
+                temp_projx.GetYaxis().SetTitle("NEvents")
+                temp_projx.SetMaximum(temp_projx.GetMaximum() * 1.5)
+                canv.Clear()
+                temp_projx.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projx.GetMean())), str(('%.2g' % temp_projx.GetRMS()))), 22)
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_projx.pdf")
+                #profile y
+                canv.Clear()
+                temp_projy = temp_hist.ProjectionY()
+                temp_projy.GetYaxis().SetTitle("NEvents")
+                temp_projy.SetMaximum(temp_projy.GetMaximum() * 1.5)
+                temp_projy.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projy.GetMean())), str(('%.2g' % temp_projy.GetRMS()))), 22)
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_projy.pdf")
             canv.Close()
             #done
     inputroot.Close()

@@ -1,3 +1,4 @@
+#Tony: this is designed to run over systmatics
 import ROOT, helpers
 import config as CONF
 import argparse, copy, glob, os, sys, time

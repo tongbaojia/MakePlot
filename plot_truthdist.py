@@ -28,16 +28,15 @@ def main():
     # create output file
     output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
 
-    print output
+    #print output
+    plt_lst = ["mHH_l", "hCandDr", 
+        "leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
+        "sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     # select the cuts
     scut_lst = [path + data for path in ["FourTag_Signal/", "ThreeTag_Signal/", "TwoTag_split_Signal/"]
-		for data in ["mHH", "hCandDr", 
-		"leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
-		"sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]]	
+		for data in plt_lst]	
     dcut_lst = [path + data for path in ["NoTag_Signal/"]*3
-		for data in ["mHH", "hCandDr", 
-		"leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
-		"sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]]	
+		for data in plt_lst]	
     #for data in ["h0b0_dR"]]
     """
 		for data in ["nh0_pt", "nh1_pt", "nb0_pt", "nb1_pt", "nb2_pt", 
@@ -45,10 +44,10 @@ def main():
 				"b0b1_dR", "b2b3_dR"]]
     """
     # # Draw the efficiency plot relative to the all normalization
-    DrawSignalTruth(output, dcut_lst, scut_lst, "F_c10-cb-b77-rhist2", "comp_")
+    DrawSignalTruth(output, dcut_lst, scut_lst, inputdir=ops.inputdir, outputname="comp_")
     output.Close()
 
-def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir, outputname="", normalization=0):
+def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir="", outputname="", normalization=0):
     ### the first argument is the input directory
     ### the second argument is the output prefix name
     ### the third argument is relative to what normalization: 0 for total number of events
@@ -69,10 +68,10 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir, outputname="", nor
         sfiles = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
   	sinfos = ["RSG " + str(m) + " GeV" for m in mass_lst]
         dfiles = ["/data_test/hist-MiniNTuple.root"]
-  	dinfos = ["data"]
+  	dinfos = ["0Tag data"]
   	allmc = []
         for j,(f,info) in enumerate(zip(dfiles + sfiles, dinfos + sinfos)):
-	    cut = dcut if "data" in f else scut
+            cut = dcut if "data" in f else scut
 
             #here could be changed to have more options
             input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + f)
@@ -88,6 +87,10 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir, outputname="", nor
 
 	    # rebin the hist for pt
 	    # set other options
+            temp_mc.GetYaxis().SetTitle("Normalized")
+            temp_mc.GetXaxis().SetNdivisions(510)
+            temp_mc.GetXaxis().SetLabelSize(0.03)
+            temp_mc.GetYaxis().SetNdivisions(505)
 	    if cut.split("_")[-1] == "pt":
 		temp_mc.Rebin(10)
 		temp_mc.GetXaxis().SetTitle( temp_mc.GetXaxis().GetTitle() + " [GeV]")
@@ -120,19 +123,23 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir, outputname="", nor
                     dR04_line.Draw("") 	
 	
 	    if temp_mc.GetNbinsX() == 76:
-		temp_mc.Rebin(4)
-	    else:	
+		    temp_mc.Rebin(4)
+	    elif temp_mc.GetNbinsX() > 20:	
 	        temp_mc.Rebin(temp_mc.GetNbinsX() / 20)
 
+
+            if "data" in f: 
+                temp_mc.Sumw2(True)
+
             outputroot.cd()
-            #temp_mc.Scale(1/temp_mc.Integral())
+            temp_mc.Scale(1/temp_mc.Integral())
             temp_mc.SetName("RSG_" + info +  "_" + cut.replace("/", "_"))
             temp_mc.Write()
             temp2_mc = outputroot.Get(temp_mc.GetName())
-	    print cut
+
 	    if temp_mc.Integral() < 1e-4:
 		continue
-	    truth_mc = helpers.TH1toTAsym(temp2_mc, scale=True)
+	    truth_mc = helpers.TH1toTAsym(temp2_mc, efficiency=False)
 
             truth_mc.SetLineColor(CONF.clr_lst[j])
             truth_mc.SetMarkerStyle(20 + j)
@@ -140,8 +147,12 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir, outputname="", nor
             truth_mc.SetMarkerSize(1)
             truth_mc.SetMaximum(maxbincontent * 1.5)
             truth_mc.SetMinimum(minbincontent)
-	    truth_mc.GetXaxis().SetTitle(cut.split("/")[1])
+	    truth_mc.GetXaxis().SetTitle(cut.split("/")[1].replace("_", " "))
             canv.cd()
+            #reset data style
+            if "data" in f: 
+                truth_mc.SetLineColor(1)
+                truth_mc.SetMarkerColor(1)
             if j==0: 
                 truth_mc.Draw("APC")
             else: 
@@ -172,7 +183,9 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir, outputname="", nor
 
         # finish up
         outputroot.cd()
-        canv.SaveAs(outputdir + cut.replace("/", "_") + "_" + canv.GetName() + ".pdf")
+        helpers.checkpath(CONF.inputpath + inputdir + "/Plot/Truth/")
+        #print CONF.inputpath + inputdir + "/Plot/Truth/"
+        canv.SaveAs(CONF.inputpath + inputdir + "/Plot/Truth/" + canv.GetName() + "_" + cut.replace("/", "_") + ".pdf")
         canv.Close()
 
 
@@ -185,7 +198,7 @@ def ratioerror(a, b):
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="TEST")
+    parser.add_argument("--inputdir", default="b77")
     return parser.parse_args()
 
 def fatal(message):

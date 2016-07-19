@@ -169,8 +169,6 @@ class eventHists:
             self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 20, 0.5, 1.5)
             self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 20, 0.5, 1.5)
 
-
-
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
             weight = event.weight
@@ -258,18 +256,11 @@ class eventHists:
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
-            #self.h0_trk0_eta.Write()
-            #self.h0_trk0_phi.Write()
-            #self.h1_trk0_eta.Write()
-            #self.h1_trk0_phi.Write()
         if self.reweight:
             self.mHH_weight.Write()
             self.h0_trk0_pt_weight.Write()
             self.h1_trk0_pt_weight.Write()
             self.h0_pt_m_weight.Write()
-
-
-
 
 #split things in to mass regions, also possible systematic variation
 class massregionHists:
@@ -308,7 +299,8 @@ class massregionHists:
 class trkregionHists:
     def __init__(self, region, outputroot, reweight=False):
         self.reweight = reweight
-        self.Trk0  = massregionHists(region, outputroot, reweight)
+        #maybe shouldn't reweight this as well, but shouldn't matter...
+        self.Trk0  = massregionHists(region, outputroot, True) 
         #self.Trk1  = massregionHists(region + "_" + "1Trk", outputroot)
         #self.Trk2  = massregionHists(region + "_" + "2Trk", outputroot)
         self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)

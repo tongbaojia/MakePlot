@@ -47,9 +47,9 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/"
 for i in {0..19}
 do
 	re=$1
-	inch=TEST
+	inch=F_c10-cb
 	iter=$i
-	ch=DS1_cb$"_"$re"_"$iter
+	ch=f_fin-re$"_"$re"_"$iter
 	#ch=f_c10-cb
 	echo $ch, "is the channel and iteration!"
 	python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
