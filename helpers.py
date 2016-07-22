@@ -772,13 +772,15 @@ def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0), efficiency=True):
 # NOTE: you __must__ store the return variable from this function and keep it in scope
 # until you save the associated canvas, otherwise python will grabage collect the 
 # watermakrs and they will __not__ show up on your canvas
-def DrawWatermarks(xatlas=0.35, yatlas=0.87, deltay=0.6, deltax=None, watermarks=None):
+def DrawWatermarks(xatlas=0.35, yatlas=0.87, deltay=0.06, deltax=None, watermarks=None):
     if deltax is not None:
         deltay = 0.0
 	if watermarks is None:
 	    assert len(deltax) == 2
   	else:
 	    assert len(deltax) == len(watermarks) -1
+    else:
+	deltax = [0]*(len(watermarks)-1 if watermarks else 2)
 
     if watermarks is None:
         atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
