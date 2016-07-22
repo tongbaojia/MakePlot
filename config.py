@@ -4,18 +4,21 @@ import ROOT, helpers, os
 #get current directory
 currpath    = os.path.abspath(os.curdir)
 #change this to your home directory of everything; should be where the code is checked out
-toppath     =  os.path.dirname(currpath)
+#toppath     =  os.path.dirname(currpath)
+toppath     =  "/afs/cern.ch/work/g/gputnam/public"
 #input top directory for the root files
-inputpath   =  toppath + "/Output/"
+outputname = "/trkptcut-outputs/"
+#outputname = "/Output/"
+inputpath   =  toppath + outputname
 helpers.checkpath(inputpath)
 #output top directory for the output plots/root files
-outputpath  =  toppath +"/Output/"
+outputpath  =  toppath + outputname
 helpers.checkpath(outputpath)
 #output top directory for only plots
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #check if reference folder exists
-refpath     =  toppath +"/Output/ref/"
+refpath     =  toppath + outputname + "ref/"
 if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
 else:

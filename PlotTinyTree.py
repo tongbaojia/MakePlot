@@ -7,6 +7,7 @@ import config as CONF
 import time, os, subprocess, glob, argparse, compiler
 #for parallel processing!
 import multiprocessing as mp
+import numpy as np
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
@@ -19,6 +20,9 @@ def options():
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
+    # TEMPORARY FOR SR SHAPE
+    parser.add_argument("--rval", default=1.6)
+    parser.add_argument("--extval", default=0.0)
     return parser.parse_args()
 
 #returns a dictionary of weights
@@ -121,7 +125,7 @@ class eventHists:
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
-        self.fullhist =  True #ops.dosyst is None ##option to turn it off
+        self.fullhist =  False #ops.dosyst is None ##option to turn it off
         self.region = region
         self.reweight = reweight
         #add in all the histograms
@@ -405,6 +409,31 @@ def pack_input(inputfile, inputsplit=-1):
     helpers.checkpath(outputpath + inputfile)
     return dic
 
+def pass_extended_SR(m0, m1, r, extend):
+    #extend = 1.0
+    #r = 1.2
+
+    # first try h0:
+    if m0 > 124:
+	h0comp = 124
+    elif m0 < 124 - extend:
+	h0comp = 124 - extend
+    else:
+	h0comp = m0
+    tryh0 = np.sqrt( ((m0-h0comp)/(0.1*m0))**2 + ((m1-115)/(0.1*m1))**2 ) < r
+    if tryh0:
+	return True
+
+    # now try h1:
+    if m1 > 115:
+	h1comp = 115
+    elif m1 < 115 - extend:
+	h1comp = 115 - extend
+    else:
+	h1comp = m1
+    tryh1 = np.sqrt( ((m0-124)/(0.1*m0))**2 + ((m1-h1comp)/(0.1*m1))**2 ) < r
+    return tryh1
+
 def main():
     print "Start TinyTree--->Plots!"
     start_time = time.time()
@@ -428,8 +457,15 @@ def main():
     global Syst_cut
     CR_size = 35.8
     SB_size = 63
+
+    # TEMPORARY HACK: set up signal paramters using outputdir
+    rval = float(ops.rval)
+    extval = float(ops.extval)
+    print "ATTENTION: r: %.2f ext: %.2f" % (rval, extval)
     Syst_cut = {
-        "SR"         : "event.Xhh < 1.6",
+	#"SR"	     : "np.sqrt( (event.j0_m*(124-event.j0_m)/124**2)**2 + (event.j1_m*(115-event.j1_m)/115**2)**2 ) < .16",
+	"SR"	     : "pass_extended_SR(event.j0_m, event.j1_m, %.2f, %.2f)" % (rval, extval),
+        #"SR"         : "event.Xhh < 1.6",
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
         "SB"         : "event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
