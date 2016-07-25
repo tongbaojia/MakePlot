@@ -32,22 +32,21 @@ def selection(config):
     cutflow        = f.Get("cutflow_XhhMiniNtuple").Clone()
     Metadata       = f.Get("MetaData_EventCount_XhhMiniNtuple").Clone()
 
-
     outfile = ROOT.TFile(config["file"] + "_skim", "recreate")
-    outtree = t.CloneTree(0)
-
     print "skimming: ", config["file"]
-    #open and copy
+    #outtree = t.CopyTree("hcand_boosted_n >= 2")
+    outtree = t.CloneTree(0)
+    ##open and copy
     nentries = t.GetEntries()
     for n in range(nentries):
         t.GetEntry(n)
         #add cuts for skimming...so simple...implicit this is a 250, 350 cut
+        if n % 20000 == 0:
+            helpers.drawProgressBar(n/(nentries*1.0))
         if t.hcand_boosted_n < 2:
             continue
         #print n%nfiles
         outtree.Fill()
-
-
     print "skimming done! ", config["file"]
     #save the output
     outfile.cd()
@@ -89,13 +88,15 @@ def skim(targetpath=""):
         if not os.path.isfile(temp_dic["file"] + "_skim"):
             config.append(temp_dic)
     print config
-
     print " Running %s jobs on %s cores" % (len(config), mp.cpu_count()-1)
     npool = min(len(config), mp.cpu_count()-1)
     pool  = mp.Pool(npool)
     pool.map(selection, config)
     ##for debugging
     #selection(config[0])
+    # for conf in config:
+    #     print conf
+    #     selection(conf)
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"

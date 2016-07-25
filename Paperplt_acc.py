@@ -43,14 +43,14 @@ def main():
 
     # select the cuts
     # the list must start from the largest to the smallest!
-    evtsel_lst = ["PassTrig", "PassDiJetEta", "PassDetaHH", "PassBJetSkim", "PassSignal"]
+    evtsel_lst = ["PassDiJetEta", "PassDetaHH", "PassBJetSkim", "PassSignal"]
     detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
     "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
     region_lst = ["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"]
     global cut_dic
-    cut_dic    = {"PassTrig":"Trigger", "PassDiJetEta":"#geq 2 large-R jets", 
-    "PassDetaHH":"1.7 > #Delta#eta_{hh}",  "PassBJetSkim":"#geq 2 b-tagged", 
-    "PassSignal":"1.6 > X_{hh} ",
+    cut_dic    = {"PassTrig":"Trigger", "PassDiJetEta":"large-R jets #geq 2", 
+    "PassDetaHH":"|#Delta#eta_{hh}| < 1.7",  "PassBJetSkim":"b-tagged #geq 2", 
+    "PassSignal":"X_{hh} < 1.6 ",
     "ThreeTag_Signal":"3 b-tagged track-jets", "FourTag_Signal":"4 b-tagged track-jets", "TwoTag_split_Signal":"2 b-tagged track-jets",
     }
 
@@ -117,7 +117,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
         #convert it to a TGraph
         graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
         graph_lst[i].SetLineColor(CONF.clr_lst[i])
-        graph_lst[i].SetMarkerStyle(20 + i)
+        graph_lst[i].SetMarkerStyle(CONF.mrk_lst[i])
         graph_lst[i].SetMarkerColor(CONF.clr_lst[i])
         graph_lst[i].SetMarkerSize(1)
         graph_lst[i].SetMaximum(maxbincontent * 1.6)
@@ -145,7 +145,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     #yline10.Draw()
     # draw watermarks
     xatlas, yatlas = 0.35, 0.87
-    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Simulation Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
     watermarks = [atlas, hh4b, lumi]

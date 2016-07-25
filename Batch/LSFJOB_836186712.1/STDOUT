@@ -1,0 +1,382 @@
+@(#)CERN job starter $Date: 2010/06/23 14:22:16 $
+Working directory is </pool/lsf/btong/836186712.1> on <b6fe6c92b5.cern.ch>
+
+the input file is 
+/pool/spool/1469355265.836186712.1.shell: line 19: [: ==: unary operator expected
+[7mlsetup              [0m lsetup <tool1> [ <tool2> ...] (see lsetup -h):
+[7m lsetup agis        [0m  (or localSetupAGIS) to use AGIS
+[7m lsetup asetup      [0m  (or asetup) to use an Athena release
+[7m lsetup atlantis    [0m  (or localSetupAtlantis) to use Atlantis
+[7m lsetup dq2         [0m  (or localSetupDQ2Client) to use DQ2Client
+[7m lsetup eiclient    [0m  (or localSetupEIClient) to use EIClient
+[7m lsetup emi         [0m  (or localSetupEmi) to use  emi
+[7m lsetup fax         [0m  (or localSetupFAX) to use FAX
+[7m lsetup ganga       [0m  (or localSetupGanga) to use Ganga
+[7m lsetup lcgenv      [0m  to use lcgenv
+[7m lsetup panda       [0m  (or localSetupPandaClient) to use Panda Client
+[7m lsetup pod         [0m  (or localSetupPoD) to use Proof-on-Demand
+[7m lsetup pyami       [0m  (or localSetupPyAMI) to use pyAMI
+[7m lsetup rcsetup     [0m  (or rcSetup) to setup an ASG release
+[7m lsetup root        [0m  (or localSetupROOT) to use ROOT
+[7m lsetup rucio       [0m  (or localSetupRucioClients) to use rucio-clients
+[7m lsetup sft         [0m  (or localSetupSFT) to use SFT packages
+[7m lsetup xrootd      [0m  (or localSetupXRootD) to use XRootD
+[7madvancedTools       [0m for advanced tools
+[7mdiagnostics         [0m for diagnostic tools
+[7mhelpMe              [0m more help
+[7mprintMenu           [0m show this menu
+[7mshowVersions        [0m show versions of installed software
+mktemp: failed to create file via template `/tmp/btong/.alrb/checkGridUse.XXXXXX': No such file or directory
+
+[1m[4m14 Jul 2016[0m 
+  DQ2 clients are deprecated and no longer supported. 
+   [97m[101mThey will be removed completely by December 2016.[0m
+   Please use Rucio instead:
+       lsetup rucio
+   For more info: https://twiki.cern.ch/twiki/bin/view/AtlasComputing/RucioClientsHowTo
+
+lsetup: invalid option -- 'u'
+'lsetup --help' for more information
+ If it is an option for a tool, you need to put it in double quotes.
+************************************************************************
+Requested:  rcsetup ... 
+ Setting up [4mrcsetup 00-04-16[0m ... 
+In current directory, found previous release with config=x86_64-slc6-gcc49-opt at the following location, going to set up its env: 
+	/cvmfs/atlas.cern.ch/repo/sw/ASG/AnalysisBase/2.4.14
+Going to set up ROOT-6.04.16-x86_64-slc6-gcc49-opt from cvmfs
+>>>>>>>>>>>>>>>>>>>>>>>>> Information for user <<<<<<<<<<<<<<<<<<<<<<<<<
+************************************************************************
+************************************************************************
+Requested:  sft ... 
+ Setting up [4mgcc gcc493_x86_64_slc6[0m ... 
+  Skipping: gcc493 already setup.
+ Setting up [4mpython 2.7.4-x86_64-slc6-gcc48[0m ... 
+  Skipping: python 2.7 x86_64 already setup.
+ Setting up [4msft  pyanalysis[0m ... 
+  Setting up pyanalysis 1.5_python2.7-d641e ...
+>>>>>>>>>>>>>>>>>>>>>>>>> Information for user <<<<<<<<<<<<<<<<<<<<<<<<<
+ sft:
+  pyanalysis:
+    The env $SFT_HOME_pyanalysis is the home dir
+************************************************************************
+ch:DS1_cb:ch syst:CR_High:syst
+plotting channel:  DS1_cb
+plotting syst:  CR_High
+Start TinyTree--->Plots!
+ START: Running 49 jobs on 15 cores
+hadd Target file: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root
+hadd Source file 1: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_0.root
+hadd Source file 2: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_1.root
+hadd Source file 3: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_2.root
+hadd Source file 4: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_3.root
+hadd Source file 5: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_4.root
+hadd Source file 6: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_5.root
+hadd Source file 7: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_6.root
+hadd Source file 8: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_7.root
+hadd Source file 9: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_8.root
+hadd Source file 10: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_9.root
+hadd Source file 11: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_10.root
+hadd Source file 12: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_11.root
+hadd Source file 13: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_12.root
+hadd Source file 14: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple_13.root
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/OneTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/OneTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/OneTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/OneTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/TwoTag_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/ThreeTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/ThreeTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/ThreeTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/ThreeTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/FourTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/FourTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/FourTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/data_test/hist-MiniNTuple.root:/FourTag_Incl
+hadd Target file: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root
+hadd Source file 1: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_0.root
+hadd Source file 2: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_1.root
+hadd Source file 3: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_2.root
+hadd Source file 4: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_3.root
+hadd Source file 5: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_4.root
+hadd Source file 6: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_5.root
+hadd Source file 7: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_6.root
+hadd Source file 8: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_7.root
+hadd Source file 9: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_8.root
+hadd Source file 10: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_9.root
+hadd Source file 11: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_10.root
+hadd Source file 12: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_11.root
+hadd Source file 13: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_12.root
+hadd Source file 14: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple_13.root
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Incl
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_3.root analysis! 195246  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M1300 hist-MiniNTuple.root analysis! 13123  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_2.root analysis! 195246  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_10.root analysis! 195245  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_11.root analysis! 195245  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M1800 hist-MiniNTuple.root analysis! 11075  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_1.root analysis! 195246  events!
+[ >                    ] 0.00%
+[ =========>           ] 49.02%
+[ ===================> ] 98.03%
+DONE with the signal_G_hh_c10_M1000 hist-MiniNTuple.root analysis! 40802  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_5.root analysis! 195246  events!
+[ >                    ] 0.00%
+[ =======>             ] 36.82%
+[ ==============>      ] 73.65%
+DONE with the signal_G_hh_c10_M1100 hist-MiniNTuple.root analysis! 54311  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_0.root analysis! 195246  events!
+[ >                    ] 0.00%
+[ ======>              ] 32.40%
+[ ============>        ] 64.80%
+[ ===================> ] 97.20%
+DONE with the signal_G_hh_c10_M1200 hist-MiniNTuple.root analysis! 61731  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_6.root analysis! 195245  events!
+[ >                    ] 0.00%
+[ ========>            ] 42.32%
+[ ================>    ] 84.64%
+DONE with the signal_G_hh_c10_M2500 hist-MiniNTuple.root analysis! 47259  events!
+[ >                    ] 0.00%
+[ ==>                  ] 10.24%
+[ ====>                ] 20.49%
+[ ======>              ] 30.73%
+[ ========>            ] 40.97%
+[ ==========>          ] 51.22%
+[ ============>        ] 61.46%
+[ ==============>      ] 71.70%
+[ ================>    ] 81.95%
+[ ==================>  ] 92.19%
+DONE with the data_test hist-MiniNTuple_7.root analysis! 195245  events!
+[ >                    ] 0.00%
+[ ========>            ] 42.20%
+[ ================>    ] 84.40%
+DONE with the signal_G_hh_c10_M2750 hist-MiniNTuple.root analysis! 47391  events!
+--- 575.90495801 seconds ---
+Finish!
+
+Applying ATLAS style settings...
+
+
+Applying ATLAS style settings...
+
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Fit/fitNorm_i4_leadHCand_Mass.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Fit/fitNorm_i3_leadHCand_Mass.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Fit/fitNorm_i2s_leadHCand_Mass.pdf has been created
+full histos: true
+input is /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/
+***** estimation *****
+Start Fit!
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+Sample & $\mu_{qcd}$ & $\alpha_{t\bar{t}}$ & $\rho(\mu_{qcd}, \alpha_{t\bar{t}})$ \\
+\hline\hline
+& & & \\
+SB, Nb=4 & 0.00085 $\pm$ 7.3e-05 & 2.53 $\pm$ 1.13 & -0.63\\
+SB, Nb=3 & 0.0084 $\pm$ 0.00017 & 1.77 $\pm$ 0.16 & -0.61\\
+SB, Nb=2s & 0.036 $\pm$ 0.00037 & 1.44 $\pm$ 0.057 & -0.64\\
+& & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+End of Fit!
+***** estimation *****
+***** estimation *****
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c|c}
+data Est & Sideband & Control & ZZ & Signal \\
+\hline\hline
+& & & & \\
+NoTag & 534858.0 $\pm$ 735.62 $\substack{+ 1031.04\\- 1031.04}$  & 139351.0 $\pm$ 375.74 $\substack{+ 268.65\\- 268.65}$  & 62965.0 $\pm$ 252.16 $\substack{+ 121.66\\- 121.66}$ \\
+OneTag & 208757.0 $\pm$ 285.44 $\substack{+ 530.29\\- 530.29}$  & 54536.71 $\pm$ 145.16 $\substack{+ 138.19\\- 138.19}$  & 24531.72 $\pm$ 97.07 $\substack{+ 62.56\\- 62.56}$ \\
+TwoTag & 23510.0 $\pm$ 36.64 $\substack{+ 154.6\\- 154.6}$  & 6154.01 $\pm$ 19.17 $\substack{+ 40.29\\- 40.29}$  & 2760.56 $\pm$ 11.91 $\substack{+ 18.24\\- 18.24}$ \\
+TwoTag split & 23264.37 $\pm$ 45.66 $\substack{+ 152.35\\- 152.35}$  & 6343.02 $\pm$ 24.72 $\substack{+ 42.25\\- 42.25}$  & 2777.85 $\pm$ 15.57 $\substack{+ 18.21\\- 18.21}$ \\
+ThreeTag & 5014.04 $\pm$ 19.6 $\substack{+ 70.66\\- 70.66}$  & 1369.1 $\pm$ 10.58 $\substack{+ 19.52\\- 19.52}$  & 596.88 $\pm$ 6.65 $\substack{+ 8.45\\- 8.45}$ \\
+FourTag & 294.1 $\pm$ 2.72 $\substack{+ 17.04\\- 17.04}$  & 85.81 $\pm$ 1.75 $\substack{+ 4.98\\- 4.98}$  & 40.56 $\pm$ 2.27 $\substack{+ 2.3\\- 2.3}$ \\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c|c}
+Data Est Diff Percentage & Sideband & Control & ZZ & Signal \\
+\hline\hline
+& & & & \\
+NoTag & 2.3e-08 $\pm$ 0.27 $\substack{+ 0.19\\- 0.19}$  & -2.7e-09 $\pm$ 0.54 $\substack{+ 0.19\\- 0.19}$  & -3.3e-12 $\pm$ 0.8 $\substack{+ 0.19\\- 0.19}$ \\
+OneTag & 2.3e-07 $\pm$ 0.36 $\substack{+ 0.25\\- 0.25}$  & -3.59 $\pm$ 0.66 $\substack{+ 0.24\\- 0.24}$  & -1.96 $\pm$ 1.01 $\substack{+ 0.25\\- 0.25}$ \\
+TwoTag & -2.7e-07 $\pm$ 0.81 $\substack{+ 0.66\\- 0.66}$  & -4.29 $\pm$ 1.49 $\substack{+ 0.63\\- 0.63}$  & -3.98 $\pm$ 2.21 $\substack{+ 0.63\\- 0.63}$ \\
+TwoTag split & -0.054 $\pm$ 0.85 $\substack{+ 0.65\\- 0.65}$  & -4.66 $\pm$ 1.54 $\substack{+ 0.64\\- 0.64}$  & -1.32 $\pm$ 2.41 $\substack{+ 0.65\\- 0.65}$ \\
+ThreeTag & 0.14 $\pm$ 1.81 $\substack{+ 1.41\\- 1.41}$  & -2.49 $\pm$ 3.36 $\substack{+ 1.39\\- 1.39}$  & -11.0 $\pm$ 4.43 $\substack{+ 1.26\\- 1.26}$ \\
+FourTag & 1.07 $\pm$ 6.86 $\substack{+ 5.86\\- 5.86}$  & 19.18 $\pm$ 16.48 $\substack{+ 6.92\\- 6.92}$  & 26.75 $\pm$ 29.51 $\substack{+ 7.19\\- 7.19}$ \\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+ Running 23 jobs on 15 cores
+--- 52.0561048985 seconds ---
+Using /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/MakePlot/rootlogon.pyc
+
+Applying ATLAS style settings...
+
+input root file is:  /afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/sum_
+ Running 12 jobs on 15 cores
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Sideband done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Sideband done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Sideband done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Control done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Control done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Control done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis/Output/DS1_cb_j0pT-leadtrk-fin_19_CR_High/Plot/Signal done!
+--- 37.9219861031 seconds ---
+DONE!!!
+
+Job finished at Sun Jul 24 12:43:30 CEST 2016 on node 
+ under linux version Scientific Linux CERN SLC release 6.8 (Carbon)
+
+CERN statistics: This process used approximately : 2:38:11 KSI2K hours (9491 KSI2K seconds)
+                 This process corresponds to     : 10:16:54 HS06  hours (37014 HS06  seconds)

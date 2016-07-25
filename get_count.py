@@ -45,7 +45,7 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--dosyst", default=False)
-    parser.add_argument("--full", default=True) #4times more time
+    parser.add_argument("--full", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
@@ -125,7 +125,7 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=background_model)
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=1, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est", masterinfo))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
