@@ -193,6 +193,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
             #print kname
         elif "totalbkg_hh" in kname and "down" in kname:
             syst_down.append(ifile.Get(kname).Clone(kname))
+        elif "totalbkg_hh" in kname:
+            syst_up.append(ifile.Get(kname).Clone(kname))
+            syst_down.append(ifile.Get(kname).Clone(kname))
     #print len(syst_up), len(syst_down)
 
 

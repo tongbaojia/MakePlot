@@ -193,9 +193,10 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
             #print kname
         elif "totalbkg_hh" in kname and "down" in kname:
             syst_down.append(ifile.Get(kname).Clone(kname))
+        elif "totalbkg_hh" in kname:
+            syst_up.append(ifile.Get(kname).Clone(kname))
+            syst_down.append(ifile.Get(kname).Clone(kname))
     #print len(syst_up), len(syst_down)
-
-
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
     ttbar = ifile.Get("ttbar_hh")

@@ -27,9 +27,9 @@ def main():
     inputpath = CONF.inputpath + inputdir + "/"
     global outputpath
     outputpath = CONF.inputpath + inputdir + "/" + "PaperPlot/SigEff/"
-
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
+
     #set global draw options
     global mass_lst
     mass_lst = [700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
@@ -37,9 +37,6 @@ def main():
     lowmass = 650
     global highmass
     highmass = 3150
-    # create output file
-    #output = ROOT.TFile.Open(outuputpath + "sigeff.root", "recreate")
-    #output.Close()
 
     # select the cuts
     # the list must start from the largest to the smallest!
@@ -49,7 +46,7 @@ def main():
     region_lst = ["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"]
     global cut_dic
     cut_dic    = {"PassTrig":"Trigger", "PassDiJetEta":"large-R jets #geq 2", 
-    "PassDetaHH":"|#Delta#eta_{hh}| < 1.7",  "PassBJetSkim":"b-tagged #geq 2", 
+    "PassDetaHH":"|#Delta#eta_{hh}| < 1.7",  "PassBJetSkim":"b-tagged track-jets #geq 2", 
     "PassSignal":"X_{hh} < 1.6 ",
     "ThreeTag_Signal":"3 b-tagged track-jets", "FourTag_Signal":"4 b-tagged track-jets", "TwoTag_split_Signal":"2 b-tagged track-jets",
     }
@@ -72,7 +69,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     ### 1 for signal mass region
     afterscript = "_rel" if dorel else ""
     canv = ROOT.TCanvas(inputdir + "_" + "Efficiency" + "_" + normalization + afterscript, "Efficiency", 800, 800)
-    xleg, yleg = 0.5, 0.7
+    xleg, yleg = 0.55, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
     # setup basic plot parameters
     # load input MC file
@@ -133,7 +130,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
-    legend.SetTextSize(0.035)
+    legend.SetTextSize(0.03)
     legend.Draw()
 
     # draw reference lines
@@ -146,12 +143,11 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     # draw watermarks
     xatlas, yatlas = 0.35, 0.87
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Simulation Internal")
-    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    watermarks = [atlas, hh4b, lumi]
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0, #sqrt{s} = 13 TeV")
+    watermarks = [atlas, hh4b]
     for wm in watermarks:
         wm.SetTextAlign(22)
-        wm.SetTextSize(0.035)
+        wm.SetTextSize(0.03)
         wm.SetTextFont(42)
         wm.SetNDC()
         wm.Draw()

@@ -25,6 +25,8 @@ def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
             hBkg.Add(h)
     # total bkg graph with errors
     gBkg = ROOT.TGraphAsymmErrors(bkgs[0].GetNbinsX())
+    # total bkg histogram, with error settings
+    hBkg_err = hBkg.Clone("bkg_err")
     # add stat errors
     for i in range(0, gBkg.GetN()):
         gBkg.SetPoint(i,       hBkg.GetBinCenter(i+1), hBkg.GetBinContent(i+1))
@@ -39,17 +41,20 @@ def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
             ### error up
             err = math.pow(gBkg.GetErrorYhigh(i),2)
             # loop over backgrounds
-            for ih in range(0, len(bkgs)):
-                err += math.pow(math.fabs( bkgs[ih].GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2)
+            for ih in range(0, len(bkgsUp)):
+                err += math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2)
             gBkg.SetPointEYhigh(i, math.sqrt(err))
             ### error down
             err = math.pow(gBkg.GetErrorYlow(i),2)
             # loop over backgrounds
-            for ih in range(0, len(bkgs)):
-                err += math.pow(math.fabs( bkgs[ih].GetBinContent(i+1) - bkgsDown[ih].GetBinContent(i+1) ), 2)
+            for ih in range(0, len(bkgsDown)):
+                err += math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsDown[ih].GetBinContent(i+1) ), 2)
             gBkg.SetPointEYlow(i, math.sqrt(err))
-
-    return [hBkg, gBkg]
+        # loop over points, for hBkg
+        for i in range(0, gBkg.GetN()):
+            maxbinerr = max(gBkg.GetErrorYhigh(i), gBkg.GetErrorYlow(i))
+            hBkg_err.SetBinError(i, maxbinerr)
+    return [hBkg, gBkg, hBkg_err]
 
 # function to build data/bkgd ratios
 def makeDataRatio(data, bkg):

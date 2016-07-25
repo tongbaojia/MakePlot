@@ -89,11 +89,15 @@ def SBCR_table(masterdic):
         #print masterdic, systag
         for c in cut_lst:
             if raw == "zjet":
-                valuetuple = (masterdic[raw][c.split("__")[0]][c.split("__")[1]], 
-                    masterdic[raw][c.split("__")[0]][c.split("__")[1] + "_err"])
+                raw_tempname = raw
             else:
-                valuetuple = (masterdic[raw + "_est"][c.split("__")[0]][c.split("__")[1]], 
-                    masterdic[raw + "_est"][c.split("__")[0]][c.split("__")[1] + "_err"])
+                raw_tempname = raw + "_est"
+            err_fit  = 0
+            if c.split("__")[1] + "_syst_muqcd_fit_up" in masterdic[raw_tempname][c.split("__")[0]].keys():
+                err_fit = masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1] + "_syst_muqcd_fit_up"]
+                #print err_fit
+            err_all  = helpers.syst_adderror(masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1] + "_err"], err_fit)
+            valuetuple = (masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1]], err_all)
             outstr += help_table.add_entry(valuetuple)
         #finish the current entry
         outstr+="\\\\"
