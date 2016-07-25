@@ -728,7 +728,7 @@ def drawProgressBar(percent, barLen = 20):
     #sys.stdout.write("[ %s ] %.2f%%" % (progress, percent * 100) + "\r")
 
 
-def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
+def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0), efficiency=True):
     #only for efficiency plot now!
     x = array("f", [])
     y = array("f", [])
@@ -756,7 +756,10 @@ def TH1toTAsym(hist, cutvalue=0, pltrange=(0, 0)):
             exl.append(0)
             exh.append(0)
             eyl.append(hist.GetBinError(i))
-            eyh.append(min(hist.GetBinError(i), 1 - hist.GetBinContent(i)))
+            if efficiency: 
+                eyh.append(min(hist.GetBinError(i), 1 - hist.GetBinContent(i)))
+            else:
+                eyh.append(hist.GetBinError(i))
     #print n, x
     gr = ROOT.TGraphAsymmErrors(n,x,y,exl,exh,eyl,eyh)
     gr.GetXaxis().SetLimits(xMin, xMax)

@@ -61,13 +61,18 @@ def add_entry(valuetuple, doerr=True, percent=False):
     return temstr
 
 
-def add_table_head(tableList, column_lst, title=""):
+def add_table_head(tableList, column_lst, title="", special_raw=None):
     '''add the table header: the string, the columns and the title'''
     title_lst = [title.replace("_", " ")]
     for t in column_lst:
         title_lst.append(t.replace("_", " "))
     tableList.append("\\begin{footnotesize}")
     tableList.append("\\begin{tabular}{c" + "{0}".format("|c" * len(column_lst)) + "}")
+    if special_raw is not None:
+        special_lst = [" "]
+        for s in special_raw:
+            special_lst.append("{" + s.replace("_", " ") + "}")
+        tableList.append(" & \multicolumn{2}{c}".join(special_lst) + " \\\\")
     tableList.append(" & ".join(title_lst) + " \\\\")
     tableList.append("\\hline\\hline")
     #tableList.append("{0}\\\\".format("& " * len(column_lst)))
@@ -79,6 +84,34 @@ def add_table_tail(tableList, column_lst):
     tableList.append("\\end{tabular}")
     tableList.append("\\end{footnotesize}")
     tableList.append("\\newline")
+
+
+#these still need development
+def add_table_head_formal(tableList, column_lst, title="", special_raw=None):
+    '''add the table header: the string, the columns and the title'''
+    title_lst = [title.replace("_", " ")]
+    for t in column_lst:
+        title_lst.append(t.replace("_", " "))
+    tableList.append("\\begin{tabular}{lS[table-format=4.0,table-number-alignment=right,round-mode=places,round-precision=0]@{\,$\pm$}S[round-mode=figures,round-precision=1,table-format=3.0]")
+    tableList.append("S[table-format=3.0,table-number-alignment=right,round-mode=places,round-precision=0]@{\,$\pm$}S[round-mode=figures,round-precision=1,table-format=2.0]")
+    tableList.append("S[table-format=2.0,table-number-alignment=right,round-mode=places,round-precision=0]@{\,$\pm$}S[round-mode=figures,round-precision=1,table-format=1.0]}")
+    
+    if special_raw is not None:
+        special_lst = [" "]
+        for s in special_raw:
+            special_lst.append("{" + s.replace("_", " ") + "}")
+        tableList.append(" & \multicolumn{2}{c}".join(special_lst) + " \\\\")
+    tableList.append(" & ".join(title_lst) + " \\\\")
+    tableList.append("\\hline\\hline")
+    #tableList.append("{0}\\\\".format("& " * len(column_lst)))
+
+def add_table_tail_formal(tableList, column_lst):
+    '''add the table ending line: the string, the columns'''
+    #tableList.append("{0}\\\\".format("& " * len(column_lst)))
+    tableList.append("\\bottomrule")
+    tableList.append("\\end{tabular}")
+    tableList.append("\\newline")
+
 
 if __name__ == '__main__': 
     main()

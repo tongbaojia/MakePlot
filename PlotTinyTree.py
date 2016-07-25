@@ -61,17 +61,17 @@ def get_reweight(folder, filename):
         lstline =  line.split()#default split by space
         #print lstline
         if "par0" in line:
-            par_weight["par0"] = float(lstline[1])
+            par_weight["par0"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "par1" in line:
-            par_weight["par1"] = float(lstline[1])
+            par_weight["par1"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "par2" in line:
-            par_weight["par2"] = float(lstline[1])
+            par_weight["par2"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "par3" in line:
-            par_weight["par3"] = float(lstline[1])
+            par_weight["par3"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "low" in line:
-            par_weight["low"]  = float(lstline[1])
+            par_weight["low"]  = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "high" in line:
-            par_weight["high"] = float(lstline[1])
+            par_weight["high"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
     #print par_weight
     f_reweight.close()
     return par_weight
@@ -79,8 +79,8 @@ def get_reweight(folder, filename):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event):
     totalweight = 1
-    maxscale = 1.5 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.5 #this means the minimum correction is this for each reweighting; used to be 0.5
+    maxscale = 1.7 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.3 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -102,8 +102,10 @@ def calc_reweight(dic, event):
     #also contrain the totalweight
     if totalweight < minscale:
         totalweight = minscale
+        #print totalweight, tempweight
     elif totalweight > maxscale:
         totalweight = maxscale
+        #print totalweight, tempweight
     return totalweight
 
 #get Xhh and Rhh values; for variations's sake
@@ -112,11 +114,8 @@ def GetExp(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
     return RhhExp
 
-
-
 class eventHists:
     # will take 3 minutes to generate all histograms; 3 times more time...
-
     def __init__(self, region, outputroot, reweight=False):
         outputroot.cd()
         outputroot.mkdir(region)
@@ -156,8 +155,18 @@ class eventHists:
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
             self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+            #self.h0_trk0_eta  = ROOT.TH1F("leadHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
+            #self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
+            #self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
+            #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
+        #save reweight weights
+        if self.reweight:
+            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 28, 0.3, 1.7)
+            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 28, 0.3, 1.7)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 28, 0.3, 1.7)
+            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 28, 0.3, 1.7)
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
@@ -199,8 +208,17 @@ class eventHists:
             self.trks_pt.Fill(event.j0_trk1_pt, weight)
             self.trks_pt.Fill(event.j1_trk0_pt, weight)
             self.trks_pt.Fill(event.j1_trk1_pt, weight)
+            #self.h0_trk0_eta.Fill(event.j0_trk0_eta, weight)
+            #self.h0_trk0_phi.Fill(event.j0_trk0_phi, weight)
+            #self.h1_trk0_eta.Fill(event.j1_trk0_eta, weight)
+            #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
+        if self.reweight:
+            self.mHH_weight.Fill(event.mHH, weight)
+            self.h0_trk0_pt_weight.Fill(event.j0_trk0_pt, weight)
+            self.h1_trk0_pt_weight.Fill(event.j1_trk0_pt, weight)
+            self.h0_pt_m_weight.Fill(event.j0_pt, weight)
 
     def Write(self, outputroot):
         outputroot.cd(self.region)
@@ -237,8 +255,11 @@ class eventHists:
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
-
-
+        if self.reweight:
+            self.mHH_weight.Write()
+            self.h0_trk0_pt_weight.Write()
+            self.h1_trk0_pt_weight.Write()
+            self.h0_pt_m_weight.Write()
 
 #split things in to mass regions, also possible systematic variation
 class massregionHists:
@@ -277,7 +298,8 @@ class massregionHists:
 class trkregionHists:
     def __init__(self, region, outputroot, reweight=False):
         self.reweight = reweight
-        self.Trk0  = massregionHists(region, outputroot, reweight)
+        #maybe shouldn't reweight this as well, but shouldn't matter...
+        self.Trk0  = massregionHists(region, outputroot, True) 
         #self.Trk1  = massregionHists(region + "_" + "1Trk", outputroot)
         #self.Trk2  = massregionHists(region + "_" + "2Trk", outputroot)
         self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)
@@ -287,7 +309,7 @@ class trkregionHists:
             self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic = get_parameter(filename=ops.reweight)
 
     def Fill(self, event, weight=-1):
-        self.Trk0.Fill(event, weight)
+        self.Trk0.Fill(event, event.weight)
         # if event.j0_nTrk >= 1 or event.j1_nTrk >= 1:
         #     self.Trk1.Fill(event)
         # if event.j0_nTrk >= 2 or event.j1_nTrk >= 2:
@@ -482,8 +504,8 @@ def main():
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
             #this is a really bad practice and temp fix now! need to watch this very carfully...
-            ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             #print ori_link, dst_link
             if os.path.islink(dst_link):
@@ -494,7 +516,7 @@ def main():
     #return
     ##if reweight, reweight everything
     #parallel compute!
-    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool  = mp.Pool(npool)
     pool.map(analysis, inputtasks)

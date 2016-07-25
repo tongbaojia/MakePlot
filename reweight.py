@@ -1,16 +1,19 @@
 # Tony Tong; baojia.tong@cern.ch
 import os, argparse, sys, math, time
+import config as CONF
+from array import array
+import ROOT as ROOT
+import help_plot as h_plt
+import help_table as h_table
+import helpers
+import rootlogon
 #for parallel processing!
 import multiprocessing as mp
-from array import array
-import ROOT, rootlogon, helpers
-import config as CONF
-from ROOT import *
+#other setups
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
 ROOT.SetAtlasStyle()
-#other setups
-TH1.AddDirectory(False)
+ROOT.TH1.AddDirectory(False)
 StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
 
@@ -18,128 +21,10 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="f_c10-cb")
+    parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--inputroot", default="sum")
     parser.add_argument("--iter", default=0)
     return parser.parse_args()
-
-# zero the x-errors
-def zeroXerror(g):
-    for i in range(0,g.GetN()):
-        g.SetPointEXlow(i,  0.0)
-        g.SetPointEXhigh(i, 0.0) 
-
-# function to build total background in histograma and graph format
-def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
-    # total bkg histogram
-    hBkg = bkgs[0].Clone("bkg")
-    if len(bkgs)>1:
-        hBkg.Reset()
-        for h in bkgs:
-            hBkg.Add(h)
-    # total bkg graph with errors
-    gBkg = ROOT.TGraphAsymmErrors(bkgs[0].GetNbinsX())
-    # add stat errors
-    for i in range(0, gBkg.GetN()):
-        gBkg.SetPoint(i,       hBkg.GetBinCenter(i+1), hBkg.GetBinContent(i+1))
-        gBkg.SetPointEXlow(i,  hBkg.GetBinWidth(i+1) / 2.)
-        gBkg.SetPointEXhigh(i, hBkg.GetBinWidth(i+1) / 2.)
-        gBkg.SetPointEYlow(i,  hBkg.GetBinError(i+1))
-        gBkg.SetPointEYhigh(i, hBkg.GetBinError(i+1))
-    # add syst errors (if provided)
-    if len(bkgsUp)>0:
-        # loop over points
-        for i in range(0, gBkg.GetN()):
-            ### error up
-            err = math.pow(gBkg.GetErrorYhigh(i),2)
-            # loop over backgrounds
-            for ih in range(0, len(bkgs)):
-                err += math.pow(math.fabs( bkgs[ih].GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2)
-            gBkg.SetPointEYhigh(i, math.sqrt(err))
-            ### error down
-            err = math.pow(gBkg.GetErrorYlow(i),2)
-            # loop over backgrounds
-            for ih in range(0, len(bkgs)):
-                err += math.pow(math.fabs( bkgs[ih].GetBinContent(i+1) - bkgsDown[ih].GetBinContent(i+1) ), 2)
-            gBkg.SetPointEYlow(i, math.sqrt(err))
-
-    return [hBkg, gBkg]
-
-# function to build data/bkgd ratios
-def makeDataRatio(data, bkg):
-    # ratio set to one with error band 
-    gRatioBand = data.Clone(data.GetName() + "_gRatioBand")
-    for i in range(0, data.GetN()):
-        gRatioBand.SetPoint(i, data.GetX()[i], 1.0)
-        if bkg.GetY()[i] > 0:
-            gRatioBand.SetPointEYhigh(i, bkg.GetErrorYhigh(i) / bkg.GetY()[i]) 
-            gRatioBand.SetPointEYlow(i, bkg.GetErrorYlow(i) / bkg.GetY()[i])             
-            gRatioBand.SetPointEXhigh(i, bkg.GetErrorXhigh(i)) 
-            gRatioBand.SetPointEXlow(i, bkg.GetErrorXlow(i))             
-    # ratio set to data/bkg with data stat errors only
-    gRatioDataBkg = data.Clone(data.GetName() + "_gRatioDataBkg")
-    for i in range(0, data.GetN()):
-        if data.GetY()[i]>0 and bkg.GetY()[i]>0:
-            gRatioDataBkg.SetPoint(i, data.GetX()[i], data.GetY()[i] / bkg.GetY()[i])
-            gRatioDataBkg.SetPointEYhigh(i, data.GetErrorYhigh(i) / bkg.GetY()[i])
-            gRatioDataBkg.SetPointEYlow(i, data.GetErrorYlow(i) / bkg.GetY()[i])
-            gRatioDataBkg.SetPointEXhigh(i, data.GetErrorXhigh(i)) 
-            gRatioDataBkg.SetPointEXlow(i, data.GetErrorXlow(i))             
-        #else:
-            #gRatioDataBkg.SetPoint(i, 0.0, -1000)
-
-    return [gRatioBand,gRatioDataBkg]
-
-def graphFromHist(hist):
-    hist.SetBinErrorOption(1)
-    nBins = hist.GetNbinsX()
-    dataGr = ROOT.TGraphAsymmErrors(nBins)
-    dataGr.SetName("data_hh")
-    for i in range(nBins):
-        thisX        = hist.GetBinCenter(i+1)
-        thisY        = hist.GetBinContent(i+1)
-        if thisY:
-            thisYErrLow  = hist.GetBinErrorLow(i+1)
-            thisYErrUp   = hist.GetBinErrorUp(i+1)
-            binWidthOver2  = thisX - hist.GetBinLowEdge(i+1)
-        else:
-            thisYErrLow = 0
-            thisYErrUp  = 0
-            binWidthOver2  = thisX - hist.GetBinLowEdge(i+1)
-        #print i, thisX, thisY, thisYErrLow, thisYErrUp                                                                                                  
-        dataGr.SetPoint(i,thisX, thisY)
-        dataGr.SetPointError(i, binWidthOver2, binWidthOver2, thisYErrLow, thisYErrUp)
-    return dataGr
-
-def do_variable_rebinning(hist,bins, scale=1):
-    a=hist.GetXaxis()
-
-    newhist=ROOT.TH1F(hist.GetName()+"_rebinned",
-                      hist.GetTitle()+";"+hist.GetXaxis().GetTitle()+";"+hist.GetYaxis().GetTitle(),
-                      len(bins)-1,
-                      array('d',bins))
-
-    newhist.Sumw2()
-    newa=newhist.GetXaxis()
-    #print "check size ", hist.GetNbinsX(), newhist.GetNbinsX()
-    for b in range(0, hist.GetNbinsX()+2):
-        newb             = newa.FindBin(a.GetBinCenter(b))
-
-        # Get existing new content (if any)                                                                                                              
-        val              = newhist.GetBinContent(newb)
-        err              = newhist.GetBinError(newb)
-        # Get content to add
-        ratio_bin_widths = scale*newa.GetBinWidth(newb)/a.GetBinWidth(b)
-        #print "ratio_bin_widths",ratio_bin_widths
-        #val              = val+hist.GetBinContent(b)/ratio_bin_widths
-        #err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
-        val              = val+hist.GetBinContent(b)
-        err              = math.sqrt(err*err+hist.GetBinError(b)*hist.GetBinError(b))
-        #print "bin", newb, " new value ", val, " change ", hist.GetBinContent(b)
-        newhist.SetBinContent(newb,val)
-        newhist.SetBinError(newb,err)
-
-    return newhist
 
 ####################################################################################
 #plot
@@ -152,9 +37,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #print config, filepath, filename
     #debug
     #print filepath, filename, cut
-    gStyle.SetErrorX(0)
-    gStyle.SetHatchesSpacing(0.7)
-    gStyle.SetHatchesLineWidth(1)
+    ROOT.gStyle.SetErrorX(0)
+    ROOT.gStyle.SetHatchesSpacing(0.7)
+    ROOT.gStyle.SetHatchesLineWidth(1)
 
     # input file
     ifile = ROOT.TFile(filepath + filename + ".root")
@@ -173,9 +58,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
 
     #modify data
     data.Add(ttbar, -1)
-    data.Add(zjet, -1)
+    #data.Add(zjet, -1)
     data_est.Add(ttbar, -1)
-    data_est.Add(zjet, -1)
+    #data_est.Add(zjet, -1)
 
     #clear factioned binns; only for reweighting purpose
     # for b in range(1, data.GetNbinsX()+1): 
@@ -196,16 +81,15 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
-
     if rebinarry != []:
-        data      = do_variable_rebinning(data, rebinarry)
-        data_est  = do_variable_rebinning(data_est, rebinarry)
-        qcd       = do_variable_rebinning(qcd, rebinarry)
-        ttbar     = do_variable_rebinning(ttbar, rebinarry)
-        zjet      = do_variable_rebinning(zjet, rebinarry)
-        RSG1_1000 = do_variable_rebinning(RSG1_1000, rebinarry)
-        RSG1_1500 = do_variable_rebinning(RSG1_1500, rebinarry)
-        RSG1_2500 = do_variable_rebinning(RSG1_2500, rebinarry)
+        data      = h_plt.do_variable_rebinning(data, rebinarry)
+        data_est  = h_plt.do_variable_rebinning(data_est, rebinarry)
+        qcd       = h_plt.do_variable_rebinning(qcd, rebinarry)
+        ttbar     = h_plt.do_variable_rebinning(ttbar, rebinarry)
+        zjet      = h_plt.do_variable_rebinning(zjet, rebinarry)
+        RSG1_1000 = h_plt.do_variable_rebinning(RSG1_1000, rebinarry)
+        RSG1_1500 = h_plt.do_variable_rebinning(RSG1_1500, rebinarry)
+        RSG1_2500 = h_plt.do_variable_rebinning(RSG1_2500, rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -228,11 +112,11 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
 
-    data = makeTotBkg([data])[1]
-    bkg = makeTotBkg([qcd])
-    #bkg = makeTotBkg([ttbar,qcd,zjet]) #original
+    data = h_plt.makeTotBkg([data])[1]
+    bkg  = h_plt.makeTotBkg([qcd])
+    #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet]) #original
     # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
-    ratios = makeDataRatio(data, bkg[1])
+    ratios = h_plt.makeDataRatio(data, bkg[1])
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
     c0.SetRightMargin(0.05)
@@ -292,7 +176,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #zjet.SetFillColor(ROOT.kGreen+4)
     #zjet.Draw("HISTO SAME")
 
-    zeroXerror(data)
+    h_plt.zeroXerror(data)
     data.SetMarkerStyle(20)
     data.SetMarkerSize(1)
     data.SetLineWidth(2)
@@ -329,7 +213,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #
     # Add stat uncertianty
     #
-    ratios[0].SetFillColor(kBlue)
+    ratios[0].SetFillColor(ROOT.kBlue)
     ratios[0].SetFillStyle(3345)
     ratios[0].Draw("E2")
 
@@ -339,10 +223,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     ratios[1].SetLineWidth(2)
     if not ("Signal" in cut and blinded):
         ratios[1].Draw("E0PZ SAME")
-    # qcd_fit.SetLineColor(kRed)
-    # qcd_fitUp.SetLineColor(kRed)
+    # qcd_fit.SetLineColor(ROOT.kRed)
+    # qcd_fitUp.SetLineColor(ROOT.kRed)
     # qcd_fitUp.SetLineStyle(2)
-    # qcd_fitDown.SetLineColor(kRed)
+    # qcd_fitDown.SetLineColor(ROOT.kRed)
     # qcd_fitDown.SetLineStyle(2)
     # qcd_fit.Draw("SAME")
     # qcd_fitUp.Draw("SAME")
@@ -364,7 +248,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             testfit[iter_fit] = ROOT.TF1("testfit" + str(iter_fit), "pol" + str(iter_fit), xMin, xMax)
         #initialization of parameters
         if ("trk0_Pt" in cut): #for the leading track jet fit
-            testfit[3].SetParameters(0.82, 0.003, -1E-5, +1E-8)
+            #testfit[3].SetParameters(1, 0.006, -2E-5, +2E-8)
+            testfit[3].SetParameters(0.4, 0.0096, -2E-5, +2E-8)
             #testfit[3].SetParameters(0.6, 0.007, -3E-5, +3E-8); testing version
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
             testfit[2].SetParameters(0.82, 0.004, -1E-5)
@@ -378,19 +263,21 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             testfit[1].SetParameters(1, 0.7)
         #for the other distributions
         testfit[1].SetParameters(0.9, 0.001)
+        #testfit[1].SetParLimits(1, 0.8, 1.2)
         testfit[2].SetParameters(1.0, 0.0, 0.0)
+        #testfit[2].SetParLimits(0, 0.8, 1.2)
         testfit[3].SetParameters(1.0, 0.0, 0.0, 0.0)
 
         #do the 3 fits and save the output
         testfitprob = [0]
         for iter_fit in range(1, 4):
-            ratios[1].Fit("testfit" + str(iter_fit), "QWLR0MI", "", fitMin, fitMax)
+            ratios[1].Fit("testfit" + str(iter_fit), "QWLR0IBF", "", fitMin, fitMax)
             testfitprob.append(float(testfit[iter_fit].GetProb()))
         #pick the best iteration; try to avoid higher order function as much as possible
         best_iter = 1
-        if testfitprob[2]/(testfitprob[best_iter] + 1E-8) > 1.0:
+        if testfitprob[2]/(testfitprob[best_iter] + 1E-8) > 1.1:
             best_iter = 2
-        if testfitprob[3]/(testfitprob[best_iter] + 1E-8) > 1.0:
+        if testfitprob[3]/(testfitprob[best_iter] + 1E-8) > 1.1:
             best_iter = 3
         
         #proceed with saving parameters
@@ -398,10 +285,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         fitresult = testfit[best_iter].GetParameters()
         if len(fitresult) < 4:#fill in 0 if there are less than 3 paramters
             fitresult += [int(0)] * (4 - len(fitresult))
-        testfit[best_iter].SetLineColor(kRed)
+        testfit[best_iter].SetLineColor(ROOT.kRed)
         testfit[best_iter].SetLineStyle(9)
         testfit[best_iter].Draw("SAME")
-        myText(0.02, 0.17, 1, "y=%s + %s x + %sx^2 + %sx^3, prob:%s" % 
+        ROOT.myText(0.02, 0.17, 1, "y=%s + %s x + %sx^2 + %sx^3, prob:%s" % 
             (str('%.2g' % fitresult[0]),
             str('%.2g' % fitresult[1]), 
             str('%.2g' % fitresult[2]), 
@@ -438,8 +325,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #
     # Add ks score
     #
-    myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
-    myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
+    ROOT.myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
+    ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
     #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
 
     # labels
@@ -448,16 +335,15 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     legW=0.4
     leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
     # top right, a bit left
-    ATLASLabel(0.19, 0.91, StatusLabel)
+    ROOT.ATLASLabel(0.19, 0.91, StatusLabel)
     if "15" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
     elif "16" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     elif "cb" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, 6.6 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
     else:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
-    myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
     ##### legend
     leg.SetNColumns(2)
     leg.SetTextFont(43)
@@ -500,10 +386,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     del(testfit)
 
     ##should only be run non-parellel.
-    #if ("Sideband" in cut and True):
-        #outputroot.cd()
-        #ratios[1].SetName(cut)
-        #ratios[1].Write()
+    if ("Sideband" in cut and False):
+        outputroot.cd()
+        ratios[1].SetName(cut)
+        ratios[1].Write()
 
 
 
@@ -514,11 +400,12 @@ def dumpRegion(config):
     if "TwoTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        #rebin_dic["j0_Pt"]      = array('d', range(450, 630, 30) + [630, 660, 690, 730, 770, 810, 860, 910, 980, 1050, 1200, 1500, 2000]) #9.5 version
+        #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
+        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 890, 50) + [890, 950, 1020, 1100, 1200, 1300, 1500, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
-        #rebin_dic["trk0_Pt"]    = array('d', [0, 50] + range(50, 290, 40) + [290, 330, 370, 420, 470, 520, 580, 640, 700, 780, 900, 1300, 2000]) #9.5 version
+        #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
@@ -526,22 +413,24 @@ def dumpRegion(config):
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
-        #rebin_dic["j0_Pt"]      = array('d', [450, 480, 520, 560, 600, 640, 690, 750, 820, 920, 1100, 2000]) #9.5 version
+        #rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
+        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 940, 50) + [940, 990, 1060, 1200, 2000])#9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 360, 50) + [360, 430, 500, 600, 800, 2000])
-        rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 80] + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 1300, 2000])
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 80] + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 1300, 2000])
+        rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
-        #rebin_dic["j0_Pt"]      = array('d', [450, 480, 520, 570, 630, 700, 800, 1000, 2000]) #9.5 version
+        #rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
+        rebin_dic["j0_Pt"]      = array('d', [450, 550, 650, 750, 850, 950, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
-        #rebin_dic["trk0_Pt"]    = array('d', [0, 70, 120, 170, 220, 280, 350, 450, 600, 2000]) #9.5 version
+        #rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 350, 400, 460, 520, 620, 820, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 350, 400, 500, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
@@ -551,8 +440,8 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1, fitrange=[800, 3000])
     #plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], fitrange=[800, 3000])
     #plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"], Logy=1, fitrange=[800, 3000])
-    plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[0, 2000])
-    plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["trk0_Pt"], fitrange=[0, 2000])
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="J0 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["j0_trk0_Pt"], fitrange=[0, 2000])
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["j1_trk0_Pt"], fitrange=[0, 2000])
     plotRegion(config, cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])
     plotRegion(config, cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 400])
     plotRegion(config, cut=config["cut"] + "leadHCand_Mass",     xTitle="J0 m [GeV]", rebin=2, fitrange=[60, 170])
@@ -575,11 +464,14 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk", fitrange=([1, 6] if "TwoTag" in config["cut"] else [2, 4]))
     plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebinarry=rebin_dic["trk_pT_diff"], fitrange=[0, 600])
     plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebinarry=rebin_dic["trk_pT_diff"], fitrange=[0, 600])
+    #plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Eta",      xTitle="J0 #eta", rebin=2)
+    #plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Phi",      xTitle="J0 #phi", rebin=4)
+    #plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Eta",      xTitle="J1 #eta", rebin=2)
+    #plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Phi",      xTitle="J1 #phi", rebin=4)
     #plotRegion(config, cut=config["cut"] + "leadHCand_trks_Pt",  xTitle="J0 trks p_{T} [GeV]", rebinarry=rebin_dic["trks_Pt"], fitrange=[0, 1000])
     #plotRegion(config, cut=config["cut"] + "sublHCand_trks_Pt",  xTitle="J1 trks p_{T} [GeV]", rebinarry=rebin_dic["trks_Pt"], fitrange=[0, 1000])
     #plotRegion(config, cut=config["cut"] + "trks_Pt",            xTitle="Jets trks p_{T} [GeV]", rebinarry=rebin_dic["trks_Pt"], fitrange=[0, 1000])
     #plotRegion(config, cut=config["cut"] + "hCand_Pt_assy",      xTitle="pT assy", fitrange=[0, 0.5])
-
     print config["outputdir"], "done!"
 
 
@@ -615,7 +507,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Sideband", "Control", "Signal"]
+    region_lst = ["Sideband"]
     cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
 
     #create master list
@@ -639,10 +531,10 @@ def main():
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
-    ##for debug
-    # dumpRegion(inputtasks[0])
-    # dumpRegion(inputtasks[1])
-    # dumpRegion(inputtasks[2])
+    #for debug
+    # for task in inputtasks:
+    #     dumpRegion(task)
+    #dumpRegion(inputtasks[0])
     outputroot.Close()
     print("--- %s seconds ---" % (time.time() - start_time))
 

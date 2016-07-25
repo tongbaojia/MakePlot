@@ -1,3 +1,4 @@
+#Tony: this is designed to run over systmatics
 import ROOT, helpers
 import config as CONF
 import argparse, copy, glob, os, sys, time
@@ -137,7 +138,7 @@ def syst_pipeline(config):
             os.symlink(ori_link, dst_link)
 
     #start running programs
-    os.system("python get_count.py --dosyst True --full False" + " --inputdir " + t)
+    os.system("python get_count.py --dosyst True " + " --inputdir " + t)
     os.system("python dump_hists.py " + " --inputdir " + t)
 
 

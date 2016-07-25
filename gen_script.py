@@ -20,7 +20,7 @@ def options():
 
 #currently reweighting all of them at once...may not be optimal...
 def write_reweight(fname="TEST", reweight_dic={}, split=True):
-    motherfolder="f_fin-cb"
+    motherfolder="DS1_cb"
     helpers.checkpath("script")
     #building the inputdictionary
     region_dic = {"2bs":"TwoTag_split", "3b":"ThreeTag", "4b":"FourTag"}

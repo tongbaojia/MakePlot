@@ -193,6 +193,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
             #print kname
         elif "totalbkg_hh" in kname and "down" in kname:
             syst_down.append(ifile.Get(kname).Clone(kname))
+        elif "totalbkg_hh" in kname:
+            syst_up.append(ifile.Get(kname).Clone(kname))
+            syst_down.append(ifile.Get(kname).Clone(kname))
     #print len(syst_up), len(syst_down)
 
 
@@ -469,7 +472,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     elif "16" in filepath:
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     else:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, 6.6 fb^{-1}", 22)
+        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
     myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
     leg.SetNColumns(2)
