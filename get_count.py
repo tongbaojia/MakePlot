@@ -27,8 +27,7 @@ ROOT.gROOT.SetBatch(True)
 evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"OneTag", \
-"TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+"OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
@@ -46,7 +45,7 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--dosyst", default=False)
-    parser.add_argument("--full", default=True) #4times more time
+    parser.add_argument("--full", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
@@ -70,6 +69,7 @@ def main():
             "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
             "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
+            #"leadHCand_trk0_Eta", "leadHCand_trk0_Phi", "sublHCand_trk0_Eta", "sublHCand_trk0_Phi",\
     else:
         print "full histos: false"
         plt_lst = ["mHH_l", "mHH_pole"]
@@ -125,7 +125,7 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=background_model)
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=1, BKG_model=background_model)
     print "End of Fit!"
     masterinfo.update(fitestimation("qcd_est", masterinfo))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")

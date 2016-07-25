@@ -32,4 +32,4 @@ mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
 #current total luminiosity, in fb
-totlumi = 6.6
+totlumi = 13.28

@@ -282,7 +282,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     else:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
-    ROOT.myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
+        ROOT.myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), 22)
     ##### legend
     leg.SetNColumns(2)
     leg.SetTextFont(43)

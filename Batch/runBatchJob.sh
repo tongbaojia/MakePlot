@@ -4,12 +4,12 @@
 
 #################################################
 ## DEFINE INPUT, TESTAREA AND OUTPUT AREA ###
-#Runnumber=$1
-filenamelist=/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/MakePlot/Batch/input.txt ##267638
 echo "the input file is " $filenamelist
-yourtestarea=/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis ## replace with here if you don't have a testarea
+yourtestarea=/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis ## replace with here if you don't have a testarea
+#Runnumber=$1
+filenamelist=$yourtestarea$"/MakePlot/Batch/input.txt" ##267638
 #eosoutputarea=/eos/atlas/user/b/btong/TESTAREA/muonSW/output  ## your output forlder MUST exist
-youroutputarea=/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output ##your output area
+youroutputarea=$yourtestarea$"/Output" ##your output area
 #athenaVer="20.1.X-VAL,rel_1, gcc48 --testarea=$yourtestarea"  ## the release you want to setup
 #################################################
 tmpworkdir=$youroutputarea/run_${Runnumber}_$inputstream_$LSB_JOBID.$LSB_JOBINDEX
@@ -46,7 +46,7 @@ echo $INOPTION
 #OUTFILE=Tony_test.$LSB_JOBINDEX.root
 # # # # # # # # # # # # # #
 #setup inputs with reweights
-inch=$"F_c10-cb"
+inch=$"TEST"
 re=$"j0pT-leadtrk-fin"
 iter=$"19"
 #setup channels
@@ -60,7 +60,7 @@ inputdir=$ch$"_"$syst
 if [ $dopythonrun == "true" ]; then
 	cd MakePlot
 	python PlotTinyTree.py --inputdir $inch --outputdir $ch --dosyst $syst --reweight $re --iter $iter
-	python get_count.py --inputdir $inputdir --full True
+	python get_count.py --inputdir $inputdir --full
 	python plot.py --inputdir $inputdir
 fi
 echo "DONE!!!"

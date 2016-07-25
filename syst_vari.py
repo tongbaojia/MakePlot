@@ -15,7 +15,7 @@ ROOT.gROOT.SetBatch(True)
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="f_fin-cb_j0pT-leadtrk-fin_19")
+    parser.add_argument("--inputdir", default="DS1_cb_j0pT-leadtrk-fin_19")
     return parser.parse_args()
 
 #this script is used to plot different mu qcd fit parameters as a funciton of the SB size
