@@ -505,7 +505,7 @@ def plot_RSG_syst_detail(masterdic, cut):
             #     continue
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), syst_eff[0] * 100)
             eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), 0)
-            #print syst, syst_eff[0]
+            print syst, syst_eff[0]
             maxbincontent = max(maxbincontent, syst_eff[0] * 100)
             maxsyst = max(maxsyst, syst_eff[0] * 100)
         #start the canvas

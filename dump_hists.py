@@ -10,12 +10,12 @@ ROOT.gROOT.SetBatch()
 treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 #setup fit initial values; tricky for the fits...
-init_dic = {"l":{"FourTag":{"ttbar":[-30, -6, -10], "qcd":[2, 40, 0]}, \
-"ThreeTag":{"ttbar":[-30, -6, -10], "qcd":[1, 40, -5]},\
-"TwoTag_split":{"ttbar":[-30, -6, -10], "qcd":[1, 30, -5]}}, \
-    "pole":{"FourTag":{"ttbar":[-50, -50, -20], "qcd":[10, 50, 0]}, \
-"ThreeTag":{"ttbar":[-50, -50, -20], "qcd":[8, 40, 0]},\
-"TwoTag_split":{"ttbar":[-14, 10, -10], "qcd":[-1, 20, -3]}}}
+init_dic = {"l":{"FourTag":{"ttbar":[-30, -5, -10], "qcd":[-5, 20, -2]}, \
+"ThreeTag":{"ttbar":[-30, -5, -10], "qcd":[-5, 20, -5]},\
+"TwoTag_split":{"ttbar":[-30, -10, -10], "qcd":[-5, 20, -5]}}, \
+    "pole":{"FourTag":{"ttbar":[-50, -50, -20], "qcd":[-5, 20, -3]}, \
+"ThreeTag":{"ttbar":[-50, -50, -20], "qcd":[-1, 20, -3]},\
+"TwoTag_split":{"ttbar":[-14, 20, -10], "qcd":[-1, 20, -3]}}}
 
 
 #define functions
@@ -61,13 +61,15 @@ def dump(finaldis="l"):
         #get the mass plot
         tempdic = {}
         cut = c + "_Signal_mHH" + pltname
-        smoothrange = (1100, 3000)
+        qcdsmoothrange = (1200, 3000)
+        topsmoothrange = (1100, 3000)
         if "pole" in finaldis:
-            smoothrange = (1200, 3000)
+            qcdsmoothrange = (1200, 3000)
+            topsmoothrange = (1200, 3000)
         savehist(ifile, "data_" + cut,  "data_hh")#blind data now
-        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
-        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["qcd"])
-        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh", dosmooth=True, smoothrange = smoothrange, initpar=init_dic[finaldis][c]["ttbar"])
+        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
+        tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh",      dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
+        tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh",    dosmooth=True, smoothrange = topsmoothrange, initpar=init_dic[finaldis][c]["ttbar"])
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
 
         for mass in mass_lst:
