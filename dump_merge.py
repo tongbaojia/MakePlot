@@ -509,27 +509,28 @@ def plot_RSG_syst_detail(masterdic, cut):
             #     continue
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), syst_eff[0] * 100)
             eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), 0)
-            #print syst, syst_eff[0]
+            print syst, syst_eff[0]
             maxbincontent = max(maxbincontent, syst_eff[0] * 100)
             maxsyst = max(maxsyst, syst_eff[0] * 100)
         #start the canvas
         canv.cd()
-        #convert it to a TGraph
-        graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
+        #convert it to a graph
         if maxsyst < 3:#don't draw everything
+            print syst
             continue
-        graph_lst[i].SetLineColor(CONF.clr_lst[draw_counter])
-        graph_lst[i].SetMarkerStyle(20 + draw_counter)
-        graph_lst[i].SetMarkerColor(CONF.clr_lst[draw_counter])
-        graph_lst[i].SetMarkerSize(1)
-        graph_lst[i].SetMaximum(maxbincontent * 1.5)
-        graph_lst[i].SetMinimum(minbincontent)
-        legend.AddEntry(graph_lst[i], syst.replace("_", " "), "apl")
+        graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
+        graph_lst[-1].SetLineColor(CONF.clr_lst[draw_counter])
+        graph_lst[-1].SetMarkerStyle(20 + draw_counter)
+        graph_lst[-1].SetMarkerColor(CONF.clr_lst[draw_counter])
+        graph_lst[-1].SetMarkerSize(1)
+        graph_lst[-1].SetMaximum(maxbincontent * 1.5)
+        graph_lst[-1].SetMinimum(minbincontent)
+        legend.AddEntry(graph_lst[-1], syst.replace("_", " "), "apl")
         if draw_counter==0: 
-            graph_lst[i].Draw("APC")
+            graph_lst[-1].Draw("APC")
             draw_counter += 1
         else: 
-            graph_lst[i].Draw("PC")
+            graph_lst[-1].Draw("PC")
             draw_counter += 1
 
     legend.SetBorderSize(0)

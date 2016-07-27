@@ -77,7 +77,7 @@ def main():
         "FT_EFF_extrapolation_from_charm__1up",
     ]
 
-    print len(bsyst)
+    print "total b syst: ", len(bsyst)
     inputtasks = []
     for i in range(1, len(bsyst)):
         inputtasks.append({"inputdir":"syst_b_" + str(i)})
@@ -91,13 +91,21 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
+    #for ttbar
+    #inputtasks.append({"inputdir":"syst_tt_frag"})
+    #inputtasks.append({"inputdir":"syst_tt_had"})
+    #nputtasks.append({"inputdir":"syst_tt_ppcs"})
+    #inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    #inputtasks.append({"inputdir":"syst_tt_mass_up"})
+    #inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    #inputtasks.append({"inputdir":"syst_tt_rad_up"})
 
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool  = mp.Pool(npool)
     pool.map(syst_pipeline, inputtasks)
-    #for i in inputtasks:
-        #syst_pipeline(i)
+    # for i in inputtasks:
+    #     syst_pipeline(i)
     #syst_pipeline(inputtasks[49])
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -115,8 +123,22 @@ def syst_pipeline(config):
         os.unlink(dst_link)
     os.symlink(ori_link, dst_link)
 
+    #for ttbar, also need to link the MCs.
+    if "syst_tt_" in t:
+        for i, mass in enumerate(CONF.mass_lst):
+            #print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
+            #this is a really bad practice and temp fix now! need to watch this very carfully...
+            ori_link = CONF.inputpath + "b77/" + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            dst_link = inputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            helpers.checkpath(inputpath + "signal_G_hh_c10_M" + str(mass))
+            #print ori_link, dst_link
+            if os.path.islink(dst_link):
+                os.unlink(dst_link)
+            os.symlink(ori_link, dst_link)
+
     #start running programs
-    os.system("python get_count.py --dosyst True --full False " + " --inputdir " + t)
+    os.system("python get_count.py --dosyst True " + " --inputdir " + t)
     os.system("python dump_hists.py " + " --inputdir " + t)
 
 

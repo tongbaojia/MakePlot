@@ -20,7 +20,7 @@ Also be extra careful.
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--nfiles", default=14)
+    parser.add_argument("--file", default="16_13TeV")
     return parser.parse_args()
 
 def selection(config):
@@ -32,22 +32,21 @@ def selection(config):
     cutflow        = f.Get("cutflow_XhhMiniNtuple").Clone()
     Metadata       = f.Get("MetaData_EventCount_XhhMiniNtuple").Clone()
 
-
     outfile = ROOT.TFile(config["file"] + "_skim", "recreate")
-    outtree = t.CloneTree(0)
-
     print "skimming: ", config["file"]
-    #open and copy
+    #outtree = t.CopyTree("hcand_boosted_n >= 2")
+    outtree = t.CloneTree(0)
+    ##open and copy
     nentries = t.GetEntries()
     for n in range(nentries):
         t.GetEntry(n)
         #add cuts for skimming...so simple...implicit this is a 250, 350 cut
+        if n % 20000 == 0:
+            helpers.drawProgressBar(n/(nentries*1.0))
         if t.hcand_boosted_n < 2:
             continue
         #print n%nfiles
         outtree.Fill()
-
-
     print "skimming done! ", config["file"]
     #save the output
     outfile.cd()
@@ -83,28 +82,32 @@ def skim(targetpath=""):
         temp_dic = {}
         temp_dic["file"] = file
         #add skimming selection now
-        #if "16_13TeV" not in file:
-        #    continue
+        if ops.file not in file:
+            continue
         #only do skimming once for now!
         if not os.path.isfile(temp_dic["file"] + "_skim"):
             config.append(temp_dic)
     print config
-
     print " Running %s jobs on %s cores" % (len(config), mp.cpu_count()-1)
     npool = min(len(config), mp.cpu_count()-1)
     pool  = mp.Pool(npool)
     pool.map(selection, config)
     ##for debugging
     #selection(config[0])
+    # for conf in config:
+    #     print conf
+    #     selection(conf)
 
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
 
 def main():
     print "make sure you mount eos!"
-    #eospath = "/afs/cern.ch/user/b/btong/work/bbbb/CHEPAnalysis/eos/atlas/user/b/btong/bb/"
-    eospath = "/afs/cern.ch/user/g/gputnam/public/Xhh2-4-11/eos/atlas/user/g/gputnam/bb/"
-    skim(targetpath=eospath + "mc/v01-02-or/gridOutput/01-02-03_MiniNTuple/")
+    #eospath = CONF.toppath + "/eos/atlas/user/b/btong/bb/"
+    #skim(targetpath=eospath + "data/vBT-01-00/gridOutput/MiniNTuple/")
+    eospath = CONF.toppath + "/eos/atlas/user/g/gputnam/bb/"
+    skim(targetpath=eospath + "data/v01-02-03/gridOutput/MiniNTuple/")
+    #skim(targetpath=eospath + "mc/v01-02-or/gridOutput/MiniNTuple/")
     #skim(targetpath="ttbar_comb_test")
     #split(targetpath="signal_QCD")
 

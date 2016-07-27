@@ -34,32 +34,31 @@ def main():
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 
-    # # paper plot
-    #DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="extendedSR_mc", Xrange=[60, 240], Yrange=[60, 240])  
-    return
+    ##paper plot
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    #DrawPaper2D("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="extendedSR_mc", Xrange=[60, 240], Yrange=[60, 240])  
 
-    # #region shape comparisons
-    # #side band shapes
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
-    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
-    # DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
-    # #correlations of the jet mass and jet pT
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    # #for study only
-    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
-    # #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    # #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #region shape comparisons
+    #side band shapes
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
+    DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    #correlations of the jet mass and jet pT
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #for study only, not in the main production
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
 
     # # #signalregion shape comparison
-    # inputroot = "sum_" + inputdir + ".root"
+    inputroot = "sum_" + inputdir + ".root"
     # DrawSRcomparison(inputroot, inputdata="ttbar")
     # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
     # DrawSRcomparison(inputroot, inputdata="qcd_est")
@@ -69,9 +68,9 @@ def main():
     # DrawScalecomparison(inputroot, norm=False)
     # DrawScalecomparison(inputroot, norm=True, Logy=1)
 
-    # #draw the reweighted 2D distributions; works conditionally!
-    inputpath = CONF.inputpath + inputdir + "/"
-    outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
+    ###draw the reweighted 2D distributions; works conditionally!
+    inputpath = CONF.inputpath + "DS1_cb_j0pT-subltrk-fin_3" + "/"
+    outputpath = CONF.inputpath + "DS1_cb_j0pT-subltrk-fin_3" + "/" + "Plot/Other/"
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
     for i in ["2Trk_split", "3Trk", "4Trk"]:
@@ -79,7 +78,14 @@ def main():
         DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
         DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
         DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
+        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
+        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
 
+    ##draw the reweighted 1D distributions; for study only, not in the main production
+    #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass")
+    #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass", Logy=1)
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
     region_lst = ["Signal", "Control", "Sideband"]
@@ -366,7 +372,8 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
 
                 temp_hist = ROOT.gDirectory.Get(kname)
                 #print temp_hist.GetName()
-                temp_hist.Rebin(10) #since the binning is changed!!!
+                if "mHH_l" in keyword:
+                    temp_hist.Rebin(10) #since the binning is changed!!!
                 temp_hist.SetLineColor(2 + i)
                 temp_hist.SetMarkerStyle(20 + i)
                 temp_hist.SetMarkerColor(2 + i)
