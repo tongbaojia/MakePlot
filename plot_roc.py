@@ -13,17 +13,17 @@ import sys
 from plot_2dhists import DrawHists 
 
 # load landau-gauss file
-ROOT.gROOT.LoadMacro("langaus.C")
+# ROOT.gROOT.LoadMacro("langaus.C")
 
 outputdir = CONF.outplotpath
-CONF.inputpath = "../Output/"
-basedir = "F_c10-cb-b85/"
+basedir = "F_c10-cb-16-b85/"
 signals = []
 data = []
 
 # mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
-#mass_lst = [1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000]
-mass_lst = [2500, 2750, 3000]
+mass_lst = [1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000]
+#mass_lst = [1400, 1500, 1600, 1800, 2000]
+mass_lst += [2500, 2750, 3000]
 
 
 for mass in mass_lst:
@@ -33,9 +33,10 @@ for mass in mass_lst:
 data.append( basedir + "data_test15/hist-MiniNTuple.root")
 data.append( basedir + "data_test16/hist-MiniNTuple.root")
 
+
 """
-scuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
-dcuts = ["Alltag/h0_tj_pt_dR", "Alltag/h1_tj_pt_dR"]
+#scuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
+#dcuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
 
 deltas = np.linspace(0, .5, 21)
 masses = np.linspace(225.0/2, 325.0/2, 21)
@@ -46,13 +47,22 @@ cutstr = "m: %.1f, #delta: %.3f"
 
 #scuts = ["ThreeTag_Incl/mH0H1", "FourTag_Incl/mH0H1", "TwoTag_split_Incl/mH0H1"]
 #dcuts = ["ThreeTag_Incl/mH0H1", "FourTag_Incl/mH0H1", "TwoTag_split_Incl/mH0H1"]
+dcuts = ["AllTag_Incl/mH0H1"]
 scuts = ["AllTag_Incl/mH0H1"]
-dcuts = ["NoTag_Incl/mH0H1"]
+#scuts = ["AllTag_Signal/hh_deta"]
+#dcuts = ["AllTag_Signal/hh_deta"]
 
+rs = np.linspace(0.0, 2.0, 21)
+eps = np.linspace(0.0, 10.0, 11)
+cutvals = [(r, e0, e1) for r in rs for e0 in eps for e1 in eps]
+cutstr = "max(X_{hh}): %.1f, e0: %.1f, e1: %.1f" 
 
-cutvals = np.linspace(0.5, 1.5, 11)
-cutvals = [(c0,c1) for c0 in cutvals for c1 in cutvals)]
-cutstr = "max pt ratio: %.1f"
+#cutvals = np.linspace(0.0, 1.7, 18)
+#cutvals = np.linspace(1.0, 1.0, 1)
+#cutvals = [(c0,c1) for c0 in cutvals for c1 in cutvals]
+#cutstr = "max pt ratio h0: %.1f, max pt ratio h1: %.1f"
+#cutstr = "max jet pT asym: %.1f"
+#cutstr = "max HH #Delta#eta: %.1f"
 
 def main():
 
@@ -64,13 +74,14 @@ def main():
 
     # # Draw the efficiency plot relative to the all normalization
     # name of the canvas
-    cname = "roc_plot_pt-ratio.pdf"
-    cut_func = pass_ptmax
-    DrawRoc(output, scuts[0], dcuts[0], cut_func, cname, histdim=1)
+    cname = "roc_plot_SR_85.pdf"
+    cut_func = pass_extended_SR
+    DrawRoc(output, scuts[0], dcuts[0], cut_func, cname, histdim=2)
     output.Close()
 
 
-def passcut_dR(pt, dR, m, d):
+def passcut_dR(pt, dR, cutval):
+    (m, d) = cutval
     if pt > 1000.0:
 	return True
     cval = 2*m/pt
@@ -90,9 +101,8 @@ def pass_extended_SR(m0, m1, cutvals):
     m0pole = 124
     m1pole = 115
 
-    r = cutvals[0]
-    extend0 = cutvals[1]
-    extend1 = cutvals[2]
+    (r, extend0, extend1) = cutvals
+    #extend0 = extend1 = extend
 
     # first try h0:
     if m0 > m0pole:
@@ -152,7 +162,15 @@ def pass_LandauGauss(m0,m1,cutval):
     return np.sqrt( m0term**2 + m1term**2 + cor*m0term*m1term ) < r
 
 def pass_ptmax(h0ptratio, h1ptratio, cutval):
-    return h0ptratio < cutval && h1ptratio < cutval
+    h0cut = cutval[0]
+    h1cut = cutval[1]
+    return h0ptratio < h0cut and h1ptratio < h1cut
+
+def pass_jetpt_asym(mass, asym, cutval):
+    return asym < cutval
+
+def pass_deta(mass, deta, cutval):
+    return deta < cutval
 
 def cut_eff(cutval, cutfunc, histdim, *hists):
     retvals = []
@@ -176,7 +194,6 @@ def cut_eff(cutval, cutfunc, histdim, *hists):
 	        if cutfunc(xval, cutbal):
 		    retvals[-1] += h.GetBinContent(ix)
 
-    #print retvals
     return retvals
 
 def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
@@ -204,7 +221,7 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
         signalmc = ROOT.TH2F(scut, "roc signal", sigbase.GetXaxis().GetNbins(), sigbase.GetXaxis().GetXmin(), sigbase.GetXaxis().GetXmax(),
 				sigbase.GetYaxis().GetNbins(), sigbase.GetYaxis().GetXmin(), sigbase.GetYaxis().GetXmax() ) 
     elif histdim == 1:
-        signalmc = ROOT.TH1F(scut, "roc signal", sigbase.GetXaxis().GetNbins(), sigbase.GetXaxis().GetXmin(), sigbase.GetXaxis().getXmax() ) 
+        signalmc = ROOT.TH1F(scut, "roc signal", sigbase.GetXaxis().GetNbins(), sigbase.GetXaxis().GetXmin(), sigbase.GetXaxis().GetXmax() ) 
     else:
         raise ValueError("histdim must be 1 or 2")
 
@@ -214,6 +231,7 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
     for i in range(len(sig_file_list)):
 	scalefactor = sig_file_list[i].Integral()
         sig_file_list[i].Scale(1/scalefactor)
+	print sig_file_list[i]
         signalmc.Add( sig_file_list[i] ) 
 
     # iterate over all the data
@@ -236,9 +254,8 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
     if histdim == 2:
         datamc = ROOT.TH2F(dcut, "roc signal", database.GetXaxis().GetNbins(), database.GetXaxis().GetXmin(), database.GetXaxis().GetXmax(),
 				database.GetYaxis().GetNbins(), database.GetYaxis().GetXmin(), database.GetYaxis().GetXmax() )
-				sigbase.GetYaxis().GetNbins(), sigbase.GetYaxis().GetXmin(), sigbase.GetYaxis().GetXmax() )
     elif histdim == 1:
-	datamc = ROOT.TH1F(dcut, "roc signal", sigbase.GetXaxis().GetNbins(), database.GetXaxis().GetXmin(), database.GetXaxis().getXmax() )
+	datamc = ROOT.TH1F(dcut, "roc signal", database.GetXaxis().GetNbins(), database.GetXaxis().GetXmin(), database.GetXaxis().GetXmax() )
     else:
 	raise ValueError("histdim must be 1 or 2")
 
@@ -258,7 +275,6 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
 
     sigsize = signalmc.Integral()
     datasize = datamc.Integral()
-
     coords = []
     testvals = []
 
@@ -270,7 +286,7 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
 	sys.stdout.write("\033[F")
 
 	cutsize = cut_eff(c, cut_func, histdim, signalmc, datamc)
-	if abs(cutsize[1]/datasize) < 1e-4:
+	if cutsize[1]/datasize < 1e-4:
 	    continue
 	coords.append( (cutsize[0]/sigsize, 1 - cutsize[1]/datasize) )
 	testvals.append( c )
@@ -321,7 +337,8 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
     words = helpers.DrawWords(sBmax_info, coord_info, vmax_info)
   
     # arrow!
-    arr = ROOT.TArrow(0.85,0.75,coordmax[0], coordmax[1])
+    #arr = ROOT.TArrow(0.85,0.7,coordmax[0], coordmax[1])
+    arr = ROOT.TArrow(0.55,0.975,coordmax[0], coordmax[1])
     arr.Draw()    
 
     canv.SaveAs(outputdir + canv_name)
@@ -337,7 +354,7 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
 
     # now draw histograms in signal and data
     DrawHists(outputroot, [scut], "", signals, "mc_", cutvals=vmax, Xrange=pTrange)
-    DrawHists(outputroot, [dcut], "", data, "data_", cutvals=vmax,  Xrange=pTrange) 
+    DrawHists(outputroot, ["AllTag_Control/h0_tj_pt_dR"], "", data, "data_", cutvals=vmax,  Xrange=pTrange, scale=False) 
 
 def ratioerror(a, b):
     if a > 0:

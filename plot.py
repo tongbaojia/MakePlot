@@ -276,9 +276,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
     # top right, a bit left
     ROOT.ATLASLabel(0.19, 0.91, StatusLabel)
-    if "15" in filepath:
+    if "data_test15" in filepath:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
-    elif "16" in filepath:
+    elif "data_test16" in filepath:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
     else:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
@@ -441,9 +441,9 @@ def main():
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
-    pool.map(dumpRegion, inputtasks)
-    # for i in inputtasks:
-    #     dumpRegion(i)
+    #pool.map(dumpRegion, inputtasks)
+    for i in inputtasks:
+         dumpRegion(i)
     #dumpRegion(inputtasks[0])
     print("--- %s seconds ---" % (time.time() - start_time))
 

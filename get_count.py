@@ -46,7 +46,7 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--dosyst", default=False)
-    parser.add_argument("--full", default=True) #4times more time
+    parser.add_argument("--full", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():

@@ -7,8 +7,9 @@ currpath    = os.path.abspath(os.curdir)
 #toppath     =  os.path.dirname(currpath)
 toppath     =  "/afs/cern.ch/work/g/gputnam/public"
 #input top directory for the root files
-outputname = "/trkptcut-outputs/"
-#outputname = "/Output/"
+#outputname = "/trkpt-ratio-Outputs/"
+#outputname = "/detacut-outputs/"
+outputname = "/Output/"
 inputpath   =  toppath + outputname
 helpers.checkpath(inputpath)
 #output top directory for the output plots/root files
@@ -35,4 +36,4 @@ mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
 #current total luminiosity, in fb
-totlumi = 6.6
+totlumi = 13.3

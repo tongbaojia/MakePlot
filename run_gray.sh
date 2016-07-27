@@ -4,30 +4,25 @@
 #channels=(b77_c00-15 b77_c00-16 b77_c10-15 b77_c10-16 ref)
 #channels=(syst_b_0)
 
-inch=F_c10-cb-b77-rhist3
+inch=F_c10-cb-16-b77
 #channels=(b85-oldcut-try2)
-channels=(f_fin-cb-newSR_extended_3tagopt)
+channels=(f_fin-cb-16-b77-2cut85)
 #channels=(b77_c00-15 b77_c00-16 b77_c10-15 b77_c10-16 ref)
 #channels=(b77_c10-cb TEST_c10-cb_CR_High TEST_c10-cb_CR_Low TEST_c10-cb_CR_Small TEST_c10-cb_SB_Large TEST_c10-cb_SB_Small TEST_c10-cb_SB_High TEST_c10-cb_SB_Low)
 #channels=(TEST_c10-cb)
 #for gather tables and histograms
 
-rs=(1.4 1.6 1.8)
-ext=(3.0 5.0 7.0 9.0)
+#rs=(1.4 1.6 1.8)
+#ext=(3.0 5.0 7.0 9.0)
 
-for rv in ${rs[@]}; do
-    for ev in ${ext[@]}; do
-	ch=f_fin-cb-newSR_extended__${rv}_${ev}
+for ch in ${channels[@]}; do
 	echo $ch
-	python PlotTinyTree.py --inputdir $inch --outputdir $ch --rval $rv --extval $ev
-	##python get_count.py --inputdir $ch --full False
-	python get_count.py --inputdir $ch --full False
+	python PlotTinyTree.py --inputdir $inch --outputdir $ch
+	python get_count.py --inputdir $ch --full
 	##python test.py --inputdir $ch --full True
 	python plot.py --inputdir $ch
-	#python reweight.py --inputdir $ch
+	python reweight.py --inputdir $ch
 	python plot_prediction.py --inputdir $ch
 	#python dump_hists.py --inputdir $ch
-	# python plot_prediction.py --inputdir $ch
-        python plot_random.py --inputdir $ch
-    done
+        #python plot_random.py --inputdir $ch
 done

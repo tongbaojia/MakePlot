@@ -112,7 +112,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     temp_all = input_mc.Get(cut_lst[0] + histname).Clone()
     temp_all.SetName("Combined")
 
-    input_mc_ref = ROOT.TFile.Open(CONF.inputpath +"f_fin-cb-newSR-ref/" + "sum_f_fin-cb-newSR-ref" + ".root")
+    input_mc_ref = ROOT.TFile.Open(CONF.inputpath +"f_fin-cb-16-b77-ref/" + "sum_f_fin-cb-16-b77-ref" + ".root")
     temp_ref = input_mc_ref.Get(cut_lst[0] + histname).Clone()
     temp_ref.SetName("Run2-ref")
 
@@ -230,7 +230,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     temp_ratio.GetYaxis().SetLabelFont(43)
     temp_ratio.GetYaxis().SetLabelSize(28)
     temp_ratio.GetYaxis().SetTitle(" %s/ ref" % inputdir)
-    temp_ratio.GetYaxis().SetRangeUser(0.8, 1.2) #set range for ratio plot
+    temp_ratio.GetYaxis().SetRangeUser(0.8, 1.4) #set range for ratio plot
     temp_ratio.GetYaxis().SetNdivisions(405)
 
     temp_ratio.GetXaxis().SetTitleFont(43)

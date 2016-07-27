@@ -35,7 +35,9 @@ def main():
         os.makedirs(outputpath)
 
     # # paper plot
-    # DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    #DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="extendedSR_mc", Xrange=[60, 240], Yrange=[60, 240])  
+    return
 
     # #region shape comparisons
     # #side band shapes
@@ -68,8 +70,8 @@ def main():
     # DrawScalecomparison(inputroot, norm=True, Logy=1)
 
     # #draw the reweighted 2D distributions; works conditionally!
-    inputpath = CONF.inputpath + "f_fin-re_j0pT-leadtrk-fin_19" + "/"
-    outputpath = CONF.inputpath + "f_fin-re_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
+    inputpath = CONF.inputpath + inputdir + "/"
+    outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
     for i in ["2Trk_split", "3Trk", "4Trk"]:
@@ -222,6 +224,31 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     def myCR(x):
 	return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
 
+    def extendedSR(x):
+        extend = 6.0
+	m0 = x[0]
+	m1 = x[1]
+
+        # first try h0:
+        if m0 > 124:
+	    h0comp = 124
+        elif m0 < 124 - extend:
+	    h0comp = 124 - extend
+        else:
+	    h0comp = m0
+        tryh0 = np.sqrt( ((m0-h0comp)/(0.1*m0))**2 + ((m1-115)/(0.1*m1))**2 )
+
+        # now try h1:
+        if m1 > 115:
+	    h1comp = 115
+        elif m1 < 115 - extend:
+	    h1comp = 115 - extend
+        else:
+	    h1comp = m1
+        tryh1 = np.sqrt( ((m0-124)/(0.1*m0))**2 + ((m1-h1comp)/(0.1*m1))**2 )
+
+	return min(tryh0, tryh1)
+
     def mySR(x):
 	return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
 
@@ -256,7 +283,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     thetas = np.linspace(-np.pi, np.pi, 50)
 
     # get signal points:
-    fSR = ROOT.TF2("SR",mySR,0.,Xrange[1],0.,Xrange[1])
+    fSR = ROOT.TF2("SR",extendedSR,0.,Xrange[1],0.,Xrange[1])
     contorsSR = array.array("d", [1.6])
     fSR.SetContour(len(contorsSR),contorsSR)
     fSR.SetNpx(50)
@@ -264,6 +291,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fSR.SetLineStyle(5)
     fSR.Draw("same, cont3")
 
+    """
     # get control:
     fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
     contoursCR = array.array("d", [35.8])
@@ -293,13 +321,15 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     ttb_txt = ROOT.TLatex(0.72, 0.52, "#splitline{t#bar{t} enriched}{region}")
     ttb_txt.SetTextColor(46)
     helpers.DrawWords(ttb_txt)
+    """
 
     # fill box
-    fillbox = ROOT.TBox(Xrange[0]+1, Yrange[1]-51, Xrange[1]-1, Yrange[1]-1)
+    delta = 0
+    fillbox = ROOT.TBox(Xrange[0]+delta, Yrange[1]-51, Xrange[1]-delta, Yrange[1]-delta)
     fillbox.SetFillStyle(1001)
     fillbox.SetFillColor(0)
     # line box
-    linebox = ROOT.TBox(Xrange[0]+1, Yrange[1]-51, Xrange[1]-1, Yrange[1]-1)
+    linebox = ROOT.TBox(Xrange[0]+delta, Yrange[1]-51, Xrange[1]-delta, Yrange[1]-delta)
     linebox.SetFillStyle(0)
     linebox.SetLineWidth(4)
     linebox.SetLineStyle(1)
