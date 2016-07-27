@@ -20,9 +20,6 @@ def options():
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
-    # TEMPORARY FOR SR SHAPE
-    parser.add_argument("--rval", default=1.6)
-    parser.add_argument("--extval", default=0.0)
     return parser.parse_args()
 
 #returns a dictionary of weights
@@ -125,7 +122,7 @@ class eventHists:
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
-        self.fullhist =  False #ops.dosyst is None ##option to turn it off
+        self.fullhist =  True #ops.dosyst is None ##option to turn it off
         self.region = region
         self.reweight = reweight
         #add in all the histograms
@@ -258,6 +255,19 @@ class eventHists:
             self.h1_trk0_pt_weight.Write()
             self.h0_pt_m_weight.Write()
 
+def dump_tree(event):
+    attrs = ["mHH", "runNumber", "lbNumber", "eventNumber", "mHH_pole", "detaHH",
+		"dphiHH", "drHH", "j0_m", "j0_pt", "j0_nTrk", "j1_m", "j1_pt", 
+		"j1_nTrk", "j0_trk0_m", "j0_trk0_pt", "j0_trk0_Mv2","j0_trk1_m", "j0_trk1_pt",
+		"j0_trk1_Mv2", "j1_trk0_m", "j1_trk0_pt", "j1_trk0_Mv2",
+		"j1_trk1_m", "j1_trk1_pt", "j1_trk1_Mv2", "Xhh"]
+    if int(event.mHH) > 2000:
+	for attr in attrs:
+	    print "%s: %.4f" % (attr, getattr(event, attr))
+	print event.runNumber
+	print event.lbNumber
+	print event.eventNumber
+
 #split things in to mass regions, also possible systematic variation
 class massregionHists:
     #these are the regions and cuts;
@@ -279,11 +289,15 @@ class massregionHists:
             tempdic["evencondition"] = compiler.compile(cut, '<string>', 'eval')
             self.regionlst.append(tempdic)
 
-    def Fill(self, event, weight=-1):
+    def Fill(self, event, weight=-1, dodump=False):
         #for specific studies!
         for tempdic in self.regionlst:
             if eval(tempdic["evencondition"]):
                 tempdic["eventHists"].Fill(event, weight)
+
+	# try printing out information
+	if dodump and eval(self.RegionDict["Signal"]):
+	    dump_tree(event)
 
     def Write(self, outputroot):
         #for specific studies!
@@ -342,7 +356,8 @@ class regionHists:
         self.FourTag = massregionHists("FourTag", outputroot)
 
     def Fill(self, event):
-        b_tagging_cut = 0.3706 #0.3706 as 77% default value
+        #b_tagging_cut = 0.3706 #0.3706 as 77% default value
+        b_tagging_cut = -0.1416 #85% working point
         nb_j0 = 0
         nb_j1 = 0
         nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
@@ -371,6 +386,38 @@ class regionHists:
         self.ThreeTag.Write(outputroot)
         self.FourTag.Write(outputroot)
 
+def pass_cut(tree):
+    return pass_Deta_cut(tree) and pass_dRcut(tree)
+
+def pass_Deta_cut(tree):
+    return tree.detaHH < 1.2
+
+def pass_dRcut(t):
+    # first check if all the jets are valid
+    for j_pt in [t.j0_trk0_pt, t.j0_trk1_pt, t.j1_trk0_pt, t.j1_trk1_pt]:
+        if j_pt < 10:
+            return True
+
+    j0_deltaR = helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi)
+    j1_deltaR = helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi)
+    mass = t.mHH
+    j0pt = t.j0_pt
+    j1pt = t.j1_pt
+
+    def c0(pt, dR):
+        if pt > 1000:
+            return True
+        else:
+            return abs(285.0/pt - dR) < 0.125
+    def c1(pt, dR):
+        if pt > 1000:
+            return True
+        else:
+            return abs(265.0/pt - dR) < 0.125
+
+    chk0 = chk1 = True
+
+    return ( (c0(j0pt,j0_deltaR) or not chk0) and (c1(j1pt, j1_deltaR) or not chk1))
 
 def analysis(inputconfig):
     inputfile = inputconfig["inputfile"]
@@ -404,6 +451,9 @@ def analysis(inputconfig):
         ##place a cut if necessary
         ##if ((t.mHH) < 1000.0):
              ##continue
+	if not pass_cut(t):
+	    continue
+
         AllHists.Fill(t)
 
     #write all the output
@@ -470,17 +520,17 @@ def main():
 
     ##setup control region size, and sideband region size
     global Syst_cut
-    CR_size = 35.8
-    SB_size = 63
+    #CR_size = 35.8
+    #SB_size = 63
+    CR_size = 45.0
+    SB_size = 100.0
 
-    # TEMPORARY HACK: set up signal paramters using outputdir
-    rval = float(ops.rval)
-    extval = float(ops.extval)
-    print "ATTENTION: r: %.2f ext: %.2f" % (rval, extval)
+    rval = 1.7
+    extval = 6.0
+
     Syst_cut = {
-	#"SR"	     : "np.sqrt( (event.j0_m*(124-event.j0_m)/124**2)**2 + (event.j1_m*(115-event.j1_m)/115**2)**2 ) < .16",
-	"SR"	     : "pass_extended_SR(event.j0_m, event.j1_m, %.2f, %.2f)" % (rval, extval),
-        #"SR"         : "event.Xhh < 1.6",
+	#"SR"	     : "pass_extended_SR(event.j0_m, event.j1_m, %.2f, %.2f)" % (rval, extval),
+        "SR"         : "event.Xhh < 1.6",
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
         "SB"         : "event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
@@ -541,7 +591,6 @@ def main():
                 os.unlink(dst_link)
             print ori_link, dst_link
             os.symlink(ori_link, dst_link)
-
     #return
     ##if reweight, reweight everything
     #parallel compute!
