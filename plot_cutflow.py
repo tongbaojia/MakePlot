@@ -62,9 +62,15 @@ def main():
     # Write the data cutflow table
     data_outtex = open(outputpath + "cutflow.tex", "w")
     DataCutFlow(masterinfo, data_outtex)
+    data_outtex.close()
     # Write the MC cutflow table
     MC_outtex = open(outputpath + "SignalEffTable_RSG_c10.tex", "w")
-    MCCutFlow(masterinfo, MC_outtex)
+    MCCutFlow(masterinfo, MC_outtex, keyword="RSG1")
+    MC_outtex.close()
+    # Write the 2HDM cutflow table
+    #Xhh_outtex = open(outputpath + "SignalEffTable_Xhh.tex", "w")
+    #MCCutFlow(masterinfo, Xhh_outtex, keyword="Xhh")
+    #Xhh_outtex.close()
     # Finish the work
     del(masterinfo)
     f1.close()
@@ -131,7 +137,7 @@ def DataCutFlow(inputdic, outFile, samplename="region"):
 
 
 ### 
-def MCCutFlow(inputdic, outFile, samplename="region"):
+def MCCutFlow(inputdic, outFile, keyword="RSG1"):
     ### 
     tableList = []
     ###
@@ -151,12 +157,12 @@ def MCCutFlow(inputdic, outFile, samplename="region"):
             outstr += " & "
             value = 0
             value_err = 0
-            if type(inputdic["RSG1_%i" % mass][cut]) is dict:
-                value = inputdic["RSG1_%i" % mass][cut]["Signal"]
-                value_err = inputdic["RSG1_%i" % mass][cut]["Signal"+"_err"]
+            if type(inputdic[keyword + "_%i" % mass][cut]) is dict:
+                value = inputdic[keyword + "_%i" % mass][cut]["Signal"]
+                value_err = inputdic[keyword + "_%i" % mass][cut]["Signal"+"_err"]
             else:
-                value = inputdic["RSG1_%i" % mass][cut]
-                value_err = inputdic["RSG1_%i" % mass][cut+"_err"]
+                value = inputdic[keyword + "_%i" % mass][cut]
+                value_err = inputdic[keyword + "_%i" % mass][cut+"_err"]
             outstr += str(helpers.round_sig(value, 2))
             outstr += " $\\pm$ "
             outstr += str(helpers.round_sig(value_err, 2))

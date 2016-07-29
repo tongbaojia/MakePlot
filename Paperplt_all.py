@@ -115,12 +115,12 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fTT.SetLineColor(46)
     fTT.SetLineWidth(3)
     fTT.SetLineStyle(5)
-    fTT.Draw("same, cont3")
+    #fTT.Draw("same, cont3")
     # ttbar label:
     ttb_txt = ROOT.TLatex(0.65, 0.75, "#splitline{t#bar{t} enriched}{region}")
     ttb_txt.SetTextColor(46)
     ttb_txt.SetTextSize(0.03)
-    helpers.DrawWords(ttb_txt)
+    #helpers.DrawWords(ttb_txt)
 
     # fill box
     fillbox = ROOT.TBox(Xrange[0], Yrange[1]-21, Xrange[1], Yrange[1])
@@ -129,7 +129,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     # line box
     linebox = ROOT.TBox(Xrange[0], Yrange[1]-21, Xrange[1], Yrange[1])
     linebox.SetFillStyle(0)
-    linebox.SetLineWidth(1)
+    linebox.SetLineWidth(2)
     linebox.SetLineStyle(1)
     linebox.SetLineColor(ROOT.kBlack)
 
@@ -137,8 +137,16 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fillbox.Draw("same")
 
     # Draw Watermarks
-    wm = helpers.DrawWatermarks(0.35, 0.9, deltax=[0.25,], 
-        watermarks=["ATLAS Internal", "#sqrt{s} = 13 TeV"])
+    xatlas, yatlas = 0.3, 0.9
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas+0.3, yatlas, "#sqrt{s}=13 TeV, " + str(CONF.totlumi) + " fb^{-1}")
+    watermarks = [atlas, hh4b]
+    for wm in watermarks:
+        wm.SetTextAlign(24)
+        wm.SetTextSize(0.035)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
 
     canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
     canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".png")

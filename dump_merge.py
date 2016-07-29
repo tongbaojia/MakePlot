@@ -21,6 +21,7 @@ def options():
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--chosenhist", default="l")
+    parser.add_argument("--Xhh", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
@@ -81,7 +82,7 @@ def main():
         "FT_EFF_extrapolation_from_charm__1down",
         "FT_EFF_extrapolation_from_charm__1up",
     ]
-    print len(bsyst)
+    print "total b syst: ", len(bsyst)
     global method_qcd_syst
     method_qcd_syst = [
     "smoothQ0up", 
@@ -121,6 +122,13 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
+    inputtasks.append({"inputdir":"syst_tt_frag"})
+    inputtasks.append({"inputdir":"syst_tt_had"})
+    #inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
+    inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    inputtasks.append({"inputdir":"syst_tt_mass_up"})
+    inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    inputtasks.append({"inputdir":"syst_tt_rad_up"})
     for i in range(1, len(bsyst)):
         # if i == 11 or i == 37 or i == 40 or i == 45:
         #     continue
@@ -136,17 +144,20 @@ def main():
     ##run it, order matters, because the pole file replaces the previous one!
     masterdic = {}
     masterdic.update(merge_method_sys())
+    ## if debug
     ##masterdic.update(merge_mc_sys(inputtasks[0]))
+    ## if already load the files: express
     for task in inputtasks:
         masterdic.update(merge_mc_sys(task))
 
     with open(CONF.inputpath + "b77/sum_syst" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
          json.dump(masterdic, f)
 
-    keylist = masterdic.keys()
-    keylist.sort()
-    for key in keylist:
-        print key, masterdic[key]
+    # ##check keylist
+    # keylist = masterdic.keys()
+    # keylist.sort()
+    # for key in keylist:
+    #     print key, masterdic[key]
 
     #Generate systemtics table
     f1 = open(CONF.inputpath + "b77/sum_syst"+ ("" if "pole" not in finaldis else "_pole") + ".txt", 'r')
@@ -204,6 +215,8 @@ def merge_mc_sys(config):
         histdic = {"data":"data_hh", "totalbkg_est":"totalbkg_hh", "qcd_est":"qcd_hh", "ttbar_est":"ttbar_hh", "zjet_est":"zjet_hh"}
         for mass in mass_lst:
             histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
+            if (ops.Xhh):
+                histdic.update({"Xhh_" + str(mass) + "_est" : "signal_X_hh_m" + str(mass)})
         for histname, hist in histdic.iteritems():
             #print histname, infile.Get(hist).GetName()
             tempdic[histname]  =  GetIntegral(infile.Get(hist).Clone(hist + postname), outfiles[c])
@@ -266,7 +279,7 @@ def GetTable(masterdic, c):
         column_dic[col] = {}
     ###this is super complicated...let's get them one by one
     help_table.add_table_head(tableList, column_lst, title=c)
-    systag_lst = {"JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"b-tag SF"}
+    systag_lst = {"tt":"Top", "JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"b-tag SF"}
     #systag_lst = {"method":"Bkg Est"}
     #add each systematics
     for systag, systagname in systag_lst.iteritems():
@@ -276,10 +289,12 @@ def GetTable(masterdic, c):
         outstr += systagname
         #print masterdic, systag
         for col in column_lst:
-            #print col, systag
+            
             temp_col_dic = find_syst(masterdic, c, systag, col)
             outstr += help_table.add_entry(add_syst(temp_col_dic), doerr=False, percent=True)
             column_dic[col].update(temp_col_dic)
+            if ("tt" in systag):
+                print col, systag, temp_col_dic
         #finish the current entry
         outstr+="\\\\"
         tableList.append(outstr)
@@ -399,10 +414,8 @@ def GetSignalTable(masterdic, summarydic):
     outFile.close()
 
 def plot_RSG_syst(masterdic, cut):
-    ### the first argument is the input directory
-    ### the second argument is the output prefix name
-    ### the third argument is relative to what normalization: 0 for total number of events
-    ### 1 for signal mass region
+    ### the first argument is the input dictionary
+    ### the second argument is the 2b/3b/4b regions
     canv = ROOT.TCanvas(cut  + "_" +  "RSG" + "_" + "syst", "Sytematics", 800, 800)
     xleg, yleg = 0.52, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
@@ -474,10 +487,6 @@ def plot_RSG_syst(masterdic, cut):
     canv.Close()
 
 def plot_RSG_syst_detail(masterdic, cut):
-    ### the first argument is the input directory
-    ### the second argument is the output prefix name
-    ### the third argument is relative to what normalization: 0 for total number of events
-    ### 1 for signal mass region
     canv = ROOT.TCanvas(cut  + "_" +  "RSG" + "_" + "syst_detail", "Sytematics", 800, 800)
     xleg, yleg = 0.52, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
@@ -509,7 +518,7 @@ def plot_RSG_syst_detail(masterdic, cut):
             #     continue
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), syst_eff[0] * 100)
             eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), 0)
-            print syst, syst_eff[0]
+            #print syst, syst_eff[0]
             maxbincontent = max(maxbincontent, syst_eff[0] * 100)
             maxsyst = max(maxsyst, syst_eff[0] * 100)
         #start the canvas

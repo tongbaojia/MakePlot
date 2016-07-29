@@ -23,9 +23,11 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--Xhh", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
+    global ops
     ops = options()
     global inputdir
     inputdir = ops.inputdir
@@ -74,6 +76,8 @@ def dump(finaldis="l"):
 
         for mass in mass_lst:
             savehist(ifile, "RSG1_" + str(mass) + "_" + cut, "signal_RSG_c10_hh_m" + str(mass))
+            if(ops.Xhh):
+                savehist(ifile, "Xhh_" + str(mass) + "_" + cut, "signal_X_hh_m" + str(mass))
         outfile.Close()
         makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c), pltoutputpath + c + pltname + "_smoothed.pdf")
         masterdic[c] = tempdic

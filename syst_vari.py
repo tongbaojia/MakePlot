@@ -248,7 +248,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     pad0.SetBorderMode(0)
     pad0.SetBorderSize(0)
 
-    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.29)
+    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.30)
     pad1.SetRightMargin(0.05)
     pad1.SetBottomMargin(0.38)
     pad1.SetTopMargin(0.0001)

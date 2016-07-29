@@ -19,6 +19,7 @@ def options():
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
+    parser.add_argument("--Xhh",      action='store_true') #do 2HDM samples if necessary
     return parser.parse_args()
 
 #returns a dictionary of weights
@@ -353,6 +354,15 @@ class regionHists:
         nb_j1 += 1 if event.j1_trk0_Mv2 > b_tagging_cut else 0
         nb_j1 += 1 if event.j1_trk1_Mv2 > b_tagging_cut else 0
 
+        #for testing
+        # b_tagging_loose_cut = -0.1416 #-0.1416 as 85% value
+        # nb_j0_loose = 0
+        # nb_j1_loose = 0
+        # nb_j0_loose += 1 if event.j0_trk0_Mv2 > b_tagging_loose_cut else 0
+        # nb_j0_loose += 1 if event.j0_trk1_Mv2 > b_tagging_loose_cut else 0
+        # nb_j1_loose += 1 if event.j1_trk0_Mv2 > b_tagging_loose_cut else 0
+        # nb_j1_loose += 1 if event.j1_trk1_Mv2 > b_tagging_loose_cut else 0
+
         if nb_j0 + nb_j1 == 4:
             self.FourTag.Fill(event)
         elif nb_j0 + nb_j1 == 3:
@@ -363,7 +373,8 @@ class regionHists:
             self.TwoTag.Fill(event)
         elif nb_j0 + nb_j1 == 1:
             self.OneTag.Fill(event)
-        elif nb_j0 + nb_j1 == 0:
+        #elif nb_j0 + nb_j1 == 0:
+        #elif (nb_j0 + nb_j1 == 1):
             self.NoTag.Fill(event, event.weight)
 
     def Write(self, outputroot):
@@ -500,6 +511,8 @@ def main():
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight or ops.dosyst is not None :
             inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+            if (ops.Xhh):
+                inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
         else:#if reweight, creat the folders and the links to the files
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))

@@ -16,10 +16,12 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--Xhh",      action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
     start_time = time.time()
+    global ops
     ops = options()
 
     #total 50 systematics
@@ -92,13 +94,13 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     #for ttbar
-    #inputtasks.append({"inputdir":"syst_tt_frag"})
-    #inputtasks.append({"inputdir":"syst_tt_had"})
-    #nputtasks.append({"inputdir":"syst_tt_ppcs"})
-    #inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    #inputtasks.append({"inputdir":"syst_tt_mass_up"})
-    #inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    #inputtasks.append({"inputdir":"syst_tt_rad_up"})
+    # inputtasks.append({"inputdir":"syst_tt_frag"})
+    # inputtasks.append({"inputdir":"syst_tt_had"})
+    # inputtasks.append({"inputdir":"syst_tt_ppcs"})
+    # inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    # inputtasks.append({"inputdir":"syst_tt_mass_up"})
+    # inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    # inputtasks.append({"inputdir":"syst_tt_rad_up"})
 
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -113,6 +115,7 @@ def syst_pipeline(config):
     t = config["inputdir"]
     print "the directory is: ", t
     inputpath = CONF.inputpath + t + "/"
+
     #check if for syst, the data file is there
     helpers.checkpath(inputpath + "data_test")
     #this is a really bad practice and temp fix now! need to watch this very carfully...
@@ -137,9 +140,20 @@ def syst_pipeline(config):
                 os.unlink(dst_link)
             os.symlink(ori_link, dst_link)
 
+            #link the 2HDM samples if necessary
+            if (ops.Xhh):
+                ori_link = CONF.inputpath + "b77/" + "signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
+                dst_link = inputpath + "signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
+                helpers.checkpath(inputpath + "signal_X_hh_M" + str(mass))
+                if os.path.islink(dst_link):
+                    os.unlink(dst_link)
+                print "linking: ", dst_link
+                os.symlink(ori_link, dst_link)
+
+
     #start running programs
-    os.system("python get_count.py --dosyst True " + " --inputdir " + t)
-    os.system("python dump_hists.py " + " --inputdir " + t)
+    os.system("python get_count.py --dosyst True " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    os.system("python dump_hists.py " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
 
 
 if __name__ == '__main__': 
