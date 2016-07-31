@@ -459,7 +459,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     leg.AddEntry(bkg[1], "Stat+Syst", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "G1.5TeV*10", "F")
-    leg.AddEntry(RSG1_2000, "2TeV G#times100", "F")
+    leg.AddEntry(RSG1_2000, "G(2000)#times100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)

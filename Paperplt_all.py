@@ -54,7 +54,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     #inputroot.cd(inputdir)
 
     temp_hist = inputroot.Get(inputdir + "/mH0H1").Clone()
-    canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
+    canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 1000, 800)
     if Xrange != [0, 0]:
         temp_hist.GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
     if Yrange != [0, 0]:
@@ -71,7 +71,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     # Set Axis Labels
     temp_hist.GetXaxis().SetTitle("m_{J}^{lead} [GeV]")
     temp_hist.GetYaxis().SetTitle("m_{J}^{subl} [GeV]")
-    temp_hist.GetZaxis().SetTitle("Events")
+    temp_hist.GetZaxis().SetTitle("Events/10 GeV^{2}")
     temp_hist.GetZaxis().SetTitleOffset(1.8)
     temp_hist.GetZaxis().SetRangeUser(0, temp_hist.GetMaximum())
     # change divisions
