@@ -17,7 +17,6 @@ except:
     pass
 from array import array
 TH1.AddDirectory(False)
-StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
 
 #define functions
@@ -430,7 +429,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     elif "16" in filepath:
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", CONF.paperlegsize)
     else:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", CONF.paperlegsize)
+        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, " + str(CONF.totlumi) + " fb^{-1}", CONF.paperlegsize)
 
     if cut.find("Signal") > -1:
         tag = "Signal Region"
@@ -546,7 +545,7 @@ def main():
     inputpath = CONF.inputpath + inputdir + "/"
 
     global StatusLabel
-    StatusLabel = "Internal" ##StatusLabel = "Preliminary"
+    StatusLabel = "Preliminary" ##StatusLabel = "Preliminary"
     global figuresFolder
 
     global finaldis

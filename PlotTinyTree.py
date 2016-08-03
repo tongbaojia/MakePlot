@@ -23,16 +23,14 @@ def options():
     return parser.parse_args()
 
 #returns a dictionary of weights
-def get_parameter(filename="test.txt"):
+def get_parameter(filename="test.txt", region=""):
     #the input file need to be the following format; change to lists of tuples
     #iteration; Ntrk; parameter; inputfolder; parameterfile
     def get_info(lstline):
         return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[3], lstline[4])
 
     f_reweight = open("script/" + filename + ".txt", "r")
-    TwoTagDic = []
-    ThreeTagDic = []
-    FourTagDic = []
+    TagDic = []
     for line in f_reweight:
         if "#" in line:
             continue
@@ -42,16 +40,16 @@ def get_parameter(filename="test.txt"):
         if int(lstline[0]) > int(ops.iter):
             continue
         #now proceed normally
-        if "2bs" in line:
-            TwoTagDic.append(get_info(lstline))
-        elif "3b" in line:
-            ThreeTagDic.append(get_info(lstline))
-        elif "4b" in line:
-            FourTagDic.append(get_info(lstline))
+        if "2bs" in line and "2Trk" in region:
+            TagDic.append(get_info(lstline))
+        elif "3b" in line and "3Trk" in region:
+            TagDic.append(get_info(lstline))
+        elif "4b" in line and "4Trk" in region:
+            TagDic.append(get_info(lstline))
     #print par_weight
     f_reweight.close()
     #print TwoTagDic
-    return (TwoTagDic, ThreeTagDic, FourTagDic)
+    return TagDic
 
 #returns a dictionary of weights
 def get_reweight(folder, filename):
@@ -307,7 +305,9 @@ class trkregionHists:
         self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
         if self.reweight:
-            self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic = get_parameter(filename=ops.reweight)
+            self.Trk2s_dic = get_parameter(filename=ops.reweight, region="2Trk_split")
+            self.Trk3_dic = get_parameter(filename=ops.reweight, region="3Trk")
+            self.Trk4_dic = get_parameter(filename=ops.reweight, region="4Trk")
 
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, event.weight)
@@ -336,14 +336,37 @@ class trkregionHists:
         self.Trk3.Write(outputroot)
         self.Trk4.Write(outputroot)
 
+
+#reweighting is done here: what a genius design
+class bkgegionHists:
+    def __init__(self, region, outputroot, reweight=False):
+        self.reweight = reweight
+        self.region   = region
+        self.default  = massregionHists(region, outputroot, reweight)
+        if self.reweight:
+            self.reweight_dic = get_parameter(filename=ops.reweight, region=self.region)
+
+    def Fill(self, event, weight=-1):
+        if self.reweight:
+                weight = event.weight * calc_reweight(self.reweight_dic, event)
+        self.default.Fill(event, weight)
+
+    def Write(self, outputroot):
+        self.default.Write(outputroot)
+
+
 class regionHists:
     def __init__(self, outputroot, reweight):
-        self.NoTag  = trkregionHists("NoTag", outputroot, reweight)
+        self.NoTag  = massregionHists("NoTag", outputroot)
         self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
         self.TwoTag = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
         self.ThreeTag = massregionHists("ThreeTag", outputroot)
         self.FourTag = massregionHists("FourTag", outputroot)
+        #for background modeling
+        self.TwoTag_split_bkg  = bkgegionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
+        self.ThreeTag_bkg      = bkgegionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
+        self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
 
     def Fill(self, event):
         b_tagging_cut = 0.3706 #0.3706 as 77% default value
@@ -373,9 +396,16 @@ class regionHists:
             self.TwoTag.Fill(event)
         elif nb_j0 + nb_j1 == 1:
             self.OneTag.Fill(event)
-        #elif nb_j0 + nb_j1 == 0:
-        #elif (nb_j0 + nb_j1 == 1):
-            self.NoTag.Fill(event, event.weight)
+        elif nb_j0 + nb_j1 == 0:
+            self.NoTag.Fill(event)
+        
+        #for bkg modeling
+        if nb_j0 + nb_j1 == 0 and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
+            self.TwoTag_split_bkg.Fill(event)
+        if nb_j0 + nb_j1 == 0 and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
+            self.ThreeTag_bkg.Fill(event)
+        if nb_j0 + nb_j1 == 0 and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
+            self.FourTag_bkg.Fill(event)
 
     def Write(self, outputroot):
         self.NoTag.Write(outputroot)
@@ -384,6 +414,10 @@ class regionHists:
         self.TwoTag_split.Write(outputroot)
         self.ThreeTag.Write(outputroot)
         self.FourTag.Write(outputroot)
+        #for bkg modeling
+        self.TwoTag_split_bkg.Write(outputroot)
+        self.ThreeTag_bkg.Write(outputroot)
+        self.FourTag_bkg.Write(outputroot)
 
 
 def analysis(inputconfig):

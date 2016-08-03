@@ -14,7 +14,7 @@ ROOT.gROOT.LoadMacro("AtlasStyle.C")
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
 ROOT.SetAtlasStyle()
 ROOT.TH1.AddDirectory(False)
-StatusLabel="Internal"
+StatusLabel="Preliminary"
 ROOT.gROOT.SetBatch(True)
 
 #define functions
@@ -436,7 +436,7 @@ def main():
     print "input root file is: ", rootinputpath
 
     global StatusLabel
-    StatusLabel = "Internal" ##StatusLabel = "Preliminary"
+    StatusLabel = "Preliminary" ##StatusLabel = "Internal"
 
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
