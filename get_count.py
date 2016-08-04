@@ -46,6 +46,7 @@ def options():
     parser.add_argument("--inputdir", default="b77")
     parser.add_argument("--dosyst", default=False)
     parser.add_argument("--full", action='store_true') #4times more time
+    parser.add_argument("--Xhh", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
@@ -96,7 +97,8 @@ def main():
     inputtasks.append({"inputdir":inputpath + "data_test/hist-MiniNTuple.root", "histname":"data"})
     for mass in mass_lst:
         inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG1_%i" % mass})
-
+        if (ops.Xhh):
+            inputtasks.append({"inputdir":inputpath + "signal_X_hh_M%i/hist-MiniNTuple.root" % mass, "histname":"Xhh_%i" % mass})
 
     #setup multiprocessing
     #start calculating the dictionary

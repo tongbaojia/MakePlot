@@ -105,7 +105,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
 
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
-    yMax = data.GetMaximum() * 1.6
+    yMax = data.GetMaximum() * 1.5
     if Logy==1:
         yMax = yMax * 100
     #qcd_fit = ifile.Get("qcd_fit")
@@ -131,7 +131,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     pad0.SetBorderMode(0)
     pad0.SetBorderSize(0)
 
-    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.29)
+    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.30)
     pad1.SetRightMargin(0.05)
     pad1.SetBottomMargin(0.38)
     pad1.SetTopMargin(0.0001)
@@ -160,8 +160,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
-    bkg[1].SetFillColor(ROOT.kBlue)
-    bkg[1].SetLineColor(ROOT.kBlue)
+    bkg[1].SetFillColor(CONF.col_dic["syst"])
+    bkg[1].SetLineColor(CONF.col_dic["syst"])
     bkg[1].SetFillStyle(3345)
     bkg[1].SetMarkerSize(0)
     bkg[1].Draw("E2 SAME")
@@ -213,7 +213,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #
     # Add stat uncertianty
     #
-    ratios[0].SetFillColor(ROOT.kBlue)
+    ratios[0].SetFillColor(CONF.col_dic["syst"])
     ratios[0].SetFillStyle(3345)
     ratios[0].Draw("E2")
 
@@ -294,7 +294,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             str('%.2g' % fitresult[2]), 
             str('%.2g' % fitresult[3]), 
             str('%.2g' % fitprob))
-            , 22)
+            , CONF.legsize)
         #draw the line for stat and end of the fit
         ystart = ROOT.TLine(fitMin, 0.60, fitMin, 1.40)
         ystart.SetLineStyle(5)
@@ -325,25 +325,25 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #
     # Add ks score
     #
-    ROOT.myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
-    ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
-    #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
+    ROOT.myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), CONF.legsize)
+    ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), CONF.legsize)
+    #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), CONF.legsize)
 
     # labels
     legHunit=0.05
     legH=legHunit*6 # retuned below based on number of entries to 0.05*num_entries
     legW=0.4
-    leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
+    leg = ROOT.TLegend(0.65, 0.75, 0.95, 0.95)
     # top right, a bit left
     ROOT.ATLASLabel(0.19, 0.91, StatusLabel)
     if "15" in filepath:
-        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", CONF.legsize)
     elif "16" in filepath:
-        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", CONF.legsize)
     elif "cb" in filepath:
-        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", CONF.legsize)
     else:
-        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
+        ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", CONF.legsize)
     ##### legend
     leg.SetNColumns(2)
     leg.SetTextFont(43)

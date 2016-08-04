@@ -20,19 +20,18 @@ def options():
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
+    parser.add_argument("--Xhh",      action='store_true') #do 2HDM samples if necessary
     return parser.parse_args()
 
 #returns a dictionary of weights
-def get_parameter(filename="test.txt"):
+def get_parameter(filename="test.txt", region=""):
     #the input file need to be the following format; change to lists of tuples
     #iteration; Ntrk; parameter; inputfolder; parameterfile
     def get_info(lstline):
         return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[3], lstline[4])
 
     f_reweight = open("script/" + filename + ".txt", "r")
-    TwoTagDic = []
-    ThreeTagDic = []
-    FourTagDic = []
+    TagDic = []
     for line in f_reweight:
         if "#" in line:
             continue
@@ -42,16 +41,16 @@ def get_parameter(filename="test.txt"):
         if int(lstline[0]) > int(ops.iter):
             continue
         #now proceed normally
-        if "2bs" in line:
-            TwoTagDic.append(get_info(lstline))
-        elif "3b" in line:
-            ThreeTagDic.append(get_info(lstline))
-        elif "4b" in line:
-            FourTagDic.append(get_info(lstline))
+        if "2bs" in line and "2Trk" in region:
+            TagDic.append(get_info(lstline))
+        elif "3b" in line and "3Trk" in region:
+            TagDic.append(get_info(lstline))
+        elif "4b" in line and "4Trk" in region:
+            TagDic.append(get_info(lstline))
     #print par_weight
     f_reweight.close()
     #print TwoTagDic
-    return (TwoTagDic, ThreeTagDic, FourTagDic)
+    return TagDic
 
 #returns a dictionary of weights
 def get_reweight(folder, filename):
@@ -324,7 +323,9 @@ class trkregionHists:
         self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
         if self.reweight:
-            self.Trk2s_dic, self.Trk3_dic, self.Trk4_dic = get_parameter(filename=ops.reweight)
+            self.Trk2s_dic = get_parameter(filename=ops.reweight, region="2Trk_split")
+            self.Trk3_dic = get_parameter(filename=ops.reweight, region="3Trk")
+            self.Trk4_dic = get_parameter(filename=ops.reweight, region="4Trk")
 
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, event.weight)
@@ -353,14 +354,37 @@ class trkregionHists:
         self.Trk3.Write(outputroot)
         self.Trk4.Write(outputroot)
 
+
+#reweighting is done here: what a genius design
+class bkgegionHists:
+    def __init__(self, region, outputroot, reweight=False):
+        self.reweight = reweight
+        self.region   = region
+        self.default  = massregionHists(region, outputroot, reweight)
+        if self.reweight:
+            self.reweight_dic = get_parameter(filename=ops.reweight, region=self.region)
+
+    def Fill(self, event, weight=-1):
+        if self.reweight:
+                weight = event.weight * calc_reweight(self.reweight_dic, event)
+        self.default.Fill(event, weight)
+
+    def Write(self, outputroot):
+        self.default.Write(outputroot)
+
+
 class regionHists:
     def __init__(self, outputroot, reweight):
-        self.NoTag  = trkregionHists("NoTag", outputroot, reweight)
+        self.NoTag  = massregionHists("NoTag", outputroot)
         self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
         self.TwoTag = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
         self.ThreeTag = massregionHists("ThreeTag", outputroot)
         self.FourTag = massregionHists("FourTag", outputroot)
+        #for background modeling
+        self.TwoTag_split_bkg  = bkgegionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
+        self.ThreeTag_bkg      = bkgegionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
+        self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
 
     def Fill(self, event):
         b_tagging_cut = 0.3706 #0.3706 as 77% default value
@@ -371,6 +395,15 @@ class regionHists:
         nb_j0 += 1 if event.j0_trk1_Mv2 > b_tagging_cut else 0
         nb_j1 += 1 if event.j1_trk0_Mv2 > b_tagging_cut else 0
         nb_j1 += 1 if event.j1_trk1_Mv2 > b_tagging_cut else 0
+
+        #for testing
+        # b_tagging_loose_cut = -0.1416 #-0.1416 as 85% value
+        # nb_j0_loose = 0
+        # nb_j1_loose = 0
+        # nb_j0_loose += 1 if event.j0_trk0_Mv2 > b_tagging_loose_cut else 0
+        # nb_j0_loose += 1 if event.j0_trk1_Mv2 > b_tagging_loose_cut else 0
+        # nb_j1_loose += 1 if event.j1_trk0_Mv2 > b_tagging_loose_cut else 0
+        # nb_j1_loose += 1 if event.j1_trk1_Mv2 > b_tagging_loose_cut else 0
 
         if nb_j0 + nb_j1 == 4:
             self.FourTag.Fill(event)
@@ -383,7 +416,15 @@ class regionHists:
         elif nb_j0 + nb_j1 == 1:
             self.OneTag.Fill(event)
         elif nb_j0 + nb_j1 == 0:
-            self.NoTag.Fill(event, event.weight)
+            self.NoTag.Fill(event)
+        
+        #for bkg modeling
+        if nb_j0 + nb_j1 == 0 and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
+            self.TwoTag_split_bkg.Fill(event)
+        if nb_j0 + nb_j1 == 0 and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
+            self.ThreeTag_bkg.Fill(event)
+        if nb_j0 + nb_j1 == 0 and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
+            self.FourTag_bkg.Fill(event)
 
     def Write(self, outputroot):
         self.NoTag.Write(outputroot)
@@ -392,6 +433,10 @@ class regionHists:
         self.TwoTag_split.Write(outputroot)
         self.ThreeTag.Write(outputroot)
         self.FourTag.Write(outputroot)
+        #for bkg modeling
+        self.TwoTag_split_bkg.Write(outputroot)
+        self.ThreeTag_bkg.Write(outputroot)
+        self.FourTag_bkg.Write(outputroot)
 
 def pass_cut(tree):
     return pass_dRcut(tree)
@@ -587,6 +632,8 @@ def main():
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight or ops.dosyst is not None :
             inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+            if (ops.Xhh):
+                inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
         else:#if reweight, creat the folders and the links to the files
             print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))

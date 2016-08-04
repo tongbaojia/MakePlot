@@ -189,8 +189,8 @@ def Syst_table(masterdic):
         column_dic[col] = {}
     ###this is super complicated...let's get them one by one
     help_table.add_table_head(tableList, column_name_lst, title="Source", special_raw=tag_lst)
-    systag_lst = ["Lumi", "JER", "JMR", "Rtrk",  "EFF", "method", "Stat"]
-    systag_dic = {"Lumi":"Luminosity", "JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"$b$-tagging", "Stat":"Statistical"}
+    systag_lst = ["Lumi", "JER", "JMR", "tt", "Rtrk",  "EFF", "method", "Stat"]
+    systag_dic = {"Lumi":"Luminosity", "JER":"JER", "JMR":"JMR", "tt":"\\ttbar MC", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"$b$-tagging", "Stat":"Statistical"}
     #systag_lst = {"method":"Bkg Est"}
     #add each systematics
     for systag in systag_lst:
@@ -210,8 +210,8 @@ def Syst_table(masterdic):
                         column_dic[temp_col].update(temp_col_dic)
             elif (systag == "Lumi"):
                 if ("RSG" in col):
-                    outstr += help_table.add_entry((0.05, 0), doerr=False, percent=True)
-                    temp_col_dic = {"Lumi":(0.05, 0)}
+                    outstr += help_table.add_entry((0.033, 0), doerr=False, percent=True)
+                    temp_col_dic = {"Lumi":(0.033, 0)}
                     column_dic[temp_col].update(temp_col_dic)
                 else:
                     outstr += help_table.add_entry((0, 0), doerr=False, percent=True)

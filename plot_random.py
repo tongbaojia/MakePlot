@@ -59,24 +59,24 @@ def main():
 
     # # #signalregion shape comparison
     inputroot = "sum_" + inputdir + ".root"
-    # DrawSRcomparison(inputroot, inputdata="ttbar")
-    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    # DrawSRcomparison(inputroot, inputdata="qcd_est")
-    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="ttbar")
+    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="qcd_est")
+    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
     # # #draw the mhh before and after scale
-    # DrawScalecomparison(inputroot, norm=False)
-    # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    DrawScalecomparison(inputroot, norm=False)
+    DrawScalecomparison(inputroot, norm=True, Logy=1)
 
     ###draw the reweighted 2D distributions; works conditionally!
-    inputpath = CONF.inputpath + "DS1_cb_j0pT-subltrk-fin_3" + "/"
-    outputpath = CONF.inputpath + "DS1_cb_j0pT-subltrk-fin_3" + "/" + "Plot/Other/"
+    inputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/"
+    outputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
     for i in ["2Trk_split", "3Trk", "4Trk"]:
         DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
         DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
+        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="sublHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
         DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
         #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
         #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
@@ -146,7 +146,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
     for key in ROOT.gDirectory.GetListOfKeys():
         kname = key.GetName()
         if keyword in kname:
-
+            print "find:", kname
             temp_hist = ROOT.gDirectory.Get(kname).Clone()
             canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
             if Xrange != [0, 0]:
@@ -175,9 +175,10 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
             #draw the correlation factor
             if temp_hist.InheritsFrom("TH2"):
                 ROOT.gStyle.SetPadRightMargin(0.15)
-                myText(0.2, 0.97, 1, "Coor = %s" % str(('%.2g' % temp_hist.GetCorrelationFactor())), 22)
+                myText(0.2, 0.97, 1, "Coor = %s" % str(('%.2g' % temp_hist.GetCorrelationFactor())), CONF.legsize)
 
             canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
+            print "save: ", outputpath + prename + "_" +  canv.GetName() + ".pdf"
 
             #produce profile plot if 2D
             if temp_hist.InheritsFrom("TH2"):
@@ -209,7 +210,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
                 temp_projx.Draw()
                 for wm in watermarks:
                     wm.Draw()
-                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projx.GetMean())), str(('%.2g' % temp_projx.GetRMS()))), 22)
+                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projx.GetMean())), str(('%.2g' % temp_projx.GetRMS()))), CONF.legsize)
                 canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_projx.pdf")
                 #profile y
                 canv.Clear()
@@ -219,7 +220,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
                 temp_projy.Draw()
                 for wm in watermarks:
                     wm.Draw()
-                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projy.GetMean())), str(('%.2g' % temp_projy.GetRMS()))), 22)
+                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projy.GetMean())), str(('%.2g' % temp_projy.GetRMS()))), CONF.legsize)
                 canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_projy.pdf")
             canv.Close()
             #done

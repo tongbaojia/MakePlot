@@ -151,7 +151,7 @@ def DrawPtEff(inputdir, outputname=""):
     leg_lst  = ["Data" + year,    "RSG 1TeV", "RSG 1.1TeV", "RSG 1.2TeV"]
     for i, file in enumerate(file_lst):
 
-        input_mc  = ROOT.TFile.Open(inputpath + file + "/hist-MiniNTuple" + (year if "data" in file else "") + ".root")
+        input_mc  = ROOT.TFile.Open(inputpath + file + (year if "data" in file else "") + "/hist-MiniNTuple" + ".root")
         hist_tag  = input_mc.Get("h_leadHCand_pT_pre_trig").Clone() #hist before trigger
         hist_prob = input_mc.Get("h_leadHCand_pT_aft_trig").Clone() #hist after trigger
 

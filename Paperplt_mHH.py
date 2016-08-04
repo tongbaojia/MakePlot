@@ -17,7 +17,6 @@ except:
     pass
 from array import array
 TH1.AddDirectory(False)
-StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
 
 #define functions
@@ -203,9 +202,9 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     zjet = ifile.Get("zjet_hh")
     RSG1_1000 = ifile.Get("signal_RSG_c10_hh_m1000")
     RSG1_1500 = ifile.Get("signal_RSG_c10_hh_m1500")
-    RSG1_2500 = ifile.Get("signal_RSG_c10_hh_m2500")
+    RSG1_2000 = ifile.Get("signal_RSG_c10_hh_m2000")
     RSG1_1500.Scale(10)
-    RSG1_2500.Scale(100)
+    RSG1_2000.Scale(100)
 
     if not rebin == None:
         data.Rebin(rebin)
@@ -215,7 +214,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
         #zjet.Rebin(rebin)
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
-        RSG1_2500.Rebin(rebin)
+        RSG1_2000.Rebin(rebin)
 
     #use array to rebin histgrams
     if not rebinarry == None:
@@ -226,7 +225,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
         #zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
-        RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
+        RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -241,11 +240,11 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
 
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
-    yMax = data.GetMaximum() * 1.6
+    yMax = data.GetMaximum() * 1.5
     if ("FourTag" in cut):
-        yMax = data.GetMaximum() * 2.0
+        yMax = data.GetMaximum() * 2.2
     if Logy==1:
-        yMax = yMax * 100
+        yMax = yMax * 10
     #qcd_fit = ifile.Get("qcd_fit")
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
@@ -259,9 +258,9 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     ratios = makeDataRatio(data, bkg[1])
 
     # stack signal on background
-    RSG1_1000.Add(bkg[0]) 
-    RSG1_1500.Add(bkg[0]) 
-    RSG1_2500.Add(bkg[0]) 
+    #RSG1_1000.Add(bkg[0]) 
+    #RSG1_1500.Add(bkg[0]) 
+    #RSG1_2000.Add(bkg[0]) 
 
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
@@ -277,7 +276,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     pad0.SetBorderMode(0)
     pad0.SetBorderSize(0)
 
-    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.29)
+    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.30)
     pad1.SetRightMargin(0.05)
     pad1.SetBottomMargin(0.38)
     pad1.SetTopMargin(0.0001)
@@ -299,11 +298,11 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     bkg[0].SetLineColor(ROOT.kBlack)
     bkg[0].SetLineWidth(2)
     bkg[0].GetYaxis().SetTitleFont(43)
-    bkg[0].GetYaxis().SetTitleSize(28)
+    bkg[0].GetYaxis().SetTitleSize(35)
     bkg[0].GetYaxis().SetLabelFont(43)
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
-    bkg[0].GetYaxis().SetRangeUser(0.001, yMax)
+    bkg[0].GetYaxis().SetRangeUser(0.5, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -314,16 +313,16 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
 
     RSG1_1500.SetLineWidth(2)
     RSG1_1500.SetLineStyle(2)
-    RSG1_1500.SetLineColor(ROOT.kPink+7)
+    RSG1_1500.SetLineColor(ROOT.kGreen+4)
+
     #RSG1_1500.Draw("HISTO SAME")
+    RSG1_2000.SetLineWidth(2)
+    RSG1_2000.SetLineStyle(2)
+    RSG1_2000.SetLineColor(ROOT.kPink+7)
+    RSG1_2000.Draw("HISTO SAME")
 
-    RSG1_2500.SetLineWidth(2)
-    RSG1_2500.SetLineStyle(2)
-    RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    #RSG1_2500.Draw("HISTO SAME")
-
-    bkg[1].SetFillColor(ROOT.kBlue)
-    bkg[1].SetLineColor(ROOT.kBlue)
+    bkg[1].SetFillColor(CONF.col_dic["syst"])
+    bkg[1].SetLineColor(CONF.col_dic["syst"])
     bkg[1].SetFillStyle(3345)
     bkg[1].SetMarkerSize(0)
     bkg[1].Draw("E2 SAME")
@@ -356,16 +355,16 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     hratio.SetStats(0)
     
     hratio.GetYaxis().SetTitleFont(43)
-    hratio.GetYaxis().SetTitleSize(28)
+    hratio.GetYaxis().SetTitleSize(35)
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.1, 5.0) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.1, 4.8) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
     hratio.GetXaxis().SetTitleOffset(3.5)
-    hratio.GetXaxis().SetTitleSize(28)
+    hratio.GetXaxis().SetTitleSize(35)
     hratio.GetXaxis().SetLabelFont(43)
     hratio.GetXaxis().SetLabelSize(28)
     hratio.GetXaxis().SetTitle(xTitle)
@@ -375,7 +374,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     #
     # Add stat uncertianty
     #
-    ratios[0].SetFillColor(kBlue)
+    ratios[0].SetFillColor(CONF.col_dic["syst"])
     ratios[0].SetFillStyle(3345)
     ratios[0].Draw("E2")
 
@@ -403,7 +402,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     #     testfit.Draw("SAME")
     #     fitresult = testfit.GetParameters()
     #     myText(0.2, 0.17, 1, "y=%s x^2 + %s x + %s" % (str('%.2g' % fitresult[0]), \
-    #         str('%.2g' % fitresult[1]),str('%.2g' % fitresult[2])), 22)
+    #         str('%.2g' % fitresult[1]),str('%.2g' % fitresult[2])), CONF.paperlegsize)
 
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
@@ -414,23 +413,23 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     #
     # Add ks score
     #
-    #myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), 22)
-    #myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), 22)
-    #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), 22)
+    #myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), CONF.paperlegsize)
+    #myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), CONF.paperlegsize)
+    #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), CONF.paperlegsize)
 
     # labels
     legHunit=0.05
     legH=legHunit*6 # retuned below based on number of entries to 0.05*num_entries
     legW=0.4
-    leg = ROOT.TLegend(0.6, 0.75, 0.95, 0.95)
+    leg = ROOT.TLegend(0.66, 0.75, 0.95, 0.95)
     # top right, a bit left
     ATLASLabel(0.19, 0.91, StatusLabel)
     if "15" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", 22)
+        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", CONF.paperlegsize)
     elif "16" in filepath:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", 22)
+        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", CONF.paperlegsize)
     else:
-        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", 22)
+        myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, " + str(CONF.totlumi) + " fb^{-1}", CONF.paperlegsize)
 
     if cut.find("Signal") > -1:
         tag = "Signal Region"
@@ -444,11 +443,11 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
         tag += ", Boosted 3-tag"
     elif cut.find("TwoTag") > -1:
         tag += ", Boosted 2-tag"
-    myText(0.19, 0.83, 1, tag, 22)
+    myText(0.19, 0.83, 1, tag, CONF.paperlegsize)
     ##### legend
-    leg.SetNColumns(2)
+    #leg.SetNColumns(2)
     leg.SetTextFont(43)
-    leg.SetTextSize(15)
+    leg.SetTextSize(CONF.paperlegsize)
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
@@ -459,7 +458,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     leg.AddEntry(bkg[1], "Stat+Syst", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "G1.5TeV*10", "F")
-    #leg.AddEntry(RSG1_2500, "G2.5TeV*100", "F")
+    leg.AddEntry(RSG1_2000, "G(2000)#times100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
@@ -485,7 +484,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     del(zjet)
     del(RSG1_1000)
     del(RSG1_1500)
-    del(RSG1_2500)
+    del(RSG1_2000)
     del(syst_up)
     del(syst_down)
 
@@ -546,7 +545,7 @@ def main():
     inputpath = CONF.inputpath + inputdir + "/"
 
     global StatusLabel
-    StatusLabel = "Internal" ##StatusLabel = "Preliminary"
+    StatusLabel = "Preliminary" ##StatusLabel = "Preliminary"
     global figuresFolder
 
     global finaldis

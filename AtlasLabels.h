@@ -13,7 +13,7 @@
 
 #include "Rtypes.h"
 
-void ATLASLabel(Double_t x,Double_t y,char* text=NULL,Color_t color=1); 
+void ATLASLabel(Double_t x,Double_t y,char* text=NULL, Color_t color=1, Int_t tsize=18); 
 
 void ATLASLabelOld(Double_t x,Double_t y,bool Preliminary=false,Color_t color=1); 
 

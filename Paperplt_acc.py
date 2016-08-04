@@ -10,13 +10,10 @@ import time
 import config as CONF
 
 ROOT.gROOT.SetBatch(True)
-try:
-    ROOT.gROOT.LoadMacro("AtlasStyle.C")
-    ROOT.gROOT.LoadMacro("AtlasLabels.C")
-    ROOT.SetAtlasStyle()
-except:
-    print "Passing on AtlasStyle.C"
-    pass
+from ROOT import *    
+ROOT.gROOT.LoadMacro("AtlasStyle.C") 
+ROOT.gROOT.LoadMacro("AtlasLabels.C")
+SetAtlasStyle()
 
 def main():
 
@@ -69,8 +66,8 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     ### 1 for signal mass region
     afterscript = "_rel" if dorel else ""
     canv = ROOT.TCanvas(inputdir + "_" + "Efficiency" + "_" + normalization + afterscript, "Efficiency", 800, 800)
-    xleg, yleg = 0.55, 0.7
-    legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
+    xleg, yleg = 0.55, 0.73
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.18)
     # setup basic plot parameters
     # load input MC file
     eff_lst = []
@@ -130,6 +127,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
+    legend.SetTextFont(42)
     legend.SetTextSize(0.03)
     legend.Draw()
 
@@ -141,16 +139,24 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     yline10.SetLineStyle(9)
     #yline10.Draw()
     # draw watermarks
-    xatlas, yatlas = 0.35, 0.87
-    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Simulation Internal")
-    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0, #sqrt{s} = 13 TeV")
-    watermarks = [atlas, hh4b]
-    for wm in watermarks:
-        wm.SetTextAlign(22)
-        wm.SetTextSize(0.03)
-        wm.SetTextFont(42)
-        wm.SetNDC()
-        wm.Draw()
+    xatlas, yatlas = 0.2, 0.87
+    #atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Preliminary")
+    #ATLASLabel(xatlas, yatlas, "Preliminary")
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS")
+    #atlas.SetTextAlign(22)
+    atlas.SetTextSize(0.04)
+    atlas.SetTextFont(72)
+    atlas.SetNDC()
+    atlas.Draw()
+    status = ROOT.TLatex(xatlas + 0.14, yatlas, "Preliminary")
+    #status.SetTextAlign(22)
+    status.SetTextSize(0.04)
+    status.SetTextFont(42)
+    status.SetNDC()
+    status.Draw()
+
+    myText(xatlas, yatlas-0.05, 1, "G c=1.0, #sqrt{s} = 13 TeV", CONF.paperlegsize - 2)
+    myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize - 2)
     # finish up
     canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".pdf")
     canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".eps")
