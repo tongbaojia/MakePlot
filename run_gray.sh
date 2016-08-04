@@ -6,7 +6,7 @@
 
 inch=F_c10-cb-16-b77
 #channels=(b85-oldcut-try2)
-channels=(f_fin-cb-16-b77-2cut85)
+channels=(f_fin-cb-16-b77-tight-deta)
 #channels=(b77_c00-15 b77_c00-16 b77_c10-15 b77_c10-16 ref)
 #channels=(b77_c10-cb TEST_c10-cb_CR_High TEST_c10-cb_CR_Low TEST_c10-cb_CR_Small TEST_c10-cb_SB_Large TEST_c10-cb_SB_Small TEST_c10-cb_SB_High TEST_c10-cb_SB_Low)
 #channels=(TEST_c10-cb)
@@ -17,7 +17,7 @@ channels=(f_fin-cb-16-b77-2cut85)
 
 for ch in ${channels[@]}; do
 	echo $ch
-	python PlotTinyTree.py --inputdir $inch --outputdir $ch
+	python PlotTinyTree2.py --inputdir $inch --outputdir $ch
 	python get_count.py --inputdir $ch --full
 	##python test.py --inputdir $ch --full True
 	python plot.py --inputdir $ch

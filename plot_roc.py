@@ -16,14 +16,14 @@ from plot_2dhists import DrawHists
 # ROOT.gROOT.LoadMacro("langaus.C")
 
 outputdir = CONF.outplotpath
-basedir = "F_c10-cb-16-b85/"
+basedir = "F_c10-cb-16-b77/"
 signals = []
 data = []
 
 # mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 mass_lst = [1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000]
 #mass_lst = [1400, 1500, 1600, 1800, 2000]
-mass_lst += [2500, 2750, 3000]
+#mass_lst += [2500, 2750, 3000]
 
 
 for mass in mass_lst:
@@ -34,29 +34,32 @@ data.append( basedir + "data_test15/hist-MiniNTuple.root")
 data.append( basedir + "data_test16/hist-MiniNTuple.root")
 
 
-"""
-#scuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
-#dcuts = ["AllTag_Signal/h0_tj_pt_dR", "AllTag_Signal/h1_tj_pt_dR"]
+#scuts = ["ThreeTag_Signal/h0_tj_pt_dR", "ThreeTag_Signal/h1_tj_pt_dR"]
+scuts = ["FourTag_Signal/h0_tj_pt_dR", "FourTag_Signal/h1_tj_pt_dR"]
+dcuts = ["TwoTag_Signal/h0_tj_pt_dR", "TwoTag_Signal/h1_tj_pt_dR"]
 
-deltas = np.linspace(0, .5, 21)
-masses = np.linspace(225.0/2, 325.0/2, 21)
+
+#deltas = np.linspace(.17, .5, 34)
+#deltas = np.linspace(0.175, .3, 6)
+deltas = np.linspace(0, .3, 13)
+masses = np.linspace(300.0/2, 450.0/2, 31)
 
 cutvals = [(m,d) for m in masses for d in deltas]
 cutstr = "m: %.1f, #delta: %.3f"
-"""
 
 #scuts = ["ThreeTag_Incl/mH0H1", "FourTag_Incl/mH0H1", "TwoTag_split_Incl/mH0H1"]
 #dcuts = ["ThreeTag_Incl/mH0H1", "FourTag_Incl/mH0H1", "TwoTag_split_Incl/mH0H1"]
-dcuts = ["AllTag_Incl/mH0H1"]
-scuts = ["AllTag_Incl/mH0H1"]
+#dcuts = ["AllTag_Incl/mH0H1"]
+#scuts = ["AllTag_Incl/mH0H1"]
 #scuts = ["AllTag_Signal/hh_deta"]
 #dcuts = ["AllTag_Signal/hh_deta"]
 
+"""
 rs = np.linspace(0.0, 2.0, 21)
 eps = np.linspace(0.0, 10.0, 11)
 cutvals = [(r, e0, e1) for r in rs for e0 in eps for e1 in eps]
 cutstr = "max(X_{hh}): %.1f, e0: %.1f, e1: %.1f" 
-
+"""
 #cutvals = np.linspace(0.0, 1.7, 18)
 #cutvals = np.linspace(1.0, 1.0, 1)
 #cutvals = [(c0,c1) for c0 in cutvals for c1 in cutvals]
@@ -74,18 +77,19 @@ def main():
 
     # # Draw the efficiency plot relative to the all normalization
     # name of the canvas
-    cname = "roc_plot_SR_85.pdf"
-    cut_func = pass_extended_SR
+    cname = "roc_plot_pt_dR_lead.pdf"
+    cut_func = passcut_dR
     DrawRoc(output, scuts[0], dcuts[0], cut_func, cname, histdim=2)
     output.Close()
 
 
 def passcut_dR(pt, dR, cutval):
     (m, d) = cutval
-    if pt > 1000.0:
-	return True
+    #if pt > 1000.0:
+    #    return True
     cval = 2*m/pt
-    return abs(cval - dR) < d
+    #return abs(cval - dR) < d
+    return dR > cval - d
 
 def passcut_SR(m0, m1, cutval):
     a = cutval[0]
@@ -196,6 +200,19 @@ def cut_eff(cutval, cutfunc, histdim, *hists):
 
     return retvals
 
+def dRShape(pt, m):
+    if abs(pt[0]) < 1e-4:
+        return 1e+4
+    return 2.0*m[0]/pt[0]
+
+def FitHist(hist, fitfunc, params):
+    params = np.array( params )
+    fitter = ROOT.TF1("fit",fitfunc, hist.GetXaxis().GetXmin(), hist.GetXaxis().GetXmax(), params.shape[0]) 
+    fitter.SetParameters( params )
+
+    hist.Fit(fitter)
+    print fitter.Print()
+
 def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
     #signalmc = ROOT.TH2F(scut, "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
     #datamc = ROOT.TH2F(dcut, "dR between lead, subleading track jet", 350, 0, 3500, 130, 0, 6.5)
@@ -273,6 +290,9 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
         signalmc.Rebin(2)
         datamc.Rebin(2)
 
+    # also try fitting the signal
+    #FitHist( datamc.ProfileX(), dRShape, np.array( [125.0] ) )
+
     sigsize = signalmc.Integral()
     datasize = datamc.Integral()
     coords = []
@@ -309,19 +329,17 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
 
     sig = map(lambda x: x[0]/np.sqrt(1-x[1]), coords)
 
-    sig9 = map(lambda x: x[0]/np.sqrt(1-x[1]), [c if c[0] > .9 else (0,0) for c in coords ])
+    sig9 = map(lambda x: x[0]/np.sqrt(1-x[1]), [c if c[0] > .8 else (0,0) for c in coords ])
 
     print "\n\nOptimal S/sqrt(B) for any signal efficiency:"
     print "Value: " + str(max(sig))
     print "Cutvals: " + str(testvals[sig.index(max(sig))])
     print "ROC coords: " + str(coords[sig.index(max(sig))])
      
-    """
-    print "\nOptimal S/sqrt(B) for signal efficiency > .9:"
+    print "\nOptimal S/sqrt(B) for signal efficiency > .8:"
     print "Value: " + str( max(sig9))
     print "Cutvals: " + str(testvals[sig9.index(max(sig9))])
     print "ROC coords: " + str(coords[sig9.index(max(sig9))])
-    """
 
     # draw on canvas optimal cut info
     sBmax = max(sig)
@@ -344,17 +362,17 @@ def DrawRoc(outputroot, scut, dcut, cut_func, canv_name, histdim=2):
     canv.SaveAs(outputdir + canv_name)
     canv.Close()
 
-    return
+    #return
 
     # decide on the histogram range
     if "h0" in scut:
-	pTrange = (450, 2000)
+	pTrange = (450, 2500)
     elif "h1" in scut:
-	pTrange = (250, 2000)
+	pTrange = (250, 2500)
 
     # now draw histograms in signal and data
-    DrawHists(outputroot, [scut], "", signals, "mc_", cutvals=vmax, Xrange=pTrange)
-    DrawHists(outputroot, ["AllTag_Control/h0_tj_pt_dR"], "", data, "data_", cutvals=vmax,  Xrange=pTrange, scale=False) 
+    DrawHists(outputroot, [scut], "", signals, "mc_", cutvals=testvals[sig9.index(max(sig9))], Xrange=pTrange)
+    DrawHists(outputroot, [dcut], "", data, "data_", cutvals=testvals[sig9.index(max(sig9))],  Xrange=pTrange, scale=False) 
 
 def ratioerror(a, b):
     if a > 0:

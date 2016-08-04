@@ -32,16 +32,19 @@ def main():
     #pathlist = ["Alltag/"]
     print output
     cut_lst = [path + data for path in pathlist
+		for data in ["h0_tj_pt_dR", "h1_tj_pt_dR"]]
 		#for data in ["hh_deta"]]
-		for data in ["jetpt_asym_m"]]
+		#for data in ["jetpt_asym_m"]]
 		#for data in ["h0_tj_pt_dR", "h1_tj_pt_dR", "h0_tj_match_pt_dR", "h1_tj_match_pt_dR"]] 
 
     #tfiles = ["/signal_2HDM_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
-    tfiles = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
+    #tfiles = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
+    tfiles = ["/ttbar_comb_test/hist-MiniNTuple.root"]
+    #tfiles = ["/data_test/hist-MiniNTuple.root"]
     #tfiles = ["/data_test15/hist-MiniNTuple.root", "/data_test16/hist-MiniNTuple.root"]
 
     # # Draw the efficiency plot relative to the all normalization
-    DrawHists(output, cut_lst, "F_c10-cb-b77-ptratio-hists", tfiles, "mc_", scale=False)
+    DrawHists(output, cut_lst, "F_c10-cb-16-b77", tfiles, "ttbar_mc_", scale=False)
     output.Close()
 
 
@@ -100,12 +103,12 @@ def DrawHists(outputroot, cut_lst, inputdir, tfiles, outputname="", normalizatio
 
             input_mc.Close()
 
-	bigmc.Rebin2D(4, 2)
+	bigmc.Rebin2D(4, 1)
 	bigmc.Scale(1/bigmc.Integral())
         bigmc.GetYaxis().SetRangeUser(0.2,1.0)
 	bigmc.GetXaxis().SetRangeUser(*Xrange)
 	bigmc.GetXaxis().SetLabelSize(0.035)
-	#bigmc.GetZaxis().SetRangeUser(.05, 0.5)
+	bigmc.GetZaxis().SetRangeUser(1e-6, 1e-1)
 	#bigmc.GetXaxis().SetTitle("Higgs pT [MeV]")
 	bigmc.GetYaxis().SetTitle("trkjet #DeltaR")
 	#bigmc.GetXaxis().SetTitle("Dijet Mass [MeV]")
@@ -124,25 +127,26 @@ def DrawHists(outputroot, cut_lst, inputdir, tfiles, outputname="", normalizatio
 	# cut line
 	if cutvals is not None:
 	    (mcut, dcut) = cutvals
-	    xs = np.arange(Xrange[0], 1000, 10, dtype="float")
-	    ys = np.array([mcut*2/x + dcut for x in xs])
+	    xs = np.arange(Xrange[0], 1500, 10, dtype="float")
+	    ys = np.array([mcut*2/x + dcut for x in xs if mcut*2/x + dcut > 0.2])
+	    xs = xs[:ys.shape[0]]
 	    cutline = ROOT.TPolyLine(xs.shape[0], xs, ys)
 	    cutline.SetLineWidth(4)
 
-	    xs2 = np.arange(Xrange[0], 1000, 10,dtype="float")
+	    xs2 = np.arange(Xrange[0], 1500, 10,dtype="float")
 	    ys2 = np.array([mcut*2/x - dcut for x in xs2 if mcut*2/x - dcut > 0.2])
 	    xs2 = xs2[:ys2.shape[0]]
 	    cutline2 = ROOT.TPolyLine(xs2.shape[0], xs2, ys2)
 	    cutline2.SetLineWidth(4)
 
 	    # cut line two
-	    dashline = ROOT.TLine(1000.0, 0.2, 1000.0, 1.0)
-	    dashline.SetLineWidth(4)
-	    dashline.SetLineStyle(9)
+	    #dashline = ROOT.TLine(1000.0, 0.2, 1000.0, 1.0)
+	    #dashline.SetLineWidth(4)
+	    #dashline.SetLineStyle(9)
 
-	    cutline.Draw()
+	    #cutline.Draw()
 	    cutline2.Draw()
-	    dashline.Draw()
+	    #dashline.Draw()
 
         # finish up
         outputroot.cd()
