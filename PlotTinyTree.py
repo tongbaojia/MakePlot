@@ -363,8 +363,8 @@ class regionHists:
         self.FourTag = massregionHists("FourTag", outputroot)
 
     def Fill(self, event):
-        #b_tagging_cut = 0.3706 #0.3706 as 77% default value
-        b_tagging_cut = -0.1416 #85% working point
+        b_tagging_cut = 0.3706 #0.3706 as 77% default value
+        #b_tagging_cut = -0.1416 #85% working point
         nb_j0 = 0
         nb_j1 = 0
         nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
@@ -394,7 +394,8 @@ class regionHists:
         self.FourTag.Write(outputroot)
 
 def pass_cut(tree):
-    return pass_Deta_cut(tree) and pass_dRcut(tree)
+    return pass_dRcut(tree)
+    #return pass_Deta_cut(tree) and pass_dRcut(tree)
 
 def pass_Deta_cut(tree):
     return tree.detaHH < 1.2
@@ -412,15 +413,15 @@ def pass_dRcut(t):
     j1pt = t.j1_pt
 
     def c0(pt, dR):
-        if pt > 1000:
+        if t.j0_nb < 2:
             return True
         else:
-            return abs(285.0/pt - dR) < 0.125
+            return abs(285.0/pt - dR) < 0.175
     def c1(pt, dR):
-        if pt > 1000:
+        if t.j1_nb < 2:
             return True
         else:
-            return abs(265.0/pt - dR) < 0.125
+            return abs(265.0/pt - dR) < 0.175
 
     chk0 = chk1 = True
 
@@ -527,10 +528,10 @@ def main():
 
     ##setup control region size, and sideband region size
     global Syst_cut
-    #CR_size = 35.8
-    #SB_size = 63
-    CR_size = 45.0
-    SB_size = 100.0
+    CR_size = 35.8
+    SB_size = 63
+    #CR_size = 45.0
+    #SB_size = 100.0
 
     rval = 1.7
     extval = 6.0
