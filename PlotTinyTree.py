@@ -439,6 +439,7 @@ class regionHists:
         self.FourTag_bkg.Write(outputroot)
 
 def pass_cut(tree):
+    return True
     return pass_dRcut(tree)
     #return pass_Deta_cut(tree) and pass_dRcut(tree)
 
