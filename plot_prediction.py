@@ -41,16 +41,17 @@ def main():
     # Draw the efficiency plot relative to the all normalization
     #DrawSignalEff(cut_sig_lst, "TEST_b77", "Significance", 100)
     # b_tag = [70, 77, 80, 85, 90]
-    cut_all_lst = ["OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+    """
+    cut_all_lst = CONF.region_lst
     outputname = inputdir + "_allsig"
     DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.005, (2400, 3100))
     DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.06, (1750, 2450))
     DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.2, (1450, 2450))
     DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 1.5)
     DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 300, logy=1)
+    """
 
-
-    cut_rel_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+    cut_rel_lst = CONF.signal_lst
     outputname = inputdir + "_relsig"
     DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.005, (2400, 3100))
     DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.06, (1750, 2450))

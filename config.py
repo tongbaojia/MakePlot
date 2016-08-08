@@ -42,3 +42,41 @@ col_dic = {"syst":ROOT.kGray+2}
 #size for legend
 legsize = 17
 paperlegsize = 28
+
+# returns the number of scores in a list
+# that pass the given b-tagging WP
+def num_btags(bs, b_tagging_cut = 0.3706): # 77% working point
+    return len([b for b in bs if b > b_tagging_cut])
+
+# all b-tagging regions, and their definitions
+# for each region, define a function that takes in the b-tagging scores
+# of the two top-scored trackjets from both jets in an event, 
+# and returns whether that event belongs in that 
+# region. Note that the set of regions should be disjoint/orthogonal to one another.
+bregions = {
+	"NoTag"        : lambda b0,b1: num_btags(b0 + b1) == 0,
+	"OneTag"       : lambda b0,b1: num_btags(b0 + b1) == 1,
+	"TwoTag"       : lambda b0,b1: (not num_btags(b0) == num_btags(b1)) and num_btags(b0+b1) == 2,
+	"TwoTag_split" : lambda b0,b1: num_btags(b0) == num_btags(b1) == 1,
+	"ThreeTag"     : lambda b0,b1: num_btags(b0+b1) == 3,
+        "FourTag"      : lambda b0,b1: num_btags(b0+b1) == 4,
+}
+
+# cuts to be included in signal region
+signal_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
+# background for each region
+bkg_lst = ["Bkg_" + s for s in signal_lst]
+cut_lst = signal_lst + bkg_lst
+
+# For each background region, define a function
+# that takes in bjet scores and number of trackjets to define whether
+# to include a given event
+backgrounds = {
+	"Bkg_FourTag"      : lambda b0,ntj0,b1,ntj1: bregions["NoTag"](b0,b1) and ntj0 >= 2 and ntj1 >= 2,
+	"Bkg_ThreeTag"	   : lambda b0,ntj0,b1,ntj1: bregions["NoTag"](b0,b1) and  
+				( (ntj0 >= 1 and ntj1 >= 2) or (ntj0 >= 2 and ntj1 >= 1) ),
+        "Bkg_TwoTag_split" : lambda b0,ntj0,b1,ntj1: bregions["NoTag"](b0,b1) and ntj0 >= 1 and ntj1 >= 1,
+}
+
+
+
