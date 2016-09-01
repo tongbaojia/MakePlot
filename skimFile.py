@@ -73,6 +73,7 @@ def skim(targetpath=""):
     inputpath = targetpath
     outputpath = targetpath
     helpers.checkpath(outputpath)
+    print targetpath
 
     #setup files
     files = glob.glob(targetpath + "*_MiniNTuple.root")
@@ -106,8 +107,8 @@ def main():
     #eospath = CONF.toppath + "/eos/atlas/user/b/btong/bb/"
     #skim(targetpath=eospath + "data/vBT-01-00/gridOutput/MiniNTuple/")
     eospath = CONF.toppath + "/eos/atlas/user/g/gputnam/bb/"
-    skim(targetpath=eospath + "data/v01-02-03/gridOutput/MiniNTuple/")
-    #skim(targetpath=eospath + "mc/v01-02-or/gridOutput/MiniNTuple/")
+    #skim(targetpath=eospath + "data/v01-02-03/gridOutput/MiniNTuple/")
+    skim(targetpath=eospath + "mc/v01-02-or/gridOutput/MiniNTuple/")
     #skim(targetpath="ttbar_comb_test")
     #split(targetpath="signal_QCD")
 

@@ -25,11 +25,11 @@ def main():
         os.makedirs(outputpath)
     #set global draw options
     global mass_lst
-    mass_lst = [700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    mass_lst = [700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000, 3500, 4000, 4500, 5000, 6000]
     global lowmass
     lowmass = 650
     global highmass
-    highmass = 3150
+    highmass = 6150
     # create output file
     #output = ROOT.TFile.Open(outuputpath + "sigeff.root", "recreate")
     #output.Close()
