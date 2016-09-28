@@ -324,8 +324,8 @@ def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
     if "TwoTag" or "OneTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
@@ -406,8 +406,8 @@ def main():
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
-    region_lst = ["Sideband", "Control","Signal"]
-    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]#, "OneTag", "TwoTag"]
+    region_lst = ["Sideband", "Control"]
+    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag", "TwoTag", "OneTag"]
     #create master list
     inputtasks = []
     #fill the task list

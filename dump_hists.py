@@ -22,7 +22,7 @@ init_dic = {"l":{"FourTag":{"ttbar":[-30, -5, -10], "qcd":[-5, 20, -2]}, \
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--Xhh", action='store_true') #4times more time
     return parser.parse_args()
 

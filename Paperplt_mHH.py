@@ -23,7 +23,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--inputroot", default="sum")
     parser.add_argument("--chosenhist", default="l")
     return parser.parse_args()

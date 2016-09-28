@@ -32,7 +32,7 @@ cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Sideband", "Control", "Signal"]
-blind=False
+blind=True
 #set list of dumping yields
 yield_lst = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
 yield_dic = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
@@ -43,7 +43,7 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--dosyst", default=False)
     #parser.add_argument("--full", default=True) #4times more time
     parser.add_argument("--full", action='store_true') #4times more time
@@ -618,7 +618,7 @@ def DumpSignificance(inputdic):
         #get the corresponding region
         for j, region in enumerate(region_lst):
             #for all the mass points:
-            temp_plt = ROOT.TH1D("%s_%s_Significance" % (cut, region), ";mass, GeV; Significance", 32, -50, 3150)
+            temp_plt = ROOT.TH1D("%s_%s_Significance" % (cut, region), ";mass, GeV; Significance", 62, -50, 6150)
             for mass in mass_lst:
                 temp_plt.SetBinContent(temp_plt.GetXaxis().FindBin(mass), inputdic["RSG1_" + str(mass) + "_sig_est"][cut][region])
                 temp_plt.SetBinError(temp_plt.GetXaxis().FindBin(mass), inputdic["RSG1_" + str(mass) + "_sig_est_err"][cut][region])

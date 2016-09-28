@@ -14,6 +14,8 @@ helpers.checkpath(outputpath)
 #output top directory for only plots
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
+#put in the working directory name; default b77~
+workdir     =  "test" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 if not os.path.exists(refpath):
@@ -32,7 +34,7 @@ mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
 #current total luminiosity, in fb
-totlumi = 13.3
+totlumi = 22.1
 #color dictionary for plotting style
 col_dic = {"syst":ROOT.kGray+2}
 #size for legend

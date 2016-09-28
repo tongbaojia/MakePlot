@@ -20,7 +20,7 @@ ROOT.gROOT.SetBatch(True)
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--inputroot", default="sum")
     return parser.parse_args()
 

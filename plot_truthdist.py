@@ -18,7 +18,7 @@ ROOT.SetAtlasStyle()
 #set global variables
 #set output directory
 outputdir = CONF.outplotpath
-mass_lst = [1500, 2000, 2500, 3000]
+mass_lst = [1500, 2000, 3000, 4000, 5000]
 # mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 # mass_lst = mass_lst[3:-1]
 
@@ -29,13 +29,13 @@ def main():
     output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
 
     #print output
-    plt_lst = ["mHH_l", "hCandDr", 
+    plt_lst = ["mHH_l", "hCandDr",
         "leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
         "sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     # select the cuts
-    scut_lst = [path + data for path in ["FourTag_Signal/", "ThreeTag_Signal/", "TwoTag_split_Signal/"]
+    scut_lst = [path + data for path in ["FourTag_Signal/", "ThreeTag_Signal/", "TwoTag_split_Signal/", "OneTag_Signal/"]
 		for data in plt_lst]	
-    dcut_lst = [path + data for path in ["NoTag_Signal/"]*3
+    dcut_lst = [path + data for path in ["NoTag_Signal/"]*4
 		for data in plt_lst]	
     #for data in ["h0b0_dR"]]
     """
@@ -198,7 +198,7 @@ def ratioerror(a, b):
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     return parser.parse_args()
 
 def fatal(message):

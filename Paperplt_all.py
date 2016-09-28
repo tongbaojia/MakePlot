@@ -19,7 +19,7 @@ SetAtlasStyle()
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     return parser.parse_args()
 
 def main():

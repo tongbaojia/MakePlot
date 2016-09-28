@@ -14,7 +14,7 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST_c10-cb")
+    parser.add_argument("--inputdir",  default="TEST")
     parser.add_argument("--outputdir", default="test")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
@@ -123,8 +123,8 @@ class eventHists:
         self.region = region
         self.reweight = reweight
         #add in all the histograms
-        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        400,  0, 4000)
-        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        400,  0, 4000)
+        self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        700,  0, 7000) #plot range changed for 7 TeV signals
+        self.mHH_pole     = ROOT.TH1F("mHH_pole",           ";mHH [GeV]",        700,  0, 7000)
         self.h0_m         = ROOT.TH1F("leadHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h1_m         = ROOT.TH1F("sublHCand_Mass",     ";Mass [GeV]",       60,   0,  300)
         self.h0_trk0_pt   = ROOT.TH1F("leadHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
@@ -160,6 +160,9 @@ class eventHists:
             #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
+            self.MV2H0H1      = ROOT.TH2F("MV2H0H1",              ";MV2 sum H0;MV2 sum H1;", 400,  -2,  2,  400,  -2,  2)
+            self.MV2H0        = ROOT.TH2F("MV2H0",                ";MV2 H0, j0;MV2 H0, j1;", 400,  -2,  2,  400,  -2,  2)
+            self.MV2H1        = ROOT.TH2F("MV2H1",                ";MV2 H1, j0;MV2 H1, j1;", 400,  -2,  2,  400,  -2,  2)
         #save reweight weights
         if self.reweight:
             self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 28, 0.3, 1.7)
@@ -213,6 +216,9 @@ class eventHists:
             #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
+            self.MV2H0H1.Fill(event.j0_trk0_Mv2 + event.j0_trk1_Mv2, event.j1_trk0_Mv2 + event.j1_trk1_Mv2, weight)
+            self.MV2H0.Fill(event.j0_trk0_Mv2, event.j0_trk1_Mv2, weight)
+            self.MV2H1.Fill(event.j1_trk0_Mv2, event.j1_trk1_Mv2, weight)
         if self.reweight:
             self.mHH_weight.Fill(event.mHH, weight)
             self.h0_trk0_pt_weight.Fill(event.j0_trk0_pt, weight)
@@ -254,6 +260,9 @@ class eventHists:
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
+            self.MV2H0H1.Write()
+            self.MV2H0.Write()
+            self.MV2H1.Write()
         if self.reweight:
             self.mHH_weight.Write()
             self.h0_trk0_pt_weight.Write()
@@ -357,6 +366,7 @@ class bkgegionHists:
 
 class regionHists:
     def __init__(self, outputroot, reweight):
+        self.AllTag  = massregionHists("AllTag", outputroot)
         self.NoTag  = massregionHists("NoTag", outputroot)
         self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
         self.TwoTag = massregionHists("TwoTag", outputroot)
@@ -369,7 +379,7 @@ class regionHists:
         self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
 
     def Fill(self, event):
-        b_tagging_cut = 0.3706 #0.3706 as 77% default value
+        b_tagging_cut = 0.3706 #0.3706 as 77% default value; 0.6455 70%; 0.8529 as 60%;
         nb_j0 = 0
         nb_j1 = 0
         nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
@@ -386,6 +396,8 @@ class regionHists:
         # nb_j1_loose += 1 if event.j1_trk0_Mv2 > b_tagging_loose_cut else 0
         # nb_j1_loose += 1 if event.j1_trk1_Mv2 > b_tagging_loose_cut else 0
 
+        #fill the tag regions
+        self.AllTag.Fill(event)
         if nb_j0 + nb_j1 == 4:
             self.FourTag.Fill(event)
         elif nb_j0 + nb_j1 == 3:
@@ -408,6 +420,7 @@ class regionHists:
             self.FourTag_bkg.Fill(event)
 
     def Write(self, outputroot):
+        self.AllTag.Write(outputroot)
         self.NoTag.Write(outputroot)
         self.OneTag.Write(outputroot)
         self.TwoTag.Write(outputroot)
@@ -450,8 +463,8 @@ def analysis(inputconfig):
         t.fChain.GetEntry(i)
         #print t.Xzz
         ##place a cut if necessary
-        ##if ((t.mHH) < 1000.0):
-             ##continue
+        if (abs(t.detaHH) > 1.1):
+             continue
         AllHists.Fill(t)
 
     #write all the output

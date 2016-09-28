@@ -19,7 +19,7 @@ SetAtlasStyle()
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     return parser.parse_args()
 
 def main():
@@ -39,15 +39,16 @@ def main():
 
     #region shape comparisons
     #side band shapes
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
-    DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    #DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
     #correlations of the jet mass and jet pT
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    
     #for study only, not in the main production
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk0_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="TwoTag_split_Sideband", Xrange=[10, 300], Yrange=[50, 200])
@@ -55,36 +56,63 @@ def main():
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Sideband", keyword="leadHCand_trk1_pt_v_j_m", prename="ThreeTag_Sideband", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
+    
+    #for MV2 studies
+    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG2000_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG3000_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "FourTag_Signal", keyword="MV2H0H1", prename="Data_FourTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Signal", keyword="MV2H0H1", prename="Data_ThreeTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Signal", keyword="MV2H0H1", prename="Data_TwoTag_split_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
 
-    # # #signalregion shape comparison
-    inputroot = "sum_" + inputdir + ".root"
-    DrawSRcomparison(inputroot, inputdata="ttbar")
-    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    DrawSRcomparison(inputroot, inputdata="qcd_est")
-    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
 
-    # # #draw the mhh before and after scale
-    DrawScalecomparison(inputroot, norm=False)
-    DrawScalecomparison(inputroot, norm=True, Logy=1)
+
+
+    # # # #signalregion shape comparison
+    # inputroot = "sum_" + inputdir + ".root"
+    # DrawSRcomparison(inputroot, inputdata="ttbar")
+    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    # DrawSRcomparison(inputroot, inputdata="qcd_est")
+    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+
+    # # # #draw the mhh before and after scale
+    # DrawScalecomparison(inputroot, norm=False)
+    # DrawScalecomparison(inputroot, norm=True, Logy=1)
 
     ###draw the reweighted 2D distributions; works conditionally!
-    inputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/"
-    outputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
-    if not os.path.exists(outputpath):
-        os.makedirs(outputpath)
-    for i in ["2Trk_split", "3Trk", "4Trk"]:
-        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
-        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="sublHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
-        DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
-        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
-        #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    # inputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/"
+    # outputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
+    # if not os.path.exists(outputpath):
+    #     os.makedirs(outputpath)
+    # for i in ["2Trk_split", "3Trk", "4Trk"]:
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="sublHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
+    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
+    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
 
     ##draw the reweighted 1D distributions; for study only, not in the main production
     #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass")
     #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass", Logy=1)
+
+
+    ##testing two plots from two different files
+    #for 2HMD deta comparison study
+    # for histname in ["hCandDeta", "mHH_l", "hCandDr",
+    #     "leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
+    #     "sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"signal_G_hh_c10_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Graviton"}, 
+    #         {"file":"signal_X_hh_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"2HDM"},
+    #         {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Signal/" + histname, "leg":"NoTagData"},
+    #         ], keyword=histname, norm=True)
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
     region_lst = ["Signal", "Control", "Sideband"]
@@ -461,6 +489,56 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
         canv.Close()
 
     inputroot.Close()
+
+def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
+    #print inputdir
+    tempname = "directcompare" + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
+    canv = ROOT.TCanvas(tempname, tempname, 800, 800)
+    canv.SetLogy(Logy)
+    xleg, yleg = 0.5, 0.7
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.15, yleg+0.2)
+    counter = 0
+    maxbincontent = (0.05 if Logy ==0 else 10)
+    temphst_lst = []
+
+    for i, dic in enumerate(inputlst):
+        refroot = ROOT.TFile.Open(inputpath + dic["file"])
+        temphst_lst.append(refroot.Get(dic["path"]).Clone())
+        temphst_lst[i].SetDirectory(0) #otherwise the hist lives in the current open file
+
+        temphst_lst[i].SetLineColor(2 + i)
+        temphst_lst[i].SetMarkerStyle(20 + i)
+        temphst_lst[i].SetMarkerColor(2 + i)
+        temphst_lst[i].SetMarkerSize(1)
+        if norm:
+            temphst_lst[i].Scale(1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
+
+        maxbincontent = max(maxbincontent, temphst_lst[i].GetMaximum())
+        temphst_lst[i].SetMaximum(maxbincontent * 1.5)
+        legend.AddEntry(temphst_lst[i], dic["leg"], "apl")
+        temphst_lst[i].Draw("" if i==0 else "same")
+        refroot.Close()
+    
+    legend.SetBorderSize(0)
+    legend.SetMargin(0.3)
+    legend.SetTextSize(0.04)
+    legend.Draw()
+
+    # draw watermarks
+    xatlas, yatlas = 0.35, 0.87
+    atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+    hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "Simulations")
+    lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
+    watermarks = [atlas]
+    for wm in watermarks:
+        wm.SetTextAlign(22)
+        wm.SetTextSize(0.04)
+        wm.SetTextFont(42)
+        wm.SetNDC()
+        wm.Draw()
+
+    canv.SaveAs(outputpath + canv.GetName() + ".pdf")
+    canv.Close()
 
 if __name__ == "__main__":
     main()

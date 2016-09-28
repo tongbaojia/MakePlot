@@ -14,7 +14,7 @@ temp_dic = {"j0_trk0_pt":"leadHCand_trk0_Pt",
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--full", default=False) #4times more time
     return parser.parse_args()
 

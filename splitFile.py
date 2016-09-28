@@ -70,7 +70,7 @@ def split(targetpath="data_test"):
 
 def main():
     split(targetpath="data_test")
-    #split(targetpath="ttbar_comb_test")
+    split(targetpath="ttbar_comb_test")
     #split(targetpath="signal_QCD")
 
 #def clearbranches():

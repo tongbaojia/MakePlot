@@ -21,7 +21,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--inputroot", default="sum")
     parser.add_argument("--iter", default=0)
     return parser.parse_args()
