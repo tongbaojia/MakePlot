@@ -58,17 +58,12 @@ def main():
     #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
     
     #for MV2 studies
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG2000_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG3000_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "FourTag_Signal", keyword="MV2H0H1", prename="Data_FourTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "ThreeTag_Signal", keyword="MV2H0H1", prename="Data_ThreeTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_split_Signal", keyword="MV2H0H1", prename="Data_TwoTag_split_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
-
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
+    DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
 
 
@@ -184,17 +179,17 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
 
             temp_hist.Draw("colz")
 
-            xatlas, yatlas = 0.35, 0.87
+            xatlas, yatlas = 0.35, 0.89
             atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
-            hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
-            lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "#sqrt{s} = 13 TeV")
+            lumi  = ROOT.TLatex(xatlas, yatlas-0.04, "#sqrt{s} = 13 TeV")
+            hh4b  = ROOT.TLatex(xatlas, yatlas-0.08, "RSG c=1.0")
             if "data" in inputname:
                 watermarks = [atlas, lumi]
             else:
                 watermarks = [atlas, hh4b, lumi]
             for wm in watermarks:
                 wm.SetTextAlign(22)
-                wm.SetTextSize(0.04)
+                wm.SetTextSize(0.025)
                 wm.SetTextFont(42)
                 wm.SetNDC()
                 wm.Draw()
@@ -539,6 +534,118 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
 
     canv.SaveAs(outputpath + canv.GetName() + ".pdf")
     canv.Close()
+
+def DrawBTaggingPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], dodouble=1):
+    #print inputdir
+    inputroot = ROOT.TFile.Open(inputpath + inputname)
+    inputroot.cd(inputdir)
+    for key in ROOT.gDirectory.GetListOfKeys():
+        kname = key.GetName()
+        if keyword in kname:
+            print "find:", kname
+            temp_hist = ROOT.gDirectory.Get(kname).Clone()
+            canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
+            if Xrange != [0, 0]:
+                temp_hist.GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
+            if Yrange != [0, 0]:
+                temp_hist.GetYaxis().SetRangeUser(Yrange[0], Yrange[1])
+                temp_hist.GetYaxis().SetTitleOffset(1.4)
+
+            temp_hist.Draw("colz")
+
+            xatlas, yatlas = 0.35, 0.89
+            atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
+            lumi  = ROOT.TLatex(xatlas, yatlas-0.04, "#sqrt{s} = 13 TeV")
+            hh4b  = ROOT.TLatex(xatlas, yatlas-0.08, "RSG c=1.0")
+            if "data" in inputname:
+                watermarks = [atlas, lumi]
+            else:
+                watermarks = [atlas, hh4b, lumi]
+            for wm in watermarks:
+                wm.SetTextAlign(22)
+                wm.SetTextSize(0.025)
+                wm.SetTextFont(42)
+                wm.SetNDC()
+                wm.Draw()
+
+            #draw the b-tagging lines
+            xlines = []
+            ylines = []
+            xnotes = []
+            ynotes = []
+            btag_lst = [[30, 0.9951 * dodouble], [50, 0.9452 * dodouble], [60, 0.8529 * dodouble], [70, 0.6455 * dodouble], [77, 0.370 * dodouble], [85, -0.1416 * dodouble]]
+            for j, btag_wp in enumerate(btag_lst):
+                print dodouble, btag_wp[1]
+                xlines.append(ROOT.TLine(btag_wp[1], btag_wp[1], 2, btag_wp[1]))
+                xlines[-1].SetLineStyle(9)
+                xlines[-1].Draw()
+                ylines.append(ROOT.TLine(btag_wp[1], btag_wp[1], btag_wp[1], 2))
+                ylines[-1].SetLineStyle(9)
+                ylines[-1].Draw()
+                xnotes.append(ROOT.TLatex(btag_wp[1], 1 + 0.08, str(btag_wp[0])))
+                xnotes[-1].SetTextSize(0.015)
+                xnotes[-1].Draw()
+                #compute the percentage of tags inside the cuts
+                evt_cut    = temp_hist.Integral(temp_hist.GetXaxis().FindBin(btag_wp[1]), temp_hist.GetXaxis().FindBin(2), temp_hist.GetYaxis().FindBin(btag_wp[1]), temp_hist.GetYaxis().FindBin(2))
+                evt_total  = temp_hist.Integral(temp_hist.GetXaxis().FindBin(-2), temp_hist.GetXaxis().FindBin(2), temp_hist.GetYaxis().FindBin(-2), temp_hist.GetYaxis().FindBin(2))
+                #print evt_cut, evt_total
+                ynotes.append(ROOT.TLatex(1 + 0.12, btag_wp[1], ("%.4f " % (100 * evt_cut/evt_total))))
+                ynotes[-1].SetTextSize(0.015)
+                ynotes[-1].Draw()
+            #draw the correlation factor
+            if temp_hist.InheritsFrom("TH2"):
+                ROOT.gStyle.SetPadRightMargin(0.15)
+                myText(0.2, 0.97, 1, "Coor = %s" % str(('%.2g' % temp_hist.GetCorrelationFactor())), CONF.legsize)
+
+            canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
+            print "save: ", outputpath + prename + "_" +  canv.GetName() + ".pdf"
+
+            #produce profile plot if 2D
+            if temp_hist.InheritsFrom("TH2"):
+                #profile x
+                canv.Clear()
+                temp_prox = temp_hist.ProfileX()
+                temp_prox.GetYaxis().SetTitle(temp_hist.GetYaxis().GetTitle())
+                temp_prox.SetMaximum(temp_prox.GetMaximum() * 1.5)
+                canv.Clear()
+                temp_prox.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_profx.pdf")
+                #profile y
+                canv.Clear()
+                temp_proy = temp_hist.ProfileY()
+                temp_proy.GetYaxis().SetTitle(temp_hist.GetXaxis().GetTitle())
+                temp_proy.SetMaximum(temp_proy.GetMaximum() * 1.5)
+                temp_proy.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_profy.pdf")
+                #profile x
+                canv.Clear()
+                temp_projx = temp_hist.ProjectionX()
+                temp_projx.GetYaxis().SetTitle("NEvents")
+                temp_projx.SetMaximum(temp_projx.GetMaximum() * 1.5)
+                canv.Clear()
+                temp_projx.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projx.GetMean())), str(('%.2g' % temp_projx.GetRMS()))), CONF.legsize)
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_projx.pdf")
+                #profile y
+                canv.Clear()
+                temp_projy = temp_hist.ProjectionY()
+                temp_projy.GetYaxis().SetTitle("NEvents")
+                temp_projy.SetMaximum(temp_projy.GetMaximum() * 1.5)
+                temp_projy.Draw()
+                for wm in watermarks:
+                    wm.Draw()
+                myText(0.2, 0.97, 1, "Mean=%s, RMS=%s" % (str(('%.2g' % temp_projy.GetMean())), str(('%.2g' % temp_projy.GetRMS()))), CONF.legsize)
+                canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_projy.pdf")
+            canv.Close()
+            #done
+    inputroot.Close()
+
 
 if __name__ == "__main__":
     main()
