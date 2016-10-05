@@ -58,10 +58,12 @@ def main():
     #DrawSignalPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="RSG1500_All_Incl", Xrange=[10, 300], Yrange=[50, 200])
     
     #for MV2 studies
-    DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    #DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
     DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
     DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
-    DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG2500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    DrawBTaggingPlot("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG2500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
+    #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
     DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
     DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
@@ -544,6 +546,9 @@ def DrawBTaggingPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0]
         if keyword in kname:
             print "find:", kname
             temp_hist = ROOT.gDirectory.Get(kname).Clone()
+            #if rebin
+            temp_hist.RebinX(10)
+            temp_hist.RebinY(10)
             canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
             if Xrange != [0, 0]:
                 temp_hist.GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
