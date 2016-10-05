@@ -599,6 +599,9 @@ def GetSignificance(mass):
             #needs to rebin here!!! use 50 GeV binning at least...
             plttemp_sig.Rebin(5)
             plttemp_bkg.Rebin(5)
+            #can scale to a different lumi here; note this is only for significance tests!
+            plttemp_sig.Scale(2.5)
+            plttemp_bkg.Scale(2.5)
             cutcounts[region], cutcounts_err[region], S, B = GetSensitivity(plttemp_sig, plttemp_bkg)
             #print mass, cut, region, " sig ", cutcounts[region], " sigerr ", cutcounts_err[region], " Nsig ", S, " Nbkg ", B
             #get the mass plot

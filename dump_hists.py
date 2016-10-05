@@ -46,6 +46,10 @@ def dump(finaldis="l"):
     ifile = ROOT.TFile(inputpath + "/" + "sum_" + inputdir + ".root")
     global mass_lst
     mass_lst = CONF.mass_lst
+    global ignore_ttbar #this is for cases where the ttbar bkg is not well modeled; turn the ttbar contribution off
+    ignore_ttbar = True
+    global scale_lumi #ICHEP lumi 13.3, scale to 33.2 for now, default should be 1
+    scale_lumi = 2.5
 
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
@@ -95,8 +99,9 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
         #hist_zjet = inputroot.Get(inname.replace("data_est", "zjet")).Clone()
         #hist.Add(hist_zjet, -1)
         hist_qcd = inputroot.Get(inname.replace("data", "qcd")).Clone()
-        hist_ttbar = inputroot.Get(inname.replace("data", "ttbar")).Clone()
-        hist_qcd.Add(hist_ttbar, 1)
+        if not ignore_ttbar:
+            hist_ttbar = inputroot.Get(inname.replace("data", "ttbar")).Clone()
+            hist_qcd.Add(hist_ttbar, 1)
         hist = hist_qcd.Clone(inname)
     #always clear the negative bins before smoothing!
     ClearNegBin(hist)
@@ -106,19 +111,23 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
         hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
 
     #here do smoothing
-    if dosmooth:
+    if ignore_ttbar and "ttbar" in outname:
+        hist.Reset()
+    elif dosmooth:
         #print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
             makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
         #hist = smoothfit.MakeSmoothHistoWithError(hist, sm)
         hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"])
+
+    hist.Scale(scale_lumi)
     hist.SetName(outname)
     hist.SetTitle(outname)
     #hist.SetBins(60, 200, 3200)
     outfile.cd()
     hist.Write()
 
-    if dosmooth:
+    if dosmooth and not (ignore_ttbar and "ttbar" in outname):
         return sm["res"]
 ### 
 def WriteFitResult(inputdic, outFile, npar=3):
@@ -137,18 +146,19 @@ def WriteFitResult(inputdic, outFile, npar=3):
         outstr += cut.replace("_", " ")
         outstr += " & "
         #print inputdic[cut]["ttbar_est"]["paramerrs"][0]
-        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][0], 2))
-        outstr += " $\\pm$ "
-        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][0], 2))
-        outstr += " & "
-        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][1], 2))
-        outstr += " $\\pm$ "
-        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][1], 2))
-        outstr += " & "
-        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][2], 2))
-        outstr += " $\\pm$ "
-        outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][2], 2))
-        outstr += " & "
+        if not ignore_ttbar:
+            outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][0], 2))
+            outstr += " $\\pm$ "
+            outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][0], 2))
+            outstr += " & "
+            outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][1], 2))
+            outstr += " $\\pm$ "
+            outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][1], 2))
+            outstr += " & "
+            outstr += str(round_sig(inputdic[cut]["ttbar_est"]["params"][2], 2))
+            outstr += " $\\pm$ "
+            outstr += str(round_sig(inputdic[cut]["ttbar_est"]["paramerrs"][2], 2))
+            outstr += " & "
         outstr += str(round_sig(inputdic[cut]["qcd_est"]["params"][0], 2))
         outstr += " $\\pm$ "
         outstr += str(round_sig(inputdic[cut]["qcd_est"]["paramerrs"][0], 2))
@@ -179,11 +189,12 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     f = ROOT.TFile(infileName, "READ")
     
     qcd = f.Get("qcd_hh").Clone()
-    top = f.Get("ttbar_hh").Clone()
     bkg = qcd.Clone("bkg_hh")
 
     #stack qcd on top of top
-    bkg.Add(top)
+    if not ignore_ttbar:
+        top = f.Get("ttbar_hh").Clone()
+        bkg.Add(top)
     
     #make canvas
     c=ROOT.TCanvas()
@@ -201,9 +212,6 @@ def makeSmoothedMJJPlots( infileName, outfileName):
 
     bkg.Draw("HIST")
 
-    top.SetLineColor(ROOT.kBlack)
-    top.SetFillColor(ROOT.kRed)
-    top.Draw("HISTsame")
 
     bkg_err = bkg.Clone("bkg_err")
     bkg_err.SetFillColor(ROOT.kBlack)
@@ -211,9 +219,13 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     bkg_err.Draw("sameE2")
     
 
-    top_err = top.Clone("top_err")
-    top_err.SetFillColor(ROOT.kBlack)
-    top_err.SetFillStyle(3001)
+    if not ignore_ttbar:
+        top.SetLineColor(ROOT.kBlack)
+        top.SetFillColor(ROOT.kRed)
+        top.Draw("HISTsame")
+        top_err = top.Clone("top_err")
+        top_err.SetFillColor(ROOT.kBlack)
+        top_err.SetFillStyle(3001)
     #top_err.Draw("sameE2")
 
     leg = ROOT.TLegend(0.7,0.7,0.9,0.9)
@@ -221,7 +233,8 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     leg.SetMargin(0.3)
     leg.SetTextSize(0.04)
     leg.AddEntry(bkg, "QCD", "F")
-    leg.AddEntry(top, "t #bar{t}", "F")
+    if not ignore_ttbar:
+        leg.AddEntry(top, "t #bar{t}", "F")
     leg.Draw()
 
     c.SaveAs(outfileName)
