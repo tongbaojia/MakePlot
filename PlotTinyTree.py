@@ -379,7 +379,7 @@ class regionHists:
         self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
 
     def Fill(self, event):
-        b_tagging_cut = 0.3706 #0.3706 as 77% default value; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%
+        b_tagging_cut = 0.3706 #0.3706 as 77% default value; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%;-0.1416 as 85% value
         nb_j0 = 0
         nb_j1 = 0
         nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
@@ -388,7 +388,7 @@ class regionHists:
         nb_j1 += 1 if event.j1_trk1_Mv2 > b_tagging_cut else 0
 
         #for testing
-        b_tagging_tight_cut = 0.9452 #-0.1416 as 85% value
+        b_tagging_tight_cut = 0.9452 #
         nb_j0_tight = 0
         nb_j1_tight = 0
         nb_j0_tight += 1 if event.j0_trk0_Mv2 > b_tagging_tight_cut else 0
@@ -412,33 +412,33 @@ class regionHists:
         # elif nb_j0 + nb_j1 == 0:
         #     self.NoTag.Fill(event)
 
-        ##for continues b-tagging tests; for folder test
-        # if nb_j0_tight + nb_j1_tight == 4:
-        #     self.FourTag.Fill(event) #this is always the tightest one
-        # elif (nb_j0_tight == 2 or nb_j1_tight == 2) and nb_j0 + nb_j1 == 4:
-        #     self.ThreeTag.Fill(event) #this is 3 tight 1 tight; if not the last tight, then 3b
-        # elif nb_j0 + nb_j1 == 4:
-        #     self.TwoTag_split.Fill(event) #this is 2 tight 2 tight, on both side; if not the last tight, then 2bs
-        # elif (nb_j0_tight == 2 or nb_j1_tight == 2) and nb_j0 + nb_j1 == 3: 
-        #     self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
-        # elif nb_j0 + nb_j1 == 3:
-        #     self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
-        # elif nb_j0 + nb_j1 == 0:
-        #     self.NoTag.Fill(event)
-
-        ##for continues b-tagging tests; for folder test_3b
-        if (nb_j0_tight == 2 or nb_j1_tight == 2) and nb_j0 + nb_j1 == 3:
+        ##for continues b-tagging tests; for folder test (testing 4b)
+        if nb_j0_tight + nb_j1_tight == 4:
             self.FourTag.Fill(event) #this is always the tightest one
-        elif (nb_j0_tight == 1 or nb_j1_tight == 1) and nb_j0 + nb_j1 == 3:
+        elif (nb_j0_tight + nb_j1_tight == 3) and nb_j0 + nb_j1 == 4:
             self.ThreeTag.Fill(event) #this is 3 tight 1 tight; if not the last tight, then 3b
-        elif nb_j0 + nb_j1 == 3:
+        elif (nb_j0_tight + nb_j1_tight == 2) and nb_j0 + nb_j1 == 4:
             self.TwoTag_split.Fill(event) #this is 2 tight 2 tight, on both side; if not the last tight, then 2bs
-        elif nb_j0 + nb_j1 == 4: 
+        elif (nb_j0_tight + nb_j1_tight == 1) and nb_j0 + nb_j1 == 4: 
             self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
-        elif nb_j0 == 1 and nb_j1 == 1:
+        elif (nb_j0_tight + nb_j1_tight == 0) and nb_j0 + nb_j1 == 4:
             self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
         elif nb_j0 + nb_j1 == 0:
             self.NoTag.Fill(event)
+
+        ##for continues b-tagging tests; for folder test_3b
+        # if (nb_j0_tight == 2 or nb_j1_tight == 2) and nb_j0 + nb_j1 == 3:
+        #     self.FourTag.Fill(event) #this is always the tightest one
+        # elif (nb_j0_tight == 1 or nb_j1_tight == 1) and nb_j0 + nb_j1 == 3:
+        #     self.ThreeTag.Fill(event) #this is 3 tight 1 tight; if not the last tight, then 3b
+        # elif nb_j0 + nb_j1 == 3:
+        #     self.TwoTag_split.Fill(event) #this is 2 tight 2 tight, on both side; if not the last tight, then 2bs
+        # elif nb_j0 + nb_j1 == 4: 
+        #     self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
+        # elif nb_j0 == 1 and nb_j1 == 1:
+        #     self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
+        # elif nb_j0 + nb_j1 == 0:
+        #     self.NoTag.Fill(event)
         
         #for bkg modeling
         if nb_j0 + nb_j1 == 0 and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:

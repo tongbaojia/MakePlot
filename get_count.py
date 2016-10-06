@@ -564,7 +564,7 @@ def GetSensitivity(h_signal, h_bkg):
         maxBin = h_signal.GetMaximumBin()
         maxMass = h_signal.GetBinCenter(maxBin)
         integralbin_min, integralbin_max = GetMassWindow(h_signal, 0.68)   # or 0.95; the width contorl here
-
+        
         S_err = ROOT.Double(0.)
         S = h_signal.IntegralAndError(integralbin_min, integralbin_max, S_err)
 
@@ -603,7 +603,8 @@ def GetSignificance(mass):
             plttemp_sig.Scale(2.5)
             plttemp_bkg.Scale(2.5)
             cutcounts[region], cutcounts_err[region], S, B = GetSensitivity(plttemp_sig, plttemp_bkg)
-            #print mass, cut, region, " sig ", cutcounts[region], " sigerr ", cutcounts_err[region], " Nsig ", S, " Nbkg ", B
+            # if mass == 1000 and region is "Signal":
+            #     print mass, cut, region, " sig ", cutcounts[region], " sigerr ", cutcounts_err[region], " Nsig ", S, " Nbkg ", B
             #get the mass plot
             # if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
             #     or ("ThreeTag" in cut) or ("FourTag" in cut)) & blind:\ 

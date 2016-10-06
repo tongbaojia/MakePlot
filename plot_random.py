@@ -36,6 +36,11 @@ def main():
 
     ##paper plot
     DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
 
     #region shape comparisons
     #side band shapes
