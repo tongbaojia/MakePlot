@@ -57,9 +57,9 @@ def dump(finaldis="l"):
     global mass_lst
     mass_lst = CONF.mass_lst
     global ignore_ttbar #this is for cases where the ttbar bkg is not well modeled; turn the ttbar contribution off
-    ignore_ttbar = True
+    ignore_ttbar = False #True ##for continous b-tagging testing
     global scale_lumi #ICHEP lumi 13.3, scale to 33.2 for now, default should be 1
-    scale_lumi = 2.5
+    scale_lumi = 1.0 #2.5
 
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
@@ -82,7 +82,7 @@ def dump(finaldis="l"):
         if "pole" in finaldis:
             qcdsmoothrange = (1200, 3000)
             topsmoothrange = (1200, 3000)
-        savehist(ifile, "data_" + cut,  "data_hh")#blind data now
+        savehist(ifile, "data_" + cut,  "data_hh")#blind data now; if not, change data_est to data
         tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh",      dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh",    dosmooth=True, smoothrange = topsmoothrange, initpar=init_dic[finaldis][c]["ttbar"])

@@ -210,7 +210,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ks   = data.KolmogorovTest(data_est, "QU")
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
-    percentdiff   = (int_data_est - int_data)/int_data * 100.0
+    percentdiff   = 0 if int_data == 0 else (int_data_est - int_data)/(int_data) * 100.0
     #chi2 =        data.Chi2Test(data_est, "QU CHI2")
     #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
 

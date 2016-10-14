@@ -249,7 +249,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         #initialization of parameters
         if ("trk0_Pt" in cut): #for the leading track jet fit
             #testfit[3].SetParameters(1, 0.006, -2E-5, +2E-8)
-            testfit[3].SetParameters(0.4, 0.0096, -2E-5, +2E-8)
+            testfit[3].SetParameters(0.76, 0.009, -5E-5, +9E-8)
             #testfit[3].SetParameters(0.6, 0.007, -3E-5, +3E-8); testing version
         elif ("trk1_Pt" in cut): #for the subleading track jet fit
             testfit[2].SetParameters(0.82, 0.004, -1E-5)
@@ -401,7 +401,7 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 890, 50) + [890, 950, 1020, 1100, 1200, 1300, 1500, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 890, 50) + [890, 950, 1020, 1100, 1190, 1290, 1400, 1600, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
         rebin_dic["j0_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version

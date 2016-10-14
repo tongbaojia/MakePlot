@@ -33,8 +33,8 @@ clr_lst  = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPink
 mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
-#current total luminiosity, in fb 22.1
-totlumi = 13.0
+#current total luminiosity, in fb 22.1; 13.0
+totlumi = 28.0
 #color dictionary for plotting style
 col_dic = {"syst":ROOT.kGray+2}
 #size for legend
