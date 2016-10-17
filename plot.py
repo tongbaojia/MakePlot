@@ -53,6 +53,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
     RSG1_1500.Scale(10)
+    RSG1_2000 = ifile.Get("RSG1_2000_" + cut )
+    RSG1_2000.Scale(100)
     RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
     RSG1_2500.Scale(100)
 
@@ -65,6 +67,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         #zjet.Rebin(rebin)
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
+        RSG1_2000.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
     #use array to rebin histgrams
     if not rebinarry == None:
@@ -75,6 +78,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         #zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
+        RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
         RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
@@ -110,10 +114,11 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # stack signal on background
     RSG1_1000.Add(bkg[0]) 
     RSG1_1500.Add(bkg[0]) 
+    RSG1_2000.Add(bkg[0]) 
     RSG1_2500.Add(bkg[0]) 
 
     # canvas
-    c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
+    c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 600, 600)
     c0.SetRightMargin(0.05)
 
     # top pad
@@ -164,12 +169,18 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_1500.SetLineWidth(2)
     RSG1_1500.SetLineStyle(2)
     RSG1_1500.SetLineColor(ROOT.kPink+7)
-    RSG1_1500.Draw("HISTO SAME")
+    #RSG1_1500.Draw("HISTO SAME")
+
+
+    RSG1_2000.SetLineWidth(2)
+    RSG1_2000.SetLineStyle(2)
+    RSG1_2000.SetLineColor(ROOT.kPink+7)
+    RSG1_2000.Draw("HISTO SAME")
 
     RSG1_2500.SetLineWidth(2)
     RSG1_2500.SetLineStyle(2)
     RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    RSG1_2500.Draw("HISTO SAME")
+    #RSG1_2500.Draw("HISTO SAME")
 
     bkg[1].SetFillColor(CONF.col_dic["syst"])
     bkg[1].SetLineColor(CONF.col_dic["syst"])
@@ -282,7 +293,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", CONF.legsize)
     else:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", CONF.legsize)
-    ROOT.myText(0.19, 0.83, 1, ' ' + cut.replace("_", "; "), CONF.legsize)
+    ROOT.myText(0.19, 0.83, 1, ' ' + cut.replace("_", ";"), CONF.legsize)
     ##### legend
     #leg.SetNColumns(2)
     leg.SetTextFont(43)
@@ -296,8 +307,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
-    leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
-    leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
+    #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
+    leg.AddEntry(RSG1_2000, "G(2000)#times100", "F")
+    #leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
@@ -305,10 +317,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
 
 
+
+
     # save
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
-    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".eps")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".C")
@@ -327,7 +341,7 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
         rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
+        rebin_dic["j1_Pt"]      = array('d', range(250, 900, 50) + [900, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
@@ -336,8 +350,8 @@ def dumpRegion(config):
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
         rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
-        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
-        rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
+        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 900, 1000, 2000])
+        rebin_dic["j1_Pt"]      = array('d', range(250, 800, 50) + [800, 900, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
@@ -346,9 +360,9 @@ def dumpRegion(config):
     if "FourTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
         rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
-        rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
-        rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
+        rebin_dic["j0_Pt"]      = array('d', [450, 490, 530, 570, 610, 650, 700, 750, 800, 900, 1100, 2000])
+        rebin_dic["j1_Pt"]      = array('d', [250, 300, 350, 400, 450, 500, 550, 650, 800, 2000])
+        rebin_dic["trk0_Pt"]    = array('d', [0, 70, 130, 190, 250, 320, 390, 480, 1000, 2000])
         rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
@@ -379,9 +393,8 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebinarry=rebin_dic["trk_dr"])
     plotRegion(config, cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
     plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
-    
-    #plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
-    #plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
+    plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=4)
+    plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=4)
 
     print config["outputdir"], "done!"
 

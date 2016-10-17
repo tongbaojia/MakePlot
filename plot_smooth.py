@@ -513,15 +513,15 @@ def main():
         outputFolder = inputpath + inputroot + "Plot/Smooth"
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
-        for j, cut in enumerate(cut_lst):
-            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + ".root"
-            config = {}
-            config["root"] = rootinputpath
-            config["inputdir"] = inputdir
-            config["outputdir"] = outputFolder
-            config["cut"] = cut + "_" + region + "_"
-            config["blind"] = False
-            inputtasks.append(config)
+        # for j, cut in enumerate(cut_lst):
+        #     rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + ".root"
+        #     config = {}
+        #     config["root"] = rootinputpath
+        #     config["inputdir"] = inputdir
+        #     config["outputdir"] = outputFolder
+        #     config["cut"] = cut + "_" + region + "_"
+        #     config["blind"] = False
+        #     inputtasks.append(config)
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + ".root"
             config = {}

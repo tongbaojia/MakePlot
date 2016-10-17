@@ -23,6 +23,7 @@ ROOT.gROOT.SetBatch(True)
 #     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
 #     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 # input are exclusive trkjets
+blind=True
 
 evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
@@ -32,7 +33,6 @@ cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Sideband", "Control", "Signal"]
-blind=True
 #set list of dumping yields
 yield_lst = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
 yield_dic = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
@@ -268,7 +268,7 @@ def fitestimation(histname="", inputdic={}):
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
                 #for ttbar, for mscale and mll, use 3b instead of 4b
-                if "ttbar" in histname and "FourTag" in cut and "mHH" in hst:
+                if "ttbar" in histname and "FourTag" in cut:
                     hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
                     htemp_qcd = hist_temp.Clone()

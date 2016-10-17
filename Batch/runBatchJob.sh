@@ -5,7 +5,7 @@
 #################################################
 ## DEFINE INPUT, TESTAREA AND OUTPUT AREA ###
 echo "the input file is " $filenamelist
-yourtestarea=/afs/cern.ch/work/b/btong/bbbb/ICHEPAnalysis ## replace with here if you don't have a testarea
+yourtestarea=/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis ## replace with here if you don't have a testarea
 #Runnumber=$1
 filenamelist=$yourtestarea$"/MakePlot/Batch/input.txt" ##267638
 #eosoutputarea=/eos/atlas/user/b/btong/TESTAREA/muonSW/output  ## your output forlder MUST exist
@@ -59,9 +59,10 @@ inputdir=$ch$"_"$syst
 
 if [ $dopythonrun == "true" ]; then
 	cd MakePlot
-	python PlotTinyTree.py --inputdir $inch --outputdir $ch --dosyst $syst --reweight $re --iter $iter
+	python PlotTinyTree.py --inputdir $inch --outputdir $ch --dosyst $syst #--reweight $re --iter $iter
 	python get_count.py --inputdir $inputdir --full
 	python plot.py --inputdir $inputdir
+	python dump_hists.py --inputdir $inputdir
 fi
 echo "DONE!!!"
 

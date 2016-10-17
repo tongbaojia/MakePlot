@@ -15,7 +15,7 @@ helpers.checkpath(outputpath)
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #put in the working directory name; default b77~
-workdir     =  "test" #b77
+workdir     =  "b77" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 if not os.path.exists(refpath):

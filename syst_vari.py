@@ -15,7 +15,7 @@ ROOT.gROOT.SetBatch(True)
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="DS1_cb_j0pT-leadtrk-fin_19")
+    parser.add_argument("--inputdir", default="b77_j0pT-leadtrk-fin_19")
     return parser.parse_args()
 
 #this script is used to plot different mu qcd fit parameters as a funciton of the SB size
@@ -291,7 +291,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     #ratio of the two plots
     ratiohist = temp_hist.Clone()
     ratiohist.Divide(ref_hist)
-    ratiohist.GetYaxis().SetRangeUser(0.1, 3) #set range for ratio plot
+    ratiohist.GetYaxis().SetRangeUser(0.8, 1.2) #set range for ratio plot
     ratiohist.GetYaxis().SetTitle("Varaition/Nominal") #set range for ratio plot
     ratiohist.Draw("")
 
@@ -301,7 +301,8 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     line.SetLineStyle(1)
     line.Draw()
     #canv.SetLogy(1)
-    canv.SaveAs(CONF.inputpath + "/" + "b77"  + "/Plot/Syst/" + canv.GetName() + ".pdf")
+    helpers.checkpath(CONF.inputpath + "b77" + "/Plot/Syst/")
+    canv.SaveAs(CONF.inputpath + "b77" + "/Plot/Syst/" + canv.GetName() + ".pdf")
     pad0.Close()
     pad1.Close()
     canv.Close()

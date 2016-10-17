@@ -107,8 +107,8 @@ def main():
     eospath = CONF.toppath + "/eos/atlas/user/b/btong/bb/"
     #skim(targetpath=eospath + "data/vBT-01-00/gridOutput/MiniNTuple/")
     #eospath = CONF.toppath + "/eos/atlas/user/g/gputnam/bb/"
-    skim(targetpath=eospath + "data/v02-00-00/gridOutput/MiniNTuple/")
-    #skim(targetpath=eospath + "mc/v02-00-00/gridOutput/MiniNTuple/")
+    #skim(targetpath=eospath + "data/v02-00-00/gridOutput/MiniNTuple/")
+    skim(targetpath=eospath + "mc/v02-00-00/gridOutput/MiniNTuple/")
     #skim(targetpath="ttbar_comb_test")
     #split(targetpath="signal_QCD")
 

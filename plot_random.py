@@ -42,13 +42,13 @@ def main():
     DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
     DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
 
-    #region shape comparisons
-    #side band shapes
+    ##region shape comparisons
+    ##side band shapes
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
     #DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
-    #correlations of the jet mass and jet pT
+    ##correlations of the jet mass and jet pT
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
@@ -64,26 +64,24 @@ def main():
     
     #for MV2 studies
     #DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
-    DrawBTaggingPlot("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG2500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawBTaggingPlot("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG2500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
+    #DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    #DrawBTaggingPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG1500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
+    #DrawBTaggingPlot("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H1", prename="RSG2500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2])
+    #DrawBTaggingPlot("signal_G_hh_c10_M2500/hist-MiniNTuple.root", "AllTag_Signal", keyword="MV2H0H1", prename="RSG2500_All_Incl", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
-    DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
+    #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
+    #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
+    ###signalregion shape comparison
+    inputroot = "sum_" + inputdir + ".root"
+    DrawSRcomparison(inputroot, inputdata="ttbar")
+    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="qcd_est")
+    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
-
-    # # # #signalregion shape comparison
-    # inputroot = "sum_" + inputdir + ".root"
-    # DrawSRcomparison(inputroot, inputdata="ttbar")
-    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    # DrawSRcomparison(inputroot, inputdata="qcd_est")
-    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
-
-    # # # #draw the mhh before and after scale
-    # DrawScalecomparison(inputroot, norm=False)
-    # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    ###draw the mhh before and after scale
+    DrawScalecomparison(inputroot, norm=False)
+    DrawScalecomparison(inputroot, norm=True, Logy=1)
 
     ###draw the reweighted 2D distributions; works conditionally!
     # inputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/"
