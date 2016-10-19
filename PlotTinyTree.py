@@ -515,11 +515,14 @@ def analysis(inputconfig):
         t.fChain.GetEntry(i)
         #print t.Xzz
         ##place a cut if necessary
+        def selection():
+            passed = True
+            return passed
         # if (abs(t.detaHH) > 1.1):
         #      continue
-        ## dR cut
-        # if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
-        #     continue
+        # dR cut
+        #if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
+            #continue
         AllHists.Fill(t)
 
     #write all the output

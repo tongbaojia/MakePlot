@@ -32,19 +32,29 @@ class TempPlots:
 
     def Plot2D(self, name, title, x, y, nbinsx, nbinsy, xmin, xmax, ymin, ymax, weight=1.):
         if name not in self.plotdic:
-            self.plotdic[name] = ROOT.TH1F(name, title, nbinsx, nbinsy, xmin, xmax, ymin, ymax)
+            self.plotdic[name] = ROOT.TH2F(name, title, nbinsx, nbinsy, xmin, xmax, ymin, ymax)
         self.plotdic[name].Fill(x, y, weight)
 
     def Write(self, outputroot):
         outputroot.cd()
         for pltname in self.plotdic:
-            self.plotdic[pltname].Write(
-                )
+            self.plotdic[pltname].Write()
             #save hist as pdf as well
             canv = ROOT.TCanvas(pltname, " ", 600, 600)
-            self.plotdic[pltname].Draw()
-            canv.SaveAs(outputpath + self.
-                outname + "_" + pltname + ".pdf")
+            if self.plotdic[pltname].InheritsFrom("TH2"):
+                self.plotdic[pltname].Draw("colz")
+                canv.SaveAs(outputpath + self.outname + "_" + pltname + ".pdf")
+
+                canv.Clear()
+                temp_prox = self.plotdic[pltname].ProfileX()
+                temp_prox.GetYaxis().SetTitle(self.plotdic[pltname].GetYaxis().GetTitle())
+                temp_prox.SetMaximum(self.plotdic[pltname].GetYaxis().GetBinUpEdge(self.plotdic[pltname].GetYaxis().GetNbins()))
+                canv.Clear()
+                temp_prox.Draw()
+                canv.SaveAs(outputpath + self.outname + "_" +  canv.GetName() + "_profx.pdf")
+            else:
+                self.plotdic[pltname].Draw()
+                canv.SaveAs(outputpath + self.outname + "_" + pltname + ".pdf")
             del(canv)
 
 def TinyAnalysis(inputfile, outname="", DEBUG=False):
@@ -69,19 +79,38 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
         ''' ##this peak can be faked because around 1250, 2m/pT ~ 0.2, thus the two track jet start to merge to one
             ##so requiring a large R jet to have one and only one track jet basically is selecting 
             ##the high pT jets that will merge, and hence the bump '''
-        if (t.j0_pt > 500): #& (t.j1_pt < 800):
-            if (t.j0_nTrk == 1):
-                if (t.Xzz > 2.1) & (t.Xzz < 4.2): 
-                    plt.Plot1D("m_ZZ_control", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
-                    plt.Plot1D("j0_pt_ZZ_control", "j0 pT; j0 pT, GeV;", t.j0_pt, 60, 500, 2500)
-                elif (t.Xzz < 2.1):     
-                    plt.Plot1D("m_ZZ_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
-                    plt.Plot1D("j0_pt_ZZ_signal", "j0 pT; j0 pT, GeV;", t.j0_pt, 60, 500, 2500)
+        # if (t.j0_pt > 500): #& (t.j1_pt < 800):
+        #     if (t.j0_nTrk == 1):
+        #         if (t.Xzz > 2.1) & (t.Xzz < 4.2): 
+        #             plt.Plot1D("m_ZZ_control", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
+        #             plt.Plot1D("j0_pt_ZZ_control", "j0 pT; j0 pT, GeV;", t.j0_pt, 60, 500, 2500)
+        #         elif (t.Xzz < 2.1):     
+        #             plt.Plot1D("m_ZZ_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
+        #             plt.Plot1D("j0_pt_ZZ_signal", "j0 pT; j0 pT, GeV;", t.j0_pt, 60, 500, 2500)
 
-                if (t.Xhh > 2.1) & (t.Xhh < 4.2): 
-                    plt.Plot1D("m_HH_control", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
-                elif (t.Xhh < 2.1):     
-                    plt.Plot1D("m_HH_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
+        #         if (t.Xhh > 2.1) & (t.Xhh < 4.2): 
+        #             plt.Plot1D("m_HH_control", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
+        #         elif (t.Xhh < 2.1):     
+        #             plt.Plot1D("m_HH_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
+
+        if t.Xhh < 1.6:
+            hcand0 = ROOT.TLorentzVector()
+            hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
+            hcand0_boost = hcand0.BoostVector()
+            if t.j0_nTrk >= 2:
+                hcand0_b0 = ROOT.TLorentzVector()
+                hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
+                hcand0_b1 = ROOT.TLorentzVector()
+                hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
+                hcand0_b0.Boost(-hcand0_boost)
+                hcand0_b1.Boost(-hcand0_boost)
+                plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
+
+
+            #hcand1 = ROOT.TLorentzVector()
+            #hcand1.SetPtEtaPhiM(t.j1_pt, t.j1_eta, t.j1_phi, t.j1_m)
+            #plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 50, 0, 4000, 11, -0.2, 2) #, t.weight)
+            #plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 11, -0.2, 2) #, t.weight)
 
     plt.Write(outroot)           
     print "DONE with the analysis!"
@@ -136,9 +165,9 @@ def main():
     #if do eos
     eosmcpath = CONF.toppath + "/eos/atlas/user/b/btong/bb/mc/v02-00-00/gridOutput/MiniNTuple/*mc15_13TeV"
     #start analysis on TinyNtuple
-    mass = 1400
-    TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
-    #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
+    mass = 2000
+    #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
+    TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root_skim")[0], "signal_M" + str(mass)) #MC
 
