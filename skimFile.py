@@ -43,10 +43,12 @@ def selection(config):
         #add cuts for skimming...so simple...implicit this is a 250, 350 cut
         if n % 20000 == 0:
             helpers.drawProgressBar(n/(nentries*1.0))
-        if t.hcand_boosted_n < 2:
-            continue
+        if t.hcand_boosted_n >= 2:
+            outtree.Fill()
+        else:
+            pass
         #print n%nfiles
-        outtree.Fill()
+        
     print "skimming done! ", config["file"]
     #save the output
     outfile.cd()

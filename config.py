@@ -38,5 +38,5 @@ totlumi = 28.0
 #color dictionary for plotting style
 col_dic = {"syst":ROOT.kGray+2}
 #size for legend
-legsize = 17
+legsize = 20
 paperlegsize = 28

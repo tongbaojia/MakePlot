@@ -38,7 +38,7 @@ def main():
 
     # select the cuts
     # the list must start from the largest to the smallest!
-    evtsel_lst = ["PassTrig", "PassDiJetPt", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
+    evtsel_lst = ["PassTrig", "PassResolvedJet", "PassFatJetMass", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
     detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
     "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
     region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"]
@@ -46,12 +46,12 @@ def main():
     # Draw the efficiency plot relative to the all normalization
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel")
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", dorel=True)
-    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorelfcomp=True)
-    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True, dorelfcomp=True)
+    #DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorelfcomp=True)
+    #DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True, dorelfcomp=True)
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All")
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True)
-    #DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
-    #DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
     # For cuts that don't exist in the cutflow plot; only run this on original sample!
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
     #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
@@ -100,7 +100,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             #this is a really dirty temp fix
             scale_weight = (cutflow_mc.GetBinContent(cutflow_mc.GetXaxis().FindBin("All")) * 1.0)\
                 / (cutflow_mc_w.GetBinContent(cutflow_mc_w.GetXaxis().FindBin("All")) * 1.0)
-
+                
             #this is really only for doing reference comparison only!
             input_mc_ref = ROOT.TFile.Open(CONF.inputpath + "ref" + "/" + "signal_G_hh_c10_M" + "%i/hist-MiniNTuple.root" % mass)
             cutflow_mc_ref   = input_mc_ref.Get("CutFlowNoWeight").Clone("CutFlowNoWeight_ref") #notice here we use no weight for now!
@@ -113,13 +113,13 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             #print cut, mass, cutevt_mc, totevt_mc, cutevt_mc_ref, totevt_mc_ref
             #for cuts that are defined in folders but not in the cutflow table...
             if doint:
-                cuthist_temp = input_mc.Get(cut + "/mHH_l")
-                cutevt_mc    = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
+                cuthist_temp     = input_mc.Get(cut + "/mHH_l")
+                cutevt_mc        = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
                 cuthist_temp_ref = input_mc_ref.Get(cut + "/mHH_l")
                 cutevt_mc_ref    = cuthist_temp_ref.Integral(0, cuthist_temp_ref.GetXaxis().GetNbins()+1) * scale_weight_ref
             if donormint:
-                cuthist_temp = input_mc.Get(normalization + "/mHH_l")
-                totevt_mc    = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
+                cuthist_temp     = input_mc.Get(normalization + "/mHH_l")
+                totevt_mc        = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
                 cuthist_temp_ref = input_mc_ref.Get(normalization + "/mHH_l")
                 totevt_mc_ref    = cuthist_temp_ref.Integral(0, cuthist_temp_ref.GetXaxis().GetNbins()+1) * scale_weight_ref
 
@@ -129,9 +129,10 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             elif dorelfcomp:
                 totevt_mc = cutevt_mc_ref * 1.0
                 minbincontent = 0.5
-                
+            
+            # if mass == 2500:
+            #     print "m:{:>5} c:{:>24} evt:{:>8};".format(mass, cut, cutevt_mc)
 
-            #print i, cut, mass
             #continue as usual
             eff_content = cutevt_mc/totevt_mc
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), cutevt_mc/totevt_mc)

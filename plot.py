@@ -95,7 +95,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #load basic information
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
-    yMax = data.GetMaximum() * 1.5
+    yMax = data.GetMaximum() * 1.6
     if ("FourTag" in cut):
         yMax = data.GetMaximum() * 2.0
     if Logy==1:
@@ -220,7 +220,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.6, 1.4) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -293,7 +293,18 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2016, 2.6 fb^{-1}", CONF.legsize)
     else:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 15+16, " + str(CONF.totlumi) + " fb^{-1}", CONF.legsize)
-    ROOT.myText(0.19, 0.83, 1, ' ' + cut.replace("_", ";"), CONF.legsize)
+
+    #clean up the info string
+    infostr = cut
+    infostr = infostr.replace("_", ";")
+    infostr = infostr.replace("Sideband", "SB") if "Sideband" in infostr else infostr
+    infostr = infostr.replace("Control", "CR") if "Sideband" in infostr else infostr
+    infostr = infostr.replace("Signal", "SR") if "Sideband" in infostr else infostr
+    infostr = infostr.replace("FourTag", "4b") if "FourTag" in infostr else infostr
+    infostr = infostr.replace("ThreeTag", "3b") if "ThreeTag" in infostr else infostr
+    infostr = infostr.replace("TwoTag;split", "2bs") if "TwoTag;split" in infostr else infostr
+    ROOT.myText(0.19, 0.83, 1, ' ' + infostr, CONF.legsize)
+
     ##### legend
     #leg.SetNColumns(2)
     leg.SetTextFont(43)
@@ -305,7 +316,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.AddEntry(bkg[0], "Multijet", "F")
     leg.AddEntry(ttbar, "t#bar{t}","F")
     #leg.AddEntry(zjet, "Z+jets","F")
-    leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
+    leg.AddEntry(bkg[1], "Stat Uncer.", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
     leg.AddEntry(RSG1_2000, "G(2000)#times100", "F")
@@ -338,8 +349,8 @@ def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
     if "TwoTag" or "OneTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 900, 50) + [900, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
@@ -421,6 +432,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
     region_lst = ["Sideband", "Control", "Signal"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"] #, "TwoTag", "OneTag"]
+    cut_lst = ["OneTag"]
     #create master list
     inputtasks = []
     #fill the task list
