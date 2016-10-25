@@ -34,15 +34,15 @@ def main():
     #output = ROOT.TFile.Open(outuputpath + "sigeff.root", "recreate")
     # select the cuts
     cut_lst = ["PassTrig"]
-
-    # Draw the efficiency plot relative to the all normalization
+    #cut_lst = ["PassTrig", "PassHt1000", "Pass4J"]
+    ##Draw the efficiency plot relative to the all normalization
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="PreSel")
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="All")
-    # Draw pT dependent trig efficiency; needs fix...
-    DrawPtEff(inputdir, outputname="trig")
-    # Draw the pT dependent independently for 2015 and 2016
-    #DrawPtEff(inputdir, outputname="trig_15")
-    #DrawPtEff(inputdir, outputname="trig_16")
+    ##Draw pT dependent trig efficiency; needs fix...
+    # DrawPtEff(inputdir, outputname="trig")
+    ##Draw the pT dependent independently for 2015 and 2016
+    DrawPtEff(inputdir, outputname="trig_15")
+    DrawPtEff(inputdir, outputname="trig_16")
     #output.Close()
 
 def options():
@@ -86,7 +86,7 @@ def DrawTrigEff(cut_lst, inputdir, outputname="", normalization="All"):
 
         eff_lst[i].SetMaximum(maxbincontent * 1.5)
         eff_lst[i].SetMinimum(minbincontent)
-        legend.AddEntry(eff_lst[i], cut.replace("_", " "), "apl")
+        legend.AddEntry(eff_lst[i], cut.replace("_", " ") if cut is not "PassTrig" else "PassJ420 lcw", "apl")
         canv.cd()
         if cut==cut_lst[0]: 
             eff_lst[i].Draw("epl")

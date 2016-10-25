@@ -1,9 +1,10 @@
 ###Tony: this is designed to plot directly from the TinyTree; could be adapted to draw from MiniTree
 import ROOT, helpers
 import config as CONF
-import time, os, subprocess, glob, argparse, compiler
+import time, os, subprocess, glob, argparse, compiler, csv
 #for parallel processing!
 import multiprocessing as mp
+import rootlogon
 #import tree configuration
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro('TinyTree.C')
@@ -58,6 +59,7 @@ class TempPlots:
             del(canv)
 
 def TinyAnalysis(inputfile, outname="", DEBUG=False):
+    '''this runs on Tiny Ntuple; quick studies and checks'''
     #read the input file
     f = ROOT.TFile(inputfile, "read")
     #load the target tree
@@ -65,6 +67,13 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
     #load the plotter
     outroot = ROOT.TFile.Open(outputpath + outname + "temp.root", "recreate")
     plt = TempPlots(outroot, outname)
+    #if need lumi for each run
+    with open('script/lumitable.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        lumitable = dict((rows[0],rows[6]) for rows in reader)
+    firstrun = 297730
+    lastrun  = 308084
+    #print lumitable
     #start looping through events
     N = t.fChain.GetEntries()
     for i in range(N):
@@ -93,18 +102,61 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
         #         elif (t.Xhh < 2.1):     
         #             plt.Plot1D("m_HH_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
 
+
+        '''check if the number of events in consistent in runs'''
+        if t.Xhh > 1.6 and t.Rhh < 35.8:
+            #print t.runNumber
+            if (t.j0_nb == 0 and t.j1_nb == 0) :
+                plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+                plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+                plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
         if t.Xhh < 1.6:
-            hcand0 = ROOT.TLorentzVector()
-            hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
-            hcand0_boost = hcand0.BoostVector()
-            if t.j0_nTrk >= 2:
-                hcand0_b0 = ROOT.TLorentzVector()
-                hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
-                hcand0_b1 = ROOT.TLorentzVector()
-                hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
-                hcand0_b0.Boost(-hcand0_boost)
-                hcand0_b1.Boost(-hcand0_boost)
-                plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
+            #print t.runNumber
+            if (t.j0_nb == 0 and t.j1_nb == 0) :
+                plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+                plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+                plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            
+            ''' understad if 2b events, the b-tagged jet and the un-b tagged jet have any difference '''
+            # if (t.j0_nb == 2 and t.j1_nb == 0):
+            #     plt.Plot1D("2b_bjet_pT", "pT; b-tagged large R jet, pT, GeV;", t.j0_pt,  36, 200, 2000) #, t.weight)
+            #     plt.Plot1D("2b_non_bjet_pT", "pT; non b-tagged large R jet, pT, GeV;", t.j1_pt,  36, 200, 2000) #, t.weight)
+            #     #trkjets
+            #     plt.Plot1D("2b_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j0_trk0_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot1D("2b_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j0_trk1_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot1D("2b_non_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j1_trk0_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot1D("2b_non_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j1_trk1_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot2D("2b_bjet_pT_drtrk", "pT J vs trk dR; b-tagged large R jet, pT, GeV; dR trkjets;", t.j0_pt, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 36, 200, 2000, 11, -0.2, 2) #, t.weight)
+            #     plt.Plot2D("2b_non_bjet_pT_drtrk", "pT J vs trk dR; b-tagged large R jet, pT, GeV; dR trkjets;", t.j1_pt, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 36, 200, 2000, 11, -0.2, 2) #, t.weight)
+
+            # elif (t.j0_nb == 0 and t.j1_nb == 2):
+            #     plt.Plot1D("2b_bjet_pT", "pT; b-tagged large R jet, pT, GeV;", t.j1_pt,  36, 200, 2000) #, t.weight)
+            #     plt.Plot1D("2b_non_bjet_pT", "pT; non b-tagged large R jet, pT, GeV;", t.j0_pt,  36, 200, 2000) #, t.weight)
+            #     #trkjets
+            #     plt.Plot1D("2b_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j1_trk0_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot1D("2b_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j1_trk1_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot1D("2b_non_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j0_trk0_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot1D("2b_non_bjet_trkpT", "trkpT; b-tagged jet, trackjet, pT, GeV;", t.j0_trk1_pt,  20, 0, 500) #, t.weight)
+            #     plt.Plot2D("2b_bjet_pT_drtrk", "pT J vs trk dR; b-tagged large R jet, pT, GeV; dR trkjets;", t.j1_pt, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 36, 200, 2000, 11, -0.2, 2) #, t.weight)
+            #     plt.Plot2D("2b_non_bjet_pT_drtrk", "pT J vs trk dR; b-tagged large R jet, pT, GeV; dR trkjets;", t.j0_pt, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 36, 200, 2000, 11, -0.2, 2) #, t.weight)
+
+
+            # ''' test rest frame reco '''
+            # hcand0 = ROOT.TLorentzVector()
+            # hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
+            # hcand0_boost = hcand0.BoostVector()
+            # if t.j0_nTrk >= 2:
+            #     hcand0_b0 = ROOT.TLorentzVector()
+            #     hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
+            #     hcand0_b1 = ROOT.TLorentzVector()
+            #     hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
+            #     hcand0_b0.Boost(-hcand0_boost)
+            #     hcand0_b1.Boost(-hcand0_boost)
+            #     plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
 
 
             #hcand1 = ROOT.TLorentzVector()
@@ -118,8 +170,8 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
     del(t)
     outroot.Close()
 
-
 def MiniAnalysis(inputfile, outname="", DEBUG=False):
+    '''this runs on Mini Ntuple; in depth studies'''
     #read the input file
     f = ROOT.TFile(inputfile, "read")
     #load the target tree
@@ -131,6 +183,13 @@ def MiniAnalysis(inputfile, outname="", DEBUG=False):
     N = t.fChain.GetEntries()
     for i in range(N):
     # get the next tree in the chain and verify
+        if DEBUG:
+            #debug trigger list
+            for trig in t.passedTriggers:
+                print trig
+            if i > 1:
+                break
+
         if i %10000 == 0:
             helpers.drawProgressBar(i/(N*1.0))
         else:
@@ -138,13 +197,39 @@ def MiniAnalysis(inputfile, outname="", DEBUG=False):
 
         t.fChain.GetEntry(i)
         #print t.Xzz
-        if (t.hcand_boosted_pt[0] > 500 * 1000): #& (t.j1_pt < 800):
-            if (t.jet_ak2track_asso_n[0] == 1): #& (t.j1_pt < 800):
-                plt.Plot1D("nTrks_1trkjet", "Number of tracks; nTrks;", t.hcand_boosted_nTrack[0], 80, -0.5, 79.5) #, t.weight)
-            elif (t.jet_ak2track_asso_n[0] > 1):
-                plt.Plot1D("nTrks_2trkjet", "Number of tracks; nTrks;", t.hcand_boosted_nTrack[0], 80, -0.5, 79.5) #, t.weight)
-        else:
-            pass
+        # if (t.hcand_boosted_pt[0] > 500 * 1000): #& (t.j1_pt < 800):
+        #     if (t.jet_ak2track_asso_n[0] == 1): #& (t.j1_pt < 800):
+        #         plt.Plot1D("nTrks_1trkjet", "Number of tracks; nTrks;", t.hcand_boosted_nTrack[0], 80, -0.5, 79.5) #, t.weight)
+        #     elif (t.jet_ak2track_asso_n[0] > 1):
+        #         plt.Plot1D("nTrks_2trkjet", "Number of tracks; nTrks;", t.hcand_boosted_nTrack[0], 80, -0.5, 79.5) #, t.weight)
+        # else:
+        #     pass
+
+        ##for quick trigger studies
+        # TriggerDecision = False
+        # TriggerDecision_4j = False
+        # TriggerDecision_ht = False
+        # TriggerDecision_lcw = False
+        # for trig in t.passedTriggers:
+        #     if "HLT_4j100" == trig:
+        #         plt.Plot1D("HLT_4j100", "HLT_4j100; jetpt;", t.hcand_boosted_pt[0]/1000.0, 40, 0, 2000) #, t.weight)
+        #         TriggerDecision = True
+        #         TriggerDecision_4j = True
+        #     if "HLT_ht1000_L1J100" == trig:
+        #         plt.Plot1D("HLT_ht1000_L1J100", "HLT_ht1000_L1J100; jetpt;", t.hcand_boosted_pt[0]/1000.0, 40, 0, 2000) #, t.weight)
+        #         TriggerDecision = True
+        #         TriggerDecision_ht = True
+        #     if "HLT_j420_a10_lcw_sub_L1J100" == trig:
+        #         #print trig
+        #         TriggerDecision_lcw = True
+        #         TriggerDecision = True
+        # if TriggerDecision_lcw:
+        #     plt.Plot1D("HLT_j420_a10_lcw_sub_L1J100", "HLT_j420_a10_lcw_sub_L1J100; jetpt;", t.hcand_boosted_pt[0]/1000.0, 40, 0, 2000) #, t.weight)
+        # if not TriggerDecision_lcw and TriggerDecision_ht:
+        #     plt.Plot1D("HLT_recover", "HLT_recover; jetpt;", t.hcand_boosted_pt[0]/1000.0, 40, 0, 2000) #, t.weight)
+        # if TriggerDecision:
+        #     plt.Plot1D("HLT_all", "HLT_all; jetpt;", t.hcand_boosted_pt[0]/1000.0, 40, 0, 2000) #, t.weight)
+
 
     plt.Write(outroot)           
     print "DONE with the analysis!"
@@ -165,9 +250,10 @@ def main():
     #if do eos
     eosmcpath = CONF.toppath + "/eos/atlas/user/b/btong/bb/mc/v02-00-00/gridOutput/MiniNTuple/*mc15_13TeV"
     #start analysis on TinyNtuple
-    mass = 2000
+    mass = 1200
     #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
-    TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
+    #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
+    TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root_skim")[0], "signal_M" + str(mass)) #MC
 
