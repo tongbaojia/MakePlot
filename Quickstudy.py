@@ -104,23 +104,24 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
 
 
         '''check if the number of events in consistent in runs'''
-        if t.Xhh > 1.6 and t.Rhh < 35.8:
-            #print t.runNumber
-            if (t.j0_nb == 0 and t.j1_nb == 0) :
-                plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
-                plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
-                plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        if t.Xhh < 1.6:
-            #print t.runNumber
-            if (t.j0_nb == 0 and t.j1_nb == 0) :
-                plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
-                plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
-                plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        # if t.Xhh > 1.6 and t.Rhh < 35.8:
+        #     #print t.runNumber
+        #     if (t.j0_nb == 0 and t.j1_nb == 0) :
+        #         plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+        #         plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+        #         plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        # if t.Xhh < 1.6:
+        #     #print t.runNumber
+        #     if (t.j0_nb == 0 and t.j1_nb == 0) :
+        #         plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+        #         plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+        #         plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
             
+        if t.Xhh < 1.6:
             ''' understad if 2b events, the b-tagged jet and the un-b tagged jet have any difference '''
             # if (t.j0_nb == 2 and t.j1_nb == 0):
             #     plt.Plot1D("2b_bjet_pT", "pT; b-tagged large R jet, pT, GeV;", t.j0_pt,  36, 200, 2000) #, t.weight)
@@ -161,8 +162,10 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
 
             #hcand1 = ROOT.TLorentzVector()
             #hcand1.SetPtEtaPhiM(t.j1_pt, t.j1_eta, t.j1_phi, t.j1_m)
-            #plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 50, 0, 4000, 11, -0.2, 2) #, t.weight)
-            #plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 11, -0.2, 2) #, t.weight)
+            if (t.mHH > 2300 or t.mHH < 1700):
+                continue
+            plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
+            plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
 
     plt.Write(outroot)           
     print "DONE with the analysis!"
@@ -250,10 +253,10 @@ def main():
     #if do eos
     eosmcpath = CONF.toppath + "/eos/atlas/user/b/btong/bb/mc/v02-00-00/gridOutput/MiniNTuple/*mc15_13TeV"
     #start analysis on TinyNtuple
-    mass = 1200
-    #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
-    #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
-    TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
+    mass = 2000
+    TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
+    TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
+    #TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root_skim")[0], "signal_M" + str(mass)) #MC
 
