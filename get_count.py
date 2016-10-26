@@ -603,7 +603,7 @@ def GetSignificance(mass):
             plttemp_sig.Scale(2.5)
             plttemp_bkg.Scale(2.5)
             cutcounts[region], cutcounts_err[region], S, B = GetSensitivity(plttemp_sig, plttemp_bkg)
-            if mass == 1500 and region is "Signal":
+            if mass == 2000 and region is "Signal":
                 print "m:{:>5} c:{:>24} r:{:>8}; INFO-- sig:{:10.4f}  S:{:10.4f}  B:{:10.4f}  Entry:{:10.4f}".format(mass, cut, region, cutcounts[region], S, B, plttemp_sig.GetEntries())
             #get the mass plot
             # if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \

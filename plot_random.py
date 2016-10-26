@@ -34,13 +34,26 @@ def main():
     if not os.path.exists(outputpath):
         os.makedirs(outputpath)
 
-    ##paper plot
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    ##starndard plots
+    # ##paper plot
+    # DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    # DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    # DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    # DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    # DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    # DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+
+    # ###signalregion shape comparison
+    # inputroot = "sum_" + inputdir + ".root"
+    # DrawSRcomparison(inputroot, inputdata="ttbar")
+    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    # DrawSRcomparison(inputroot, inputdata="qcd_est")
+    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+
+    # ###draw the mhh before and after scale
+    # DrawScalecomparison(inputroot, norm=False)
+    # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    ###end of standard plots
 
     ##region shape comparisons
     ##side band shapes
@@ -72,17 +85,6 @@ def main():
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
-    ###signalregion shape comparison
-    inputroot = "sum_" + inputdir + ".root"
-    DrawSRcomparison(inputroot, inputdata="ttbar")
-    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    DrawSRcomparison(inputroot, inputdata="qcd_est")
-    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
-
-    ###draw the mhh before and after scale
-    DrawScalecomparison(inputroot, norm=False)
-    DrawScalecomparison(inputroot, norm=True, Logy=1)
-
     ###draw the reweighted 2D distributions; works conditionally!
     # inputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/"
     # outputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
@@ -104,7 +106,7 @@ def main():
 
 
     ##testing two plots from two different files
-    #for 2HMD deta comparison study
+    #for 2HDM deta comparison study
     # for histname in ["hCandDeta", "mHH_l", "hCandDr",
     #     "leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
     #     "sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
@@ -113,6 +115,12 @@ def main():
     #         {"file":"signal_X_hh_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"2HDM"},
     #         {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Signal/" + histname, "leg":"NoTagData"},
     #         ], keyword=histname, norm=True)
+    for histname in ["drtrk_rest", "trk1_rest_pt", "trk0_rest_pt", "m_frac", "pt_frac", "dr_frac", "dphi_frac"]:
+        DrawMulticomparison([
+            {"file":"tempplot/datatemp.root", "path":histname, "leg":"Data"}, 
+            {"file":"tempplot/signal_M2000temp.root", "path":histname, "leg":"2TeV"}, 
+            ], keyword=histname, norm=True)
+
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
     region_lst = ["Signal", "Control", "Sideband"]

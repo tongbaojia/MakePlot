@@ -146,26 +146,43 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
             #     plt.Plot2D("2b_non_bjet_pT_drtrk", "pT J vs trk dR; b-tagged large R jet, pT, GeV; dR trkjets;", t.j0_pt, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 36, 200, 2000, 11, -0.2, 2) #, t.weight)
 
 
-            # ''' test rest frame reco '''
-            # hcand0 = ROOT.TLorentzVector()
-            # hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
-            # hcand0_boost = hcand0.BoostVector()
-            # if t.j0_nTrk >= 2:
-            #     hcand0_b0 = ROOT.TLorentzVector()
-            #     hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
-            #     hcand0_b1 = ROOT.TLorentzVector()
-            #     hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
-            #     hcand0_b0.Boost(-hcand0_boost)
-            #     hcand0_b1.Boost(-hcand0_boost)
-            #     plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
+            ''' test rest frame reco '''
+            if (t.mHH > 2300 or t.mHH < 1700):
+                continue
+            hcand0 = ROOT.TLorentzVector()
+            hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
+            hcand1 = ROOT.TLorentzVector()
+            hcand1.SetPtEtaPhiM(t.j1_pt, t.j1_eta, t.j1_phi, t.j1_m)
+            hcand0_b0 = ROOT.TLorentzVector()
+            hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
+            hcand0_b1 = ROOT.TLorentzVector()
+            hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
+            hcand1_b0 = ROOT.TLorentzVector()
+            hcand1_b0.SetPtEtaPhiM(t.j1_trk0_pt, t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk0_m)
+            hcand1_b1 = ROOT.TLorentzVector()
+            hcand1_b1.SetPtEtaPhiM(t.j1_trk1_pt, t.j1_trk1_eta, t.j1_trk1_phi, t.j1_trk1_m)
+            hcand0_boost = hcand0.BoostVector()
+            G_boost = (hcand0 + hcand1).BoostVector()
+            ##see if the hcand boosted backwards is back to back
+            #hcand0.Boost(-G_boost)
+            #hcand1.Boost(-G_boost)
+            plt.Plot1D("m_frac", "mass fraction; mass fraction;", (hcand0_b0 + hcand0_b1 + hcand1_b0 + hcand1_b1 ).M()/(hcand0 + hcand1).M(), 20, 0, 1)
+            plt.Plot1D("pt_frac", "pt fraction; pt fraction;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).Pt()/(hcand0 + hcand1).Pt(), 20, 0, 1)
+            plt.Plot1D("dr_frac", "dR 4 trkjets; dR 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaR(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
+            plt.Plot1D("dphi_frac", "dphi 4 trkjets; dphi 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaPhi(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
+            
+            if t.j0_nTrk >= 2:                
+                hcand0_b0.Boost(-hcand0_boost)
+                hcand0_b1.Boost(-hcand0_boost)
+                plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
+                plt.Plot1D("trk0_rest_pt", "trk0_rest_pt; trk0 pT rest, GeV;", hcand0_b0.Pt(), 100, 0, 200) #, t.weight)
+                plt.Plot1D("trk1_rest_pt", "trk1_rest_pt; trk1 pT rest, GeV;", hcand0_b1.Pt(), 100, 0, 200) #, t.weight)
 
 
             #hcand1 = ROOT.TLorentzVector()
             #hcand1.SetPtEtaPhiM(t.j1_pt, t.j1_eta, t.j1_phi, t.j1_m)
-            if (t.mHH > 2300 or t.mHH < 1700):
-                continue
-            plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
-            plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
+            # plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
+            # plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
 
     plt.Write(outroot)           
     print "DONE with the analysis!"
