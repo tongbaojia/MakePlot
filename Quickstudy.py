@@ -166,16 +166,20 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
             ##see if the hcand boosted backwards is back to back
             #hcand0.Boost(-G_boost)
             #hcand1.Boost(-G_boost)
+            sumTrk = hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1
+            sumTrk.Boost(-G_boost)
             plt.Plot1D("m_frac", "mass fraction; mass fraction;", (hcand0_b0 + hcand0_b1 + hcand1_b0 + hcand1_b1 ).M()/(hcand0 + hcand1).M(), 20, 0, 1)
             plt.Plot1D("pt_frac", "pt fraction; pt fraction;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).Pt()/(hcand0 + hcand1).Pt(), 20, 0, 1)
             plt.Plot1D("dr_frac", "dR 4 trkjets; dR 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaR(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
             plt.Plot1D("dphi_frac", "dphi 4 trkjets; dphi 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaPhi(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
+            plt.Plot1D("sum_trkpt", "pt 4 trkjets; pt 4trkjets GeV;", (sumTrk).Pt(), 100, 0, 200) #, t.weight)
             
             if t.j0_nTrk >= 2:                
                 hcand0_b0.Boost(-hcand0_boost)
                 hcand0_b1.Boost(-hcand0_boost)
                 plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
                 plt.Plot1D("trk0_rest_pt", "trk0_rest_pt; trk0 pT rest, GeV;", hcand0_b0.Pt(), 100, 0, 200) #, t.weight)
+                plt.Plot1D("trk0_rest_m", "trk0_rest_m; trk0 Mass rest, GeV;", hcand0_b0.M(), 100, 0, 200) #, t.weight)
                 plt.Plot1D("trk1_rest_pt", "trk1_rest_pt; trk1 pT rest, GeV;", hcand0_b1.Pt(), 100, 0, 200) #, t.weight)
 
 

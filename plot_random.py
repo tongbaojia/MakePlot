@@ -36,12 +36,12 @@ def main():
 
     ##starndard plots
     # ##paper plot
-    # DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    # DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    # DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    # DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
-    # DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    # DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
 
     # ###signalregion shape comparison
     # inputroot = "sum_" + inputdir + ".root"
@@ -57,10 +57,10 @@ def main():
 
     ##region shape comparisons
     ##side band shapes
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
-    #DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
     ##correlations of the jet mass and jet pT
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
@@ -115,11 +115,11 @@ def main():
     #         {"file":"signal_X_hh_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"2HDM"},
     #         {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Signal/" + histname, "leg":"NoTagData"},
     #         ], keyword=histname, norm=True)
-    for histname in ["drtrk_rest", "trk1_rest_pt", "trk0_rest_pt", "m_frac", "pt_frac", "dr_frac", "dphi_frac"]:
-        DrawMulticomparison([
-            {"file":"tempplot/datatemp.root", "path":histname, "leg":"Data"}, 
-            {"file":"tempplot/signal_M2000temp.root", "path":histname, "leg":"2TeV"}, 
-            ], keyword=histname, norm=True)
+    # for histname in ["drtrk_rest", "trk1_rest_pt", "trk0_rest_pt", "m_frac", "pt_frac", "dr_frac", "dphi_frac", "sum_trkpt", "trk0_rest_m"]:
+    #     DrawMulticomparison([
+    #         {"file":"tempplot/datatemp.root", "path":histname, "leg":"Data"}, 
+    #         {"file":"tempplot/signal_M2000temp.root", "path":histname, "leg":"2TeV"}, 
+    #         ], keyword=histname, norm=True)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):

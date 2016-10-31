@@ -55,7 +55,7 @@ def main():
     ops = options()
     inputdir = ops.inputdir
     #set the defult options
-    global background_model
+    global background_model #0 is NoTag, 1 is OneTag, s is the special case
     background_model = 0
     global fullhists
     fullhists = ops.full
@@ -128,11 +128,20 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=1, BKG_model=background_model, fitzjets=True)
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model="s", fitzjets=True)
+    global fitresult_NoTag
+    fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=0, fitzjets=True)
+    global fitresult_OneTag
+    fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=1, fitzjets=True)
     print "End of Fit!"
-    masterinfo.update(fitestimation("qcd_est", masterinfo))
+    #masterinfo.update(fitestimation("qcd_est", masterinfo))
+    masterinfo.update(fitestimation_test("qcd_est", masterinfo))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
-    masterinfo.update(fitestimation("ttbar_est", masterinfo))
+    masterinfo.update(fitestimation_test("ttbar_est", masterinfo))
     #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo.update(GetdataEst(masterinfo, "data_est", dosyst=True))
@@ -216,6 +225,126 @@ def GetdataEst(inputdic, histname="", dosyst=False):
     return {histname:data_est}
 
 ### returns the estimation dictionary;
+def fitestimation_test(histname="", inputdic={}):
+    #now do the real work
+    print "***** estimation *****"
+    #do a dump fill first
+    outroot.cd()
+    est = {}
+    for i, cut in enumerate(cut_lst):
+        #get the corresponding region
+        cutcounts = {}
+        for j, region in enumerate(region_lst):
+            #start the histogram as a dumb holder
+            Ftransfer = 1.0
+            Ftransfer_err = 0.0
+            Ftransfer_OneTag = 1.0
+            Ftransfer_OneTag_err = 0.0
+            Ftransfer_NoTag = 1.0
+            Ftransfer_NoTag_err = 0.0
+            Ftransfer_corr = 0.0
+            Ntransfer = 1.0
+            #define where the qcd come from
+            ref_cut = numb_dict[background_model]
+            # if ("2Trk_in1" in cut):
+            #     ref_cut = "2Trk_in1_NoTag"
+            # elif ("2Trk" in cut):
+            #     ref_cut = "2Trk_NoTag"
+            # elif ("3Trk" in cut):
+            #     ref_cut = "3Trk_NoTag"
+            # elif ("4Trk" in cut):
+            #     ref_cut = "4Trk_NoTag"
+            if ("Trk" not in cut):
+                ref_cut = numb_dict[background_model]
+                if background_model == 0: ##only in NoTag situations, stupid for now
+                    if ("split" in cut):
+                        ref_cut = numb_dict[background_model] + "_2Trk_split"
+                    elif ("ThreeTag" in cut):
+                        ref_cut = numb_dict[background_model] + "_3Trk"
+                    elif ("FourTag" in cut):
+                        ref_cut = numb_dict[background_model] + "_4Trk"
+            #reset for top, use the correct MCs
+            if "ttbar" in histname: 
+                ref_cut = cut
+            #start the temp calculation of Ftransfer
+            #print fitresult
+            if fitresult and cut in word_dict.keys():
+                if word_dict[cut] < len(fitresult["mu" + histname.replace("_est", "")]):
+                    Ftransfer = fitresult["mu" + histname.replace("_est", "")][word_dict[cut]]
+                    Ftransfer_err = fitresult["mu" + histname.replace("_est", "") + "_e"][word_dict[cut]]
+                    Ftransfer_NoTag = fitresult_NoTag["mu" + histname.replace("_est", "")][word_dict[cut]]
+                    Ftransfer_NoTag_err = fitresult_NoTag["mu" + histname.replace("_est", "") + "_e"][word_dict[cut]]
+                    Ftransfer_OneTag = fitresult_OneTag["mu" + histname.replace("_est", "")][word_dict[cut]]
+                    Ftransfer_OneTag_err = fitresult_OneTag["mu" + histname.replace("_est", "") + "_e"][word_dict[cut]]
+                    corr_temp = fitresult["corr_m"][word_dict[cut]]
+                    Ftransfer_corr = corr_temp[word_dict[cut] + len(corr_temp)/2]
+                    #print "cor is, ", fitresult["corr_m"], Ftransfer_corr, cut, histname, word_dict[cut]
+                else:
+                    Ftransfer = inputdic["qcd"][cut]["Sideband"]/inputdic["qcd"][ref_cut]["Sideband"]
+                    Ftransfer_err = helpers.ratioerror(inputdic["qcd"][cut]["Sideband"], inputdic["qcd"][ref_cut]["Sideband"])
+            #print histname, cut, Ftransfer, Ftransfer_NoTag, Ftransfer_OneTag
+            for hst in plt_lst:
+                htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
+                htemp_qcd_NoTag = outroot.Get(histname.replace("_est", "") + "_" + numb_dict[0] + "_" + region + "_" + hst).Clone()
+                htemp_qcd_OneTag = outroot.Get(histname.replace("_est", "") + "_" + numb_dict[1] + "_" + region + "_" + hst).Clone()
+                #for ttbar, for mscale and mll, use 3b instead of 4b
+                if "ttbar" in histname and "FourTag" in cut:
+                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
+                    hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
+                    htemp_qcd = hist_temp.Clone()
+                    del(hist_temp)
+                #proceed!
+                Ntransfer = htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)
+                htemp_qcd.SetName(histname + "_" + cut + "_" + region + "_" + hst)
+                htemp_qcd.Scale(Ftransfer)
+
+                ##this is nasty for now
+                if "qcd" in histname:
+                    if ("split" in cut): ##2bs; this works wonderfully
+                        htemp_qcd_NoTag.Scale(Ftransfer_NoTag)
+                        htemp_qcd.Scale(2)
+                        htemp_qcd.Add(htemp_qcd_NoTag, -1)
+                    elif ("ThreeTag" in cut):
+                        htemp_qcd_NoTag.Scale(Ftransfer_NoTag)
+                        htemp_qcd_OneTag.Scale(Ftransfer_OneTag)
+                        htemp_qcd.Add(htemp_qcd_OneTag, 1)
+                        htemp_qcd.Add(htemp_qcd_NoTag, -1)
+                    elif ("FourTag" in cut):
+                        htemp_qcd_NoTag.Scale(Ftransfer_NoTag)
+                        htemp_qcd_OneTag.Scale(Ftransfer_OneTag)
+                        htemp_qcd.Add(htemp_qcd_OneTag, 1)
+                        htemp_qcd.Add(htemp_qcd_NoTag, -1) #htemp_qcd.Add(htemp_qcd_NoTag, -1)
+                elif "ttbar" in histname:
+                    htemp_qcd.Scale(1/Ftransfer)#unscale
+                    if ("split" in cut): ##2bs; this works wonderfully
+                        htemp_qcd.Scale(2 * Ftransfer - Ftransfer_NoTag)
+                    elif ("ThreeTag" in cut):
+                        htemp_qcd.Scale( Ftransfer + Ftransfer_OneTag - Ftransfer_NoTag)
+                    elif ("FourTag" in cut):
+                        htemp_qcd.Scale( Ftransfer + Ftransfer_OneTag - Ftransfer_NoTag) #htemp_qcd.Scale(2 * Ftransfer - Ftransfer_NoTag)
+
+
+                htemp_qcd.Write()
+                del(htemp_qcd)
+                del(htemp_qcd_NoTag)
+                del(htemp_qcd_OneTag)
+
+            #get the notag sideband for the current version
+            plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
+            err = ROOT.Double(0.)
+            cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
+            cutcounts[region + "_err"] = float(err)
+            cutcounts[region + "_syst_muqcd_fit_up"] = Ftransfer_err * Ntransfer
+            cutcounts[region + "_syst_muqcd_fit_down"] = -Ftransfer_err * Ntransfer
+            cutcounts[region + "_scale_factor"] = Ftransfer
+            cutcounts[region + "_corr"] = Ftransfer_corr
+            #print cut, region, Ntransfer, Ftransfer_err, cutcounts[region + "_syst_muqcd_fit_up"]
+            del(plttemp)
+        est[cut] = cutcounts
+    return {histname:est}
+
+
+### returns the estimation dictionary;
 def fitestimation(histname="", inputdic={}):
     #now do the real work
     print "***** estimation *****"
@@ -243,12 +372,13 @@ def fitestimation(histname="", inputdic={}):
             #     ref_cut = "4Trk_NoTag"
             if ("Trk" not in cut):
                 ref_cut = numb_dict[background_model]
-                if ("split" in cut):
-                    ref_cut = numb_dict[background_model] + "_2Trk_split"
-                elif ("ThreeTag" in cut):
-                    ref_cut = numb_dict[background_model] + "_3Trk"
-                elif ("FourTag" in cut):
-                    ref_cut = numb_dict[background_model] + "_4Trk"
+                if background_model == 0: ##only in NoTag situations, stupid for now
+                    if ("split" in cut):
+                        ref_cut = numb_dict[background_model] + "_2Trk_split"
+                    elif ("ThreeTag" in cut):
+                        ref_cut = numb_dict[background_model] + "_3Trk"
+                    elif ("FourTag" in cut):
+                        ref_cut = numb_dict[background_model] + "_4Trk"
             #reset for top, use the correct MCs
             if "ttbar" in histname: 
                 ref_cut = cut
@@ -370,7 +500,7 @@ def Getqcd(inputdic, histname=""):
                 htemp_zjet  = outroot.Get("zjet" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd   = outroot.Get("data" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName("qcd" + "_" + cut + "_" + region + "_" + hst)
-                htemp_qcd.Add(htemp_ttbar, -1)
+                htemp_qcd.Add(htemp_ttbar, -1) #substract the ttbar from MC
                 htemp_qcd.Add(htemp_zjet, -1)
                 htemp_qcd.Write()
                 del(htemp_qcd)
@@ -466,8 +596,6 @@ def WriteYield(inputdic, outFile, cut="Signal"):
             #     outstr += "}$ "
             # else:
             #     outstr += " $\\pm$ sys"
-
-
         outstr+="\\\\"
         tableList.append(outstr)
 

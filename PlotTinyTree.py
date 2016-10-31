@@ -464,11 +464,11 @@ class regionHists:
         #     self.FourTag_bkg.Fill(event)
 
         ##new bkg modeling, from 1b and 2b  
-        if nb_j0 + nb_j1 == 1 and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
+        if ((nb_j0 >= 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 >= 1)) and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
             self.TwoTag_split_bkg.Fill(event)
-        if ((nb_j0 == 2) or (nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
+        if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
             self.ThreeTag_bkg.Fill(event)
-        if ((nb_j0 == 2) or (nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
+        if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
             self.FourTag_bkg.Fill(event)
 
     def Write(self, outputroot):
