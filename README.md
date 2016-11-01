@@ -11,15 +11,17 @@ Active contributors are Gray Putnam.
 To make it work, Xhh4bUtiles, created by Michael Kagan, is also needed.
 
 
-You should do:(in the direcotry where you have XhhCommon and Xhh4bBoosted)
-git clone https://github.com/tongbaojia/MakePlot.git
-cd MakePlot
-git clone https://github.com/tongbaojia/Xhh4bUtils
+###### First setup
+You should do:(in the direcotry where you have XhhCommon and Xhh4bBoosted) <br />
+git clone https://github.com/tongbaojia/MakePlot.git <br />
+cd MakePlot <br />
+git clone https://github.com/tongbaojia/Xhh4bUtils <br />
 
-Before you run code in MakePlot, do outside the MakePlot folder:
-(to setup the up to date root and python version on lxplus)
-rcSetup
-lsetup 'sft releases/pyanalysis/1.5_python2.7-d641e'
+###### Setup each time
+Before you run code in MakePlot, do outside the MakePlot folder: <br />
+(to setup the up to date root and python version on lxplus) <br />
+rcSetup <br />
+lsetup 'sft releases/pyanalysis/1.5_python2.7-d641e' <br />
 
 
 ###### Introduction to the work flow
