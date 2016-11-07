@@ -367,17 +367,24 @@ class bkgegionHists:
 
 class regionHists:
     def __init__(self, outputroot, reweight):
-        self.AllTag  = massregionHists("AllTag", outputroot)
-        self.NoTag  = massregionHists("NoTag", outputroot)
-        self.OneTag = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
-        self.TwoTag = massregionHists("TwoTag", outputroot)
+        self.AllTag       = massregionHists("AllTag", outputroot)
+        self.NoTag        = massregionHists("NoTag", outputroot)
+        self.OneTag       = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag       = massregionHists("TwoTag", outputroot)
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
-        self.ThreeTag = massregionHists("ThreeTag", outputroot)
-        self.FourTag = massregionHists("FourTag", outputroot)
+        self.ThreeTag     = massregionHists("ThreeTag", outputroot)
+        self.FourTag      = massregionHists("FourTag", outputroot)
         #for background modeling
         self.TwoTag_split_bkg  = bkgegionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
         self.ThreeTag_bkg      = bkgegionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
         self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
+        #for extra studies
+        self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag_lead         = massregionHists("TwoTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag_subl         = massregionHists("TwoTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
 
     def Fill(self, event):
         b_tagging_cut = 0.3706 #0.3706 as 77% default value; -0.1416 85%; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%;-0.1416 as 85% value
@@ -470,6 +477,20 @@ class regionHists:
             self.ThreeTag_bkg.Fill(event)
         if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
             self.FourTag_bkg.Fill(event)
+
+        ##for extra studies
+        if (nb_j0 == 1 and nb_j1 == 0):
+            self.OneTag_lead.Fill(event)
+        elif (nb_j0 == 0 and nb_j1 == 1):
+            self.OneTag_subl.Fill(event)
+        elif (nb_j0 == 2 and nb_j1 == 0):
+            self.TwoTag_lead.Fill(event)
+        elif (nb_j0 == 0 and nb_j1 == 2):
+            self.TwoTag_subl.Fill(event)
+        elif (nb_j0 == 2 and nb_j1 == 1):
+            self.ThreeTag_lead.Fill(event)
+        elif (nb_j0 == 1 and nb_j1 == 2):
+            self.ThreeTag_subl.Fill(event)
 
     def Write(self, outputroot):
         self.AllTag.Write(outputroot)
@@ -635,7 +656,7 @@ def main():
     ##if reweight, reweight everything
     #parallel compute!
     print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    npool = min(len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)  ##because herophysics sucks
     pool  = mp.Pool(npool)
     pool.map(analysis, inputtasks)
     
