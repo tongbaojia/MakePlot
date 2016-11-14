@@ -13,7 +13,7 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default="TEST")
-    parser.add_argument("--nfiles", default=14)
+    parser.add_argument("--nfiles", default=CONF.splits)
     return parser.parse_args()
 
 
@@ -39,6 +39,9 @@ def split(targetpath="data_test"):
     for j, hist in enumerate(hist_list):
         temp_hist_list.append(f.Get(hist).Clone())
         temp_hist_list[j].Scale(1.0/(nfiles * 1.0))
+        ##correct for the sqrt N error here; this is really stupid
+        for x_bin in range(0, temp_hist_list[j].GetXaxis().GetNbins()+1):
+            temp_hist_list[j].SetBinError(x_bin, temp_hist_list[j].GetBinError(x_bin) * ROOT.TMath.Sqrt(nfiles))
 
     outfile = []
     outtree = []
@@ -69,7 +72,7 @@ def split(targetpath="data_test"):
 
 
 def main():
-    #split(targetpath="ttbar_comb_test")
+    split(targetpath="ttbar_comb_test")
     split(targetpath="data_test")
     #split(targetpath="signal_QCD")
 

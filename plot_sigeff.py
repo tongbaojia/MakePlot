@@ -38,7 +38,7 @@ def main():
 
     # select the cuts
     # the list must start from the largest to the smallest!
-    evtsel_lst = ["PassTrig", "PassResolvedJet", "PassFatJetMass", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
+    evtsel_lst = ["PassTrig", "PassFatJetMass", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
     detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
     "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
     region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"]

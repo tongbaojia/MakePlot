@@ -12,15 +12,15 @@ cut_lst = ["FourTag", "ThreeTag", "TwoTag_split", "TwoTag", "OneTag"]
 #setup fit initial values; tricky for the fits...
 init_dic = {
     "l":{
-        "FourTag":{"ttbar":[-30, -5, -10], "qcd":[-5, 20, -2]},
-        "ThreeTag":{"ttbar":[-30, -5, -10], "qcd":[-5, 20, -5]},
-        "TwoTag_split":{"ttbar":[-30, -10, -10], "qcd":[-5, 20, -5]},
-        "TwoTag":{"ttbar":[-30, -10, -10], "qcd":[-5, 20, -5]},
-        "OneTag":{"ttbar":[-30, -10, -10], "qcd":[-5, 20, -5]}
+        "FourTag":{"ttbar":[-30, 5, -10], "qcd":[-5, 20, -2]},
+        "ThreeTag":{"ttbar":[-30, 5, -10], "qcd":[-5, 20, -5]},
+        "TwoTag_split":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
+        "TwoTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
+        "OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
     },
     "pole":{
-        "FourTag":{"ttbar":[-50, -50, -20], "qcd":[-5, 20, -3]},
-        "ThreeTag":{"ttbar":[-50, -50, -20], "qcd":[-1, 20, -3]},
+        "FourTag":{"ttbar":[-50, 10, -20], "qcd":[-5, 20, -3]},
+        "ThreeTag":{"ttbar":[-50, 10, -20], "qcd":[-1, 20, -3]},
         "TwoTag_split":{"ttbar":[-14, 20, -10], "qcd":[-1, 20, -3]},
         "TwoTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]},
         "OneTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]}

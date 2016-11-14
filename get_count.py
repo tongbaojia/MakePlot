@@ -129,19 +129,21 @@ def main():
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model="s", fitzjets=True)
-    global fitresult_NoTag
-    fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=0, fitzjets=True)
-    global fitresult_OneTag
-    fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=1, fitzjets=True)
+    
+    # global fitresult_NoTag
+    # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=0, fitzjets=True)
+    # global fitresult_OneTag
+    # fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=1, fitzjets=True)
+    
     print "End of Fit!"
-    #masterinfo.update(fitestimation("qcd_est", masterinfo))
-    masterinfo.update(fitestimation_test("qcd_est", masterinfo))
+    #masterinfo.update(fitestimation("qcd_est", masterinfo)) 
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
-    masterinfo.update(fitestimation_test("ttbar_est", masterinfo))
+    masterinfo.update(fitestimation("qcd_est", masterinfo))
+    masterinfo.update(fitestimation("ttbar_est", masterinfo))
     #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo.update(GetdataEst(masterinfo, "data_est", dosyst=True))
@@ -342,7 +344,6 @@ def fitestimation_test(histname="", inputdic={}):
             del(plttemp)
         est[cut] = cutcounts
     return {histname:est}
-
 
 ### returns the estimation dictionary;
 def fitestimation(histname="", inputdic={}):
@@ -625,6 +626,7 @@ def GetEvtCount(config):
     for i, cut in enumerate(evtsel_lst):
         eventcounts[cut] = cutflow_temp.GetBinContent(cutflow_temp.GetXaxis().FindBin(cut))
         eventcounts[cut+"_err"] = cutflow_temp.GetBinError(cutflow_temp.GetXaxis().FindBin(cut))
+        print histname, cut, eventcounts[cut], eventcounts[cut+"_err"]
 
     for i, cut in enumerate(cut_lst):
         #get the corresponding region

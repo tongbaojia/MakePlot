@@ -14,7 +14,7 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST")
+    parser.add_argument("--inputdir",  default="TEST_noveto")
     parser.add_argument("--outputdir", default="Moriond")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
@@ -605,7 +605,7 @@ def main():
         return
 
     #real job; full chain 2 mins...just data is 50 seconds
-    nsplit = 14
+    nsplit = CONF.splits
     split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     inputtasks = []
     for split_file in split_list:
