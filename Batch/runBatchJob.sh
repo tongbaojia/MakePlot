@@ -46,15 +46,16 @@ echo $INOPTION
 #OUTFILE=Tony_test.$LSB_JOBINDEX.root
 # # # # # # # # # # # # # #
 #setup inputs with reweights
-inch=$"TEST"
-re=$"j0pT-leadtrk-fin"
-iter=$"19"
+inch=$"TEST_noveto"
 #setup channels
 ch=$(grep -o -P '(?<=ch:).*(?=:ch)' <<< $INOPTION)
 echo "plotting channel: " $ch
 syst=$(grep -o -P '(?<=syst:).*(?=:syst)' <<< $INOPTION)
 echo "plotting syst: " $syst
-ch=$ch$"_"$re"_"$iter
+#if reweight
+# re=$"j0pT-leadtrk-fin"
+# iter=$"19"
+# ch=$ch$"_"$re"_"$iter
 inputdir=$ch$"_"$syst
 
 if [ $dopythonrun == "true" ]; then

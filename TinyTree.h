@@ -24,7 +24,7 @@ public :
    // Declaration of leaf types
    Float_t         runNumber;
    Float_t         lbNumber;
-   Float_t         eventNumber;
+   Long64_t        eventNumber;
    Float_t         mHH;
    Float_t         mHH_pole;
    Float_t         detaHH;

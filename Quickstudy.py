@@ -1,4 +1,5 @@
 ###Tony: this is designed to plot directly from the TinyTree; could be adapted to draw from MiniTree
+###Note the functions here; one ability is to draw time wise comparison
 import ROOT, helpers
 import config as CONF
 import time, os, subprocess, glob, argparse, compiler, csv
@@ -71,8 +72,8 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
     with open('script/lumitable.csv', mode='r') as infile:
         reader = csv.reader(infile)
         lumitable = dict((rows[0],rows[6]) for rows in reader)
-    firstrun = 297730
-    lastrun  = 308084
+    firstrun = 276262
+    lastrun  = 311481
     #print lumitable
     #start looping through events
     N = t.fChain.GetEntries()
@@ -104,24 +105,37 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
 
 
         '''check if the number of events in consistent in runs'''
-        # if t.Xhh > 1.6 and t.Rhh < 35.8:
-        #     #print t.runNumber
-        #     if (t.j0_nb == 0 and t.j1_nb == 0) :
-        #         plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        #     if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
-        #         plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        #     if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
-        #         plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        # if t.Xhh < 1.6:
-        #     #print t.runNumber
-        #     if (t.j0_nb == 0 and t.j1_nb == 0) :
-        #         plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        #     if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
-        #         plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        #     if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
-        #         plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            
+        if t.Xhh > 1.6 and t.Rhh < 35.8:
+            #print t.runNumber
+            if (t.j0_nb == 0 and t.j1_nb == 0) :
+                plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+                plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+                plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 1):
+                plt.Plot1D("N_2bs_CR", "N_2bs; RunNumber; 2bs-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 2) or (t.j0_nb == 2 and t.j1_nb == 1) :
+                plt.Plot1D("N_3b_CR", "N_3b; RunNumber; 3b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 2 and t.j1_nb == 2):
+                plt.Plot1D("N_4b_CR", "N_4b; RunNumber; 4b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
         if t.Xhh < 1.6:
+            #print t.runNumber
+            if (t.j0_nb == 0 and t.j1_nb == 0) :
+                plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+                plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+                plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 1):
+                plt.Plot1D("N_2bs_SR", "N_2bs; RunNumber; 2bs-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 1 and t.j1_nb == 2) or (t.j0_nb == 2 and t.j1_nb == 1) :
+                plt.Plot1D("N_3b_SR", "N_3b; RunNumber; 3b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+            if (t.j0_nb == 2 and t.j1_nb == 2):
+                plt.Plot1D("N_4b_SR", "N_4b; RunNumber; 4b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        
+        ##for signal region studies
+        #if t.Xhh < 1.6:
             ''' understad if 2b events, the b-tagged jet and the un-b tagged jet have any difference '''
             # if (t.j0_nb == 2 and t.j1_nb == 0):
             #     plt.Plot1D("2b_bjet_pT", "pT; b-tagged large R jet, pT, GeV;", t.j0_pt,  36, 200, 2000) #, t.weight)
@@ -147,40 +161,40 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
 
 
             ''' test rest frame reco '''
-            if (t.mHH > 2300 or t.mHH < 1700):
-                continue
-            hcand0 = ROOT.TLorentzVector()
-            hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
-            hcand1 = ROOT.TLorentzVector()
-            hcand1.SetPtEtaPhiM(t.j1_pt, t.j1_eta, t.j1_phi, t.j1_m)
-            hcand0_b0 = ROOT.TLorentzVector()
-            hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
-            hcand0_b1 = ROOT.TLorentzVector()
-            hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
-            hcand1_b0 = ROOT.TLorentzVector()
-            hcand1_b0.SetPtEtaPhiM(t.j1_trk0_pt, t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk0_m)
-            hcand1_b1 = ROOT.TLorentzVector()
-            hcand1_b1.SetPtEtaPhiM(t.j1_trk1_pt, t.j1_trk1_eta, t.j1_trk1_phi, t.j1_trk1_m)
-            hcand0_boost = hcand0.BoostVector()
-            G_boost = (hcand0 + hcand1).BoostVector()
-            ##see if the hcand boosted backwards is back to back
-            #hcand0.Boost(-G_boost)
-            #hcand1.Boost(-G_boost)
-            sumTrk = hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1
-            sumTrk.Boost(-G_boost)
-            plt.Plot1D("m_frac", "mass fraction; mass fraction;", (hcand0_b0 + hcand0_b1 + hcand1_b0 + hcand1_b1 ).M()/(hcand0 + hcand1).M(), 20, 0, 1)
-            plt.Plot1D("pt_frac", "pt fraction; pt fraction;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).Pt()/(hcand0 + hcand1).Pt(), 20, 0, 1)
-            plt.Plot1D("dr_frac", "dR 4 trkjets; dR 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaR(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
-            plt.Plot1D("dphi_frac", "dphi 4 trkjets; dphi 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaPhi(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
-            plt.Plot1D("sum_trkpt", "pt 4 trkjets; pt 4trkjets GeV;", (sumTrk).Pt(), 100, 0, 200) #, t.weight)
+            # if (t.mHH > 2300 or t.mHH < 1700):
+            #     continue
+            # hcand0 = ROOT.TLorentzVector()
+            # hcand0.SetPtEtaPhiM(t.j0_pt, t.j0_eta, t.j0_phi, t.j0_m)
+            # hcand1 = ROOT.TLorentzVector()
+            # hcand1.SetPtEtaPhiM(t.j1_pt, t.j1_eta, t.j1_phi, t.j1_m)
+            # hcand0_b0 = ROOT.TLorentzVector()
+            # hcand0_b0.SetPtEtaPhiM(t.j0_trk0_pt, t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk0_m)
+            # hcand0_b1 = ROOT.TLorentzVector()
+            # hcand0_b1.SetPtEtaPhiM(t.j0_trk1_pt, t.j0_trk1_eta, t.j0_trk1_phi, t.j0_trk1_m)
+            # hcand1_b0 = ROOT.TLorentzVector()
+            # hcand1_b0.SetPtEtaPhiM(t.j1_trk0_pt, t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk0_m)
+            # hcand1_b1 = ROOT.TLorentzVector()
+            # hcand1_b1.SetPtEtaPhiM(t.j1_trk1_pt, t.j1_trk1_eta, t.j1_trk1_phi, t.j1_trk1_m)
+            # hcand0_boost = hcand0.BoostVector()
+            # G_boost = (hcand0 + hcand1).BoostVector()
+            # ##see if the hcand boosted backwards is back to back
+            # #hcand0.Boost(-G_boost)
+            # #hcand1.Boost(-G_boost)
+            # sumTrk = hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1
+            # sumTrk.Boost(-G_boost)
+            # plt.Plot1D("m_frac", "mass fraction; mass fraction;", (hcand0_b0 + hcand0_b1 + hcand1_b0 + hcand1_b1 ).M()/(hcand0 + hcand1).M(), 20, 0, 1)
+            # plt.Plot1D("pt_frac", "pt fraction; pt fraction;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).Pt()/(hcand0 + hcand1).Pt(), 20, 0, 1)
+            # plt.Plot1D("dr_frac", "dR 4 trkjets; dR 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaR(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
+            # plt.Plot1D("dphi_frac", "dphi 4 trkjets; dphi 4trkjets-2largejets;", (hcand0_b0 + hcand0_b1  + hcand1_b0 + hcand1_b1 ).DeltaPhi(hcand0 + hcand1), 31, -0.2, 6) #, t.weight)
+            # plt.Plot1D("sum_trkpt", "pt 4 trkjets; pt 4trkjets GeV;", (sumTrk).Pt(), 100, 0, 200) #, t.weight)
             
-            if t.j0_nTrk >= 2:                
-                hcand0_b0.Boost(-hcand0_boost)
-                hcand0_b1.Boost(-hcand0_boost)
-                plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
-                plt.Plot1D("trk0_rest_pt", "trk0_rest_pt; trk0 pT rest, GeV;", hcand0_b0.Pt(), 100, 0, 200) #, t.weight)
-                plt.Plot1D("trk0_rest_m", "trk0_rest_m; trk0 Mass rest, GeV;", hcand0_b0.M(), 100, 0, 200) #, t.weight)
-                plt.Plot1D("trk1_rest_pt", "trk1_rest_pt; trk1 pT rest, GeV;", hcand0_b1.Pt(), 100, 0, 200) #, t.weight)
+            # if t.j0_nTrk >= 2:                
+            #     hcand0_b0.Boost(-hcand0_boost)
+            #     hcand0_b1.Boost(-hcand0_boost)
+            #     plt.Plot1D("drtrk_rest", "dR trkjets; dR trkjets rest;", hcand0_b0.DeltaR(hcand0_b1), 31, -0.2, 6) #, t.weight)
+            #     plt.Plot1D("trk0_rest_pt", "trk0_rest_pt; trk0 pT rest, GeV;", hcand0_b0.Pt(), 100, 0, 200) #, t.weight)
+            #     plt.Plot1D("trk0_rest_m", "trk0_rest_m; trk0 Mass rest, GeV;", hcand0_b0.M(), 100, 0, 200) #, t.weight)
+            #     plt.Plot1D("trk1_rest_pt", "trk1_rest_pt; trk1 pT rest, GeV;", hcand0_b1.Pt(), 100, 0, 200) #, t.weight)
 
 
             #hcand1 = ROOT.TLorentzVector()
@@ -273,13 +287,15 @@ def main():
 
     #if do eos
     eosmcpath = CONF.toppath + "/eos/atlas/user/b/btong/bb/mc/v02-00-00/gridOutput/MiniNTuple/*mc15_13TeV"
+    eosdatapath = CONF.toppath + "/eos/atlas/user/b/btong/bb/data/v02-00-00/gridOutput/MiniNTuple/*16_*periodB.*.root_skim"
     #start analysis on TinyNtuple
     mass = 2000
-    TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
-    TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
+    #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
+    #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
     #TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root_skim")[0], "signal_M" + str(mass)) #MC
+    #MiniAnalysis(glob.glob(eosdatapath)[0], "data16") #data
 
     #finish
     print("--- %s seconds ---" % (time.time() - start_time))

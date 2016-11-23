@@ -477,6 +477,8 @@ def dumpRegion(config):
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
     plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
     plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
+    plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]")
+    plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1)
 
     print config["outputdir"], "done!"
 

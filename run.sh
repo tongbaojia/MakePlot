@@ -8,7 +8,7 @@ channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ)
 #for gather tables and histograms
 
 for ch in ${channels[@]}; do
-	ch=$"b77_j0pT-leadtrk-fin_19_"$ch
+	ch=$"b77_"$ch
 	# cd Output
 	# if [ ! -d $ch$"/data_est" ]; then
 	# 	mkdir $ch$"/data_est"

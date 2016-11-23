@@ -15,9 +15,10 @@ helpers.checkpath(outputpath)
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #put in the working directory name; default b77~
-workdir     =  "b77" #b77
+workdir     =  "Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
+#check if the path exists
 if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
 else:
@@ -29,15 +30,17 @@ mass_lst   = [400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 
 ##this affects the cutflow plot error!!! because root reduces the error by sqrt(N). Need to scale it back up...
 splits     = 14
 #plot color variables
-clr_lst  = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPink-8, 
+clr_lst    = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPink-8, 
 	ROOT.kSpring-7, ROOT.kMagenta+2, ROOT.kCyan+1, ROOT.kViolet-6, ROOT.kTeal+3, ROOT.kBlue+6, 
 	ROOT.kRed-1, ROOT.kBlue-1, ROOT.kOrange-7, ROOT.kGreen-3, ROOT.kPink+8]
 #plot marker style variables
 mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
+#set the blinding status
+blind  = True
 #current total luminiosity, in fb 22.1; 13.0
-totlumi = 28.0
+totlumi = 36.5
 #color dictionary for plotting style
 col_dic = {"syst":ROOT.kGray+2}
 #size for legend

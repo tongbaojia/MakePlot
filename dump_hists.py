@@ -6,24 +6,23 @@ from helpers import round_sig
 import config as CONF
 ROOT.gROOT.SetBatch()
 
-
 treename  = "XhhMiniNtuple"
-cut_lst = ["FourTag", "ThreeTag", "TwoTag_split", "TwoTag", "OneTag"]
+cut_lst   = ["FourTag", "ThreeTag", "TwoTag_split"]#"TwoTag", "OneTag"
 #setup fit initial values; tricky for the fits...
 init_dic = {
     "l":{
         "FourTag":{"ttbar":[-30, 5, -10], "qcd":[-5, 20, -2]},
         "ThreeTag":{"ttbar":[-30, 5, -10], "qcd":[-5, 20, -5]},
         "TwoTag_split":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
-        "TwoTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
-        "OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
+        #"TwoTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
+        #"OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
     },
     "pole":{
-        "FourTag":{"ttbar":[-50, 10, -20], "qcd":[-5, 20, -3]},
-        "ThreeTag":{"ttbar":[-50, 10, -20], "qcd":[-1, 20, -3]},
-        "TwoTag_split":{"ttbar":[-14, 20, -10], "qcd":[-1, 20, -3]},
-        "TwoTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]},
-        "OneTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]}
+        "FourTag":{"ttbar":[2, 30, 5], "qcd":[-5, 20, -3]},
+        "ThreeTag":{"ttbar":[2, 30, 5], "qcd":[-1, 20, -3]},
+        "TwoTag_split":{"ttbar":[-10, 20, -10], "qcd":[-1, 20, -3]},
+        #"TwoTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]},
+        #"OneTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]}
     }
 }
 
@@ -82,7 +81,10 @@ def dump(finaldis="l"):
         if "pole" in finaldis:
             qcdsmoothrange = (1200, 3000)
             topsmoothrange = (1200, 3000)
-        savehist(ifile, "data_" + cut,  "data_hh")#blind data now; if not, change data_est to data
+        if CONF.blind:
+            savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now; if not, change data_est to data
+        else:
+            savehist(ifile, "data_" + cut,  "data_hh")#unblind data now; if not, change data_est to data
         tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh",      dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh",    dosmooth=True, smoothrange = topsmoothrange, initpar=init_dic[finaldis][c]["ttbar"])

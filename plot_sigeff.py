@@ -46,8 +46,8 @@ def main():
     # Draw the efficiency plot relative to the all normalization
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel")
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", dorel=True)
-    #DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorelfcomp=True)
-    #DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True, dorelfcomp=True)
+    #DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorelfcomp=True) #for signal selection efficiency comparison; i.e. trig combination
+    #DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True, dorelfcomp=True) #for signal selection efficiency comparison; i.e. trig combination
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All")
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "All", dorel=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)

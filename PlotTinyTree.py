@@ -14,13 +14,13 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST_noveto")
+    parser.add_argument("--inputdir",  default="TEST")
     parser.add_argument("--outputdir", default="Moriond")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
-    parser.add_argument("--MV2",      default=0.3706)
-    parser.add_argument("--Xhh",      action='store_true') #do 2HDM samples if necessary
+    parser.add_argument("--MV2",       default=0.3706)
+    parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
     return parser.parse_args()
 
 #returns a dictionary of weights
@@ -120,8 +120,8 @@ class eventHists:
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
-        self.fullhist =  True #ops.dosyst is None ##option to turn it off
-        self.region = region
+        self.fullhist = True #ops.dosyst is None ##option to turn it off
+        self.region   = region
         self.reweight = reweight
         #add in all the histograms
         self.mHH_l        = ROOT.TH1F("mHH_l",              ";mHH [GeV]",        700,  0, 7000) #plot range changed for 7 TeV signals
@@ -387,7 +387,7 @@ class regionHists:
         self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
 
     def Fill(self, event):
-        b_tagging_cut = 0.3706 #0.3706 as 77% default value; -0.1416 85%; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%;-0.1416 as 85% value
+        b_tagging_cut = 0.6455 #0.3706 as 77% default value; -0.1416 85%; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%;-0.1416 as 85% value
         nb_j0 = 0
         nb_j1 = 0
         nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0
@@ -504,6 +504,13 @@ class regionHists:
         self.TwoTag_split_bkg.Write(outputroot)
         self.ThreeTag_bkg.Write(outputroot)
         self.FourTag_bkg.Write(outputroot)
+        #for other bkg modeling
+        self.OneTag_lead.Write(outputroot)
+        self.OneTag_subl.Write(outputroot)
+        self.TwoTag_lead.Write(outputroot)
+        self.TwoTag_subl.Write(outputroot)
+        self.ThreeTag_lead.Write(outputroot)
+        self.ThreeTag_subl.Write(outputroot)
 
 
 def analysis(inputconfig):
@@ -526,20 +533,21 @@ def analysis(inputconfig):
         del(temp_hist)
     #start looping through events
     N = t.fChain.GetEntries()
+    #print N, inputfile
     for i in range(N):
     # get the next tree in the chain and verify
         # if DEBUG & (i > 100000):
         #     break
-        if i % 20000 == 0:
+        if i % 25000 == 0:
             helpers.drawProgressBar(i/(N*1.0))
-
         t.fChain.GetEntry(i)
         #print t.Xzz
         ##place a cut if necessary
-        def selection():
-            passed = True
-            return passed
-        # if (abs(t.detaHH) > 1.1):
+        # def selection():
+        #     passed = True
+        #     return passed
+        ##add in resovled veto whenever feel like it
+        # if (abs(t.nresj) >= 4):
         #      continue
         # dR cut
         #if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
@@ -632,6 +640,7 @@ def main():
     for split_file in split_list:
         for i in range(nsplit):
             inputtasks.append(pack_input(split_file, inputsplit=i))    
+    #for other MCs
     inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead

@@ -236,7 +236,7 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     fSR.SetNpx(100)
     fSR.SetLineColor(ROOT.kRed)
     fSR.SetLineWidth(6)
-    fTT.SetLineStyle(5)
+    fSR.SetLineStyle(5)
     fSR.Draw("same, cont3")
 
     # get control:
