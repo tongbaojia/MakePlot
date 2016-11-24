@@ -26,6 +26,7 @@ ROOT.gROOT.SetBatch(True)
 
 evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
+##setup the list of folders to process
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 "OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
@@ -33,6 +34,15 @@ cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Sideband", "Control", "Signal"]
+
+#setup dictionary for signal regions and background estimations
+#default: ["FourTag", "ThreeTag", "TwoTag_split", "TwoTag", "OneTag"]
+bkgest_lst = ["FourTag", "ThreeTag", "TwoTag_split"] 
+#setup the dictionary for background estiamtions
+##default: {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
+bkgest_dict = {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
+
+
 #set list of dumping yields
 yield_lst = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
 yield_dic = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
@@ -109,16 +119,16 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model="s", fitzjets=False)
-    global fitresult_NoTag
-    fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=0, fitzjets=False)
-    global fitresult_OneTag
-    fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-        inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=1, fitzjets=False)
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, fitzjets=False)
     
+    # global fitresult_NoTag
+    # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=0, fitzjets=False)
+    # global fitresult_OneTag
+    # fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=1, fitzjets=False)
     print "End of Fit!"
 
     #setup multiprocessing
@@ -142,16 +152,15 @@ def main():
     #WriteEvtCount(masterinfo["data_est_nofit"], output, "data Est nofit")
     masterinfo.update(GetDiff(masterinfo["data_est_nofit"], masterinfo["data"], "dataEstDiffnofit"))
     #WriteEvtCount(masterinfo["dataEstDiffnofit"], output, "Data Est no fit Diff Percentage")
-    
-
+    ###
     #masterinfo.update(fitestimation("qcd_est", masterinfo)) 
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
-    #print "old method"
-    #masterinfo.update(fitestimation("qcd_est", masterinfo))
-    #masterinfo.update(fitestimation("ttbar_est", masterinfo))
-    print "new method"
-    masterinfo.update(fitestimation_test("qcd_est", masterinfo))
-    masterinfo.update(fitestimation_test("ttbar_est", masterinfo))
+    print "old method"
+    masterinfo.update(fitestimation("qcd_est", masterinfo))
+    masterinfo.update(fitestimation("ttbar_est", masterinfo))
+    # print "new method"
+    # masterinfo.update(fitestimation_test("qcd_est", masterinfo))
+    # masterinfo.update(fitestimation_test("ttbar_est", masterinfo))
     #WriteEvtCount(masterinfo["ttbar_est"], output, "top Est")
     # # #Do data estimation
     masterinfo.update(GetdataEst(masterinfo, "data_est", dosyst=True))
@@ -181,7 +190,7 @@ def main():
             #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
         ##produce the significance plots
         DumpSignificance(masterinfo)
-    
+
     #finish and quit
     with open(inputpath + "sum%s_%s.txt" % ("" if background_model==0 else str(background_model), inputdir), "w") as f:
         json.dump(masterinfo, f)
@@ -376,27 +385,14 @@ def fitestimation(histname="", inputdic={}):
             Ftransfer_corr = 0.0
             Ntransfer = 1.0
             #define where the qcd come from
-            ref_cut = numb_dict[background_model]
-            # if ("2Trk_in1" in cut):
-            #     ref_cut = "2Trk_in1_NoTag"
-            # elif ("2Trk" in cut):
-            #     ref_cut = "2Trk_NoTag"
-            # elif ("3Trk" in cut):
-            #     ref_cut = "3Trk_NoTag"
-            # elif ("4Trk" in cut):
-            #     ref_cut = "4Trk_NoTag"
-            if ("Trk" not in cut):
-                ref_cut = numb_dict[background_model]
-                if background_model == 0: ##only in NoTag situations, stupid for now
-                    if ("split" in cut):
-                        ref_cut = numb_dict[background_model] + "_2Trk_split"
-                    elif ("ThreeTag" in cut):
-                        ref_cut = numb_dict[background_model] + "_3Trk"
-                    elif ("FourTag" in cut):
-                        ref_cut = numb_dict[background_model] + "_4Trk"
+            ref_cut = "NoTag"
+            if cut in bkgest_dict.keys():
+                ref_cut = bkgest_dict[cut]
             #reset for top, use the correct MCs
             if "ttbar" in histname: 
                 ref_cut = cut
+
+            #print ref_cut, histname, cut, region
             #start the temp calculation of Ftransfer
             #print fitresult
             if fitresult and cut in word_dict.keys():

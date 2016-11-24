@@ -148,8 +148,8 @@ def main():
 
     # Apply additional cuts on the signal and background sample. 
     # example for cut: mycut = TCut( "abs(var1)<0.5 && abs(var2-0.5)<1" )
-    mycutSig = TCut( "Xhh < 1.6 && (mHH < 2100 && mHH > 1800)" ) 
-    mycutBkg = TCut( "Xhh < 1.6 && (mHH < 2100 && mHH > 1800) && (j0_nb +j1_nb < 3)" ) 
+    mycutSig = TCut( "Xhh < 1.6 && (mHH > 2000)" ) 
+    mycutBkg = TCut( "Xhh < 1.6 && (mHH > 2000) && (j0_nb +j1_nb <= 1)" ) 
     
     # Here, the relevant variables are copied over in new, slim trees that are
     # used for TMVA training and testing
