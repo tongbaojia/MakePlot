@@ -14,12 +14,12 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST")
+    parser.add_argument("--inputdir",  default="TEST_cb")
     parser.add_argument("--outputdir", default="Moriond")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
-    parser.add_argument("--MV2",       default=0.3706)
+    parser.add_argument("--MV2",       default=0.6455)
     parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
     return parser.parse_args()
 
@@ -387,7 +387,7 @@ class regionHists:
         self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
 
     def Fill(self, event):
-        b_tagging_cut = 0.6455 #0.3706 as 77% default value; -0.1416 85%; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%;-0.1416 as 85% value
+        b_tagging_cut = float(ops.MV2) #0.3706 as 77% default value; -0.1416 85%; 0.6455 70%; 0.8529 as 60%;0.9452 as 50%;-0.1416 as 85% value
         nb_j0 = 0
         nb_j1 = 0
         nb_j0 += 1 if event.j0_trk0_Mv2 > b_tagging_cut else 0

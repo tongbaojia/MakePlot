@@ -42,6 +42,8 @@ def main():
     DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
     DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
     DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    ###for 2D comparison
+    #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
     # ###signalregion shape comparison
     # inputroot = "sum_" + inputdir + ".root"
@@ -120,6 +122,11 @@ def main():
     #         {"file":"tempplot/datatemp.root", "path":histname, "leg":"Data"}, 
     #         {"file":"tempplot/signal_M2000temp.root", "path":histname, "leg":"2TeV"}, 
     #         ], keyword=histname, norm=True)
+    for histname in ["mHH_l", "leadHCand_Mass_s", "sublHCand_Mass_s"]:
+        DrawMulticomparison([
+            {"file":"signal_G_hh_c10_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"CB"}, 
+            {"file":"../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
+            ], keyword=histname, norm=True)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
@@ -261,7 +268,7 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
             #done
     inputroot.Close()
 
-def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
+def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], compinputname="", compinputdir=""):
     # functions for the different regions
     def myCR(x):
 	return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
@@ -279,6 +286,12 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     ROOT.gStyle.SetPadRightMargin(0.15)
 
     temp_hist = inputroot.Get(inputdir + "/mH0H1").Clone()
+
+    if (compinputname != ""):
+        compinputroot = ROOT.TFile.Open(inputpath + compinputname)
+        comptemp_hist = compinputroot.Get(inputdir + "/mH0H1").Clone()
+        temp_hist.Add(comptemp_hist, -1)
+
     canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 800, 800)
     if Xrange != [0, 0]:
         temp_hist.GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
@@ -356,11 +369,13 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     wm = helpers.DrawWatermarks(0.35, 0.875, deltax=[0.3,], 
 		watermarks=["ATLAS Internal", "#sqrt{s} = 13 TeV"])
 
-    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
+    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ("_comp" if compinputname != "" else "") + ".pdf")
 
     #shut it down
     canv.Close()
     inputroot.Close()
+    if (compinputname != ""):
+        compinputroot.Close()
 
 def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
     #print inputdir

@@ -15,7 +15,7 @@ helpers.checkpath(outputpath)
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #put in the working directory name; default b77~
-workdir     =  "b70" #b77
+workdir     =  "b70_cb" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if the path exists
@@ -46,3 +46,4 @@ col_dic = {"syst":ROOT.kGray+2}
 #size for legend
 legsize = 20
 paperlegsize = 28
+StatusLabel = "Internal" #"Preliminary"

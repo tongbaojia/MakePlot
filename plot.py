@@ -14,7 +14,6 @@ ROOT.gROOT.LoadMacro("AtlasStyle.C")
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
 ROOT.SetAtlasStyle()
 ROOT.TH1.AddDirectory(False)
-StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
 
 #define functions
@@ -286,7 +285,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     legW=0.4
     leg = ROOT.TLegend(0.65, 0.75, 0.95, 0.95)
     # top right, a bit left
-    ROOT.ATLASLabel(0.19, 0.91, StatusLabel)
+    ROOT.ATLASLabel(0.19, 0.91, CONF.StatusLabel)
     if "15" in filepath:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", CONF.legsize)
     elif "16" in filepath:
@@ -423,9 +422,6 @@ def main():
     inputpath = CONF.inputpath + inputdir + "/"
     rootinputpath = inputpath + inputroot + "_"
     print "input root file is: ", rootinputpath
-
-    global StatusLabel
-    StatusLabel = "Internal" ##StatusLabel = "Preliminary"
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
@@ -437,9 +433,7 @@ def main():
     inputtasks = []
     #fill the task list
     for i, region in enumerate(region_lst):
-        if inputroot == "sum":
-            inputroot = ""
-        outputFolder = inputpath + inputroot + "Plot/" + region
+        outputFolder = inputpath + "Plot/" + region
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
 
@@ -449,7 +443,7 @@ def main():
             config["inputdir"] = inputdir
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
-            config["blind"] = True
+            config["blind"] = CONF.blind
             inputtasks.append(config)
 
         # for j, cut in enumerate(cut_lst):
