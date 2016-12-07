@@ -36,14 +36,15 @@ def main():
 
     ##starndard plots
     # ##paper plot
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    #DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
     DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG2500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG1500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
     DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG2500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG1500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG3000_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
     ###for 2D comparison
-    #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG2500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
+    #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
     # ###signalregion shape comparison
     # inputroot = "sum_" + inputdir + ".root"
@@ -124,8 +125,8 @@ def main():
     #         ], keyword=histname, norm=True)
     for histname in ["mHH_l", "leadHCand_Mass_s", "sublHCand_Mass_s"]:
         DrawMulticomparison([
-            {"file":"signal_G_hh_c10_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"CB"}, 
-            {"file":"../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
+            {"file":"signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"CB"}, 
+            {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
             ], keyword=histname, norm=True)
 
 
@@ -271,13 +272,17 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
 def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], compinputname="", compinputdir=""):
     # functions for the different regions
     def myCR(x):
-	return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
+        return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
+        # if x[1] >= 115:
+        #     return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.09*x[0]))**2 + 0.95*((x[1]-115)/(0.1*x[1]))**2)
+        # elif x[1] < 115:
+        #     return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.09*x[0]))**2 + 0.95*((x[1]-115)/(0.12*x[1]))**2)
 
     def mySR(x):
-	return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
+	   return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
 
     def myTop(x):
-	return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )	
+	   return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )	
 
 
     #print inputdir

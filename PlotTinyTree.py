@@ -14,8 +14,8 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST_cb")
-    parser.add_argument("--outputdir", default="Moriond")
+    parser.add_argument("--inputdir",  default="TEST_70")
+    parser.add_argument("--outputdir", default="b70")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
@@ -109,10 +109,14 @@ def calc_reweight(dic, event):
     return totalweight
 
 #get Xhh and Rhh values; for variations's sake
-def GetExp(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCenterY=115., RhhCut=35.8):
+def GetRhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCenterY=115., RhhCut=35.8):
     #XhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s" % (XhhCenterX, XhhCenterY, XhhCut)
     RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
     return RhhExp
+
+def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
+    XhhExp = "((ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.09*event.j0_m), 2) + 0.95*ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s) if (event.j1_m > 115) else (ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.09*event.j0_m), 2) + 0.95*ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s))" % (XhhCenterX, XhhCenterY, XhhCut, XhhCenterX, XhhCenterY, XhhCut)
+    return XhhExp
 
 class eventHists:
     # will take 3 minutes to generate all histograms; 3 times more time...
@@ -285,9 +289,9 @@ class massregionHists:
         #for specific studies; for systemtaics
         for name, cut in self.RegionDict.items():
             tempdic = {}
-            tempdic["name"] = name
-            tempdic["histname"] = region + "_" + name
-            tempdic["eventHists"] = eventHists(tempdic["histname"], outputroot, reweight)
+            tempdic["name"]          = name
+            tempdic["histname"]      = region + "_" + name
+            tempdic["eventHists"]    = eventHists(tempdic["histname"], outputroot, reweight)
             tempdic["evencondition"] = compiler.compile(cut, '<string>', 'eval')
             self.regionlst.append(tempdic)
 
@@ -412,8 +416,9 @@ class regionHists:
         elif nb_j0 + nb_j1 == 3:
             self.ThreeTag.Fill(event) #this is 3 tight 1 tight; if not the last tight, then 3b
         elif nb_j0 == 1 and nb_j1 == 1:
+            #if (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
             self.TwoTag_split.Fill(event) #this is 2 tight 2 tight, on both side; if not the last tight, then 2bs
-        elif nb_j0 + nb_j1 == 2: 
+        elif (nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2): 
             self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
         elif nb_j0 + nb_j1 == 1:
             self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
@@ -471,7 +476,7 @@ class regionHists:
         #     self.FourTag_bkg.Fill(event)
 
         ##new bkg modeling, from 1b and 2b  
-        if ((nb_j0 >= 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 >= 1)) and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
+        if ((nb_j0 == 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 1)) and event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
             self.TwoTag_split_bkg.Fill(event)
         if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
             self.ThreeTag_bkg.Fill(event)
@@ -594,16 +599,16 @@ def main():
     ##setup control region size, and sideband region size
     global Syst_cut
     CR_size = 35.8
-    SB_size = 63
+    SB_size = 53
     Syst_cut = {
-        "SR"         : "event.Xhh < 1.6",
+        "SR"         : "event.Xhh < 1.6", #GetXhh()
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
         "SB"         : "event.Rhh < %s" % str(SB_size) ,
-        "CR_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
-        "CR_Low"     : GetExp(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=CR_size),
+        "CR_High"    : GetRhh(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
+        "CR_Low"     : GetRhh(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=CR_size),
         "CR_Small"   : "event.Xhh > 2.0 and event.Rhh < %s" % str(CR_size) ,
-        "SB_High"    : GetExp(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=SB_size),
-        "SB_Low"     : GetExp(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=SB_size),
+        "SB_High"    : GetRhh(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=SB_size),
+        "SB_Low"     : GetRhh(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=SB_size),
         "SB_Large"   : "event.Rhh < %s" % str(SB_size + 5) ,
         "SB_Small"   : "event.Rhh < %s" % str(SB_size - 5) ,
         "ZZ"         : "event.Xzz < 2.1" ,
@@ -636,6 +641,7 @@ def main():
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
     split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    #split_list = ["ttbar_comb_test"]
     inputtasks = []
     for split_file in split_list:
         for i in range(nsplit):

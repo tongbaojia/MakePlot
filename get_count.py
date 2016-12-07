@@ -28,8 +28,8 @@ evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "Pas
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 ##setup the list of folders to process
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+#"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
@@ -40,8 +40,11 @@ region_lst = ["Sideband", "Control", "Signal"]
 bkgest_lst = ["FourTag", "ThreeTag", "TwoTag_split"] 
 #setup the dictionary for background estiamtions
 ##default: {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
-bkgest_dict = {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
-#bkgest_dict = {"FourTag":"TwoTag_lead", "ThreeTag":"TwoTag_lead", "TwoTag_split":"OneTag_lead", "TwoTag":"NoTag", "OneTag":"NoTag"}
+#bkgest_dict = {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
+bkgest_dict       = {"FourTag":"NoTag_4Trk",  "ThreeTag":"NoTag_2Trk_split", "TwoTag_split":"NoTag_2Trk_split",  "TwoTag":"OneTag",  "OneTag":"NoTag"}
+#bkgest_dict_NoTag = {"FourTag":"NoTag",      "ThreeTag":"NoTag",      "TwoTag_split":"NoTag",       "TwoTag":"NoTag", "OneTag":"NoTag"}
+#bkgest_dict_OneTag= {"FourTag":"TwoTag",      "ThreeTag":"TwoTag",      "TwoTag_split":"OneTag_subl", "TwoTag":"NoTag", "OneTag":"NoTag"}
+weight_dict       = {"FourTag":("NoTag", "NoTag_4Trk"),  "ThreeTag":("NoTag", "NoTag_3Trk"), "TwoTag_split":("NoTag", "NoTag_2Trk_split")}
 
 
 #set list of dumping yields
@@ -120,7 +123,16 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, fitzjets=False)
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
+        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, Weight_dic=weight_dict, fitzjets=False)
+    # global fitresult_NoTag
+    # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_lst=bkgest_lst, BKG_dic=bkgest_dict_NoTag, fitzjets=False)
+    # global fitresult_OneTag
+    # fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_lst=bkgest_lst, BKG_dic=bkgest_dict_OneTag, fitzjets=False)
     
     # global fitresult_NoTag
     # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
@@ -156,9 +168,12 @@ def main():
     ###
     #masterinfo.update(fitestimation("qcd_est", masterinfo)) 
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
-    print "old method"
-    masterinfo.update(fitestimation("qcd_est", masterinfo))
+    #print "old method"
+    #masterinfo.update(fitestimation("qcd_est", masterinfo))
+    masterinfo.update(fitestimation("qcd_est", masterinfo, weight=True))
+    #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     masterinfo.update(fitestimation("ttbar_est", masterinfo))
+    #WriteEvtCount(masterinfo["ttbar_est"], output, "ttbar Est")
     # print "new method"
     # masterinfo.update(fitestimation_test("qcd_est", masterinfo))
     # masterinfo.update(fitestimation_test("ttbar_est", masterinfo))
@@ -221,7 +236,7 @@ def GetdataEst(inputdic, histname="", dosyst=False):
                 htemp_qcd   = outroot.Get(optionalqcd + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, 1)
-                htemp_qcd.Add(htemp_zjet, 1) #disable adding zjets
+                #htemp_qcd.Add(htemp_zjet, 1) #disable adding zjets
                 htemp_qcd.Write()
                 del(htemp_qcd)
                 del(htemp_zjet)
@@ -265,28 +280,19 @@ def fitestimation_test(histname="", inputdic={}):
             Ftransfer_corr = 0.0
             Ntransfer = 1.0
             #define where the qcd come from
-            ref_cut = numb_dict[background_model]
-            # if ("2Trk_in1" in cut):
-            #     ref_cut = "2Trk_in1_NoTag"
-            # elif ("2Trk" in cut):
-            #     ref_cut = "2Trk_NoTag"
-            # elif ("3Trk" in cut):
-            #     ref_cut = "3Trk_NoTag"
-            # elif ("4Trk" in cut):
-            #     ref_cut = "4Trk_NoTag"
-            if ("Trk" not in cut):
-                ref_cut = numb_dict[background_model]
-                if background_model == 0: ##only in NoTag situations, stupid for now
-                    if ("split" in cut):
-                        ref_cut = numb_dict[background_model] + "_2Trk_split"
-                    elif ("ThreeTag" in cut):
-                        ref_cut = numb_dict[background_model] + "_3Trk"
-                    elif ("FourTag" in cut):
-                        ref_cut = numb_dict[background_model] + "_4Trk"
+            ref_cut = "NoTag"
+            ref_cut_NoTag = "NoTag"
+            ref_cut_OneTag = "NoTag"
+            if cut in bkgest_dict.keys():
+                ref_cut = bkgest_dict[cut]
+                ref_cut_NoTag = bkgest_dict_NoTag[cut]
+                ref_cut_OneTag = bkgest_dict_OneTag[cut]
             #reset for top, use the correct MCs
             if "ttbar" in histname: 
                 ref_cut = cut
             #start the temp calculation of Ftransfer
+
+            #print ref_cut, histname, cut, region
             #print fitresult
             if fitresult and cut in word_dict.keys():
                 if word_dict[cut] < len(fitresult["mu" + histname.replace("_est", "")]):
@@ -305,8 +311,8 @@ def fitestimation_test(histname="", inputdic={}):
             #print histname, cut, Ftransfer, Ftransfer_NoTag, Ftransfer_OneTag
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
-                htemp_qcd_NoTag = outroot.Get(histname.replace("_est", "") + "_" + numb_dict[0] + "_" + region + "_" + hst).Clone()
-                htemp_qcd_OneTag = outroot.Get(histname.replace("_est", "") + "_" + numb_dict[1] + "_" + region + "_" + hst).Clone()
+                htemp_qcd_NoTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_NoTag + "_" + region + "_" + hst).Clone()
+                htemp_qcd_OneTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_OneTag + "_" + region + "_" + hst).Clone()
                 #for ttbar, for mscale and mll, use 3b instead of 4b
                 if "ttbar" in histname and "FourTag" in cut:
                     hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
@@ -322,20 +328,20 @@ def fitestimation_test(histname="", inputdic={}):
                 if "qcd" in histname:
                     if ("split" in cut): ##2bs; this works wonderfully
                         htemp_qcd_NoTag.Scale(Ftransfer_NoTag)
-                        htemp_qcd.Scale(2)
+                        htemp_qcd_OneTag.Scale(Ftransfer_OneTag)
+                        htemp_qcd.Add(htemp_qcd_OneTag, 1)
                         htemp_qcd.Add(htemp_qcd_NoTag, -1)
                     elif ("ThreeTag" in cut):
                         htemp_qcd_NoTag.Scale(Ftransfer_NoTag)
                         htemp_qcd_OneTag.Scale(Ftransfer_OneTag)
-                        htemp_qcd.Scale(2)
-                        htemp_qcd.Add(htemp_qcd_OneTag, -1)
+                        htemp_qcd.Add(htemp_qcd_OneTag, 1)
+                        htemp_qcd.Add(htemp_qcd_NoTag, -1)
                         #htemp_qcd.Add(htemp_qcd_NoTag, -1)
                     elif ("FourTag" in cut):
                         htemp_qcd_NoTag.Scale(Ftransfer_NoTag)
                         htemp_qcd_OneTag.Scale(Ftransfer_OneTag)
-                        htemp_qcd.Scale(2)
-                        #htemp_qcd.Add(htemp_qcd_OneTag, 1)
-                        htemp_qcd.Add(htemp_qcd_NoTag, -1) #htemp_qcd.Add(htemp_qcd_NoTag, -1)
+                        htemp_qcd.Add(htemp_qcd_OneTag, 1)
+                        htemp_qcd.Add(htemp_qcd_NoTag, -1)
                         ##directly scale from 2tag
                         # htemp_qcd.Scale(2)
                         # htemp_qcd.Add(htemp_qcd_NoTag, -1)
@@ -343,11 +349,11 @@ def fitestimation_test(histname="", inputdic={}):
                 elif "ttbar" in histname:
                     htemp_qcd.Scale(1/Ftransfer)#unscale
                     if ("split" in cut): ##2bs; this works wonderfully
-                        htemp_qcd.Scale(2 * Ftransfer - Ftransfer_NoTag)
+                        htemp_qcd.Scale(Ftransfer + Ftransfer_OneTag - Ftransfer_NoTag)
                     elif ("ThreeTag" in cut):
-                        htemp_qcd.Scale(2 * Ftransfer - Ftransfer_OneTag )
+                        htemp_qcd.Scale(Ftransfer + Ftransfer_OneTag - Ftransfer_NoTag )
                     elif ("FourTag" in cut):
-                        htemp_qcd.Scale(2 * Ftransfer - Ftransfer_NoTag) #htemp_qcd.Scale(2 * Ftransfer - Ftransfer_NoTag)
+                        htemp_qcd.Scale(Ftransfer + Ftransfer_OneTag - Ftransfer_NoTag) #htemp_qcd.Scale(2 * Ftransfer - Ftransfer_NoTag)
 
 
                 htemp_qcd.Write()
@@ -370,7 +376,8 @@ def fitestimation_test(histname="", inputdic={}):
     return {histname:est}
 
 ### returns the estimation dictionary;
-def fitestimation(histname="", inputdic={}):
+def fitestimation(histname="", inputdic={}, weight=False):
+    '''weight controls whether the a/b tag ratio is applied'''
     #now do the real work
     print "***** estimation *****"
     #do a dump fill first
@@ -419,6 +426,22 @@ def fitestimation(histname="", inputdic={}):
                 Ntransfer = htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)
                 htemp_qcd.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Scale(Ftransfer)
+                ## add weight!
+                if weight:
+                    #print ref_cut, histname, cut, region
+                    if cut in weight_dict.keys():
+                        hist_temp_base = outroot.Get(histname.replace("_est", "") + "_" + weight_dict[cut][0] + "_" + region + "_" + hst).Clone("base")
+                        hist_temp_model = outroot.Get(histname.replace("_est", "") + "_" + weight_dict[cut][1] + "_" + region + "_" + hst).Clone("model")
+                        hist_temp_base.Scale(hist_temp_model.Integral()/hist_temp_base.Integral())
+                        hist_temp_model.Divide(hist_temp_base)
+                        htemp_qcd.Multiply(hist_temp_model)
+                        hist_temp_model.SetName(histname + "_" + cut + "_" + region + "_" + hst + "_weight")
+                        hist_temp_model.Write()
+                        del(hist_temp_model)
+                        del(hist_temp_base)
+                    else:
+                        pass
+                ## end of add weight
                 htemp_qcd.Write()
                 del(htemp_qcd)
 
@@ -431,7 +454,7 @@ def fitestimation(histname="", inputdic={}):
             cutcounts[region + "_syst_muqcd_fit_down"] = -Ftransfer_err * Ntransfer
             cutcounts[region + "_scale_factor"] = Ftransfer
             cutcounts[region + "_corr"] = Ftransfer_corr
-            #print cut, region, Ntransfer, Ftransfer_err, cutcounts[region + "_syst_muqcd_fit_up"]
+            #print plttemp.GetName(), cut, region, cutcounts[region], cutcounts[region + "_err"], cutcounts[region + "_syst_muqcd_fit_up"]
             del(plttemp)
         est[cut] = cutcounts
     return {histname:est}
@@ -508,12 +531,20 @@ def Getqcd(inputdic, histname=""):
         cutcounts = {}
         for j, region in enumerate(region_lst):
             for hst in plt_lst:
-                htemp_ttbar = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
+                ##do the ttbar correction here as well
+                if "FourTag" in cut:
+                    htemp_ttbar = outroot.Get("ttbar" + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
+                    htemp_ttbar_temp = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
+                    htemp_ttbar.Scale(htemp_ttbar_temp.Integral(0, htemp_ttbar_temp.GetNbinsX()+1)/htemp_ttbar.Integral(0, htemp_ttbar.GetNbinsX()+1))
+                    del(htemp_ttbar_temp)
+                else:
+                    htemp_ttbar = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_zjet  = outroot.Get("zjet" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd   = outroot.Get("data" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName("qcd" + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, -1) #substract the ttbar from MC
                 htemp_qcd.Add(htemp_zjet, -1)
+                helpers.clear_negbin(htemp_qcd)
                 htemp_qcd.Write()
                 del(htemp_qcd)
                 del(htemp_zjet)

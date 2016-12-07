@@ -45,6 +45,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # read stuff
     data = ifile.Get("data_" + cut )
     compdata = icompfile.Get("data_" + cut.replace(config["cut"], config["compcut"]) )
+    compttbar = icompfile.Get("ttbar_" + cut.replace(config["cut"], config["compcut"]) )
     if "Signal" in cut and blinded:
         data = ifile.Get("data_est_" + cut )
         compdata = icompfile.Get("data_est_" + cut.replace(config["cut"], config["compcut"]) )
@@ -53,7 +54,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     qcd = ifile.Get("qcd_est_" + cut )
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
-    ttbar = ifile.Get("ttbar_est_" + cut )
+    ttbar = ifile.Get("ttbar_" + cut )
+    #ttbar = ifile.Get("ttbar_est_" + cut )
     #zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
@@ -67,6 +69,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     if not rebin == None:
         data.Rebin(rebin)
         compdata.Rebin(rebin)
+        compttbar.Rebin(rebin)
         data_est.Rebin(rebin)
         qcd.Rebin(rebin)
         ttbar.Rebin(rebin)
@@ -79,6 +82,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     if not rebinarry == None:
         data      = data.Rebin(len(rebinarry) - 1, data.GetName()+"_rebinned", rebinarry)
         compdata  = compdata.Rebin(len(rebinarry) - 1, compdata.GetName()+"_rebinned", rebinarry)
+        compttbar = compttbar.Rebin(len(rebinarry) - 1, compttbar.GetName()+"_rebinned", rebinarry)
         data_est  = data_est.Rebin(len(rebinarry) - 1, data_est.GetName()+"_rebinned", rebinarry)
         qcd       = qcd.Rebin(len(rebinarry) - 1, qcd.GetName()+"_rebinned", rebinarry)
         ttbar     = ttbar.Rebin(len(rebinarry) - 1, ttbar.GetName()+"_rebinned", rebinarry)
@@ -88,16 +92,21 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
         RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
 
+    ##for compare only: substract ttbar
+    data.Add(ttbar, -1)
+    compdata.Add(compttbar, -1)
     #get QS scores
     if "Signal" in cut and blinded:
         ks = 0
     else:
-        ks   = data.KolmogorovTest(data_est, "QU")
+        ks   = data.KolmogorovTest(compdata, "QU")
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_data_est = compdata.Integral(0, compdata.GetXaxis().GetNbins()+1)
     percentdiff   = (int_data_est - int_data)/int_data * 100.0
     #chi2 =        data.Chi2Test(data_est, "QU CHI2")
     #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
+    if config["compnorm"]:
+        compdata.Scale(data.Integral(0, data.GetXaxis().GetNbins()+1)/compdata.Integral(0, compdata.GetXaxis().GetNbins()+1))
 
     #load basic information
     xMin = data.GetXaxis().GetBinLowEdge(1)
@@ -320,7 +329,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
     leg.AddEntry(data  , config["leg"], "PE")
-    leg.AddEntry(bkg[0], config["compleg"], "F")
+    leg.AddEntry(bkg[0], config["compleg"] + (" norm" if config["compnorm"] else ""), "F")
     #leg.AddEntry(ttbar, "t#bar{t}","F")
     #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncer.", "F")
@@ -350,6 +359,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     pad0.Close()
     pad1.Close()
     c0.Close()
+    ifile.Close()
+    icompfile.Close()
     del(leg)
 
 def dumpRegion(config):
@@ -437,7 +448,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
     region_lst = ["Sideband", "Control", "Signal"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"] #, "TwoTag", "OneTag"]
-    #cut_lst = ["OneTag"]
+    #cut_lst = ["OneTag_lead", "TwoTag_lead"]
     #create master list
     inputtasks = []
     #fill the task list
@@ -453,13 +464,15 @@ def main():
             config["outputdir"]    = outputFolder
             config["cut"]          = cut + "_" + region + "_"
             config["blind"]        = CONF.blind
-            config["leg"]          = "CB"
+            config["leg"]          = "sig"
             #for comparison settings
-            comparedir             = "b70_calo"
+            comparedir             = "b70_cb"
             config["comproot"]     = CONF.inputpath + comparedir + "/" + inputroot + "_"
             config["compinputdir"] = comparedir
-            config["compcut"]      = cut + "_" + region + "_"
-            config["compleg"]      = "Calo"
+            #config["compcut"]      = cut.replace("lead", "subl") + "_" + region + "_"
+            config["compcut"]      = "TwoTag_subl" + "_" + region + "_"
+            config["compleg"]      = "TwoTag_subl".replace("_", " ")
+            config["compnorm"]     = True
             inputtasks.append(config)
 
         # for j, cut in enumerate(cut_lst):

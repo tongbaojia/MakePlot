@@ -681,6 +681,12 @@ def do_variable_rebinning(hist,bins):
 
     return newhist
 
+def clear_negbin(hist, value=0.0):
+    for ibin in range(0, hist.GetNbinsX()+1):
+        if hist.GetBinContent(ibin) < value:
+            hist.SetBinContent(ibin, value)
+            hist.SetBinError(ibin, value)
+    return
 
 def ratioerror(a, b, ea=-1, eb=-1):
     if ea > 0 and eb > 0:
