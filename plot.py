@@ -332,8 +332,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # save
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
-    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
+    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".eps")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".C")
 
@@ -427,7 +427,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
     region_lst = ["Sideband", "Control", "Signal"]
-    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag", "TwoTag", "OneTag"]
+    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
     #cut_lst = ["OneTag"]
     #create master list
     inputtasks = []

@@ -82,6 +82,7 @@ def skim(targetpath=""):
     config = []
     #setup the dictionary
     for file in files:
+        #print file
         temp_dic = {}
         temp_dic["file"] = file
         #add skimming selection now
@@ -111,7 +112,7 @@ def main():
     #eospath = CONF.toppath + "/eos/atlas/user/g/gputnam/bb/"
     skim(targetpath=eospath + "data/v02-00-00/gridOutput/MiniNTuple/")
     #skim(targetpath=eospath + "mc/v02-00-00/gridOutput/MiniNTuple/")
-    #skim(targetpath="ttbar_comb_test")
+    #skim(targetpath="../test_mini/data-MiniNTuple/")
     #split(targetpath="signal_QCD")
 
 #def clearbranches():

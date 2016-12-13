@@ -9,13 +9,13 @@ from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut
 
 # Default settings for command line arguments
 DEFAULT_OUTFNAME = "TMVA.root"
-DEFAULT_METHODS  = "BDT,Likelihood,KNN,Cuts"
+DEFAULT_METHODS  = "Cuts"#BDT,Likelihood,KNN,
 #Cuts,CutsD,CutsPCA,CutsGA,CutsSA,Likelihood,LikelihoodD,LikelihoodPCA,LikelihoodKDE,LikelihoodMIX,PDERS,PDERSD,PDERSPCA,PDEFoam,PDEFoamBoost,KNN,LD,Fisher,FisherG,BoostedFisher,HMatrix,FDA_GA,FDA_SA,FDA_MC,FDA_MT,FDA_GAMT,FDA_MCMT,MLP,MLPBFGS,MLPBNN,CFMlpANN,TMlpANN,SVM,BDT,BDTD,BDTG,BDTB,RuleFit"
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST")
-    parser.add_argument("--outputdir",  default="TEST")
+    parser.add_argument("--inputdir",  default="TEST_70")
+    parser.add_argument("--outputdir",  default="TEST_70")
     return parser.parse_args()
 
 # Main routine
@@ -68,6 +68,7 @@ def main():
     # note that you may also use variable expressions, such as: "3*var1/var2*abs(var3)"
     # [all types of expressions that can also be parsed by TTree::Draw( "expression" )]
     factory.AddVariable( "mHH",                  "mHH",    "GeV", 'F' )
+    factory.AddVariable( "j0_nb + j1_nb",        "Nb",     "Nb",  'I' )
     factory.AddVariable( "j0_pt",                "j0_pt",  "GeV", 'F' )
     factory.AddVariable( "j0_eta",               "j0_eta", "rad", 'F' )
     factory.AddVariable( "j0_phi",               "j0_phi", "rad", 'F' )
@@ -78,20 +79,24 @@ def main():
     factory.AddVariable( "j1_m",                 "j1_m",   "GeV", 'F' )
     factory.AddVariable( "j0_trk0_pt",                "j0_trk0_pt",  "GeV", 'F' )
     factory.AddVariable( "j0_trk0_eta",               "j0_trk0_eta", "rad", 'F' )
-    factory.AddVariable( "j0_trk0_phi",               "j0_trk0_phi", "rad", 'F' )
+    #factory.AddVariable( "j0_trk0_phi",               "j0_trk0_phi", "rad", 'F' )
     factory.AddVariable( "j0_trk0_m",                 "j0_trk0_m",   "GeV", 'F' )
+    factory.AddVariable( "j0_trk0_Mv2",               "j0_trk0_Mv2", "MV2", 'F' )
     factory.AddVariable( "j0_trk1_pt",                "j0_trk1_pt",  "GeV", 'F' )
     factory.AddVariable( "j0_trk1_eta",               "j0_trk1_eta", "rad", 'F' )
-    factory.AddVariable( "j0_trk1_phi",               "j0_trk1_phi", "rad", 'F' )
+    #factory.AddVariable( "j0_trk1_phi",               "j0_trk1_phi", "rad", 'F' )
     factory.AddVariable( "j0_trk1_m",                 "j0_trk1_m",   "GeV", 'F' )
+    factory.AddVariable( "j0_trk1_Mv2",               "j0_trk1_Mv2", "MV2", 'F' )
     factory.AddVariable( "j1_trk0_pt",                "j1_trk0_pt",  "GeV", 'F' )
     factory.AddVariable( "j1_trk0_eta",               "j1_trk0_eta", "rad", 'F' )
-    factory.AddVariable( "j1_trk0_phi",               "j1_trk0_phi", "rad", 'F' )
+    #factory.AddVariable( "j1_trk0_phi",               "j1_trk0_phi", "rad", 'F' )
     factory.AddVariable( "j1_trk0_m",                 "j1_trk0_m",   "GeV", 'F' )
+    factory.AddVariable( "j1_trk0_Mv2",               "j1_trk0_Mv2", "MV2", 'F' )
     factory.AddVariable( "j1_trk1_pt",                "j1_trk1_pt",  "GeV", 'F' )
     factory.AddVariable( "j1_trk1_eta",               "j1_trk1_eta", "rad", 'F' )
-    factory.AddVariable( "j1_trk1_phi",               "j1_trk1_phi", "rad", 'F' )
+    #factory.AddVariable( "j1_trk1_phi",               "j1_trk1_phi", "rad", 'F' )
     factory.AddVariable( "j1_trk1_m",                 "j1_trk1_m",   "GeV", 'F' )
+    factory.AddVariable( "j1_trk1_Mv2",               "j1_trk1_Mv2", "MV2", 'F' )
 
     #factory.AddVariable( "myvar1 := var1+var2", 'F' )
     #factory.AddVariable( "myvar2 := var1-var2", "Expression 2", "", 'F' )
@@ -148,8 +153,8 @@ def main():
 
     # Apply additional cuts on the signal and background sample. 
     # example for cut: mycut = TCut( "abs(var1)<0.5 && abs(var2-0.5)<1" )
-    mycutSig = TCut( "Xhh < 1.6 && (mHH > 2000)" ) 
-    mycutBkg = TCut( "Xhh < 1.6 && (mHH > 2000) && (j0_nb +j1_nb <= 1)" ) 
+    mycutSig = TCut( "Rhh < 63 " ) 
+    mycutBkg = TCut( "Rhh < 63 " ) #TCut( "Rhh < 63 && (j0_nb +j1_nb == 0)" ) 
     
     # Here, the relevant variables are copied over in new, slim trees that are
     # used for TMVA training and testing

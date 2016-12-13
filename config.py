@@ -15,7 +15,7 @@ helpers.checkpath(outputpath)
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #put in the working directory name; default b77~
-workdir     =  "b70_new" #b77
+workdir     =  "b70" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if the path exists
@@ -38,7 +38,8 @@ mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
 #set the blinding status
-blind  = False #False
+blind  = True
+ #False
 #current total luminiosity, in fb 22.1; 13.0
 totlumi = 36.5
 #color dictionary for plotting style

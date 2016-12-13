@@ -41,10 +41,10 @@ bkgest_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 #setup the dictionary for background estiamtions
 ##default: {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
 #bkgest_dict = {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
-bkgest_dict       = {"FourTag":"NoTag_4Trk",  "ThreeTag":"NoTag_2Trk_split", "TwoTag_split":"NoTag_2Trk_split",  "TwoTag":"OneTag",  "OneTag":"NoTag"}
+bkgest_dict       = {"FourTag":"NoTag_4Trk",  "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split",  "TwoTag":"OneTag",  "OneTag":"NoTag"}
 #bkgest_dict_NoTag = {"FourTag":"NoTag",      "ThreeTag":"NoTag",      "TwoTag_split":"NoTag",       "TwoTag":"NoTag", "OneTag":"NoTag"}
 #bkgest_dict_OneTag= {"FourTag":"TwoTag",      "ThreeTag":"TwoTag",      "TwoTag_split":"OneTag_subl", "TwoTag":"NoTag", "OneTag":"NoTag"}
-weight_dict       = {"FourTag":("NoTag", "NoTag_4Trk"),  "ThreeTag":("NoTag", "NoTag_3Trk"), "TwoTag_split":("NoTag", "NoTag_2Trk_split")}
+weight_dict       = {"FourTag":("NoTag", "NoTag_2Trk_split"),  "ThreeTag":("NoTag", "NoTag_2Trk_split"), "TwoTag_split":("NoTag", "NoTag_2Trk_split"), "TwoTag":("NoTag", "OneTag")}
 
 
 #set list of dumping yields
@@ -124,7 +124,7 @@ def main():
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
-        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, Weight_dic=weight_dict, fitzjets=False)
+        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, fitzjets=False) #Weight_dic = weight_dict, 
     # global fitresult_NoTag
     # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
     #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
@@ -170,7 +170,7 @@ def main():
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     #print "old method"
     #masterinfo.update(fitestimation("qcd_est", masterinfo))
-    masterinfo.update(fitestimation("qcd_est", masterinfo, weight=True))
+    masterinfo.update(fitestimation("qcd_est", masterinfo))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     masterinfo.update(fitestimation("ttbar_est", masterinfo))
     #WriteEvtCount(masterinfo["ttbar_est"], output, "ttbar Est")
@@ -430,8 +430,8 @@ def fitestimation(histname="", inputdic={}, weight=False):
                 if weight:
                     #print ref_cut, histname, cut, region
                     if cut in weight_dict.keys():
-                        hist_temp_base = outroot.Get(histname.replace("_est", "") + "_" + weight_dict[cut][0] + "_" + region + "_" + hst).Clone("base")
-                        hist_temp_model = outroot.Get(histname.replace("_est", "") + "_" + weight_dict[cut][1] + "_" + region + "_" + hst).Clone("model")
+                        hist_temp_base = outroot.Get(histname.replace("_est", "") + "_" + weight_dict[cut][0] + "_" + "Sideband" + "_" + hst).Clone("base")
+                        hist_temp_model = outroot.Get(histname.replace("_est", "") + "_" + weight_dict[cut][1] + "_" + "Sideband" + "_" + hst).Clone("model")
                         hist_temp_base.Scale(hist_temp_model.Integral()/hist_temp_base.Integral())
                         hist_temp_model.Divide(hist_temp_base)
                         htemp_qcd.Multiply(hist_temp_model)

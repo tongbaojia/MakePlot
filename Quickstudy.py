@@ -208,7 +208,7 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
     del(t)
     outroot.Close()
 
-def MiniAnalysis(inputfile, outname="", DEBUG=False):
+def MiniAnalysis(inputfile, outname="", DEBUG=True):
     '''this runs on Mini Ntuple; in depth studies'''
     #read the input file
     f = ROOT.TFile(inputfile, "read")
@@ -296,6 +296,7 @@ def main():
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root_skim")[0], "signal_M" + str(mass)) #MC
     #MiniAnalysis(glob.glob(eosdatapath)[0], "data16") #data
+    MiniAnalysis(glob.glob("../test_mini/data-MiniNTuple/*.root_skim")[0], "signal_M" + str(mass)) #MC
 
     #finish
     print("--- %s seconds ---" % (time.time() - start_time))
