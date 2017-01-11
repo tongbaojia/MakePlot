@@ -316,6 +316,45 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             f_reweight.close()
 
         #done with the fit!!
+        #try spline interpolation
+        inter = ROOT.Math.Interpolator(0, ROOT.Math.Interpolation.kCSPLINE)
+        ni = ratios[1].GetN()
+        xi = ROOT.vector('double')(ni + 2)
+        yi = ROOT.vector('double')(ni + 2)
+        #deal with the beginning
+        for k in range(0, ni):
+            xk = ROOT.Double()
+            yk = ROOT.Double()
+            ratios[1].GetPoint(k, xk, yk)
+            xi[k + 1] = xk
+            yi[k + 1] = yk
+        #for edge effects
+        xi[0] = xi[1] - abs(xi[1] - xi[2])
+        yi[0] = yi[0]
+        xi[ni + 1] = xi[ni] + abs(xi[ni] - xi[ni - 1])
+        yi[ni + 1] = yi[ni]
+        inter.SetData(xi, yi)
+        spline = ROOT.TSpline3(cut, ratios[1])
+        spline.SaveAs(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx")
+
+        inter_step = 5
+        xf = ROOT.vector('double')(ni * inter_step)
+        yf = ROOT.vector('double')(ni * inter_step)
+        inter_graph = ROOT.TGraph(ratios[1].GetN() * inter_step)
+        spline_graph = ROOT.TGraph(ratios[1].GetN() * inter_step)
+        for k in range(0, (ni * inter_step)):
+            xf[k] = xi[0] + (xi[ni + 1] - xi[0])/(ni * inter_step * 1.0) * k
+            #print k, xf[k], inter.Eval(xf[k])
+            inter_graph.SetPoint(k, xf[k], inter.Eval(xf[k]))
+            spline_graph.SetPoint(k, xf[k], spline.Eval(xf[k]))
+
+        inter_graph.SetLineColor(ROOT.kBlue)
+        inter_graph.SetLineWidth(2)
+        inter_graph.Draw("SAME L")
+        spline_graph.SetLineColor(ROOT.kGreen)
+        spline_graph.SetLineWidth(2)
+        spline_graph.Draw("SAME L")
+
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)
     line.SetLineStyle(1)
@@ -384,6 +423,15 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     del(RSG1_1500)
     del(RSG1_2500)
     del(testfit)
+
+    ##rename the spline function generated
+    with open(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx","r") as f:
+        newlines = []
+        for line in f.readlines():
+            newlines.append(line.replace("/afs/cern", "rs" + str(iter_reweight) + "_" + cut))
+        with open(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx", "w") as f:
+            for line in newlines:
+                f.write(line)
 
     ##should only be run non-parellel.
     if ("Sideband" in cut and False):
@@ -490,7 +538,7 @@ def main():
     inputdir = ops.inputdir
     inputroot = ops.inputroot
     inputpath = CONF.inputpath + inputdir + "/"
-    rootinputpath = inputpath + inputroot + ("r" + str(iter_reweight - 1) if iter_reweight > 0 else "") + "_"
+    rootinputpath = inputpath + inputroot + "_"
     print "input root file is: ", rootinputpath
 
     global StatusLabel
@@ -531,7 +579,7 @@ def main():
     npool = min(len(inputtasks), mp.cpu_count()-1)
     pool = mp.Pool(npool)
     pool.map(dumpRegion, inputtasks)
-    #for debug
+    ##for debug
     # for task in inputtasks:
     #     dumpRegion(task)
     #dumpRegion(inputtasks[0])

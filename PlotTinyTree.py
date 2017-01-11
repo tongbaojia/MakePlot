@@ -28,7 +28,7 @@ def get_parameter(filename="test.txt", region=""):
     #the input file need to be the following format; change to lists of tuples
     #iteration; Ntrk; parameter; inputfolder; parameterfile
     def get_info(lstline):
-        return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[3], lstline[4])
+        return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[0], lstline[3], lstline[4])
 
     f_reweight = open("script/" + filename + ".txt", "r")
     TagDic = []
@@ -49,11 +49,11 @@ def get_parameter(filename="test.txt", region=""):
             TagDic.append(get_info(lstline))
     #print par_weight
     f_reweight.close()
-    #print TwoTagDic
+    #print TagDic
     return TagDic
 
 #returns a dictionary of weights
-def get_reweight(folder, filename):
+def get_reweight(curriter, folder, filename, spline=True):
     reweightfolder = CONF.outputpath + folder + "/" + "Reweight/"
     f_reweight = open(reweightfolder + filename, "r")
     par_weight = {}
@@ -72,12 +72,17 @@ def get_reweight(folder, filename):
             par_weight["low"]  = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
         elif "high" in line:
             par_weight["high"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
+        #for spline weights
+        par_weight["name"]     = filename.replace("r" + curriter + "_", "rs" + curriter + "_").replace("txt", "cxx")
     #print par_weight
     f_reweight.close()
+    #load spline function
+    if spline:
+        ROOT.gROOT.LoadMacro(reweightfolder + par_weight["name"])
     return par_weight
 
 #calculate the weight based on the input dictionary as the instruction
-def calc_reweight(dic, event):
+def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
     maxscale = 1.7 #this means the maximum correction is this for each reweighting; used to be 1.5
     minscale = 0.3 #this means the minimum correction is this for each reweighting; used to be 0.5
@@ -90,7 +95,11 @@ def calc_reweight(dic, event):
             value =  v["high"]
         #start calculated reweight factor
         tempweight = 1
-        tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
+        if poly: #use polynomial fits
+            tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
+        if spline: #use spline functions!
+            tempweight = eval("ROOT." + v["name"].replace(".cxx", "(%d)" % value))
+            #print "new: ", tempweight, "old: ", v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
         if tempweight < 0.8:
             tempweight = 0.8
@@ -320,8 +329,8 @@ class trkregionHists:
         self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
         if self.reweight:
             self.Trk2s_dic = get_parameter(filename=ops.reweight, region="2Trk_split")
-            self.Trk3_dic = get_parameter(filename=ops.reweight, region="3Trk")
-            self.Trk4_dic = get_parameter(filename=ops.reweight, region="4Trk")
+            self.Trk3_dic  = get_parameter(filename=ops.reweight, region="3Trk")
+            self.Trk4_dic  = get_parameter(filename=ops.reweight, region="4Trk")
 
     def Fill(self, event, weight=-1):
         self.Trk0.Fill(event, event.weight)
@@ -673,6 +682,8 @@ def main():
 
     #return
     ##if reweight, reweight everything
+    ##for debug parallel
+    #analysis(inputtasks[0])
     #parallel compute!
     print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)  ##because herophysics sucks

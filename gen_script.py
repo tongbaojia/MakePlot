@@ -50,7 +50,7 @@ def write_reweight(fname="TEST", reweight_dic={}, split=True):
                 templine += region + " " #Ntrk
                 templine += "event." + var + " " #parameter
                 templine += motherfolder + ("_" + fname + "_" + str(i-1) if i!= 0 else "") + " " #look for the original iteration
-                templine += "r0_" + region_fname + "_Sideband_" + var_fname + ".txt" + " " #parameterfile;
+                templine += "r" + str(i) + "_" + region_fname + "_Sideband_" + var_fname + ".txt" + " " #parameterfile;
                 templine += "\n"
                 print templine
                 f.write(templine)
@@ -94,6 +94,7 @@ def main():
         }
     write_reweight("j0pT-trks-fin", reweight_dic)
     print "DONE"
+
 ### end
 if __name__ == "__main__":
     main()

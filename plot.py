@@ -87,7 +87,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ks   = data.KolmogorovTest(data_est, "QU")
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
-    percentdiff   = (int_data_est - int_data)/int_data * 100.0
+    percent_ratio  = (int_data)/int_data_est
     #chi2 =        data.Chi2Test(data_est, "QU CHI2")
     #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
 
@@ -275,8 +275,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #
     if (ops.detail):
         ROOT.myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), CONF.legsize)
-        ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % 
-            (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), CONF.legsize)
+        ROOT.myText(0.4, 0.97, 1, "Obs/Est = %s/%s = %s" % 
+            (str(('%.1f' % int_data)), str(('%.1f' % int_data_est)), str(('%.3f' % percent_ratio))), CONF.legsize)
         #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), CONF.legsize)
 
     # labels
@@ -333,7 +333,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
-    #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".eps")
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".C")
 
