@@ -1,3 +1,4 @@
+###this file is used to generate reweighting instructions
 import ROOT, helpers
 import config as CONF
 import argparse, copy, glob, os, sys, time
@@ -19,7 +20,7 @@ def options():
     return parser.parse_args()
 
 #currently reweighting all of them at once...may not be optimal...
-def write_reweight(fname="TEST", reweight_dic={}, split=True):
+def write_reweight(fname="TEST", reweight_dic={}, split=False):
     motherfolder="Moriond"
     helpers.checkpath("script")
     #building the inputdictionary
@@ -36,7 +37,7 @@ def write_reweight(fname="TEST", reweight_dic={}, split=True):
         #space is very important!!!!
         for region, region_fname in region_dic.iteritems():
             for var, var_fname in reweight_dic.iteritems():
-                if split:
+                if split: #this is to reweight leading pT and trk pT seperately
                     if "j0_pt" in var and i%2 == 1: #for even skip j0_pt
                         continue
                     elif "j0_pt" not in var and i%2 != 1: #for odd, skip other

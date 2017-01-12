@@ -316,7 +316,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             f_reweight.close()
 
         #done with the fit!!
-        #try spline interpolation
+        #try spline interpolation: CSPLINE, LINEAR, POLYNOMIAL, CSPLINE_PERIODIC, AKIMA, AKIMA_PERIODIC
         inter = ROOT.Math.Interpolator(0, ROOT.Math.Interpolation.kCSPLINE)
         ni = ratios[1].GetN()
         xi = ROOT.vector('double')(ni + 2)
@@ -334,7 +334,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         xi[ni + 1] = xi[ni] + abs(xi[ni] - xi[ni - 1])
         yi[ni + 1] = yi[ni]
         inter.SetData(xi, yi)
-        spline = ROOT.TSpline3(cut, ratios[1])
+        temp_graph = ROOT.TGraph(ni + 2)
+        for k in range(0, ni + 2):
+            temp_graph.SetPoint(k, xi[k], yi[k])
+        spline = ROOT.TSpline3(cut, temp_graph)
         spline.SaveAs(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx")
 
         inter_step = 5
@@ -450,11 +453,11 @@ def dumpRegion(config):
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 890, 50) + [890, 950, 1020, 1100, 1190, 1290, 1400, 2000]) #9.5 version
-        rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 800, 900, 1000, 2000])
+        rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 1100, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
         rebin_dic["j0_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
         rebin_dic["j1_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
-        rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
+        rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 500])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
@@ -466,7 +469,7 @@ def dumpRegion(config):
         rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 800, 900, 1000, 2000])
         rebin_dic["j0_trk0_Pt"]    = array('d', [0, 80] + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 1300, 2000])
         rebin_dic["j1_trk0_Pt"]    = array('d', [0, 80] + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 1300, 2000])
-        rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 250, 400])
+        rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 250, 500])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -479,7 +482,7 @@ def dumpRegion(config):
         #rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
         rebin_dic["j0_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 350, 400, 460, 520, 620, 820, 2000]) #9.5 version
         rebin_dic["j1_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 350, 400, 500, 2000]) #9.5 version
-        rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 400])
+        rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 500])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])

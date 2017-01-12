@@ -84,8 +84,8 @@ def get_reweight(curriter, folder, filename, spline=True):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
-    maxscale = 1.7 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.3 #this means the minimum correction is this for each reweighting; used to be 0.5
+    maxscale = 1.5 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.5 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v in dic:#this "dic" really is not a dic, but a tuple!
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -101,11 +101,12 @@ def calc_reweight(dic, event, poly=False, spline=True):
             tempweight = eval("ROOT." + v["name"].replace(".cxx", "(%d)" % value))
             #print "new: ", tempweight, "old: ", v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.8:
-            tempweight = 0.8
-        elif tempweight > 1.2:
-            tempweight = 1.2
-        totalweight *= tempweight
+        if tempweight < 0.7:
+            tempweight = 0.7
+        elif tempweight > 1.3:
+            tempweight = 1.3
+        totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence
+        #totalweight *= tempweight
 
     #print totalweight
     #also contrain the totalweight

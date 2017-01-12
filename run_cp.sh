@@ -4,19 +4,21 @@ workpath="/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/"
 # #### Testing
 re=j0pT-leadtrk-fin
 inch=TEST_70
-iter=1
-#ch=DS1_cb
-#ch=Moriond
+iter=-1
+##first reweight
+ch=Moriond
+echo $workpath$ch$"/Plot_r"$(($iter + 1))$"/Sideband/"
+python reweight.py --inputdir $ch --iter $(($iter + 1))
 ##this is for the first round
 #echo $ch, "is the channel and iteration!"
 #python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
 ##this is for the testing round!
-ch=Moriond$"_"$re"_"$iter
-echo $ch, "is the channel and iteration!"
-# python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
-# python get_count.py --inputdir $ch --full
-# python plot.py --inputdir $ch 
-# python reweight.py --inputdir $ch --iter $(($iter + 1))
+#ch=Moriond$"_"$re"_"$iter
+#echo $ch, "is the channel and iteration!"
+#python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
+#python get_count.py --inputdir $ch --full
+#python plot.py --inputdir $ch 
+#python reweight.py --inputdir $ch --iter $(($iter + 1))
 #publish online
 echo "Publish!"
 if [ ! -d $homepath"/www/share/hh4b/reweight/"$ch ]; then
