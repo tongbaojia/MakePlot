@@ -46,12 +46,12 @@ def main():
     ###for 2D comparison
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
-    # ###signalregion shape comparison
-    # inputroot = "sum_" + inputdir + ".root"
-    # DrawSRcomparison(inputroot, inputdata="ttbar")
-    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    # DrawSRcomparison(inputroot, inputdata="qcd_est")
-    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    ###signalregion shape comparison
+    inputroot = "sum_" + inputdir + ".root"
+    DrawSRcomparison(inputroot, inputdata="ttbar")
+    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="qcd_est")
+    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
     # ###draw the mhh before and after scale
     # DrawScalecomparison(inputroot, norm=False)
@@ -407,7 +407,9 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
                 temp_hist.SetMarkerColor(2 + i)
                 temp_hist.SetMarkerSize(1)
                 if norm:
+                    #print temp_hist.GetBinContent(10), temp_hist.GetBinError(10), temp_hist.Integral(0, temp_hist.GetXaxis().GetNbins()+1)
                     temp_hist.Scale(1/temp_hist.Integral(0, temp_hist.GetXaxis().GetNbins()+1))
+                    #print temp_hist.GetBinContent(10), temp_hist.GetBinError(10)
 
                 if Xrange != [0, 0]:
                     temp_hist.GetXaxis().SetRangeUser(Xrange[0], Xrange[1])

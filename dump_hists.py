@@ -11,15 +11,15 @@ cut_lst   = ["FourTag", "ThreeTag", "TwoTag_split"]#"TwoTag", "OneTag"
 #setup fit initial values; tricky for the fits...
 init_dic = {
     "l":{
-        "FourTag":{"ttbar":[-30, 5, -10], "qcd":[-5, 20, -2]},
-        "ThreeTag":{"ttbar":[-30, 5, -10], "qcd":[-5, 20, -5]},
-        "TwoTag_split":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
+        "FourTag":{"ttbar":[-50, 5, -10], "qcd":[-5, 20, -2]},
+        "ThreeTag":{"ttbar":[-50, 5, -10], "qcd":[-5, 20, -5]},
+        "TwoTag_split":{"ttbar":[-10, 10, -10], "qcd":[-5, 20, -5]},
         #"TwoTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
         #"OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
     },
     "pole":{
-        "FourTag":{"ttbar":[2, 30, 5], "qcd":[-5, 20, -3]},
-        "ThreeTag":{"ttbar":[2, 30, 5], "qcd":[-1, 20, -3]},
+        "FourTag":{"ttbar":[2, 30, 5], "qcd":[-5, 30, -3]},
+        "ThreeTag":{"ttbar":[2, 30, 5], "qcd":[-2, 30, -2]},
         "TwoTag_split":{"ttbar":[-10, 20, -10], "qcd":[-1, 20, -3]},
         #"TwoTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]},
         #"OneTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]}
@@ -77,7 +77,7 @@ def dump(finaldis="l"):
         tempdic = {}
         cut = c + "_Signal_mHH" + pltname
         qcdsmoothrange = (1200, 3000)
-        topsmoothrange = (1100, 3000)
+        topsmoothrange = (1200, 3000)
         if "pole" in finaldis:
             qcdsmoothrange = (1200, 3000)
             topsmoothrange = (1200, 3000)
@@ -116,12 +116,12 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
             hist_qcd.Add(hist_ttbar, 1)
         hist = hist_qcd.Clone(inname)
     #always clear the negative bins before smoothing!
+    #print inname, smoothrange, initpar, hist.GetMaximum()
     ClearNegBin(hist)
     #rebin is also done here, will be send to limit input
-    #print inname, smoothrange, initpar
+    #print inname, smoothrange, initpar, hist.GetMaximum()
     if Rebin:
         hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
-
     #here do smoothing
     if ignore_ttbar and "ttbar" in outname:
         hist.Reset()
@@ -266,16 +266,15 @@ def do_variable_rebinning(hist,bins, scale=1):
     #print "check size ", hist.GetNbinsX(), newhist.GetNbinsX()
     for b in range(0, hist.GetNbinsX()+1):
         newb             = newa.FindBin(a.GetBinCenter(b))
-
         # Get existing new content (if any)                                                                                                              
         val              = newhist.GetBinContent(newb)
         err              = newhist.GetBinError(newb)
         # Get content to add
-        ratio_bin_widths = scale*newa.GetBinWidth(newb)/a.GetBinWidth(b)
+        ratio_bin_widths = scale*newa.GetBinWidth(newb)/(a.GetBinWidth(b) * 1.0)
         #print "ratio_bin_widths",ratio_bin_widths
         #val              = val+hist.GetBinContent(b)/ratio_bin_widths
         #err              = math.sqrt(err*err+hist.GetBinError(b)/ratio_bin_widths*hist.GetBinError(b)/ratio_bin_widths)
-        val              = val+hist.GetBinContent(b)
+        val              = val + hist.GetBinContent(b)
         err              = math.sqrt(err*err+hist.GetBinError(b)*hist.GetBinError(b))
         #print "bin", newb, " new value ", val, " change ", hist.GetBinContent(b)
         newhist.SetBinContent(newb,val)

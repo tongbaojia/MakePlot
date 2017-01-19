@@ -156,7 +156,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     bkg[0].GetYaxis().SetLabelFont(43)
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
-    bkg[0].GetYaxis().SetRangeUser(0.001, yMax)
+    bkg[0].GetYaxis().SetRangeUser(0.02, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -253,16 +253,17 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # qcd_fitUp.Draw("SAME")
     # qcd_fitDown.Draw("SAME")
 
-    # Fit the ratio with a TF1
-    # if not ("Signal" in cut and blinded):
-    #     testfit = ROOT.TF1("testfit", "pol2", xMin, xMax)
-    #     testfit.SetParameters(1, 0, 0)
-    #     ratios[1].Fit("testfit")
-    #     testfit.SetLineColor(kRed)
-    #     testfit.Draw("SAME")
-    #     fitresult = testfit.GetParameters()
-    #     myText(0.2, 0.17, 1, "y=%s x^2 + %s x + %s" % (str('%.2g' % fitresult[0]), \
-    #         str('%.2g' % fitresult[1]),str('%.2g' % fitresult[2])), CONF.legsize)
+    ## Fit the ratio with a TF1
+    if("mHH" in cut and not blinded):
+        testfit = ROOT.TF1("testfit", "pol1", xMin, xMax)
+        testfit.SetParameters(1, 0)
+        ratios[1].Fit("testfit", "QLWW0IBF", "")
+        testfit.SetLineColor(ROOT.kRed)
+        testfit.SetLineStyle(9)
+        testfit.Draw("SAME")
+        fitresult = testfit.GetParameters()
+        ROOT.myText(0.15, 0.12, 1, "y=%s x + %s, prob:%s" % (str('%.2g' % fitresult[0]), \
+            str('%.2g' % fitresult[1]), str('%.2g' % float(testfit.GetProb()))), CONF.legsize)
 
     # draw the ratio 1 line
     line = ROOT.TLine(xMin, 1.0, xMax, 1.0)

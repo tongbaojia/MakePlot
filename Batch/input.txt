@@ -1,8 +1,8 @@
-ch:b77:ch syst:CR_High:syst
-ch:b77:ch syst:CR_Low:syst
-ch:b77:ch syst:CR_Small:syst
-ch:b77:ch syst:SB_High:syst
-ch:b77:ch syst:SB_Low:syst
-ch:b77:ch syst:SB_Large:syst
-ch:b77:ch syst:SB_Small:syst
-ch:b77:ch syst:ZZ:syst
+ch:b70:ch syst:CR_High:syst
+ch:b70:ch syst:CR_Low:syst
+ch:b70:ch syst:CR_Small:syst
+ch:b70:ch syst:SB_High:syst
+ch:b70:ch syst:SB_Low:syst
+ch:b70:ch syst:SB_Large:syst
+ch:b70:ch syst:SB_Small:syst
+ch:b70:ch syst:ZZ:syst

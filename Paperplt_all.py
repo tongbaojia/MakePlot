@@ -423,7 +423,7 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
 
     # get control:
     fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
-    contoursCR = array.array("d", [32.8])
+    contoursCR = array.array("d", [33])
     fCR.SetContour(1, contoursCR)
     fCR.SetNpx(400)
     fCR.SetLineColor(ROOT.kOrange+7)
@@ -432,7 +432,7 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
 
     # sideband:
     fSB = ROOT.TF2("SB", mySB,0,Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [63.0])
+    contoursSB = array.array("d", [53])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(400)
     fSB.SetLineColor(ROOT.kBlue)

@@ -60,10 +60,10 @@ inputdir=$ch$"_"$syst
 
 if [ $dopythonrun == "true" ]; then
 	cd MakePlot
-	python PlotTinyTree.py --inputdir $inch --outputdir $ch --dosyst $syst #--reweight $re --iter $iter
-	python get_count.py --inputdir $inputdir --full
-	python plot.py --inputdir $inputdir
-	python dump_hists.py --inputdir $inputdir
+	python PlotTinyTree.py --outputdir $ch --dosyst $syst #--reweight $re --iter $iter
+	python get_count.py    --inputdir $inputdir --full
+	python plot.py         --inputdir $inputdir
+	python dump_hists.py   --inputdir $inputdir
 fi
 echo "DONE!!!"
 

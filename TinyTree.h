@@ -229,12 +229,12 @@ void TinyTree::Init(TTree *tree)
    fChain->SetBranchAddress("j1_trk1_eta", &j1_trk1_eta, &b_j1_trk1_eta);
    fChain->SetBranchAddress("j1_trk1_phi", &j1_trk1_phi, &b_j1_trk1_phi);
    fChain->SetBranchAddress("j1_trk1_Mv2", &j1_trk1_Mv2, &b_j1_trk1_Mv2);
-   fChain->SetBranchAddress("Xzz", &Xzz, &b_Xzz);
+   //fChain->SetBranchAddress("Xzz", &Xzz, &b_Xzz);
    //fChain->SetBranchAddress("Xww", &Xww, &b_Xww);
    fChain->SetBranchAddress("Xhh", &Xhh, &b_Xhh);
    fChain->SetBranchAddress("Rhh", &Rhh, &b_Rhh);
    //fChain->SetBranchAddress("Xtt", &Xtt, &b_Xtt);
-   //fChain->SetBranchAddress("nresj", &nresj, &b_nresj);
+   fChain->SetBranchAddress("nresj", &nresj, &b_nresj);
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    Notify();
 }

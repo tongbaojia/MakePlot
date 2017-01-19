@@ -20,6 +20,7 @@ def options():
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
     parser.add_argument("--MV2",       default=0.6455)
+    parser.add_argument("--resveto",   action='store_true')
     parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
     return parser.parse_args()
 
@@ -533,8 +534,8 @@ class regionHists:
 
 
 def analysis(inputconfig):
-    inputfile = inputconfig["inputfile"]
-    inputroot = inputconfig["inputroot"]
+    inputfile  = inputconfig["inputfile"]
+    inputroot  = inputconfig["inputroot"]
     outputroot = inputconfig["outputroot"]
 
     outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
@@ -565,21 +566,33 @@ def analysis(inputconfig):
         # def selection():
         #     passed = True
         #     return passed
-        ##add in resovled veto whenever feel like it
-        # if (abs(t.nresj) >= 4):
-        #      continue
+        
+        ##for debugging
+        # if (t.j0_nb + t.j1_nb == 4 and t.Xhh < 1.6):
+        #     print "WTF"
         # dR cut
         #if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
             #continue
-        AllHists.Fill(t)
+
+        #AllHists.Fill(t)
+        ##or, add in resovled veto whenever feel like it
+        if (ops.resveto):
+            if (abs(t.nresj) < 4):
+                #print "here"
+                AllHists.Fill(t)
+            else:
+                continue
+        else:
+            AllHists.Fill(t)
 
     #write all the output
     AllHists.Write(outroot)
     print "DONE with the " + inputfile,  outputroot  + " analysis!", N, " events!"
     #close the input file;
-    del(t)
     outroot.Close()
     del(AllHists)
+    del(t)
+    del(f)
 
 #pack the input into a configuration dictionary
 def pack_input(inputfile, inputsplit=-1):
@@ -612,19 +625,19 @@ def main():
 
     ##setup control region size, and sideband region size
     global Syst_cut
-    CR_size = 32.8
-    SB_size = 53
+    CR_size = 33 #this needs to be fixed; so good so far
+    SB_size = 53 #53 is the new default; should be between 48-58 due to stats
     Syst_cut = {
         "SR"         : "event.Xhh < 1.6", #GetXhh()
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
-        "SB"         : GetRhh(RhhCenterX=134., RhhCenterY=125., RhhCut=SB_size),#"event.Rhh < %s" % str(SB_size) ,
-        "CR_High"    : GetRhh(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=CR_size),
-        "CR_Low"     : GetRhh(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=CR_size),
+        "SB"         : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size),#"event.Rhh < %s" % str(SB_size) ,
+        "CR_High"    : GetRhh(RhhCenterX=124.+5,  RhhCenterY=115.+5,  RhhCut=CR_size),
+        "CR_Low"     : GetRhh(RhhCenterX=124.-5,  RhhCenterY=115.-5,  RhhCut=CR_size),
         "CR_Small"   : "event.Xhh > 2.0 and event.Rhh < %s" % str(CR_size) ,
-        "SB_High"    : GetRhh(RhhCenterX=124.+5, RhhCenterY=115.+5, RhhCut=SB_size),
-        "SB_Low"     : GetRhh(RhhCenterX=124.-5, RhhCenterY=115.-5, RhhCut=SB_size),
-        "SB_Large"   : GetRhh(RhhCenterX=124., RhhCenterY=115., RhhCut=SB_size + 5), #"event.Rhh < %s" % str(SB_size + 5) ,
-        "SB_Small"   : GetRhh(RhhCenterX=124., RhhCenterY=115., RhhCut=SB_size - 5), #"event.Rhh < %s" % str(SB_size - 5) ,
+        "SB_High"    : GetRhh(RhhCenterX=124.+15, RhhCenterY=115.+15, RhhCut=SB_size),
+        "SB_Low"     : GetRhh(RhhCenterX=124.+5,  RhhCenterY=115.+5,  RhhCut=SB_size),
+        "SB_Large"   : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size + 5), #"event.Rhh < %s" % str(SB_size + 5) ,
+        "SB_Small"   : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size - 5), #"event.Rhh < %s" % str(SB_size - 5) ,
         "ZZ"         : "event.Xzz < 2.1" ,
         }
     global SR_cut
@@ -660,7 +673,7 @@ def main():
     for split_file in split_list:
         for i in range(nsplit):
             inputtasks.append(pack_input(split_file, inputsplit=i))    
-    #for other MCs
+    ##for other MCs
     inputtasks.append(pack_input("zjets_test"))
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead
@@ -683,15 +696,18 @@ def main():
 
     #return
     ##if reweight, reweight everything
+    
     ##for debug parallel
+    #analysis(pack_input("ttbar_comb_test"))
     #analysis(inputtasks[0])
-    #parallel compute!
+    
+    ##parallel compute!
     print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)  ##because herophysics sucks
     pool  = mp.Pool(npool)
     pool.map(analysis, inputtasks)
     
-    #all the other extra set of MCs
+    ##all the other extra set of MCs
     for split_file in split_list:
         targetpath = outputpath + split_file + "/"
         targetfiles = []
@@ -712,6 +728,11 @@ def main():
     #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"
+    ##consistency check
+    #f = ROOT.TFile(outputpath + "ttbar_comb_test" + "/hist-MiniNTuple.root", "read")
+    f = ROOT.TFile(outputpath + "signal_G_hh_c10_M1000" + "/hist-MiniNTuple.root", "read")
+    print f.Get("FourTag_Signal/mHH_l").GetEntries()
+    f.Close()
 
 #def clearbranches():
 if __name__ == "__main__":
