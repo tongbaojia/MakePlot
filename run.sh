@@ -8,7 +8,7 @@ channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ)
 #for gather tables and histograms
 
 for ch in ${channels[@]}; do
-	ch=$"b77_"$ch
+	ch=$"b70_"$ch
 	# cd Output
 	# if [ ! -d $ch$"/data_est" ]; then
 	# 	mkdir $ch$"/data_est"
@@ -26,8 +26,8 @@ for ch in ${channels[@]}; do
 	#python plot_sigeff.py --inputdir $ch
 	#python plot_cutflow.py --inputdir $ch
 	#python plot_prediction.py --inputdir $ch
-	python dump_hists.py --inputdir $ch
-	#python plot_random.py --inputdir $ch
+	#python dump_hists.py --inputdir $ch
+	python plot_random.py --inputdir $ch
 	#python plot_smooth.py --inputdir $ch
 done
 

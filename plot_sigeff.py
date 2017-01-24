@@ -1,3 +1,4 @@
+#Tony: Draw signal efficiencies
 import ROOT, rootlogon
 import argparse
 import array

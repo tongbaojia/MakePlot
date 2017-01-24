@@ -389,7 +389,7 @@ class regionHists:
         self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
         self.ThreeTag     = massregionHists("ThreeTag", outputroot)
         self.FourTag      = massregionHists("FourTag", outputroot)
-        #for background modeling
+        #for background modeling; not really NoTag!!!
         self.TwoTag_split_bkg  = bkgegionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
         self.ThreeTag_bkg      = bkgegionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
         self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)

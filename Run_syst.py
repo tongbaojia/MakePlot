@@ -150,7 +150,6 @@ def syst_pipeline(config):
                 print "linking: ", dst_link
                 os.symlink(ori_link, dst_link)
 
-
     #start running programs
     os.system("python get_count.py --dosyst True " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
     os.system("python dump_hists.py " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))

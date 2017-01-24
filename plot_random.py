@@ -46,24 +46,25 @@ def main():
     ###for 2D comparison
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
-    ###signalregion shape comparison
-    inputroot = "sum_" + inputdir + ".root"
-    DrawSRcomparison(inputroot, inputdata="ttbar")
-    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    DrawSRcomparison(inputroot, inputdata="qcd_est")
-    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    # ###signalregion shape comparison
+    # inputroot = "sum_" + inputdir + ".root"
+    # DrawSRcomparison(inputroot, inputdata="ttbar")
+    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    # DrawSRcomparison(inputroot, inputdata="qcd_est")
+    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
 
-    # ###draw the mhh before and after scale
-    # DrawScalecomparison(inputroot, norm=False)
-    # DrawScalecomparison(inputroot, norm=True, Logy=1)
-    ###end of standard plots
+    # # ###draw the mhh before and after scale
+    # # DrawScalecomparison(inputroot, norm=False)
+    # # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    # ###end of standard plots
 
-    ##region shape comparisons
-    ##side band shapes
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
-    #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
+    # ##region shape comparisons
+    # ##side band shapes
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
     DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
+    
     ##correlations of the jet mass and jet pT
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
@@ -88,13 +89,13 @@ def main():
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
-    ###draw the reweighted 2D distributions; works conditionally!
-    # inputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/"
-    # outputpath = CONF.inputpath + "DS1_cb_j0pT-leadtrk-fin_19" + "/" + "Plot/Other/"
+    # ##draw the reweighted 2D distributions; works conditionally!
+    # inputpath = CONF.inputpath + "Moriond_j0pT-alltrk-fin_3" + "/"
+    # outputpath = CONF.inputpath + "Moriond_j0pT-alltrk-fin_3" + "/" + "Plot/Other/"
     # if not os.path.exists(outputpath):
     #     os.makedirs(outputpath)
     # for i in ["2Trk_split", "3Trk", "4Trk"]:
-    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[500, 3500], Yrange=[0.5, 1.5])
     #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
     #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="sublHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
     #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
@@ -103,9 +104,9 @@ def main():
     #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
     #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
 
-    ##draw the reweighted 1D distributions; for study only, not in the main production
-    #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass")
-    #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass", Logy=1)
+    # ##draw the reweighted 1D distributions; for study only, not in the main production
+    # #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass")
+    # #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass", Logy=1)
 
 
     ##testing two plots from two different files
@@ -123,11 +124,70 @@ def main():
     #         {"file":"tempplot/datatemp.root", "path":histname, "leg":"Data"}, 
     #         {"file":"tempplot/signal_M2000temp.root", "path":histname, "leg":"2TeV"}, 
     #         ], keyword=histname, norm=True)
-    for histname in ["mHH_l", "leadHCand_Mass_s", "sublHCand_Mass_s"]:
-        DrawMulticomparison([
-            {"file":"signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"CB"}, 
-            {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
-            ], keyword=histname, norm=True)
+    # for histname in ["mHH_l", "leadHCand_Mass_s", "sublHCand_Mass_s"]:
+    #     DrawMulticomparison([
+    #         {"file":"signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"CB"}, 
+    #         {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
+    #         ], keyword=histname, norm=True)
+
+    # ##for reweighting shape comparison
+    # for histname in ["data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",
+    # "data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l"]:
+    #     DrawMulticomparison([
+    #         {"file":"../b70/sum_b70.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"../b70/sum_b70.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+
+    # for histname in ["data_est_FourTag_Sideband_leadHCand_trk0_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk0_Pt",
+    # "data_est_FourTag_Control_leadHCand_trk0_Pt", "data_est_ThreeTag_Control_leadHCand_trk0_Pt", "data_est_TwoTag_split_Control_leadHCand_trk0_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"../b70/sum_b70.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"../b70/sum_b70.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
+
+    # for histname in ["data_est_FourTag_Sideband_sublHCand_trk0_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk0_Pt",
+    # "data_est_FourTag_Control_sublHCand_trk0_Pt", "data_est_ThreeTag_Control_sublHCand_trk0_Pt", "data_est_TwoTag_split_Control_sublHCand_trk0_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"../b70/sum_b70.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"../b70/sum_b70.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
+
+    # for histname in ["data_est_FourTag_Sideband_leadHCand_trk1_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk1_Pt",
+    # "data_est_FourTag_Control_leadHCand_trk1_Pt", "data_est_ThreeTag_Control_leadHCand_trk1_Pt", "data_est_TwoTag_split_Control_leadHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"../b70/sum_b70.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"../b70/sum_b70.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
+
+    # for histname in ["data_est_FourTag_Sideband_sublHCand_trk1_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk1_Pt",
+    # "data_est_FourTag_Control_sublHCand_trk1_Pt", "data_est_ThreeTag_Control_sublHCand_trk1_Pt", "data_est_TwoTag_split_Control_sublHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"../b70/sum_b70.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"../b70/sum_b70.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
+
+    # for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l"]:
+    #     DrawMulticomparison([
+    #         {"file":"../b70/sum_b70.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
@@ -520,33 +580,83 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
 
     inputroot.Close()
 
-def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
+def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0, Rebin=1):
     #print inputdir
     tempname = "directcompare" + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
     canv = ROOT.TCanvas(tempname, tempname, 800, 800)
-    canv.SetLogy(Logy)
-    xleg, yleg = 0.5, 0.7
-    legend = ROOT.TLegend(xleg, yleg, xleg+0.15, yleg+0.2)
+    # two pad
+    pad0 = ROOT.TPad("pad0", "pad0", 0.0, 0.31, 1., 1.)
+    pad0.SetRightMargin(0.05)
+    pad0.SetBottomMargin(0.0001)
+    pad0.SetFrameFillColor(0)
+    pad0.SetFrameBorderMode(0)
+    pad0.SetFrameFillColor(0)
+    pad0.SetBorderMode(0)
+    pad0.SetBorderSize(0)
+
+    pad1 = ROOT.TPad("pad1", "pad1", 0.0, 0.0, 1., 0.30)
+    pad1.SetRightMargin(0.05)
+    pad1.SetBottomMargin(0.38)
+    pad1.SetTopMargin(0.0001)
+    pad1.SetFrameFillColor(0)
+    pad1.SetFillStyle(0) # transparent
+    pad1.SetFrameBorderMode(0)
+    pad1.SetFrameFillColor(0)
+    pad1.SetBorderMode(0)
+    pad1.SetBorderSize(0)
+
+
+    #top pad
+    canv.cd()
+    pad0.SetLogy(Logy)
+    pad0.Draw()
+    pad0.cd()
+
+    xleg, yleg = 0.68, 0.68
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.2, yleg+0.2)
     counter = 0
     maxbincontent = (0.05 if Logy ==0 else 10)
     temphst_lst = []
+    graph_lst   = []
+    tempratio_lst = []
 
     for i, dic in enumerate(inputlst):
+        #print dic["file"], dic["path"] ##?????
         refroot = ROOT.TFile.Open(inputpath + dic["file"])
         temphst_lst.append(refroot.Get(dic["path"]).Clone())
+        tempratio_lst.append(refroot.Get(dic["path"]).Clone(dic["path"] + "_ratio"))
         temphst_lst[i].SetDirectory(0) #otherwise the hist lives in the current open file
+        tempratio_lst[i].SetDirectory(0) #otherwise the hist lives in the current open file
 
-        temphst_lst[i].SetLineColor(2 + i)
-        temphst_lst[i].SetMarkerStyle(20 + i)
-        temphst_lst[i].SetMarkerColor(2 + i)
-        temphst_lst[i].SetMarkerSize(1)
+        if Rebin != 1:
+            temphst_lst[i].Rebin(Rebin)
+            tempratio_lst[i].Rebin(Rebin)
         if norm:
             temphst_lst[i].Scale(1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
 
+        for j in range(1, temphst_lst[0].GetNbinsX()+1):
+            try:
+                tempratio_lst[i].SetBinContent(j, temphst_lst[i].GetBinContent(j) / temphst_lst[0].GetBinContent(j))
+                tempratio_lst[i].SetBinError(j, helpers.ratioerror(\
+                    temphst_lst[i].GetBinContent(j), temphst_lst[0].GetBinContent(j), \
+                    temphst_lst[i].GetBinError(j), temphst_lst[0].GetBinError(j)))
+            except ZeroDivisionError:
+                pass
+                #print "Divide by zero! Check bin content in", canv.GetName()
+
         maxbincontent = max(maxbincontent, temphst_lst[i].GetMaximum())
-        temphst_lst[i].SetMaximum(maxbincontent * 1.5)
-        legend.AddEntry(temphst_lst[i], dic["leg"], "apl")
-        temphst_lst[i].Draw("" if i==0 else "same")
+        #graph_lst.append(helpers.TH1toTAsym(temphst_lst[i], efficiency=False))
+        temphst_lst[i].SetLineColor(1 if i == 0 else CONF.clr_lst[i])
+        #temphst_lst[i].SetLineStyle(1 + i)
+        temphst_lst[i].SetMarkerStyle(20 + i)
+        temphst_lst[i].SetMarkerColor(1 if i == 0 else CONF.clr_lst[i])
+        temphst_lst[i].SetMarkerSize(1)
+        temphst_lst[i].SetMaximum(maxbincontent * (1.5 if Logy == 0 else 150))
+        temphst_lst[i].SetMinimum(0.001 if Logy == 0 else 0.2)
+        if Xrange != [0, 0]:
+            temphst_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
+        legend.AddEntry(temphst_lst[i], dic["leg"], "pl")
+        temphst_lst[i].Draw("EP" if i==0 else "hist same")
         refroot.Close()
     
     legend.SetBorderSize(0)
@@ -555,11 +665,12 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
     legend.Draw()
 
     # draw watermarks
-    xatlas, yatlas = 0.35, 0.87
+    xatlas, yatlas = 0.4, 0.87
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "Simulations")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    watermarks = [atlas]
+    info  = ROOT.TLatex(xatlas, yatlas-0.06, keyword.replace("data_est_", "").replace("_mHH_l", "").replace("_", " "))
+    watermarks = [atlas, info]
     for wm in watermarks:
         wm.SetTextAlign(22)
         wm.SetTextSize(0.04)
@@ -567,8 +678,45 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
         wm.SetNDC()
         wm.Draw()
 
+    #bottom pad
+    canv.cd()
+    pad1.Draw()
+    pad1.cd()
+    for i, dic in enumerate(inputlst):
+        tempratio_lst[i].SetLineColor(1 if i == 0 else CONF.clr_lst[i])
+        #tempratio_lst[i].SetLineStyle(1 + i)
+        tempratio_lst[i].SetMarkerStyle(20 + i)
+        tempratio_lst[i].SetMarkerColor(1 if i == 0 else CONF.clr_lst[i])
+        tempratio_lst[i].SetMarkerSize(1)
+        tempratio_lst[i].GetYaxis().SetTitleFont(43)
+        tempratio_lst[i].GetYaxis().SetTitleSize(28)
+        tempratio_lst[i].GetYaxis().SetLabelFont(43)
+        tempratio_lst[i].GetYaxis().SetLabelSize(28)
+        tempratio_lst[i].GetYaxis().SetTitle("ratio to ref")
+        tempratio_lst[i].GetYaxis().SetRangeUser(0.6, 1.5) #set range for ratio plot
+        tempratio_lst[i].GetYaxis().SetNdivisions(405)
+        tempratio_lst[i].GetXaxis().SetTitleFont(43)
+        tempratio_lst[i].GetXaxis().SetTitleOffset(3.5)
+        tempratio_lst[i].GetXaxis().SetTitleSize(28)
+        tempratio_lst[i].GetXaxis().SetLabelFont(43)
+        tempratio_lst[i].GetXaxis().SetLabelSize(28)
+        if Xrange != [0, 0]:
+            tempratio_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
+        if i > 0:
+            tempratio_lst[i].Draw("ep" if i == 1 else "ep same")
+    # draw the ratio 1 line
+    line = ROOT.TLine(Xrange[0], 1.0, Xrange[1], 1.0)
+    line.SetLineStyle(1)
+    line.Draw()
+
+    #save and clean up
     canv.SaveAs(outputpath + canv.GetName() + ".pdf")
+    pad0.Close()
+    pad1.Close()
     canv.Close()
+    del(tempratio_lst)
+    del(temphst_lst)
+    del(graph_lst)
 
 def DrawBTaggingPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], dodouble=1):
     #print inputdir

@@ -38,7 +38,7 @@ mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
 #set the blinding status
-blind  = False
+blind  = True
  #False
 #current total luminiosity, in fb 22.1; 13.0
 totlumi = 36.5

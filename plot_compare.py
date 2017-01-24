@@ -1,4 +1,5 @@
 # Tony Tong; baojia.tong@cern.ch
+# used to compare plots from two folders
 import os, argparse, sys, math, time
 import config as CONF
 from array import array

@@ -1,5 +1,6 @@
 import argparse, copy, os, sys, glob, math
 from array import array
+import numpy as np
 import ROOT, rootlogon
 import Xhh4bUtils.BkgFit.smoothfit_Ultimate as smoothfit
 from helpers import round_sig
@@ -33,6 +34,7 @@ def options():
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default=CONF.workdir)
     parser.add_argument("--Xhh", action='store_true') #4times more time
+    parser.add_argument("--dosyst", action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
@@ -122,15 +124,17 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     #print inname, smoothrange, initpar, hist.GetMaximum()
     if Rebin:
         hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
-    #here do smoothing
-    if ignore_ttbar and "ttbar" in outname:
+    #here do smoothing; but check if histogram is empty; if empty do not smooth
+    if (ignore_ttbar and "ttbar" in outname) or hist.Integral() == 0:
         hist.Reset()
     elif dosmooth:
         #print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
             makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
-        #hist = smoothfit.MakeSmoothHistoWithError(hist, sm)
-        hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"])
+        if ops.dosyst:
+            hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"]) ##This one doesn't have smoothing error, only for systematics
+        else:
+            hist = smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error
 
     hist.Scale(scale_lumi)
     hist.SetName(outname)
@@ -139,8 +143,14 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     outfile.cd()
     hist.Write()
 
+    if hist.Integral() == 0:
+        print "\x1b[0;33;41m WARNING!!! \x1b[0m", hist, " HISTOGRAM EMPTY"
+        sm = {"res": {"params": np.array([0, 0, 0]), "paramerrs": np.array([0, 0, 0]), "corr": np.array([[0, 0, 0],[0, 0, 0],[0, 0, 0]])}}
+
     if dosmooth and not (ignore_ttbar and "ttbar" in outname):
+        #print sm["res"]
         return sm["res"]
+
 ### 
 def WriteFitResult(inputdic, outFile, npar=3):
     ### 

@@ -15,7 +15,7 @@ ROOT.gROOT.SetBatch(True)
 
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir", default="b77")
+    parser.add_argument("--inputdir", default=CONF.workdir)
     return parser.parse_args()
 
 #this script is used to plot different mu qcd fit parameters as a funciton of the SB size
@@ -199,10 +199,10 @@ def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal"):
         outFile.write(line+" \n")
 
 def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
-    #print inputdir
+    #print inputdir, inputname
     histdir   = inputdir + "_" + inputname
     inputroot = ROOT.TFile.Open(CONF.inputpath + "/" + histdir +  "/Limitinput/" + histdir + "_limit_" + tag  + ".root")
-    refroot   = ROOT.TFile.Open(CONF.inputpath + "/" + "b77"  + "/Limitinput/" + "b77" + "_limit_" + tag  + ".root")
+    refroot   = ROOT.TFile.Open(CONF.inputpath + "/" + inputdir  + "/Limitinput/" + inputdir + "_limit_" + tag  + ".root")
     
     tempname = inputname + "_" + "compare" + "_" + tag + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
     canv = ROOT.TCanvas(tempname, tempname, 800, 800)
@@ -232,14 +232,15 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
 
     #continue
     maxbincontent = max(maxbincontent, ref_hist.GetMaximum(), temp_hist.GetMaximum())
-    temp_hist.SetMaximum(maxbincontent * 1.5)
-    ref_hist.SetMaximum(maxbincontent * 1.5)
+    temp_hist.SetMaximum(maxbincontent * 1.5 * 100)
+    ref_hist.SetMaximum(maxbincontent * 1.5 * 100)
     legend.AddEntry(temp_hist, inputname.replace("_", " "), "apl")
     legend.AddEntry(ref_hist, "ref", "apl")
 
 
     # top pad
     pad0 = ROOT.TPad("pad0", "pad0", 0.0, 0.31, 1., 1.)
+    pad0.SetLogy(1)
     pad0.SetRightMargin(0.05)
     pad0.SetBottomMargin(0.0001)
     pad0.SetFrameFillColor(0)
@@ -289,10 +290,20 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     pad1.cd()
 
     #ratio of the two plots
-    ratiohist = temp_hist.Clone()
+    ratiohist = temp_hist.Clone("ratio")
     ratiohist.Divide(ref_hist)
     ratiohist.GetYaxis().SetRangeUser(0.8, 1.2) #set range for ratio plot
     ratiohist.GetYaxis().SetTitle("Varaition/Nominal") #set range for ratio plot
+    ratiohist.GetYaxis().SetTitleFont(43)
+    ratiohist.GetYaxis().SetTitleSize(28)
+    ratiohist.GetYaxis().SetLabelFont(43)
+    ratiohist.GetYaxis().SetLabelSize(28)
+    ratiohist.GetYaxis().SetNdivisions(405)
+    ratiohist.GetXaxis().SetTitleFont(43)
+    ratiohist.GetXaxis().SetTitleOffset(3.5)
+    ratiohist.GetXaxis().SetTitleSize(28)
+    ratiohist.GetXaxis().SetLabelFont(43)
+    ratiohist.GetXaxis().SetLabelSize(28)
     ratiohist.Draw("")
 
     xMin = ref_hist.GetXaxis().GetBinLowEdge(1)
@@ -301,8 +312,8 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     line.SetLineStyle(1)
     line.Draw()
     #canv.SetLogy(1)
-    helpers.checkpath(CONF.inputpath + "b77" + "/Plot/Syst/")
-    canv.SaveAs(CONF.inputpath + "b77" + "/Plot/Syst/" + canv.GetName() + ".pdf")
+    helpers.checkpath(CONF.inputpath + inputdir + "/Plot/Syst/")
+    canv.SaveAs(CONF.inputpath + inputdir + "/Plot/Syst/" + canv.GetName() + ".pdf")
     pad0.Close()
     pad1.Close()
     canv.Close()

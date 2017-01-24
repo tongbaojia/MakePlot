@@ -58,7 +58,7 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default=CONF.workdir)
-    parser.add_argument("--dosyst", default=False)
+    parser.add_argument("--dosyst", action='store_true')
     #parser.add_argument("--full", default=True) #4times more time
     parser.add_argument("--full", action='store_true') #4times more time
     parser.add_argument("--Xhh", action='store_true') #4times more time
@@ -198,7 +198,7 @@ def main():
         WriteYield(masterinfo, yield_tex, tag)
 
     #save time if do systematics
-    if (ops.dosyst is False):
+    if (not ops.dosyst):
         ##Do overlay signal region predictions
         print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
         npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -571,10 +571,10 @@ def WriteEvtCount(inputdic, outFile, samplename="region"):
     tableList = []
     ###
     tableList.append("\\begin{footnotesize}")
-    tableList.append("\\begin{tabular}{c|c|c|c|c}")
-    tableList.append("%s & Sideband & Control & ZZ & Signal \\\\" % samplename)
+    tableList.append("\\begin{tabular}{c|c|c|c}")
+    tableList.append("%s & Sideband & Control & Signal \\\\" % samplename)
     tableList.append("\\hline\\hline")
-    tableList.append("& & & & \\\\")
+    tableList.append("& & & \\\\")
 
     for i, cut in enumerate(dump_lst):
         #get the corresponding region
@@ -684,12 +684,15 @@ def GetEvtCount(config):
                 hst_temp = input_f.Get(cut + "_" + region + "/" + hst).Clone()
                 hst_temp.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 outroot.cd()
+                if ("Signal" in region) & (("TwoTag_split" in cut) \
+                    or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
+                    hst_temp.Reset()
                 hst_temp.Write()
                 del(hst_temp)
 
             #get the mass plot
             plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
-            if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
+            if ("Signal" in region) & (("TwoTag_split" in cut) \
                 or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
                 cutcounts[region] = 0
                 cutcounts[region + "_err"] = 0
