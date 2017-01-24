@@ -102,13 +102,13 @@ def main():
     # inputtasks.append({"inputdir":"syst_tt_rad_down"})
     # inputtasks.append({"inputdir":"syst_tt_rad_up"})
 
-    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    npool = min(len(inputtasks), mp.cpu_count()-1)
-    pool  = mp.Pool(npool)
-    pool.map(syst_pipeline, inputtasks)
+    # print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    # npool = min(len(inputtasks), mp.cpu_count()-1)
+    # pool  = mp.Pool(npool)
+    # pool.map(syst_pipeline, inputtasks)
     # for i in inputtasks:
     #     syst_pipeline(i)
-    #syst_pipeline(inputtasks[49])
+    syst_pipeline(inputtasks[59])
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def syst_pipeline(config):
@@ -119,7 +119,7 @@ def syst_pipeline(config):
     #check if for syst, the data file is there
     helpers.checkpath(inputpath + "data_test")
     #this is a really bad practice and temp fix now! need to watch this very carfully...
-    ori_link = CONF.inputpath + "b77/data_test/hist-MiniNTuple.root"
+    ori_link = CONF.inputpath + ops.inputdir + "/data_test/hist-MiniNTuple.root"
     dst_link = inputpath + "data_test/hist-MiniNTuple.root"
     #print ori_link, dst_link
     if os.path.islink(dst_link):
@@ -131,7 +131,7 @@ def syst_pipeline(config):
         for i, mass in enumerate(CONF.mass_lst):
             #print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
             #this is a really bad practice and temp fix now! need to watch this very carfully...
-            ori_link = CONF.inputpath + "b77/" + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            ori_link = CONF.inputpath + ops.inputdir + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             dst_link = inputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
             helpers.checkpath(inputpath + "signal_G_hh_c10_M" + str(mass))
@@ -142,7 +142,7 @@ def syst_pipeline(config):
 
             #link the 2HDM samples if necessary
             if (ops.Xhh):
-                ori_link = CONF.inputpath + "b77/" + "signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
+                ori_link = CONF.inputpath + ops.inputdir + "signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
                 dst_link = inputpath + "signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
                 helpers.checkpath(inputpath + "signal_X_hh_M" + str(mass))
                 if os.path.islink(dst_link):
@@ -151,7 +151,7 @@ def syst_pipeline(config):
                 os.symlink(ori_link, dst_link)
 
     #start running programs
-    os.system("python get_count.py --dosyst True " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
     os.system("python dump_hists.py " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
 
 

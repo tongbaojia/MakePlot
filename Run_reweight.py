@@ -24,14 +24,14 @@ def main():
     global ops
     ops = options()
 
-    iter_total = 4
+    iter_total = 6
     print "total iteration: ", iter_total
     inputtasks = []
-    for i in range(3, iter_total):
-        #inputtasks.append({"motherdir":"TEST_70", "reweight":"j0pT-leadtrk-fin", "iter_re": i})
-        #analysis_pipeline({"motherdir":"TEST_70", "reweight":"j0pT-alltrk-fin", "iter_re": i})
-        #analysis_pipeline({"motherdir":"TEST_70", "reweight":"j0pT-leadtrk-fin", "iter_re": i})
-        analysis_pipeline({"motherdir":"TEST_70", "reweight":"j0pT-subltrk-fin", "iter_re": i})
+    for i in range(0, iter_total):
+        #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i})
+        #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i})
+        #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i})
+        analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i})
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def analysis_pipeline(config):
@@ -43,7 +43,7 @@ def analysis_pipeline(config):
     print "the directory is: ", outputdir, " parent dir is: ", motherdir, " reweight: ",  reweight, " iteration: ", iter_re
     ##reweight
     #print "python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re)
-    #os.system("python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re))
+    os.system("python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re))
     ##fit and produce plot
     os.system("python get_count.py --full --inputdir " + outputdir)
     os.system("python plot.py --inputdir " + outputdir)
