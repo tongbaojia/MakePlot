@@ -31,8 +31,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     filename = config["inputdir"]
     outputFolder= config["outputdir"]
     blinded = config["blind"]
-    #print config, filepath, filename
-    #print cut
+    #print config, filepath, filename, cut
     ROOT.gStyle.SetErrorX(0)
     ROOT.gStyle.SetHatchesSpacing(0.7)
     ROOT.gStyle.SetHatchesLineWidth(1)

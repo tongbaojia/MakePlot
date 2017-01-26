@@ -186,8 +186,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     ifile.cd()
     for key in ROOT.gDirectory.GetListOfKeys():
         kname = key.GetName()
-        # if "QCDShape" in kname:
-        #     continue
+        if "QCDShape" in kname: ##these are buggy now!
+            continue
         if "totalbkg_hh" in kname and "up" in kname:
             syst_up.append(ifile.Get(kname).Clone(kname))
             #print kname
@@ -402,7 +402,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.1, 4.8) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.5, 1.8) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)

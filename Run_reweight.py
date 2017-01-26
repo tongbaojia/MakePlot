@@ -17,6 +17,7 @@ def options():
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default="Moriond")
     parser.add_argument("--Xhh",      action='store_true') #4times more time
+    parser.add_argument("--var",      default="j0pT-alltrk-fin") #4times more time
     return parser.parse_args()
 
 def main():
@@ -28,10 +29,10 @@ def main():
     print "total iteration: ", iter_total
     inputtasks = []
     for i in range(0, iter_total):
-        #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i})
-        #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i})
-        #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i})
-        analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i})
+        #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i}) #2
+        #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i}) #2
+        #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i}) #4
+        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i})
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def analysis_pipeline(config):

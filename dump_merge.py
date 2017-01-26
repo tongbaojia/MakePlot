@@ -1,3 +1,4 @@
+#Tony: merging all systematics
 import argparse, copy, os, sys, glob, math
 from array import array
 import ROOT, rootlogon
@@ -111,7 +112,7 @@ def main():
     "QCDNormCRdown",
     ]
     inputtasks = []
-    inputtasks.append({"inputdir":"b77"})
+    inputtasks.append({"inputdir":"Moriond"})
     inputtasks.append({"inputdir":"syst_JET_JER"})
     inputtasks.append({"inputdir":"syst_JET_JMR"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Baseline_All__1down"})
@@ -124,7 +125,7 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     inputtasks.append({"inputdir":"syst_tt_frag"})
     inputtasks.append({"inputdir":"syst_tt_had"})
-    #inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
+    inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
     inputtasks.append({"inputdir":"syst_tt_mass_down"})
     inputtasks.append({"inputdir":"syst_tt_mass_up"})
     inputtasks.append({"inputdir":"syst_tt_rad_down"})
@@ -140,7 +141,7 @@ def main():
     global finaldis
     finaldis = ops.chosenhist
     for c in cut_lst:
-        outfiles[c]  = ROOT.TFile("%s/b77_limit_%s_fullsys%s.root" % (CONF.inputpath  + "b77/Limitinput", c, "" if "pole" not in finaldis else "_pole"), "Recreate")
+        outfiles[c]  = ROOT.TFile("%s/Moriond_limit_%s_fullsys%s.root" % (CONF.inputpath  + "Moriond/Limitinput", c, "" if "pole" not in finaldis else "_pole"), "Recreate")
     ##run it, order matters, because the pole file replaces the previous one!
     masterdic = {}
     masterdic.update(merge_method_sys())
@@ -150,7 +151,7 @@ def main():
     for task in inputtasks:
         masterdic.update(merge_mc_sys(task))
 
-    with open(CONF.inputpath + "b77/sum_syst" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
+    with open(CONF.inputpath + "Moriond/sum_syst" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
          json.dump(masterdic, f)
 
     # ##check keylist
@@ -160,7 +161,7 @@ def main():
     #     print key, masterdic[key]
 
     #Generate systemtics table
-    f1 = open(CONF.inputpath + "b77/sum_syst"+ ("" if "pole" not in finaldis else "_pole") + ".txt", 'r')
+    f1 = open(CONF.inputpath + "Moriond/sum_syst"+ ("" if "pole" not in finaldis else "_pole") + ".txt", 'r')
     masterdic = json.load(f1)
     summarydic = {}
     for c in cut_lst:
@@ -169,7 +170,7 @@ def main():
        plot_RSG_syst_detail(masterdic, c)
     
     #save the summary dic
-    with open(CONF.inputpath + "b77/sum_syst_summary" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
+    with open(CONF.inputpath + "Moriond/sum_syst_summary" + ("" if "pole" not in finaldis else "_pole") + ".txt", "w") as f:
          json.dump(summarydic, f)
     #Generate Signal Region table
     GetSignalTable(masterdic, summarydic)
@@ -198,7 +199,7 @@ def merge_mc_sys(config):
 
     infodic = {}
     postname = "_" +  inputdir
-    if "b77" in postname:
+    if "Moriond" in postname:
         postname = ""
     elif "syst_b" in postname:#get the bsystematic name
         #print inputdir.split("_")
@@ -247,11 +248,11 @@ def merge_method_sys():
             hist_temp_total   = hist_temp_qcd.Clone("totalbkg_hh_" + syst)
             hist_temp_total.Add(hist_temp_ttbar, 1)
             tempdic = {}
-            tempdic["qcd_est"]    =  GetIntegral(hist_temp_qcd, outfiles[c])
-            tempdic["ttbar_est"]  =  GetIntegral(hist_temp_ttbar, outfiles[c])
+            tempdic["qcd_est"]       =  GetIntegral(hist_temp_qcd, outfiles[c])
+            tempdic["ttbar_est"]     =  GetIntegral(hist_temp_ttbar, outfiles[c])
             tempdic["totalbkg_est"]  =  GetIntegral(hist_temp_total, outfiles[c])
             infodic[c + "_method_" + syst] = tempdic
-
+            #print syst, tempdic["ttbar_est"]
 
         infile.Close()
     return infodic
@@ -268,7 +269,7 @@ def GetIntegral(hist, outfile):
     return tempdic
 
 def GetTable(masterdic, c):
-    texoutpath = CONF.inputpath + "b77" + "/" + "Plot/Tables/"
+    texoutpath = CONF.inputpath + "Moriond" + "/" + "Plot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
     outFile = open( texoutpath + c + "_fullsyst" + ("" if "pole" not in finaldis else "_pole") + ".tex", "w")
@@ -378,7 +379,7 @@ def add_syst(sys_lst):
 
 #singal region table
 def GetSignalTable(masterdic, summarydic):
-    texoutpath = CONF.inputpath + "b77" + "/" + "Plot/Tables/"
+    texoutpath = CONF.inputpath + "Moriond" + "/" + "Plot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
     outFile = open( texoutpath + "SR_summary.tex", "w")

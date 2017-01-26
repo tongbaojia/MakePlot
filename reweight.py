@@ -330,7 +330,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
             yi[k + 1] = yk
         #for edge effects
         xi[0] = xi[1] - abs(xi[1] - xi[2])
-        yi[0] = yi[0]
+        yi[0] = yi[1]
         xi[ni + 1] = xi[ni] + abs(xi[ni] - xi[ni - 1])
         yi[ni + 1] = yi[ni]
         inter.SetData(xi, yi)
@@ -452,24 +452,24 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 890, 50) + [890, 950, 1020, 1100, 1190, 1290, 1400, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]      = array('d', range(450, 600, 30) + range(600, 800, 40) + [800, 850, 910, 980, 1060, 1230, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 1100, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
-        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
-        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 50, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
-        rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 500])
-        rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
+        rebin_dic["trk1_Pt"]    = array('d', range(0, 150, 15) + [150, 170, 190, 220, 500]) #tuned
+        rebin_dic["trk_dr"]     = array('d', [0, 0.2] + [x * 0.1 for x in range(2, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
-        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 940, 50) + [940, 990, 1060, 1160, 1400, 2000])#9.5 version
+        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 840, 50) + [840, 900, 1000, 2000])#9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 800, 900, 1000, 2000])
-        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 80] + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 1300, 2000])
-        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 80] + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 1300, 2000])
-        rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 250, 500])
+        rebin_dic["j0_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 2000])
+        rebin_dic["j1_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 2000])
+        rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 500])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -477,12 +477,12 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
-        rebin_dic["j0_Pt"]      = array('d', [450, 550, 650, 750, 850, 950, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]      = array('d', [450, 550, 650, 750, 850, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
-        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 350, 400, 460, 520, 620, 820, 2000]) #9.5 version
-        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 350, 400, 500, 2000]) #9.5 version
-        rebin_dic["trk1_Pt"]    = array('d', range(0, 180, 30) + [180, 500])
+        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
+        rebin_dic["trk1_Pt"]    = array('d', range(0, 150, 30) + [150, 500])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])

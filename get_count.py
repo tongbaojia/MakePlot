@@ -175,7 +175,7 @@ def main():
     masterinfo.update(fitestimation("qcd_est", masterinfo))
     #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     masterinfo.update(fitestimation("ttbar_est", masterinfo))
-    WriteEvtCount(masterinfo["ttbar_est"], output, "ttbar Est")
+    #WriteEvtCount(masterinfo["ttbar_est"], output, "ttbar Est")
     # print "new method"
     # masterinfo.update(fitestimation_test("qcd_est", masterinfo))
     # masterinfo.update(fitestimation_test("ttbar_est", masterinfo))

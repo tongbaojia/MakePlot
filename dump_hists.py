@@ -12,16 +12,16 @@ cut_lst   = ["FourTag", "ThreeTag", "TwoTag_split"]#"TwoTag", "OneTag"
 #setup fit initial values; tricky for the fits...
 init_dic = {
     "l":{
-        "FourTag":{"ttbar":[-50, 5, -10], "qcd":[-5, 20, -2]},
-        "ThreeTag":{"ttbar":[-50, 5, -10], "qcd":[-5, 20, -5]},
-        "TwoTag_split":{"ttbar":[-10, 10, -10], "qcd":[-5, 20, -5]},
+        "FourTag":{"ttbar":[-20, 5, -10], "qcd":[-5, 20, -2]},
+        "ThreeTag":{"ttbar":[-20, 5, -10], "qcd":[-5, 20, -5]},
+        "TwoTag_split":{"ttbar":[-5, 20, -5], "qcd":[-5, 10, -5]},
         #"TwoTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
         #"OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
     },
     "pole":{
         "FourTag":{"ttbar":[2, 30, 5], "qcd":[-5, 30, -3]},
         "ThreeTag":{"ttbar":[2, 30, 5], "qcd":[-2, 30, -2]},
-        "TwoTag_split":{"ttbar":[-10, 20, -10], "qcd":[-1, 20, -3]},
+        "TwoTag_split":{"ttbar":[-10, 10, -10], "qcd":[-1, 20, -3]},
         #"TwoTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]},
         #"OneTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]}
     }
@@ -133,7 +133,7 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
             makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
         if ops.dosyst:
             hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"]) ##This one doesn't have smoothing error, only for systematics
-        else:
+        else: #be very careful here; don't mess up the default
             hist = smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error
 
     hist.Scale(scale_lumi)
@@ -144,7 +144,7 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     hist.Write()
 
     if hist.Integral() == 0:
-        print "\x1b[0;33;41m WARNING!!! \x1b[0m", hist, " HISTOGRAM EMPTY"
+        print "\x1b[1;33;43m WARNING!!! \x1b[0m", hist, " HISTOGRAM EMPTY"
         sm = {"res": {"params": np.array([0, 0, 0]), "paramerrs": np.array([0, 0, 0]), "corr": np.array([[0, 0, 0],[0, 0, 0],[0, 0, 0]])}}
 
     if dosmooth and not (ignore_ttbar and "ttbar" in outname):
