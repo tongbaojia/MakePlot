@@ -1,3 +1,4 @@
+#Tony: this script is used to plot different mu qcd fit parameters as a funciton of the SB size
 import ROOT, rootlogon
 import argparse, array, copy, glob, os, sys, time
 try:
@@ -14,7 +15,6 @@ SetAtlasStyle()
 ROOT.gROOT.SetBatch(True)
 
 
-#this script is used to plot different mu qcd fit parameters as a funciton of the SB size
 def main():
 
     start_time = time.time()

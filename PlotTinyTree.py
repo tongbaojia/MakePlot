@@ -14,7 +14,7 @@ ROOT.gROOT.LoadMacro('TinyTree.C')
 #define functions
 def options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--inputdir",  default="TEST_70")
+    parser.add_argument("--inputdir",  default="TEST")
     parser.add_argument("--outputdir", default="b70")
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
@@ -175,10 +175,13 @@ class eventHists:
             #self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
             #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
-            self.mH0H1        = ROOT.TH2F("mH0H1",              ";mH1 [GeV]; mH2 [GeV];", 50,  50,  250,  50,  50,  250)
-            self.MV2H0H1      = ROOT.TH2F("MV2H0H1",              ";MV2 sum H0;MV2 sum H1;", 400,  -2,  2,  400,  -2,  2)
-            self.MV2H0        = ROOT.TH2F("MV2H0",                ";MV2 H0, j0;MV2 H0, j1;", 400,  -2,  2,  400,  -2,  2)
-            self.MV2H1        = ROOT.TH2F("MV2H1",                ";MV2 H1, j0;MV2 H1, j1;", 400,  -2,  2,  400,  -2,  2)
+            self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 50,  50,  250,  50,  50,  250)
+            self.dRH0H1       = ROOT.TH2F("dRH0H1",             ";#Deltar_{trk}^{lead}; #Deltar_{trk}^{subl};", 50, 0.2,  1.2, 50, 0.2, 1.2)
+            self.trkfracH0H1  = ROOT.TH2F("trkfracH0H1",        ";H0:p_{T}^{Trk0}/(p_{T}^{Trk0} + p_{T}^{Trk1});H1:p_{T}^{Trk0}}/(p_{T}^{Trk0} + p_{T}^{Trk1});", 50, 0.5, 1.0, 50, 0.5, 1.0)
+            self.mHHdRH0      = ROOT.TH2F("mHHdRH0",            ";mHH [GeV]; #Deltar_{trk}^{lead};", 300, 500, 3500,  50, 0.2,  1.2)
+            #self.MV2H0H1      = ROOT.TH2F("MV2H0H1",              ";MV2 sum H0;MV2 sum H1;", 400,  -2,  2,  400,  -2,  2)
+            #self.MV2H0        = ROOT.TH2F("MV2H0",                ";MV2 H0, j0;MV2 H0, j1;", 400,  -2,  2,  400,  -2,  2)
+            #self.MV2H1        = ROOT.TH2F("MV2H1",                ";MV2 H1, j0;MV2 H1, j1;", 400,  -2,  2,  400,  -2,  2)
         #save reweight weights
         if self.reweight:
             self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 28, 0.3, 1.7)
@@ -201,7 +204,6 @@ class eventHists:
         self.Rhh.Fill(event.Rhh, weight)
 
         if self.fullhist:
-            self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
             self.h_deta.Fill(event.detaHH, weight)    
             self.h_dphi.Fill(event.dphiHH, weight)    
             self.h_dr.Fill(event.drHH, weight) 
@@ -232,9 +234,13 @@ class eventHists:
             #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
-            self.MV2H0H1.Fill(event.j0_trk0_Mv2 + event.j0_trk1_Mv2, event.j1_trk0_Mv2 + event.j1_trk1_Mv2, weight)
-            self.MV2H0.Fill(event.j0_trk0_Mv2, event.j0_trk1_Mv2, weight)
-            self.MV2H1.Fill(event.j1_trk0_Mv2, event.j1_trk1_Mv2, weight)
+            self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
+            self.dRH0H1.Fill(helpers.dR(event.j0_trk0_eta, event.j0_trk0_phi, event.j0_trk1_eta, event.j0_trk1_phi), helpers.dR(event.j1_trk0_eta, event.j1_trk0_phi, event.j1_trk1_eta, event.j1_trk1_phi), weight)
+            self.trkfracH0H1.Fill(event.j0_trk0_pt/(event.j0_trk0_pt + event.j0_trk1_pt), event.j1_trk0_pt/(event.j1_trk0_pt + event.j1_trk1_pt), weight)
+            self.mHHdRH0.Fill(event.mHH, helpers.dR(event.j0_trk0_eta, event.j0_trk0_phi, event.j0_trk1_eta, event.j0_trk1_phi), weight)
+            #self.MV2H0H1.Fill(event.j0_trk0_Mv2 + event.j0_trk1_Mv2, event.j1_trk0_Mv2 + event.j1_trk1_Mv2, weight)
+            #self.MV2H0.Fill(event.j0_trk0_Mv2, event.j0_trk1_Mv2, weight)
+            #self.MV2H1.Fill(event.j1_trk0_Mv2, event.j1_trk1_Mv2, weight)
         if self.reweight:
             self.mHH_weight.Fill(event.mHH, weight)
             self.h0_trk0_pt_weight.Fill(event.j0_trk0_pt, weight)
@@ -276,9 +282,12 @@ class eventHists:
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
-            self.MV2H0H1.Write()
-            self.MV2H0.Write()
-            self.MV2H1.Write()
+            self.dRH0H1.Write()
+            self.trkfracH0H1.Write()
+            self.mHHdRH0.Write()
+            #self.MV2H0H1.Write()
+            #self.MV2H0.Write()
+            #self.MV2H1.Write()
         if self.reweight:
             self.mHH_weight.Write()
             self.h0_trk0_pt_weight.Write()
@@ -394,12 +403,12 @@ class regionHists:
         self.ThreeTag_bkg      = bkgegionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
         self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
         # #for extra studies
-        # self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #if test 1 tag fit, needs to enable this
-        # self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #if test 1 tag fit, needs to enable this
-        # self.TwoTag_lead         = massregionHists("TwoTag_lead", outputroot) #if test 1 tag fit, needs to enable this
-        # self.TwoTag_subl         = massregionHists("TwoTag_subl", outputroot) #if test 1 tag fit, needs to enable this
-        # self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #if test 1 tag fit, needs to enable this
-        # self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag_lead         = massregionHists("TwoTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag_subl         = massregionHists("TwoTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -498,19 +507,19 @@ class regionHists:
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 self.FourTag_bkg.Fill(event)
 
-            # ##for extra studies
-            # if (nb_j0 == 1 and nb_j1 == 0):
-            #     self.OneTag_lead.Fill(event)
-            # elif (nb_j0 == 0 and nb_j1 == 1):
-            #     self.OneTag_subl.Fill(event)
-            # elif (nb_j0 == 2 and nb_j1 == 0):
-            #     self.TwoTag_lead.Fill(event)
-            # elif (nb_j0 == 0 and nb_j1 == 2):
-            #     self.TwoTag_subl.Fill(event)
-            # elif (nb_j0 == 2 and nb_j1 == 1):
-            #     self.ThreeTag_lead.Fill(event)
-            # elif (nb_j0 == 1 and nb_j1 == 2):
-            #     self.ThreeTag_subl.Fill(event)
+            ##for extra studies
+            if (nb_j0 == 1 and nb_j1 == 0):
+                self.OneTag_lead.Fill(event)
+            elif (nb_j0 == 0 and nb_j1 == 1):
+                self.OneTag_subl.Fill(event)
+            elif (nb_j0 == 2 and nb_j1 == 0):
+                self.TwoTag_lead.Fill(event)
+            elif (nb_j0 == 0 and nb_j1 == 2):
+                self.TwoTag_subl.Fill(event)
+            elif (nb_j0 == 2 and nb_j1 == 1):
+                self.ThreeTag_lead.Fill(event)
+            elif (nb_j0 == 1 and nb_j1 == 2):
+                self.ThreeTag_subl.Fill(event)
 
     def Write(self, outputroot):
         self.AllTag.Write(outputroot)
@@ -525,12 +534,12 @@ class regionHists:
         self.ThreeTag_bkg.Write(outputroot)
         self.FourTag_bkg.Write(outputroot)
         # #for other bkg modeling
-        # self.OneTag_lead.Write(outputroot)
-        # self.OneTag_subl.Write(outputroot)
-        # self.TwoTag_lead.Write(outputroot)
-        # self.TwoTag_subl.Write(outputroot)
-        # self.ThreeTag_lead.Write(outputroot)
-        # self.ThreeTag_subl.Write(outputroot)
+        self.OneTag_lead.Write(outputroot)
+        self.OneTag_subl.Write(outputroot)
+        self.TwoTag_lead.Write(outputroot)
+        self.TwoTag_subl.Write(outputroot)
+        self.ThreeTag_lead.Write(outputroot)
+        self.ThreeTag_subl.Write(outputroot)
 
 
 def analysis(inputconfig):
