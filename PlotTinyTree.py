@@ -677,31 +677,31 @@ def main():
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
     split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
-    #split_list = ["ttbar_comb_test"]
+    #split_list = ["signal_QCD"]
     inputtasks = []
     for split_file in split_list:
         for i in range(nsplit):
             inputtasks.append(pack_input(split_file, inputsplit=i))    
     ##for other MCs
-    inputtasks.append(pack_input("zjets_test"))
-    for i, mass in enumerate(CONF.mass_lst):
-        #do not reweight signal samples; create links to the original files instead
-        if not turnon_reweight or ops.dosyst is not None :
-            inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
-            if (ops.Xhh):
-                inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
-        else:#if reweight, creat the folders and the links to the files
-            print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
-            helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            #this is a really bad practice and temp fix now! need to watch this very carfully...
-            #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            ori_link = inputpath.replace(ops.inputdir, "Moriond") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+    #inputtasks.append(pack_input("zjets_test"))
+    #for i, mass in enumerate(CONF.mass_lst):
+        ##do not reweight signal samples; create links to the original files instead
+        #if not turnon_reweight or ops.dosyst is not None :
+            #inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+            #if (ops.Xhh):
+                #inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
+        #else:#if reweight, creat the folders and the links to the files
+            #print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
+            #helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
+            ##this is a really bad practice and temp fix now! need to watch this very carfully...
+            ##ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #ori_link = inputpath.replace(ops.inputdir, "Moriond") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            ##print ori_link, dst_link
+            #if os.path.islink(dst_link):
+                #os.unlink(dst_link)
             #print ori_link, dst_link
-            if os.path.islink(dst_link):
-                os.unlink(dst_link)
-            print ori_link, dst_link
-            os.symlink(ori_link, dst_link)
+            #os.symlink(ori_link, dst_link)
 
     #return
     ##if reweight, reweight everything

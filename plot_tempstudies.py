@@ -36,15 +36,99 @@ def main():
 
     ##starndard plots
     ##for 1D shape comparison
-    # for histname in ["data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",
-    # "data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l"]:
-    #     DrawMulti1Dcomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+    for histname in ["mHH_l"]:
+        DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_lead_Incl" + "/" + histname, "leg":"3b SB, 2tag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_subl_Incl" + "/" + histname, "leg":"3b SB, 2tag on subl"},
+            ], keyword=histname, norm=True, Xrange=[500, 3500], Rebin=10, Logy=1)
+    for histname in ["leadHCand_Mass", "sublHCand_Mass"]:
+        DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_lead_Incl" + "/" + histname, "leg":"3b SB, 2tag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_subl_Incl" + "/" + histname, "leg":"3b SB, 2tag on subl"},
+            ], keyword=histname, norm=True)
+    for histname in ["leadHCand_Pt_m", "sublHCand_Pt_m"]:
+        DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_lead_Incl" + "/" + histname, "leg":"3b SB, 2tag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_subl_Incl" + "/" + histname, "leg":"3b SB, 2tag on subl"},
+            ], keyword=histname, Xrange=[500, 1200], norm=True)
+    for histname in ["leadHCand_trks_Pt", "sublHCand_trks_Pt"]:
+        DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_lead_Incl" + "/" + histname, "leg":"3b SB, 2tag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_subl_Incl" + "/" + histname, "leg":"3b SB, 2tag on subl"},
+            ], keyword=histname, Xrange=[0, 500], norm=True)
+    for histname in ["leadHCand_trk_dr", "sublHCand_trk_dr"]:
+        DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_lead_Incl" + "/" + histname, "leg":"3b SB, 2tag on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"ThreeTag_subl_Incl" + "/" + histname, "leg":"3b SB, 2tag on subl"},
+            ], keyword=histname, Xrange=[0, 1], norm=True)
+    
+    DrawMulti1Dcomparison([
+        {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + "leadHCand_trk_dr", "leg":"lead: OneTag on lead"},
+        {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + "leadHCand_trk_dr", "leg":"lead: OneTag on subl"},
+        {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + "sublHCand_trk_dr", "leg":"subl: OneTag on lead"},
+        {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + "sublHCand_trk_dr", "leg":"subl: OneTag on subl"},
+        ], keyword=histname, Xrange=[0, 1.5], norm=True, prename="OneTag")
+    DrawMulti1Dcomparison([
+        {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + "leadHCand_trk_dr", "leg":"lead: TwoTag on lead"},
+        {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + "leadHCand_trk_dr", "leg":"lead: TwoTag on subl"},
+        {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + "sublHCand_trk_dr", "leg":"subl: TwoTag on lead"},
+        {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + "sublHCand_trk_dr", "leg":"subl: TwoTag on subl"},
+        ], keyword=histname, Xrange=[0, 1.5], norm=True, prename="TwoTag")
+
+
+    for histname in ["mHH_l"]:
+        DrawMulti1Dcomparison([
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            ], keyword=histname, norm=True, Xrange=[500, 3500], Rebin=10, Logy=1, prename="qcd_")
+    for histname in ["leadHCand_Mass", "sublHCand_Mass"]:
+        DrawMulti1Dcomparison([
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            ], keyword=histname, norm=True, prename="qcd_")
+    for histname in ["leadHCand_Pt_m", "sublHCand_Pt_m"]:
+        DrawMulti1Dcomparison([
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            ], keyword=histname, Xrange=[500, 1200], norm=True, prename="qcd_")
+    for histname in ["leadHCand_trks_Pt", "sublHCand_trks_Pt"]:
+        DrawMulti1Dcomparison([
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
+            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
+            ], keyword=histname, Xrange=[0, 500], norm=True, prename="qcd_")
     ##for 2D shape comparison
     for histname in ["mH0H1"]:
         Draw2Dcomparison({"base":{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag Lead"},
@@ -61,6 +145,21 @@ def main():
                           "comp":{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag Subl"}}, RebinX=1, RebinY=1)
         Draw2Dcomparison({"base":{"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag Lead"},
                           "comp":{"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag Subl"}}, RebinX=1, RebinY=1)
+    for histname in ["mH0H1"]:
+        Draw2Dcomparison({"base":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag Lead"},
+                          "comp":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag Subl"}}, RebinX=2, RebinY=2,prename="qcd_",  SubTop=False)
+        Draw2Dcomparison({"base":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag Lead"},
+                          "comp":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag Subl"}}, RebinX=2, RebinY=2,prename="qcd_",  SubTop=False)
+    for histname in ["dRH0H1"]:
+        Draw2Dcomparison({"base":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag Lead"},
+                          "comp":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag Subl"}}, RebinX=2, RebinY=2,prename="qcd_",  SubTop=False)
+        Draw2Dcomparison({"base":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag Lead"},
+                          "comp":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag Subl"}}, RebinX=2, RebinY=2,prename="qcd_",  SubTop=False)
+    for histname in ["trkfracH0H1"]:
+        Draw2Dcomparison({"base":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag Lead"},
+                          "comp":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag Subl"}}, RebinX=1, RebinY=1,prename="qcd_",  SubTop=False)
+        Draw2Dcomparison({"base":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag Lead"},
+                          "comp":{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag Subl"}}, RebinX=1, RebinY=1,prename="qcd_",  SubTop=False)
     
 
 def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0, Rebin=1):
@@ -98,7 +197,8 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
     xleg, yleg = 0.68, 0.68
     legend = ROOT.TLegend(xleg, yleg, xleg+0.2, yleg+0.2)
     counter = 0
-    maxbincontent = (0.05 if Logy ==0 else 10)
+    maxbincontent = (0.05 if (norm) else 10)
+    minbincontent = (0.001 if (norm) else 0.001)
     temphst_lst = []
     graph_lst   = []
     tempratio_lst = []
@@ -114,10 +214,18 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
         if Rebin != 1:
             temphst_lst[i].Rebin(Rebin)
             tempratio_lst[i].Rebin(Rebin)
+
         if norm:
-            temphst_lst[i].Scale(1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
+            NormFactor = 1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1)
+            temphst_lst[i].Scale(NormFactor)
 
         for j in range(1, temphst_lst[0].GetNbinsX()+1):
+            if norm:
+                try:
+                    temphst_lst[i].SetBinError(j, tempratio_lst[i].GetBinError(j)*(NormFactor))
+                    #print tempratio_lst[i].GetBinError(j), NormFactor
+                except ZeroDivisionError:
+                    pass
             try:
                 tempratio_lst[i].SetBinContent(j, temphst_lst[i].GetBinContent(j) / temphst_lst[0].GetBinContent(j))
                 tempratio_lst[i].SetBinError(j, helpers.ratioerror(\
@@ -127,15 +235,18 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
                 pass
                 #print "Divide by zero! Check bin content in", canv.GetName()
 
+
+
         maxbincontent = max(maxbincontent, temphst_lst[i].GetMaximum())
+        minbincontent = max(minbincontent, temphst_lst[i].GetMinimum())
         #graph_lst.append(helpers.TH1toTAsym(temphst_lst[i], efficiency=False))
         temphst_lst[i].SetLineColor(1 if i == 0 else CONF.clr_lst[i])
         #temphst_lst[i].SetLineStyle(1 + i)
         temphst_lst[i].SetMarkerStyle(20 + i)
         temphst_lst[i].SetMarkerColor(1 if i == 0 else CONF.clr_lst[i])
         temphst_lst[i].SetMarkerSize(1)
-        temphst_lst[i].SetMaximum(maxbincontent * (1.5 if Logy == 0 else 150))
-        temphst_lst[i].SetMinimum(0.001 if Logy == 0 else 0.2)
+        temphst_lst[i].SetMaximum(maxbincontent * (1.5 if (Logy == 0 or norm) else 150))
+        temphst_lst[i].SetMinimum(0.001 if Logy == 0 else minbincontent)
         if Xrange != [0, 0]:
             temphst_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
         legend.AddEntry(temphst_lst[i], dic["leg"], "pl")
@@ -193,7 +304,7 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
     line.Draw()
 
     #save and clean up
-    canv.SaveAs(outputpath + canv.GetName() + ".pdf")
+    canv.SaveAs(outputpath + prename + canv.GetName() + ".pdf")
     pad0.Close()
     pad1.Close()
     canv.Close()
@@ -215,8 +326,9 @@ def Draw2Dcomparison(inputlst, keyword="_", prename="comp", Xrange=[0, 0], Yrang
     temp_hist_comp = inputroot_comp.Get(inputlst["comp"]["path"]).Clone()
     temp_hist_base.SetDirectory(0)
     temp_hist_comp.SetDirectory(0)
+    inputroot_top_base = ROOT.TFile.Open(inputpath + inputlst["base"]["file"].replace("data", "ttbar_comb"))
+    inputroot_top_comp = inputroot_top_base
     if SubTop:
-        inputroot_top_base = ROOT.TFile.Open(inputpath + inputlst["base"]["file"].replace("data", "ttbar_comb"))
         if inputlst["base"]["file"] != inputlst["comp"]["file"]:
             inputroot_top_comp = ROOT.TFile.Open(inputpath + inputlst["comp"]["file"].replace("data", "ttbar_comb"))
         else:
@@ -237,8 +349,8 @@ def Draw2Dcomparison(inputlst, keyword="_", prename="comp", Xrange=[0, 0], Yrang
     temp_hist_base.Add(temp_hist_comp, -1)#substract original top
     #temp_hist_base.Divide(temp_hist_comp)
     #load fitted muqcd information
-    inputtex = CONF.inputpath + "b77/Plot/Tables/normfit.tex"
-    f1 = open(inputtex, 'r')
+    #inputtex = CONF.inputpath + CONF.workdir + "/Plot/Tables/normfit.tex"
+    #f1 = open(inputtex, 'r')
 
     ##check the maximum bin information
     ##proceed

@@ -72,9 +72,9 @@ def split(targetpath="data_test"):
 
 
 def main():
-    split(targetpath="ttbar_comb_test")
-    split(targetpath="data_test")
-    #split(targetpath="signal_QCD")
+    #split(targetpath="ttbar_comb_test")
+    #split(targetpath="data_test")
+    split(targetpath="signal_QCD")
 
 #def clearbranches():
 if __name__ == "__main__":
