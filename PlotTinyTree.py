@@ -372,7 +372,7 @@ class trkregionHists:
 
 
 #reweighting is done here: what a genius design
-class bkgegionHists:
+class bkgregionHists:
     def __init__(self, region, outputroot, reweight=False):
         self.reweight = reweight
         self.region   = region
@@ -399,9 +399,9 @@ class regionHists:
         self.ThreeTag     = massregionHists("ThreeTag", outputroot)
         self.FourTag      = massregionHists("FourTag", outputroot)
         #for background modeling; not really NoTag!!!
-        self.TwoTag_split_bkg  = bkgegionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
-        self.ThreeTag_bkg      = bkgegionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
-        self.FourTag_bkg       = bkgegionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
+        self.TwoTag_split_bkg  = bkgregionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
+        self.ThreeTag_bkg      = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
+        self.FourTag_bkg       = bkgregionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
         # #for extra studies
         self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #if test 1 tag fit, needs to enable this
         self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #if test 1 tag fit, needs to enable this

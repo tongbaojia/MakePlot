@@ -46,21 +46,28 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
 
     # read stuff
     data = ifile.Get("data_" + cut )
-    data_est = ifile.Get("data_est_" + cut )
-    qcd = ifile.Get("qcd_est_" + cut )
+    #print "data_" + cut
+    if config["compcut"] is not "": ## this means qcd estimate is something special now
+        ttbar = ifile.Get("ttbar_" + cut )
+        qcd = ifile.Get("data_" + cut.replace(config["cut"], config["compcut"])) #note these are the compcut plots
+        ttbar_est = ifile.Get("ttbar_" + cut.replace(config["cut"], config["compcut"]))
+        #zjet = ifile.Get("zjet_" + cut )
+        data.Add(ttbar, -1)
+        qcd.Add(ttbar_est, -1) ##special treatment here; directly subtracting the MC component
+
+    else: ##default method
+        qcd = ifile.Get("qcd_est_" + cut )
+        ttbar = ifile.Get("ttbar_est_" + cut )
+        #zjet = ifile.Get("zjet_" + cut )
+        #modify data
+        data.Add(ttbar, -1)
+        #data.Add(zjet, -1)
+
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
-    ttbar = ifile.Get("ttbar_est_" + cut )
-    zjet = ifile.Get("zjet_" + cut )
-    RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
-    RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
-    RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
-
-    #modify data
-    data.Add(ttbar, -1)
-    #data.Add(zjet, -1)
-    data_est.Add(ttbar, -1)
-    #data_est.Add(zjet, -1)
+    #RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
+    #RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
+    #RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
 
     #clear factioned binns; only for reweighting purpose
     # for b in range(1, data.GetNbinsX()+1): 
@@ -70,38 +77,41 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
 
     #swap data if blinded
     if "Signal" in cut and blinded:
-        data = data_est.Clone()
+        data = qcd.Clone()
     #do rebin
     if not rebin == None:
         data.Rebin(rebin)
-        data_est.Rebin(rebin)
         qcd.Rebin(rebin)
         ttbar.Rebin(rebin)
-        zjet.Rebin(rebin)
-        RSG1_1000.Rebin(rebin)
-        RSG1_1500.Rebin(rebin)
-        RSG1_2500.Rebin(rebin)
+        #zjet.Rebin(rebin)
+        #RSG1_1000.Rebin(rebin)
+        #RSG1_1500.Rebin(rebin)
+        #RSG1_2500.Rebin(rebin)
     if rebinarry != []:
         data      = h_plt.do_variable_rebinning(data, rebinarry)
-        data_est  = h_plt.do_variable_rebinning(data_est, rebinarry)
         qcd       = h_plt.do_variable_rebinning(qcd, rebinarry)
         ttbar     = h_plt.do_variable_rebinning(ttbar, rebinarry)
-        zjet      = h_plt.do_variable_rebinning(zjet, rebinarry)
-        RSG1_1000 = h_plt.do_variable_rebinning(RSG1_1000, rebinarry)
-        RSG1_1500 = h_plt.do_variable_rebinning(RSG1_1500, rebinarry)
-        RSG1_2500 = h_plt.do_variable_rebinning(RSG1_2500, rebinarry)
+        #zjet      = h_plt.do_variable_rebinning(zjet, rebinarry)
+        #RSG1_1000 = h_plt.do_variable_rebinning(RSG1_1000, rebinarry)
+        #RSG1_1500 = h_plt.do_variable_rebinning(RSG1_1500, rebinarry)
+        #RSG1_2500 = h_plt.do_variable_rebinning(RSG1_2500, rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
         ks = 0
     else:
-        ks   = data.KolmogorovTest(data_est, "QU")
+        ks   = data.KolmogorovTest(qcd, "QU")
 
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
-    int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
-    percentdiff   = (int_data_est - int_data)/int_data * 100.0
-    #chi2 =        data.Chi2Test(data_est, "QU CHI2")
-    #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
+    int_qcd = qcd.Integral(0, qcd.GetXaxis().GetNbins()+1)
+    percentdiff   = (int_qcd - int_data)/int_data * 100.0
+    #chi2 =        data.Chi2Test(qcd, "QU CHI2")
+    #ndf  = chi2 / data.Chi2Test(qcd, "QU CHI2/NDF") if chi2 else 0.0
+    if config["compcut"] is not "": 
+        ##special treatment here: for comps, rescale the original distributions
+        ##thus the number of events is kept the same!
+        data.Scale(int_qcd/int_data)
+
 
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
@@ -112,6 +122,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
 
+    #this is the important part...where the backgrounds are set
     data = h_plt.makeTotBkg([data])[1]
     bkg  = h_plt.makeTotBkg([qcd])
     #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet]) #original
@@ -368,7 +379,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     # Add ks score
     #
     ROOT.myText(0.15, 0.97, 1, "KS = %s" % str(('%.3g' % ks)), CONF.legsize)
-    ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_data_est)), str(('%.1f' % int_data))), CONF.legsize)
+    ROOT.myText(0.4, 0.97, 1, "(Est-Obs)/Obs = %s; E=%s; O=%s" % (str(('%.1f' % percentdiff)), str(('%.1f' % int_qcd)), str(('%.1f' % int_data))), CONF.legsize)
     #myText(0.15, 0.92, 1, "#chi^{2} / ndf = %s / %s" % (str(chi2), str(ndf)), CONF.legsize)
 
     # labels
@@ -418,13 +429,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     pad1.Close()
     c0.Close()
     del(data)
-    del(data_est)
     del(qcd)
     del(ttbar)
-    del(zjet)
-    del(RSG1_1000)
-    del(RSG1_1500)
-    del(RSG1_2500)
+    #del(zjet)
+    #del(RSG1_1000)
+    #del(RSG1_1500)
+    #del(RSG1_2500)
     del(testfit)
 
     ##rename the spline function generated
@@ -448,7 +458,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
 def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
-    if "TwoTag" in config["cut"]:
+    if "TwoTag" in config["cut"] or "OneTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
@@ -558,8 +568,11 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Sideband"]
-    cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
+    #region_lst = ["Sideband"]
+    #cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
+    region_lst = ["Incl"]
+    cut_lst    = ["OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl"]
+    comp_lst   = ["OneTag_subl", "TwoTag_subl", "OneTag_lead", "TwoTag_lead"]
 
     #create master list
     inputtasks = []
@@ -576,6 +589,10 @@ def main():
             config["inputdir"] = inputdir
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
+            if comp_lst[j]:
+                config["compcut"] = comp_lst[j] + "_" + region + "_"
+            else:
+                config["compcut"] = "" ##by default this is disabled
             inputtasks.append(config)
     # #parallel compute!
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)

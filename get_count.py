@@ -26,14 +26,15 @@ ROOT.gROOT.SetBatch(True)
 
 evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
-##setup the list of folders to process
+##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
+"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl", \
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
-region_lst = ["Sideband", "Control", "Signal"]
+region_lst = ["Incl", "Sideband", "Control", "Signal"]
 
 #setup dictionary for signal regions and background estimations
 #default: ["FourTag", "ThreeTag", "TwoTag_split", "TwoTag", "OneTag"]
@@ -197,8 +198,8 @@ def main():
         yield_tex = open( texoutpath + tag + "_yield.tex", "w")
         WriteYield(masterinfo, yield_tex, tag)
 
-    #save time if do systematics
-    if (not ops.dosyst):
+    #save time if do systematics ## turn it off now...
+    if (not ops.dosyst and False):
         ##Do overlay signal region predictions
         print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
         npool = min(len(inputtasks), mp.cpu_count()-1)
