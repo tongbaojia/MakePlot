@@ -42,11 +42,20 @@ def get_parameter(filename="test.txt", region=""):
         if int(lstline[0]) > int(ops.iter):
             continue
         #now proceed normally
-        if "2bs" in line and "2Trk" in region:
+        if "2bs" in line and "2Trk" in region: ## this is basically a matching
             TagDic.append(get_info(lstline))
         elif "3b" in line and "3Trk" in region:
             TagDic.append(get_info(lstline))
         elif "4b" in line and "4Trk" in region:
+            TagDic.append(get_info(lstline))
+        ## for specific 1b reweights
+        elif "1b_l" in line and "OneTag_lead" in region: 
+            TagDic.append(get_info(lstline))
+        elif "1b_s" in line and "OneTag_subl" in region:
+            TagDic.append(get_info(lstline))
+        elif "2b_l" in line and "TwoTag_lead" in region: ##for 2b leading
+            TagDic.append(get_info(lstline))
+        elif "2b_s" in line and "TwoTag_subl" in region:
             TagDic.append(get_info(lstline))
     #print par_weight
     f_reweight.close()
@@ -300,7 +309,7 @@ class massregionHists:
     def __init__(self, region, outputroot, reweight=False):
         #define control/sb variations
         self.RegionDict = {
-            "Incl"     : "True",
+            "Incl"     : Syst_cut["SB"], #"True", ##this is going to be inclusive SB + CR + SR region now
             "Signal"   : SR_cut,
             "Control"  : CR_cut,
             "Sideband" : SB_cut,
@@ -325,51 +334,6 @@ class massregionHists:
         #for specific studies!
         for tempdic in self.regionlst:
             tempdic["eventHists"].Write(outputroot)
-
-
-#reweighting is done here: what a genius design
-class trkregionHists:
-    def __init__(self, region, outputroot, reweight=False):
-        self.reweight = reweight
-        #maybe shouldn't reweight this as well, but shouldn't matter...
-        self.Trk0  = massregionHists(region, outputroot, True) 
-        #self.Trk1  = massregionHists(region + "_" + "1Trk", outputroot)
-        #self.Trk2  = massregionHists(region + "_" + "2Trk", outputroot)
-        self.Trk2s = massregionHists(region + "_" + "2Trk_split", outputroot, reweight)
-        self.Trk3  = massregionHists(region + "_" + "3Trk", outputroot, reweight)
-        self.Trk4  = massregionHists(region + "_" + "4Trk", outputroot, reweight)
-        if self.reweight:
-            self.Trk2s_dic = get_parameter(filename=ops.reweight, region="2Trk_split")
-            self.Trk3_dic  = get_parameter(filename=ops.reweight, region="3Trk")
-            self.Trk4_dic  = get_parameter(filename=ops.reweight, region="4Trk")
-
-    def Fill(self, event, weight=-1):
-        self.Trk0.Fill(event, event.weight)
-        # if event.j0_nTrk >= 1 or event.j1_nTrk >= 1:
-        #     self.Trk1.Fill(event)
-        # if event.j0_nTrk >= 2 or event.j1_nTrk >= 2:
-        #     self.Trk2.Fill(event)
-        if event.j0_nTrk >= 1 and event.j1_nTrk >= 1:
-            if self.reweight:
-                weight = event.weight * calc_reweight(self.Trk2s_dic, event)
-            self.Trk2s.Fill(event, weight)
-        if (event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1):
-            if self.reweight:
-                weight = event.weight * calc_reweight(self.Trk3_dic, event)
-            self.Trk3.Fill(event, weight)
-        if event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
-            if self.reweight:
-                weight = event.weight * calc_reweight(self.Trk4_dic, event)
-            self.Trk4.Fill(event, weight)
-
-    def Write(self, outputroot):
-        self.Trk0.Write(outputroot)
-        #self.Trk1.Write(outputroot)
-        #self.Trk2.Write(outputroot)
-        self.Trk2s.Write(outputroot)
-        self.Trk3.Write(outputroot)
-        self.Trk4.Write(outputroot)
-
 
 #reweighting is done here: what a genius design
 class bkgregionHists:
@@ -403,12 +367,12 @@ class regionHists:
         self.ThreeTag_bkg      = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
         self.FourTag_bkg       = bkgregionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
         # #for extra studies
-        self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #if test 1 tag fit, needs to enable this
-        self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #if test 1 tag fit, needs to enable this
-        self.TwoTag_lead         = massregionHists("TwoTag_lead", outputroot) #if test 1 tag fit, needs to enable this
-        self.TwoTag_subl         = massregionHists("TwoTag_subl", outputroot) #if test 1 tag fit, needs to enable this
-        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #if test 1 tag fit, needs to enable this
-        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.OneTag_lead         = bkgregionHists("OneTag_lead", outputroot, reweight) #if test 1 tag fit, needs to enable this
+        self.OneTag_subl         = bkgregionHists("OneTag_subl", outputroot, reweight) #if test 1 tag fit, needs to enable this
+        self.TwoTag_lead         = bkgregionHists("TwoTag_lead", outputroot, reweight) #if test 1 tag fit, needs to enable this
+        self.TwoTag_subl         = bkgregionHists("TwoTag_subl", outputroot, reweight) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot, reweight) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot, reweight) #if test 1 tag fit, needs to enable this
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -507,7 +471,7 @@ class regionHists:
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 self.FourTag_bkg.Fill(event)
 
-            ##for extra studies
+            ##for extra studies; need to be moved to default; notice b-tagging is already sorted here
             if (nb_j0 == 1 and nb_j1 == 0):
                 self.OneTag_lead.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 1):

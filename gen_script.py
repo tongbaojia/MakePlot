@@ -62,7 +62,40 @@ def write_reweight(fname="TEST", reweight_dic={}, split=False):
 def main():
     global iteration
     iteration = 20
-    #next one; alltrk
+    # #next one; alltrk
+    # reweight_dic = {
+    #     "j0_trk0_pt":"leadHCand_trk0_Pt",
+    #     "j0_trk1_pt":"leadHCand_trk1_Pt",
+    #     "j1_trk0_pt":"sublHCand_trk0_Pt",
+    #     "j1_trk1_pt":"sublHCand_trk1_Pt",
+    #     "j0_pt":"leadHCand_Pt_m",
+    #     }
+    # write_reweight("j0pT-alltrk-fin", reweight_dic)
+    # #next one; leadtrk
+    # reweight_dic = {
+    #     "j0_trk0_pt":"leadHCand_trk0_Pt",
+    #     "j1_trk0_pt":"sublHCand_trk0_Pt",
+    #     "j0_pt":"leadHCand_Pt_m",
+    #     }
+    # write_reweight("j0pT-leadtrk-fin", reweight_dic)
+    # #next one; subltrk
+    # reweight_dic = {
+    #     "j0_trk1_pt":"leadHCand_trk1_Pt",
+    #     "j1_trk1_pt":"sublHCand_trk1_Pt",
+    #     "j0_pt":"leadHCand_Pt_m",
+    #     }
+    # write_reweight("j0pT-subltrk-fin", reweight_dic)
+    # #next one; trks_Pt
+    # reweight_dic = {
+    #     "j0_trk0_pt":"trks_Pt",
+    #     "j0_trk1_pt":"trks_Pt",
+    #     "j1_trk0_pt":"trks_Pt",
+    #     "j1_trk1_pt":"trks_Pt",
+    #     "j0_pt":"leadHCand_Pt_m",
+    #     }
+    # write_reweight("j0pT-trks-fin", reweight_dic)
+
+
     reweight_dic = {
         "j0_trk0_pt":"leadHCand_trk0_Pt",
         "j0_trk1_pt":"leadHCand_trk1_Pt",
@@ -71,29 +104,7 @@ def main():
         "j0_pt":"leadHCand_Pt_m",
         }
     write_reweight("j0pT-alltrk-fin", reweight_dic)
-    #next one; leadtrk
-    reweight_dic = {
-        "j0_trk0_pt":"leadHCand_trk0_Pt",
-        "j1_trk0_pt":"sublHCand_trk0_Pt",
-        "j0_pt":"leadHCand_Pt_m",
-        }
-    write_reweight("j0pT-leadtrk-fin", reweight_dic)
-    #next one; subltrk
-    reweight_dic = {
-        "j0_trk1_pt":"leadHCand_trk1_Pt",
-        "j1_trk1_pt":"sublHCand_trk1_Pt",
-        "j0_pt":"leadHCand_Pt_m",
-        }
-    write_reweight("j0pT-subltrk-fin", reweight_dic)
-    #next one; trks_Pt
-    reweight_dic = {
-        "j0_trk0_pt":"trks_Pt",
-        "j0_trk1_pt":"trks_Pt",
-        "j1_trk0_pt":"trks_Pt",
-        "j1_trk1_pt":"trks_Pt",
-        "j0_pt":"leadHCand_Pt_m",
-        }
-    write_reweight("j0pT-trks-fin", reweight_dic)
+    
     print "DONE"
 
 ### end
