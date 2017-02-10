@@ -2,8 +2,8 @@ homepath="/afs/cern.ch/user/b/btong/"
 workpath="/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/"
 
 # #### Testing
-re=j0pT-leadtrk-fin
-inch=TEST_70
+re=bkg
+inch=TEST
 iter=-1
 ##first reweight
 ch=Moriond
@@ -18,9 +18,10 @@ echo $workpath$ch$"/Plot_r"$(($iter + 1))$"/Sideband/"
 #python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
 #python get_count.py --inputdir $ch --full
 #python plot.py --inputdir $ch 
-python reweight.py --inputdir $ch --iter $(($iter + 1))
+#python reweight.py --inputdir $ch --iter $(($iter + 1))
 #publish online
 echo "Publish!"
+#rm -rf $homepath"/www/share/hh4b/reweight/"$ch
 if [ ! -d $homepath"/www/share/hh4b/reweight/"$ch ]; then
   mkdir $homepath"/www/share/hh4b/reweight/"$ch
 fi
@@ -31,6 +32,7 @@ if [ ! -d $homepath"/www/share/hh4b/express/"$ch ]; then
   mkdir $homepath"/www/share/hh4b/express/"$ch
 fi
 for plt in leadHCand_Mass sublHCand_Mass mHH_l_1 trk0_Pt trk1_Pt leadHCand_Pt_m sublHCand_Pt_m; do
+	find $workpath$ch$"/Plot_r"$(($iter + 1))$"/Incl/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
 	find $workpath$ch$"/Plot_r"$(($iter + 1))$"/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
 	find $workpath$ch$"/Plot/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;
 	find $workpath$ch$"/Plot/Control/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;

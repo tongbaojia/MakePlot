@@ -22,14 +22,19 @@ def options():
     parser.add_argument("--MV2",       default=0.6455)
     parser.add_argument("--resveto",   action='store_true')
     parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
+    parser.add_argument("--debug",     action='store_true')
+
     return parser.parse_args()
 
 #returns a dictionary of weights
 def get_parameter(filename="test.txt", region=""):
     #the input file need to be the following format; change to lists of tuples
-    #iteration; Ntrk; parameter; inputfolder; parameterfile
+    #iteration; Ntrk(option); parameter; inputfolder; parameterfile; (evaluation condition)
     def get_info(lstline):
-        return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[0], lstline[3], lstline[4])
+        if len(lstline) > 5: ##return what to reweight, reweight dictionary, reweight condition
+            return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[0], lstline[3], lstline[4]), compiler.compile(lstline[5], '<string>', 'eval')
+        else:##return what to reweight, reweight dictionary
+            return compiler.compile(lstline[2], '<string>', 'eval'), get_reweight(lstline[0], lstline[3], lstline[4]), "True"
 
     f_reweight = open("script/" + filename + ".txt", "r")
     TagDic = []
@@ -42,21 +47,27 @@ def get_parameter(filename="test.txt", region=""):
         if int(lstline[0]) > int(ops.iter):
             continue
         #now proceed normally
-        if "2bs" in line and "2Trk" in region: ## this is basically a matching
-            TagDic.append(get_info(lstline))
-        elif "3b" in line and "3Trk" in region:
-            TagDic.append(get_info(lstline))
-        elif "4b" in line and "4Trk" in region:
-            TagDic.append(get_info(lstline))
-        ## for specific 1b reweights
-        elif "1b_l" in line and "OneTag_lead" in region: 
-            TagDic.append(get_info(lstline))
-        elif "1b_s" in line and "OneTag_subl" in region:
-            TagDic.append(get_info(lstline))
-        elif "2b_l" in line and "TwoTag_lead" in region: ##for 2b leading
-            TagDic.append(get_info(lstline))
-        elif "2b_s" in line and "TwoTag_subl" in region:
-            TagDic.append(get_info(lstline))
+        if "2bs" in lstline[1]:
+            if "2Trk" in region:
+                TagDic.append(get_info(lstline))
+            if "split_lead" in lstline[3] and "split_lead" in region:
+                TagDic.append(get_info(lstline))
+            elif "split_subl" in lstline[3] and "split_subl" in region:
+                TagDic.append(get_info(lstline))
+        if "3b" in lstline[1]:
+            if "3Trk" in region:
+                TagDic.append(get_info(lstline))
+            if "split_lead" in lstline[3] and "split_lead" in region:
+                TagDic.append(get_info(lstline))
+            elif "split_subl" in lstline[3] and "split_subl" in region:
+                TagDic.append(get_info(lstline))
+        if "4b" in lstline[1]:
+            if "4Trk" in region:
+                TagDic.append(get_info(lstline))
+            if "split_lead" in lstline[3] and "split_lead" in region:
+                TagDic.append(get_info(lstline))
+            elif "split_subl" in lstline[3] and "split_subl" in region:
+                TagDic.append(get_info(lstline))
     #print par_weight
     f_reweight.close()
     #print TagDic
@@ -94,9 +105,11 @@ def get_reweight(curriter, folder, filename, spline=True):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
-    maxscale = 1.8 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.3 #this means the minimum correction is this for each reweighting; used to be 0.5
-    for x, v in dic:#this "dic" really is not a dic, but a tuple!
+    maxscale = 2.0 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.1 #this means the minimum correction is this for each reweighting; used to be 0.5
+    for x, v, cond in dic:#this "dic" really is not a dic, but a tuple! #variable, weight, condition
+        if not eval(x): ##if doesn't pass the condition, do not apply the weight!
+            continue
         value = eval(x)
         #outside fit range, do the end point value extrapolation
         if (v["low"] > value):
@@ -110,11 +123,13 @@ def calc_reweight(dic, event, poly=False, spline=True):
         if spline: #use spline functions!
             tempweight = eval("ROOT." + v["name"].replace(".cxx", "(%d)" % value))
             #print "new: ", tempweight, "old: ", v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
+        # if ((event.j0_nb==1)and(event.j1_nb==0)):
+        #     print value, tempweight, x, v, cond
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.8:
-            tempweight = 0.8
-        elif tempweight > 1.2:
-            tempweight = 1.2
+        if tempweight < 0.7:
+            tempweight = 0.7
+        elif tempweight > 1.3:
+            tempweight = 1.3
         totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
         #totalweight *= tempweight
 
@@ -125,7 +140,7 @@ def calc_reweight(dic, event, poly=False, spline=True):
         #print totalweight, tempweight
     elif totalweight > maxscale:
         totalweight = maxscale
-        #print totalweight, tempweight
+    #print x, v, cond, totalweight
     return totalweight
 
 #get Xhh and Rhh values; for variations's sake
@@ -144,7 +159,7 @@ class eventHists:
         outputroot.cd()
         outputroot.mkdir(region)
         outputroot.cd(region)
-        self.fullhist = True #ops.dosyst is None ##option to turn it off
+        self.fullhist = CONF.fullstudy #ops.dosyst is None ##option to turn it off
         self.region   = region
         self.reweight = reweight
         #add in all the histograms
@@ -156,6 +171,8 @@ class eventHists:
         self.h1_trk0_pt   = ROOT.TH1F("sublHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
         self.h0_trk1_pt   = ROOT.TH1F("leadHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
         self.h1_trk1_pt   = ROOT.TH1F("sublHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
+        self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
+        self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
         self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
 
         if self.fullhist:
@@ -165,8 +182,6 @@ class eventHists:
             self.h_pt_assy    = ROOT.TH1F("hCand_Pt_assy",      ";hCand p_{T} assym", 22, -0.05, 1.05)
             self.h0_m_s       = ROOT.TH1F("leadHCand_Mass_s",   ";Mass [GeV]",       14,   60,  200)
             self.h1_m_s       = ROOT.TH1F("sublHCand_Mass_s",   ";Mass [GeV]",       14,   60,  200)
-            self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
-            self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
             self.h0_eta       = ROOT.TH1F("leadHCand_Eta",      ";#Eta",             42, -2.1,  2.1)
             self.h1_eta       = ROOT.TH1F("sublHCand_Eta",      ";#Eta",             42, -2.1,  2.1)
             self.h0_phi       = ROOT.TH1F("leadHCand_Phi",      ";#Phi",             64, -3.2,  3.2)
@@ -210,7 +225,9 @@ class eventHists:
         self.h1_trk0_pt.Fill(event.j1_trk0_pt, weight)
         self.h0_trk1_pt.Fill(event.j0_trk1_pt, weight)
         self.h1_trk1_pt.Fill(event.j1_trk1_pt, weight)
-        self.Rhh.Fill(event.Rhh, weight)
+        self.Rhh.Fill(event.Rhh, weight) 
+        self.h0_pt_m.Fill(event.j0_pt, weight)
+        self.h1_pt_m.Fill(event.j1_pt, weight) 
 
         if self.fullhist:
             self.h_deta.Fill(event.detaHH, weight)    
@@ -218,9 +235,7 @@ class eventHists:
             self.h_dr.Fill(event.drHH, weight) 
             self.h_pt_assy.Fill((event.j0_pt - event.j1_pt)/(event.j0_pt + event.j1_pt), weight)
             self.h0_m_s.Fill(event.j0_m, weight)   
-            self.h1_m_s.Fill(event.j1_m, weight)    
-            self.h0_pt_m.Fill(event.j0_pt, weight)
-            self.h1_pt_m.Fill(event.j1_pt, weight)    
+            self.h1_m_s.Fill(event.j1_m, weight)      
             self.h0_eta.Fill(event.j0_eta, weight) 
             self.h1_eta.Fill(event.j1_eta, weight)     
             self.h0_phi.Fill(event.j0_phi, weight)    
@@ -267,6 +282,8 @@ class eventHists:
         self.h1_trk0_pt.Write()
         self.h0_trk1_pt.Write()
         self.h1_trk1_pt.Write()
+        self.h0_pt_m.Write()    
+        self.h1_pt_m.Write() 
         self.Rhh.Write()
         if self.fullhist:
             self.mH0H1.Write() 
@@ -275,9 +292,7 @@ class eventHists:
             self.h_dr.Write()  
             self.h_pt_assy.Write()   
             self.h0_m_s.Write()   
-            self.h1_m_s.Write()  
-            self.h0_pt_m.Write()    
-            self.h1_pt_m.Write()    
+            self.h1_m_s.Write()     
             self.h0_eta.Write()    
             self.h1_eta.Write()   
             self.h0_phi.Write()    
@@ -353,6 +368,7 @@ class bkgregionHists:
         self.default.Write(outputroot)
 
 
+#these are the different regions
 class regionHists:
     def __init__(self, outputroot, reweight):
         self.AllTag       = massregionHists("AllTag", outputroot)
@@ -363,16 +379,22 @@ class regionHists:
         self.ThreeTag     = massregionHists("ThreeTag", outputroot)
         self.FourTag      = massregionHists("FourTag", outputroot)
         #for background modeling; not really NoTag!!!
-        self.TwoTag_split_bkg  = bkgregionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
-        self.ThreeTag_bkg      = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
-        self.FourTag_bkg       = bkgregionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
+        self.TwoTag_split_bkg       = bkgregionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
+        self.TwoTag_split_lead_bkg  = bkgregionHists("NoTag" + "_" + "2Trk_split_lead", outputroot, reweight)
+        self.TwoTag_split_subl_bkg  = bkgregionHists("NoTag" + "_" + "2Trk_split_subl", outputroot, reweight)
+        self.ThreeTag_bkg           = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
+        self.ThreeTag_lead_bkg      = bkgregionHists("NoTag" + "_" + "3Trk_lead", outputroot, reweight)
+        self.ThreeTag_subl_bkg      = bkgregionHists("NoTag" + "_" + "3Trk_subl", outputroot, reweight)
+        self.FourTag_bkg            = bkgregionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
+        self.FourTag_lead_bkg       = bkgregionHists("NoTag" + "_" + "4Trk_lead", outputroot, reweight)
+        self.FourTag_subl_bkg       = bkgregionHists("NoTag" + "_" + "4Trk_subl", outputroot, reweight)
         # #for extra studies
-        self.OneTag_lead         = bkgregionHists("OneTag_lead", outputroot, reweight) #if test 1 tag fit, needs to enable this
-        self.OneTag_subl         = bkgregionHists("OneTag_subl", outputroot, reweight) #if test 1 tag fit, needs to enable this
-        self.TwoTag_lead         = bkgregionHists("TwoTag_lead", outputroot, reweight) #if test 1 tag fit, needs to enable this
-        self.TwoTag_subl         = bkgregionHists("TwoTag_subl", outputroot, reweight) #if test 1 tag fit, needs to enable this
-        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot, reweight) #if test 1 tag fit, needs to enable this
-        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot, reweight) #if test 1 tag fit, needs to enable this
+        self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag_lead         = massregionHists("TwoTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag_subl         = massregionHists("TwoTag_subl", outputroot) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #if test 1 tag fit, needs to enable this
+        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #if test 1 tag fit, needs to enable this
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -463,13 +485,25 @@ class regionHists:
             # if nb_j0 + nb_j1 == 0 and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
             #     self.FourTag_bkg.Fill(event)
 
-            ##new bkg modeling, from 1b and 2b  
+            ##new bkg modeling, from 1b and 2b ; keep the number of trackjet consistent here
             if ((nb_j0 == 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 1)):
                 self.TwoTag_split_bkg.Fill(event)
-            if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
+                if (nb_j0 == 1 and nb_j1 == 0):
+                    self.TwoTag_split_lead_bkg.Fill(event)
+                elif (nb_j0 == 0 and nb_j1 == 1):
+                    self.TwoTag_split_subl_bkg.Fill(event)
+            if ((nb_j0 == 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 1)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
                 self.ThreeTag_bkg.Fill(event)
+                if (nb_j0 == 1 and nb_j1 == 0):
+                    self.ThreeTag_lead_bkg.Fill(event)
+                elif (nb_j0 == 0 and nb_j1 == 1):
+                    self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 self.FourTag_bkg.Fill(event)
+                if (nb_j0 == 2 and nb_j1 == 0):
+                    self.FourTag_lead_bkg.Fill(event)
+                elif (nb_j0 == 0 and nb_j1 == 2):
+                    self.FourTag_subl_bkg.Fill(event)
 
             ##for extra studies; need to be moved to default; notice b-tagging is already sorted here
             if (nb_j0 == 1 and nb_j1 == 0):
@@ -497,6 +531,12 @@ class regionHists:
         self.TwoTag_split_bkg.Write(outputroot)
         self.ThreeTag_bkg.Write(outputroot)
         self.FourTag_bkg.Write(outputroot)
+        self.TwoTag_split_lead_bkg.Write(outputroot)
+        self.ThreeTag_lead_bkg.Write(outputroot)
+        self.FourTag_lead_bkg.Write(outputroot)
+        self.TwoTag_split_subl_bkg.Write(outputroot)
+        self.ThreeTag_subl_bkg.Write(outputroot)
+        self.FourTag_subl_bkg.Write(outputroot)
         # #for other bkg modeling
         self.OneTag_lead.Write(outputroot)
         self.OneTag_subl.Write(outputroot)
@@ -640,45 +680,64 @@ def main():
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
-    split_list = ["data_test", "ttbar_comb_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    split_list = ["data_test", "ttbar_comb_test"] if not turnon_reweight else  ["data_test"]#["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
     inputtasks = []
     for split_file in split_list:
         for i in range(nsplit):
             inputtasks.append(pack_input(split_file, inputsplit=i))    
-    ##for other MCs
-    #inputtasks.append(pack_input("zjets_test"))
-    #for i, mass in enumerate(CONF.mass_lst):
-        ##do not reweight signal samples; create links to the original files instead
-        #if not turnon_reweight or ops.dosyst is not None :
-            #inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
-            #if (ops.Xhh):
-                #inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
-        #else:#if reweight, creat the folders and the links to the files
-            #print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
-            #helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            ##this is a really bad practice and temp fix now! need to watch this very carfully...
-            ##ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            #ori_link = inputpath.replace(ops.inputdir, "Moriond") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            #dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            ##print ori_link, dst_link
-            #if os.path.islink(dst_link):
-                #os.unlink(dst_link)
-            #print ori_link, dst_link
-            #os.symlink(ori_link, dst_link)
+    #for other MCs
+    if not turnon_reweight:
+        inputtasks.append(pack_input("zjets_test"))
 
+    for i, mass in enumerate(CONF.mass_lst):
+        #do not reweight signal samples; create links to the original files instead
+        if not turnon_reweight or ops.dosyst is not None :
+            inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
+            if (ops.Xhh):
+                inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
+        else:#if reweight, creat the folders and the links to the files
+            print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
+            helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
+            #this is a really bad practice and temp fix now! need to watch this very carfully...
+            #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            ori_link = inputpath.replace(ops.inputdir, "Moriond") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+            #print ori_link, dst_link
+            if os.path.islink(dst_link):
+                os.unlink(dst_link)
+            print ori_link, dst_link
+            os.symlink(ori_link, dst_link)
+
+    #for reweighting condition; copy zjet and ttbar
+    if turnon_reweight:
+        linklist = ["ttbar_comb_test", "zjets_test"]
+        for target in linklist:
+            helpers.checkpath(outputpath + target)
+            ori_link = inputpath.replace(ops.inputdir, "Moriond") + target + "/hist-MiniNTuple.root"
+            dst_link = outputpath + target + "/hist-MiniNTuple.root"
+            try:
+                os.remove(dst_link)
+            except OSError:
+                pass
+            if os.path.islink(dst_link):
+                os.unlink(dst_link)
+            print ori_link, dst_link
+            os.symlink(ori_link, dst_link)
     #return
     ##if reweight, reweight everything
     
     ##for debug parallel
     #analysis(pack_input("ttbar_comb_test"))
-    #analysis(inputtasks[0])
-    
-    ##parallel compute!
-    print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    npool = min(len(inputtasks), mp.cpu_count()-1)  ##because herophysics sucks
-    pool  = mp.Pool(npool)
-    pool.map(analysis, inputtasks)
+    if ops.debug:
+        analysis(inputtasks[0])
+        return
+    else:
+        ##parallel compute!
+        print " START: Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+        npool = min(len(inputtasks), mp.cpu_count()-1)  ##because herophysics sucks
+        pool  = mp.Pool(npool)
+        pool.map(analysis, inputtasks)
     
     ##all the other extra set of MCs
     for split_file in split_list:

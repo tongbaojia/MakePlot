@@ -28,7 +28,8 @@ evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "Pas
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 ##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl", \
+"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
+"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
@@ -79,7 +80,7 @@ def main():
     mass_lst = CONF.mass_lst
     global plt_lst
     plt_lst = []
-    if fullhists is True:
+    if fullhists is True and CONF.fullstudy: 
         print "full histos: true"
         plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
             "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
@@ -87,12 +88,17 @@ def main():
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
             "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
             #"leadHCand_trk0_Eta", "leadHCand_trk0_Phi", "sublHCand_trk0_Eta", "sublHCand_trk0_Phi",\
+    elif fullhists is True : ##this is used to skip histograms
+        plt_lst = ["mHH_l", "mHH_pole",\
+            "leadHCand_Pt_m",\
+            "sublHCand_Pt_m",\
+            "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     else:
         print "full histos: false"
         plt_lst = ["mHH_l", "mHH_pole"]
         #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
     global plt_m
-    plt_m = "_mHH_l"
+    plt_m = "mHH_l"
     #set fast test version, with all the significance output still
 
     # create output file
@@ -149,10 +155,22 @@ def main():
 
     #setup multiprocessing
     #start calculating the dictionary
-    #for result in pool.map(GetEvtCount, inputtasks):
-        #masterinfo.update(result)
-    for task in inputtasks:
-        masterinfo.update(GetEvtCount(task))
+    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)
+    pool  = mp.Pool(npool)
+    for result in pool.map(GetEvtCount, inputtasks):
+        masterinfo.update(result[0])
+        outroot.cd()
+        for plt in result[1]:
+            plt.Write()
+            del(plt)
+    # for task in inputtasks:
+    #     result = GetEvtCount(task) #dictionary of values, plots
+    #     masterinfo.update(result[0])
+    #     outroot.cd()
+    #     for plt in result[1]:
+    #         plt.Write()
+    #         del(plt)
     # #WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
     # #WriteEvtCount(masterinfo["zjet"], output, "z+jets")
     #WriteEvtCount(masterinfo["data"], output, "data")
@@ -244,7 +262,7 @@ def GetdataEst(inputdic, histname="", dosyst=False):
                 del(htemp_qcd)
                 del(htemp_zjet)
                 del(htemp_ttbar)
-            plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
+            plttemp = outroot.Get(histname + "_" + cut + "_" + region + "_" + plt_m)
             err = ROOT.Double(0.)
             cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
             cutcounts[region + "_err"] = float(err)
@@ -365,7 +383,7 @@ def fitestimation_test(histname="", inputdic={}):
                 del(htemp_qcd_OneTag)
 
             #get the notag sideband for the current version
-            plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
+            plttemp = outroot.Get(histname + "_" + cut + "_" + region + "_" + plt_m)
             err = ROOT.Double(0.)
             cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
             cutcounts[region + "_err"] = float(err)
@@ -451,7 +469,7 @@ def fitestimation(histname="", inputdic={}, weight=False):
                 del(htemp_qcd)
 
             #get the notag sideband for the current version
-            plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
+            plttemp = outroot.Get(histname + "_" + cut + "_" + region + "_" + plt_m)
             err = ROOT.Double(0.)
             cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
             cutcounts[region + "_err"] = float(err)
@@ -555,7 +573,7 @@ def Getqcd(inputdic, histname=""):
                 del(htemp_zjet)
                 del(htemp_ttbar)
             #get qcd prediction shapes
-            plttemp = outroot.Get("qcd" + "_" + cut + "_" + region + plt_m)
+            plttemp = outroot.Get("qcd" + "_" + cut + "_" + region + "_" + plt_m)
             if ("Signal" in region) & ("NoTag" not in cut) & CONF.blind:
                 cutcounts[region] = 0
                 cutcounts[region + "_err"] = 0
@@ -667,6 +685,7 @@ def GetEvtCount(config):
     cutflow_temp = input_f.Get("CutFlowWeight")
     ###
     eventcounts = {}
+    histcopies = []
     ###
     #outdir = outroot.mkdir(histname)
     #get things from cutflow table
@@ -684,24 +703,33 @@ def GetEvtCount(config):
             for hst in plt_lst:
                 hst_temp = input_f.Get(cut + "_" + region + "/" + hst).Clone()
                 hst_temp.SetName(histname + "_" + cut + "_" + region + "_" + hst)
-                outroot.cd()
+                hst_temp.SetDirectory(0)
+                
                 if ("Signal" in region) & (("TwoTag_split" in cut) \
                     or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
                     hst_temp.Reset()
-                hst_temp.Write()
-                del(hst_temp)
+                histcopies.append(hst_temp)
+                
+                if plt_m in hst:
+                    if ("Signal" in region) & (("TwoTag_split" in cut) \
+                        or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
+                        cutcounts[region] = 0
+                        cutcounts[region + "_err"] = 0
+                    else:
+                        err = ROOT.Double(0)
+                        cutcounts[region] = hst_temp.IntegralAndError(0, hst_temp.GetXaxis().GetNbins()+1, err)
+                        err = float(err) #convert it back...so that python likes it
+                        cutcounts[region + "_err"] = err
+
+                # outroot.cd()
+                # if ("Signal" in region) & (("TwoTag_split" in cut) \
+                #     or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
+                #     hst_temp.Reset()
+                # hst_temp.Write()
+                # del(hst_temp)
 
             #get the mass plot
-            plttemp = outroot.Get(histname + "_" + cut + "_" + region + plt_m)
-            if ("Signal" in region) & (("TwoTag_split" in cut) \
-                or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
-                cutcounts[region] = 0
-                cutcounts[region + "_err"] = 0
-            else:
-                err = ROOT.Double(0)
-                cutcounts[region] = plttemp.IntegralAndError(0, plttemp.GetXaxis().GetNbins()+1, err)
-                err = float(err) #convert it back...so that python likes it
-                cutcounts[region + "_err"] = err
+            plttemp = outroot.Get(histname + "_" + cut + "_" + region + "_" + plt_m)
             del(plttemp)
         #finish the for loop
         eventcounts[cut] = cutcounts
@@ -710,7 +738,7 @@ def GetEvtCount(config):
     del(cutflow_temp)
     input_f.Close()
     #return the table
-    return {histname: eventcounts}
+    return {histname: eventcounts}, histcopies
 
 #functin from Qi
 def GetMassWindow(hist, eff):
@@ -774,8 +802,8 @@ def GetSignificance(mass):
         cutcounts_err = {}
         for j, region in enumerate(region_lst):
             #needs fix!!!
-            plttemp_sig = outroot.Get("RSG1_" + str(mass) + "_" + cut + "_" + region + plt_m).Clone()
-            plttemp_bkg = outroot.Get("data_est" + "_" + cut + "_" + region + plt_m).Clone()
+            plttemp_sig = outroot.Get("RSG1_" + str(mass) + "_" + cut + "_" + region + "_" + plt_m).Clone()
+            plttemp_bkg = outroot.Get("data_est" + "_" + cut + "_" + region + "_" + plt_m).Clone()
             #needs to rebin here!!! use 50 GeV binning at least...
             plttemp_sig.Rebin(5)
             plttemp_bkg.Rebin(5)

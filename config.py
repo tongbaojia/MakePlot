@@ -15,9 +15,11 @@ helpers.checkpath(outputpath)
 outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #put in the working directory name; default b77~
-workdir     =  "b70" #"Moriond" #b77
+workdir     =  "Moriond" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
+#check if reference folder exists
+fullstudy   =  False
 #check if the path exists
 if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
