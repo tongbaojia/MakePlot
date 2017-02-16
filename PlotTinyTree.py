@@ -108,7 +108,7 @@ def calc_reweight(dic, event, poly=False, spline=True):
     maxscale = 2.0 #this means the maximum correction is this for each reweighting; used to be 1.5
     minscale = 0.1 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v, cond in dic:#this "dic" really is not a dic, but a tuple! #variable, weight, condition
-        if not eval(x): ##if doesn't pass the condition, do not apply the weight!
+        if not eval(cond): ##if doesn't pass the condition, do not apply the weight!
             continue
         value = eval(x)
         #outside fit range, do the end point value extrapolation
@@ -126,10 +126,10 @@ def calc_reweight(dic, event, poly=False, spline=True):
         # if ((event.j0_nb==1)and(event.j1_nb==0)):
         #     print value, tempweight, x, v, cond
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.7:
-            tempweight = 0.7
-        elif tempweight > 1.3:
-            tempweight = 1.3
+        if tempweight < 0.8:
+            tempweight = 0.8
+        elif tempweight > 1.2:
+            tempweight = 1.2
         totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
         #totalweight *= tempweight
 
@@ -680,15 +680,30 @@ def main():
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
-    split_list = ["data_test", "ttbar_comb_test"] if not turnon_reweight else  ["data_test"]#["data_test", "ttbar_comb_test", "signal_QCD"]
+    split_list = ["data_test", "ttbar_comb_test"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
     inputtasks = []
     for split_file in split_list:
         for i in range(nsplit):
             inputtasks.append(pack_input(split_file, inputsplit=i))    
     #for other MCs
+    #for reweighting condition; copy zjet and ttbar
     if not turnon_reweight:
         inputtasks.append(pack_input("zjets_test"))
+    else:
+        linklist = ["zjets_test"]
+        for target in linklist:
+            helpers.checkpath(outputpath + target)
+            ori_link = inputpath.replace(ops.inputdir, "Moriond") + target + "/hist-MiniNTuple.root"
+            dst_link = outputpath + target + "/hist-MiniNTuple.root"
+            try:
+                os.remove(dst_link)
+            except OSError:
+                pass
+            if os.path.islink(dst_link):
+                os.unlink(dst_link)
+            print ori_link, dst_link
+            os.symlink(ori_link, dst_link)
 
     for i, mass in enumerate(CONF.mass_lst):
         #do not reweight signal samples; create links to the original files instead
@@ -709,21 +724,6 @@ def main():
             print ori_link, dst_link
             os.symlink(ori_link, dst_link)
 
-    #for reweighting condition; copy zjet and ttbar
-    if turnon_reweight:
-        linklist = ["ttbar_comb_test", "zjets_test"]
-        for target in linklist:
-            helpers.checkpath(outputpath + target)
-            ori_link = inputpath.replace(ops.inputdir, "Moriond") + target + "/hist-MiniNTuple.root"
-            dst_link = outputpath + target + "/hist-MiniNTuple.root"
-            try:
-                os.remove(dst_link)
-            except OSError:
-                pass
-            if os.path.islink(dst_link):
-                os.unlink(dst_link)
-            print ori_link, dst_link
-            os.symlink(ori_link, dst_link)
     #return
     ##if reweight, reweight everything
     

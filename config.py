@@ -19,7 +19,7 @@ workdir     =  "Moriond" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if reference folder exists
-fullstudy   =  False
+fullstudy   =  True
 #check if the path exists
 if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
@@ -43,7 +43,7 @@ hist_r = "hist-MiniNTuple.root"
 blind  = True
  #False
 #current total luminiosity, in fb 22.1; 13.0
-totlumi = 36.5
+totlumi = 36.1
 #color dictionary for plotting style
 col_dic = {"syst":ROOT.kGray+2}
 #size for legend

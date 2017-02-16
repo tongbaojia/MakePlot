@@ -41,6 +41,7 @@ def main():
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, norm=True, Xrange=[500, 3500], Rebin=10, Logy=1, prename="2bs_")
     # for histname in ["leadHCand_Mass", "sublHCand_Mass"]:
     #     DrawMulti1Dcomparison([
@@ -53,13 +54,15 @@ def main():
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, Xrange=[500, 1200], norm=True, prename="2bs_")
     for histname in ["leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
         DrawMulti1Dcomparison([
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
-            ], keyword=histname, Xrange=[0, 500], norm=True, prename="2bs_")
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
+            ], keyword=histname, Xrange=[0, 1000], norm=True, prename="2bs_", Rebin=4, Logy=1)
     # for histname in ["leadHCand_trk_dr", "sublHCand_trk_dr"]:
     #     DrawMulti1Dcomparison([
     #         {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},

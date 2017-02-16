@@ -33,8 +33,8 @@ cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
-word_dict = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
-numb_dict = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
+word_dict  = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
+numb_dict  = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Incl", "Sideband", "Control", "Signal"]
 
 #setup dictionary for signal regions and background estimations
@@ -50,10 +50,10 @@ weight_dict       = {"FourTag":("NoTag", "NoTag_2Trk_split"),  "ThreeTag":("NoTa
 
 
 #set list of dumping yields
-yield_lst = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
-yield_dic = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
+yield_lst        = ["qcd_est", "ttbar_est", "zjet", "data_est", "data", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
+yield_dic        = {"qcd_est":"QCD Est", "ttbar_est":"$t\\bar{t}$ Est. ", "zjet":"$Z+jets$", "data_est":"Total Bkg Est",\
  "data":"Data", "RSG1_1000":"$c=1.0$,$m=1.0TeV$", "RSG1_2000":"$c=1.0$,$m=2.0TeV$", "RSG1_3000":"$c=1.0$,$m=3.0TeV$"}
-yield_tag_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+yield_tag_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
 yield_region_lst = ["Sideband", "Control", "Signal"]
 
 #define functions
@@ -134,6 +134,7 @@ def main():
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
         BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=False) #Weight_dic = weight_dict, 
+    
     # global fitresult_NoTag
     # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
     #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
@@ -599,7 +600,7 @@ def WriteEvtCount(inputdic, outFile, samplename="region"):
         #get the corresponding region
         outstr = ""
         outstr += cut.replace("_", " ") 
-        for j, region in enumerate(region_lst):
+        for j, region in enumerate(yield_region_lst):
             #get the mass plot
             outstr += " & "
             outstr += str(helpers.round_sig(inputdic[cut][region], 2))

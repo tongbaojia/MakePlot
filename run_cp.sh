@@ -18,7 +18,7 @@ echo $workpath$ch$"/Plot_r"$(($iter + 1))$"/Sideband/"
 #python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
 #python get_count.py --inputdir $ch --full
 #python plot.py --inputdir $ch 
-#python reweight.py --inputdir $ch --iter $(($iter + 1))
+python reweight.py --inputdir $ch --iter $(($iter + 1))
 #publish online
 echo "Publish!"
 #rm -rf $homepath"/www/share/hh4b/reweight/"$ch
