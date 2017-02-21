@@ -8,7 +8,7 @@ from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut
 # --------------------------------------------
 
 # Default settings for command line arguments
-DEFAULT_METHODS  = "Cuts, BDT, KNN" #BDT,Likelihood,KNN,
+DEFAULT_METHODS  = "Cuts" #BDT,Likelihood,KNN,
 #Cuts,CutsD,CutsPCA,CutsGA,CutsSA,Likelihood,LikelihoodD,LikelihoodPCA,LikelihoodKDE,LikelihoodMIX,PDERS,PDERSD,PDERSPCA,PDEFoam,PDEFoamBoost,KNN,LD,Fisher,FisherG,BoostedFisher,HMatrix,FDA_GA,FDA_SA,FDA_MC,FDA_MT,FDA_GAMT,FDA_MCMT,MLP,MLPBFGS,MLPBNN,CFMlpANN,TMlpANN,SVM,BDT,BDTD,BDTG,BDTB,RuleFit"
 
 ##for different selections, just aiming at the signal regions:
@@ -16,11 +16,13 @@ Sigcut_dic = {
     "4b":"(Xhh < 1.6) && (j0_nb == 2) && (j1_nb == 2)", 
     "3b":"(Xhh < 1.6) && (j0_nb + j1_nb == 3)", 
     "2bs":"(Xhh < 1.6) && (j0_nb == 1) && (j1_nb == 1)", 
+    "test":"(Xhh > 1.6) && (Rhh < 53) &&  (j0_nb == 2) && (j1_nb == 2)", 
     }
 Bkgcut_dic = {
     "4b":"(Xhh < 1.6) && (((j0_nb == 2) && (j1_nb == 0)) || ((j0_nb == 0) && (j1_nb == 2)))",
     "3b":"(Xhh < 1.6) && (((j0_nb == 1) && (j1_nb == 0)) || ((j0_nb == 0) && (j1_nb == 1)))",
     "2bs":"(Xhh < 1.6) && (((j0_nb == 1) && (j1_nb == 0)) || ((j0_nb == 0) && (j1_nb == 1)))",
+    "test":"(Xhh > 1.6) && (Rhh < 53) && (j0_nb + j1_nb == 4)", 
     }
 
 def options():
@@ -39,13 +41,13 @@ def main():
     outputpath = CONF.outputpath + ops.outputdir + "/tmvaplot/"
     helpers.checkpath(outputpath)
     #start analysis on TinyNtuple
-    mass = 2000
+    mass = 1500
     fSignal     = TFile( inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "read" )
     fBackground = TFile( inputpath + "data_test/" + "hist-MiniNTuple.root", "read" )
     # Get the signal and background trees for training
     signal      = fSignal.Get( "TinyTree" )
     background  = fBackground.Get( "TinyTree" )
-
+    # Set output paraemters and TMVA methods
     outfname    = "TMVA_" + ops.sel + ".root"
     methods     = DEFAULT_METHODS
     verbose     = False
@@ -92,23 +94,23 @@ def main():
     factory.AddVariable( "j0_trk0_pt",                "j0_trk0_pt",  "GeV", 'F' )
     #factory.AddVariable( "j0_trk0_eta",               "j0_trk0_eta", "rad", 'F' )
     #factory.AddVariable( "j0_trk0_phi",               "j0_trk0_phi", "rad", 'F' )
-    factory.AddVariable( "j0_trk0_m",                 "j0_trk0_m",   "GeV", 'F' )
-    factory.AddVariable( "j0_trk0_Mv2",               "j0_trk0_Mv2", "MV2", 'F' )
+    #factory.AddVariable( "j0_trk0_m",                 "j0_trk0_m",   "GeV", 'F' )
+    #factory.AddVariable( "j0_trk0_Mv2",               "j0_trk0_Mv2", "MV2", 'F' )
     factory.AddVariable( "j0_trk1_pt",                "j0_trk1_pt",  "GeV", 'F' )
     #factory.AddVariable( "j0_trk1_eta",               "j0_trk1_eta", "rad", 'F' )
     #factory.AddVariable( "j0_trk1_phi",               "j0_trk1_phi", "rad", 'F' )
-    factory.AddVariable( "j0_trk1_m",                 "j0_trk1_m",   "GeV", 'F' )
-    factory.AddVariable( "j0_trk1_Mv2",               "j0_trk1_Mv2", "MV2", 'F' )
+    #factory.AddVariable( "j0_trk1_m",                 "j0_trk1_m",   "GeV", 'F' )
+    #factory.AddVariable( "j0_trk1_Mv2",               "j0_trk1_Mv2", "MV2", 'F' )
     factory.AddVariable( "j1_trk0_pt",                "j1_trk0_pt",  "GeV", 'F' )
     #factory.AddVariable( "j1_trk0_eta",               "j1_trk0_eta", "rad", 'F' )
     #factory.AddVariable( "j1_trk0_phi",               "j1_trk0_phi", "rad", 'F' )
-    factory.AddVariable( "j1_trk0_m",                 "j1_trk0_m",   "GeV", 'F' )
-    factory.AddVariable( "j1_trk0_Mv2",               "j1_trk0_Mv2", "MV2", 'F' )
+    #factory.AddVariable( "j1_trk0_m",                 "j1_trk0_m",   "GeV", 'F' )
+    #factory.AddVariable( "j1_trk0_Mv2",               "j1_trk0_Mv2", "MV2", 'F' )
     factory.AddVariable( "j1_trk1_pt",                "j1_trk1_pt",  "GeV", 'F' )
     #factory.AddVariable( "j1_trk1_eta",               "j1_trk1_eta", "rad", 'F' )
     #factory.AddVariable( "j1_trk1_phi",               "j1_trk1_phi", "rad", 'F' )
-    factory.AddVariable( "j1_trk1_m",                 "j1_trk1_m",   "GeV", 'F' )
-    factory.AddVariable( "j1_trk1_Mv2",               "j1_trk1_Mv2", "MV2", 'F' )
+    #factory.AddVariable( "j1_trk1_m",                 "j1_trk1_m",   "GeV", 'F' )
+    #factory.AddVariable( "j1_trk1_Mv2",               "j1_trk1_Mv2", "MV2", 'F' )
 
     #factory.AddVariable( "myvar1 := var1+var2", 'F' )
     #factory.AddVariable( "myvar2 := var1-var2", "Expression 2", "", 'F' )
@@ -368,7 +370,7 @@ def main():
     
     ##open the GUI for the result macros    
     #TMVA.TMVAGui(outputpath + outfname)
-    #import ROOT;ROOT.TMVA.TMVAGui("TMVA.root")
+    #import ROOT;import AtlasStyle;ROOT.TMVA.TMVAGui("TMVA_4b.root")
     
     ##keep the ROOT thread running
     #gApplication.Run() 
