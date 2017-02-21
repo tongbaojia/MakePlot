@@ -20,6 +20,8 @@ workdir     =  "Moriond" #"Moriond" #b77
 refpath     =  toppath +"/Output/ref/"
 #check if reference folder exists
 fullstudy   =  True
+#check if doing my thesis; if so, disable all the ATLAS labels
+thesis      =  False
 #check if the path exists
 if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"

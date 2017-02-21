@@ -285,7 +285,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     legW=0.4
     leg = ROOT.TLegend(0.65, 0.75, 0.95, 0.95)
     # top right, a bit left
-    ROOT.ATLASLabel(0.19, 0.91, CONF.StatusLabel)
+    if not CONF.thesis:
+        ROOT.ATLASLabel(0.19, 0.91, CONF.StatusLabel)
     if "15" in filepath:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", CONF.legsize)
     elif "16" in filepath:

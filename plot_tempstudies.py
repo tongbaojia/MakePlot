@@ -40,7 +40,8 @@ def main():
         DrawMulti1Dcomparison([
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
-            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, norm=True, Xrange=[500, 3500], Rebin=10, Logy=1, prename="2bs_")
     # for histname in ["leadHCand_Mass", "sublHCand_Mass"]:
@@ -53,16 +54,18 @@ def main():
         DrawMulti1Dcomparison([
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
-            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, Xrange=[500, 1200], norm=True, prename="2bs_")
     for histname in ["leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
         DrawMulti1Dcomparison([
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on subl"},
-            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
-            ], keyword=histname, Xrange=[0, 1000], norm=True, prename="2bs_", Rebin=4, Logy=1)
+            ], keyword=histname, Xrange=[0, 600], norm=True, prename="2bs_", Rebin=4, Logy=1)
     # for histname in ["leadHCand_trk_dr", "sublHCand_trk_dr"]:
     #     DrawMulti1Dcomparison([
     #         {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
@@ -200,6 +203,7 @@ def main():
     #         {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + histname, "leg":"TwoTag on lead"},
     #         {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + histname, "leg":"TwoTag on subl"},
     #         ], keyword=histname, Xrange=[0, 500], norm=True, prename="qcd_")
+    
     ##for 2D shape comparison
     # for histname in ["mH0H1"]:
     #     Draw2Dcomparison({"base":{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag Lead"},
@@ -316,7 +320,8 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
         temphst_lst[i].SetMarkerStyle(20 + i)
         temphst_lst[i].SetMarkerColor(1 if i == 0 else CONF.clr_lst[i])
         temphst_lst[i].SetMarkerSize(1)
-        temphst_lst[i].SetMaximum(maxbincontent * (1.5 if (Logy == 0 or norm) else 150))
+        temphst_lst[i].GetYaxis().SetTitle("Norm" if norm else "N Events")
+        temphst_lst[i].SetMaximum(maxbincontent * (15 if (Logy == 0 or norm) else 150))
         temphst_lst[i].SetMinimum(0.001 if Logy == 0 else minbincontent)
         if Xrange != [0, 0]:
             temphst_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
@@ -358,7 +363,7 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
         tempratio_lst[i].GetYaxis().SetLabelFont(43)
         tempratio_lst[i].GetYaxis().SetLabelSize(28)
         tempratio_lst[i].GetYaxis().SetTitle("ratio to ref")
-        tempratio_lst[i].GetYaxis().SetRangeUser(0.6, 1.5) #set range for ratio plot
+        tempratio_lst[i].GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
         tempratio_lst[i].GetYaxis().SetNdivisions(405)
         tempratio_lst[i].GetXaxis().SetTitleFont(43)
         tempratio_lst[i].GetXaxis().SetTitleOffset(3.5)

@@ -181,13 +181,23 @@ def main():
             {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
             ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
 
-    for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l"]:
+    for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l",]:
         DrawMulticomparison([
             {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
             {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
             {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
             {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+            {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
             ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+
+    for histname in ["data_est_FourTag_Signal_sublHCand_trk0_Pt", "data_est_ThreeTag_Signal_sublHCand_trk0_Pt", "data_est_TwoTag_split_Signal_sublHCand_trk0_Pt",]:
+        DrawMulticomparison([
+            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+            {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
+            ], keyword=histname, norm=False, Xrange=[0, 400], Rebin=5, Logy=1)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
