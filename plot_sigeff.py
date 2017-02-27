@@ -1,13 +1,9 @@
 #Tony: Draw signal efficiencies
 import ROOT, rootlogon
-import argparse
-import array
-import copy
-import glob
+import argparse, array, copy, glob
 import helpers
-import os
-import sys
-import time
+import numpy as np
+import os, sys, time
 import config as CONF
 
 ROOT.gROOT.SetBatch(True)
@@ -43,6 +39,10 @@ def main():
     detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
     "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
     region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"]
+    region_4b_lst = ["FourTag_Signal", "FourTag_Control", "FourTag_Sideband"]
+    region_3b_lst = ["ThreeTag_Signal", "ThreeTag_Control", "ThreeTag_Sideband"]
+    region_2b_lst = ["TwoTag_split_Signal", "TwoTag_split_Control", "TwoTag_split_Sideband"]
+    region_all_lst = ["AllTag_Signal", "AllTag_Control", "AllTag_Sideband"]
 
     # Draw the efficiency plot relative to the all normalization
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel")
@@ -58,6 +58,10 @@ def main():
     #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
+    DrawSignalEff(region_4b_lst, inputdir, "region_4b_lst", "PreSel", doint=True)
+    DrawSignalEff(region_3b_lst, inputdir, "region_3b_lst", "PreSel", doint=True)
+    DrawSignalEff(region_2b_lst, inputdir, "region_2b_lst", "PreSel", doint=True)
+    DrawSignalEff(region_all_lst, inputdir, "region_alltag_lst", "PreSel", doint=True)
 
 
 def options():
@@ -189,6 +193,49 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     canv.Close()
 
 
+def SigMorph():
+#Going to make a few statistical models we want to interpolate
+#initialize workspace with some common background part
+   w = ROOT.RooWorkspace('w')
+   w.factory('Exponential::e(x[-5,15],tau[-.15,-3,0])')
+   x = w.var('x')
+
+   frame = x.frame()
+
+#center of Gaussian will move along the parameter points
+   mu = w.factory('mu[0,10]') #this is our continuous interpolation parameter
+   paramPoints = np.arange(5)
+   pdfs = ROOT.RooArgList()
+#paramVec = ROOT.TVectorD(len(paramPoints),paramPoints) #this gives problems, why?
+   paramVec = ROOT.TVectorD(len(paramPoints))
+
+# Now make the specific Gaussians to add on top of common background
+   for i in paramPoints:
+      w.factory('Gaussian::g{i}(x,mu{i}[{i},-3,5],sigma[1, 0, 2])'.format(i=i))
+      w.factory('SUM::model{i}(s[50,0,100]*g{i},b[200,0,1000]*e)'.format(i=i))
+      w.Print() #this isnt displaying in iPython
+      pdf = w.pdf('model{i}'.format(i=i))
+      pdf.plotOn(frame)
+      pdfs.add(pdf)
+      paramVec[int(i)]=i
+
+#ok, now construct the MomentMorph, can choose from these settings
+#  { Linear, NonLinear, NonLinearPosFractions, NonLinearLinFractions, SineLinear } ;
+   setting = ROOT.RooMomentMorph.Linear
+   morph = ROOT.RooMomentMorph('morph','morph',mu,ROOT.RooArgList(x),pdfs, paramVec, setting)
+   getattr(w,'import')(morph) # work around for morph = w.import(morph)
+   morph.Print('v')
+
+   #make plots of interpolated pdf
+   for i in np.arange(5):
+      print i, paramVec[1]
+      mu.setVal(i+.5) #offset from the original point a bit to see morphing
+      mu.Print()
+      morph.plotOn(frame, ROOT.RooFit.LineColor(ROOT.kRed))
+
+   c1 = ROOT.TCanvas()
+   frame.Draw()
+   c1.SaveAs('test.pdf')
 
 
 if __name__ == "__main__":
