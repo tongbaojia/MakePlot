@@ -40,9 +40,9 @@ def main():
     DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2DPrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
-    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_2000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_2000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_2000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "NoTag_Incl", prename="Top_NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "OneTag_Incl", prename="Top_OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
@@ -58,19 +58,26 @@ def main():
     DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl", prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     ## only if QCD sample exists
-    ##DrawPaper2DComparePrediction("../TEST/signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="QCD_OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    ##DrawPaper2DComparePrediction("../TEST/signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="QCD_TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+
+
+# functions for the different regions
+def mySB(x):
+    #return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
+    return  ROOT.TMath.Sqrt( (x[0]-134)**2 + (x[1]-125)**2)
+
+def myCR(x):
+    return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
+
+def mySR(x):
+    return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
+
+def myTop(x):
+    return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 ) 
+  
 
 def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
-    # functions for the different regions
-    def myCR(x):
-        return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
-
-    def mySR(x):
-        return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
-
-    def myTop(x):
-        return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )  
 
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
@@ -117,7 +124,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
 
     # get control:
     fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
-    contoursCR = array.array("d", [32.8])
+    contoursCR = array.array("d", [33.0])
     fCR.SetContour(1, contoursCR)
     fCR.SetNpx(400)
     fCR.SetLineColor(ROOT.kOrange+7)
@@ -125,8 +132,8 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fCR.Draw("same, cont3")
 
     # sideband:
-    fSB = ROOT.TF2("SB", myCR,0,Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [63.0])
+    fSB = ROOT.TF2("SB", mySB,0,Xrange[1],0,Xrange[1])
+    contoursSB = array.array("d", [53.0])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(400)
     fSB.SetLineColor(ROOT.kYellow)
@@ -178,16 +185,6 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     inputroot.Close()
 
 def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
-    # functions for the different regions
-    def myCR(x):
-        return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
-
-    def mySR(x):
-        return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
-
-    def myTop(x):
-        return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )  
-
 
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
@@ -316,25 +313,12 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     inputroot_top.Close()
     f1.close()
 
-def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
+def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], subTop=True, extra=""):
     # functions for the different regions
     SB_rad = 53
     CR_rad = 33
     SR_rad = 1.6
-    def mySB(x):
-        #return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
-        return  ROOT.TMath.Sqrt( (x[0]-134)**2 + (x[1]-125)**2)
-
-    def myCR(x):
-        return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
-
-    def mySR(x):
-        return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
-
-    def myTop(x):
-        return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )  
-
-
+ 
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
     inputroot_top = ROOT.TFile.Open(inputpath + "ttbar_comb_test/hist-MiniNTuple.root")
@@ -353,7 +337,8 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     temp_hist_data.Rebin2D(rebin_factor, rebin_factor)
 
     #add
-    temp_hist.Add(temp_hist_top_b, -1)#substract original top
+    if (subTop):
+        temp_hist.Add(temp_hist_top_b, -1)#substract original top
     #load fitted muqcd information
     inputtex = CONF.inputpath + CONF.workdir + "/Plot/Tables/normfit.tex"
     f1 = open(inputtex, 'r')
@@ -378,7 +363,8 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     ##if not scale--direct muqcd values;
     ##in this case, substract top from the data
     temp_hist_data_copy  = temp_hist_data.Clone("copy")
-    temp_hist_data.Add(temp_hist_top, -1)
+    if (subTop):
+        temp_hist_data.Add(temp_hist_top, -1)
 
     #scale down by data
     print "divide!! ", "estint: ", temp_hist.Integral(), " data: ", temp_hist_data.Integral()
@@ -390,8 +376,13 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     max_x = ROOT.Long(0)
     max_y = ROOT.Long(0)
     max_z = ROOT.Long(0)
+    min_x = ROOT.Long(0)
+    min_y = ROOT.Long(0)
+    min_z = ROOT.Long(0)
     temp_hist_data.GetMaximumBin(max_x, max_y, max_z)
-    print "maxbin: ", max_x, max_y, " content: ", temp_hist_data.GetBinContent(max_x, max_y), inputroot.Get(prename + "/mH0H1").GetBinContent(max_x * rebin_factor, max_y * rebin_factor), inputroot.Get(inputdir + "/mH0H1").GetBinContent(max_x * rebin_factor, max_y * rebin_factor)
+    temp_hist_data.GetMinimumBin(min_x, min_y, min_z)
+    print "maxbin: ", max_x, max_y, " content: ", temp_hist_data.GetBinContent(max_x, max_y), " value: ",  inputroot.Get(prename + "/mH0H1").GetBinContent(max_x * rebin_factor, max_y * rebin_factor), inputroot.Get(inputdir + "/mH0H1").GetBinContent(max_x * rebin_factor, max_y * rebin_factor)
+    #print "average muqcd: ", temp_hist_data.GetMean(3)
     ##proceed
     canv = ROOT.TCanvas(temp_hist_data.GetName(), temp_hist_data.GetTitle(), 1000, 800)
     if Xrange != [0, 0]:
@@ -405,10 +396,12 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     # log scale
     #canv.SetLogz(1)
     ##fill the pull plots:
-    pull_hist_OT = ROOT.TH1F("pull_OT", "OT; #mu_{qcd}; Counts", 30, 0.2, 0.4)
-    pull_hist_SB = ROOT.TH1F("pull_SB", "SB; #mu_{qcd}; Counts", 30, 0.2, 0.4)
-    pull_hist_CR = ROOT.TH1F("pull_CR", "CR; #mu_{qcd}; Counts", 30, 0.2, 0.4)
-    pull_hist_SR = ROOT.TH1F("pull_SR", "SR; #mu_{qcd}; Counts", 30, 0.2, 0.4)
+    local_min = temp_hist_data.GetBinContent(min_x, min_y)
+    local_max = temp_hist_data.GetBinContent(max_x, max_y)
+    pull_hist_OT = ROOT.TH1F("pull_OT", "OT; #mu_{qcd}; Counts", 50, 0, local_max + 0.02)
+    pull_hist_SB = ROOT.TH1F("pull_SB", "SB; #mu_{qcd}; Counts", 50, 0, local_max + 0.02)
+    pull_hist_CR = ROOT.TH1F("pull_CR", "CR; #mu_{qcd}; Counts", 50, 0, local_max + 0.02)
+    pull_hist_SR = ROOT.TH1F("pull_SR", "SR; #mu_{qcd}; Counts", 50, 0, local_max + 0.02)
     ##blind SR and CR; notice it is exclusive!
     for x_bin in range(temp_hist_data.GetXaxis().GetNbins()):
         for y_bin in range(temp_hist_data.GetYaxis().GetNbins()):
@@ -433,9 +426,7 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     temp_hist_data.GetYaxis().SetTitle("m_{J}^{subl} [GeV]")
     temp_hist_data.GetZaxis().SetTitle("#mu qcd")
     temp_hist_data.GetZaxis().SetTitleOffset(1.8)
-    temp_hist_max = max(temp_hist_data.GetMaximum(), abs(temp_hist_data.GetMinimum()))
-    temp_hist_data.GetZaxis().SetRangeUser(0, temp_hist_max)
-    #temp_hist_data.GetZaxis().SetRangeUser(0.2, 0.3)
+    temp_hist_data.GetZaxis().SetRangeUser(local_max / 10, local_max + 0.02)
     # change divisions
     temp_hist_data.GetXaxis().SetNdivisions(505)
     temp_hist_data.GetYaxis().SetNdivisions(505)
@@ -507,7 +498,7 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize)
 
 
-    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
+    canv.SaveAs(outputpath + extra + prename + "_" +  canv.GetName() + ".pdf")
     #canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".png")
     #canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".eps")
     #canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".C")
@@ -521,6 +512,18 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     pull_hist_SB.SetFillColor(CONF.clr_lst[1])
     pull_hist_CR.SetFillColor(CONF.clr_lst[2])
     pull_hist_SR.SetFillColor(CONF.clr_lst[3])
+    pull_hist_OT.SetLineColor(CONF.clr_lst[0])
+    pull_hist_SB.SetLineColor(CONF.clr_lst[1])
+    pull_hist_CR.SetLineColor(CONF.clr_lst[2])
+    pull_hist_SR.SetLineColor(CONF.clr_lst[3])
+    pull_hist_OT.SetMarkerColor(CONF.clr_lst[0])
+    pull_hist_SB.SetMarkerColor(CONF.clr_lst[1])
+    pull_hist_CR.SetMarkerColor(CONF.clr_lst[2])
+    pull_hist_SR.SetMarkerColor(CONF.clr_lst[3])
+    pull_hist_OT.SetMarkerStyle(CONF.mrk_lst[0])
+    pull_hist_SB.SetMarkerStyle(CONF.mrk_lst[1])
+    pull_hist_CR.SetMarkerStyle(CONF.mrk_lst[2])
+    pull_hist_SR.SetMarkerStyle(CONF.mrk_lst[3])
     pull_hs.SetMinimum(0.1)
     pull_hs.SetMaximum(pull_hist_SB.GetMaximum()*2.5)
     # pull_hist_OT.SetMinimum(0.1)
@@ -531,31 +534,34 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     # pull_hist_SB.SetMaximum(pull_hist_SB.GetMaximum()*1.5)
     # pull_hist_CR.SetMaximum(pull_hist_SB.GetMaximum()*1.5)
     # pull_hist_SR.SetMaximum(pull_hist_SB.GetMaximum()*1.5)
-    pull_hist_OT.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*2.5)
-    pull_hist_SB.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*2.5)
-    pull_hist_CR.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*2.5)
-    pull_hist_SR.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*2.5)
+    pull_hist_OT.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*1.5)
+    pull_hist_SB.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*1.5)
+    pull_hist_CR.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*1.5)
+    pull_hist_SR.GetYaxis().SetRangeUser(0.1, pull_hist_SB.GetMaximum()*1.5)
     #pull_hs.Add(pull_hist_OT)
-    pull_hs.Add(pull_hist_SB)
-    pull_hs.Add(pull_hist_CR)
-    pull_hs.Add(pull_hist_SR)
+    #pull_hs.Add(pull_hist_SB)
+    #pull_hs.Add(pull_hist_CR)
+    #pull_hs.Add(pull_hist_SR)
     #pull_hist_OT.Draw("hist")
-    pull_hs.Draw("hist")
+    #pull_hs.Draw("hist")
+    pull_hist_SB.Draw()
+    pull_hist_CR.Draw("same")
+    pull_hist_SR.Draw("same")
     #pull_hist_OT.Draw("same")
-    leg = ROOT.TLegend(0.6,0.7,0.9,0.9)
+    leg = ROOT.TLegend(0.5,0.7,0.8,0.9)
     #leg.AddEntry(pull_hist_OT, "OT mean: %.3f" % pull_hist_OT.GetMean())
-    leg.AddEntry(pull_hist_SB, "SB mean: %.3f" % pull_hist_SB.GetMean())
-    leg.AddEntry(pull_hist_CR, "CR mean: %.3f" % pull_hist_CR.GetMean())
-    leg.AddEntry(pull_hist_SR, "SR mean: %.3f" % pull_hist_SR.GetMean())
+    leg.AddEntry(pull_hist_SB, "SB mean: %.3f #pm %.3f" % (pull_hist_SB.GetMean(), pull_hist_SB.GetMeanError()))
+    leg.AddEntry(pull_hist_CR, "CR mean: %.3f #pm %.3f" % (pull_hist_CR.GetMean(), pull_hist_CR.GetMeanError()))
+    leg.AddEntry(pull_hist_SR, "SR mean: %.3f #pm %.3f" % (pull_hist_SR.GetMean(), pull_hist_SR.GetMeanError()))
     leg.SetTextFont(43)
     leg.SetTextSize(CONF.legsize)
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
     leg.Draw()
-    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_pull.pdf")
-    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_pull.root")
-    canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_pull.C")
+    canv.SaveAs(outputpath + extra + prename + "_" +  canv.GetName() + "_pull.pdf")
+    #canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_pull.root")
+    #canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + "_pull.C")
 
     #shut it down
     canv.Close()

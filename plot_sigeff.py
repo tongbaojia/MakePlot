@@ -194,6 +194,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
 
 def SigMorph():
+##see: https://arxiv.org/pdf/1410.7388.pdf
 #Going to make a few statistical models we want to interpolate
 #initialize workspace with some common background part
    w = ROOT.RooWorkspace('w')

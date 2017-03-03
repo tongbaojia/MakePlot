@@ -682,12 +682,13 @@ def main():
     nsplit = CONF.splits
     split_list = ["data_test", "ttbar_comb_test"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
+    #split_list = []
     inputtasks = []
     for split_file in split_list:
         for i in range(nsplit):
             inputtasks.append(pack_input(split_file, inputsplit=i))    
-    #for other MCs
-    #for reweighting condition; copy zjet and ttbar
+    ##for other MCs
+    ##for reweighting condition; copy zjet and ttbar
     if not turnon_reweight:
         inputtasks.append(pack_input("zjets_test"))
     else:

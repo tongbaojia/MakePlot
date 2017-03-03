@@ -45,19 +45,19 @@ def main():
     outputname = inputdir + "_allsig"
     #DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.005, (2900, 5100), logy=1)
     #DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.005, (2900, 5100))
-    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.005, (2400, 3100))
-    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.06, (1750, 2450))
-    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.2, (1450, 2450))
-    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 1.5)
+    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.1, (2400, 3100))
+    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 0.6, (1750, 2450))
+    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 1.0, (1450, 2450))
+    DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 4.0)
     DrawSignalEff(cut_all_lst, inputdir, inputroot, outputname, 300, logy=1)
 
 
     cut_rel_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
     outputname = inputdir + "_relsig"
-    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.005, (2400, 3100))
-    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.06, (1750, 2450))
-    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.2, (1450, 2450))
-    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 1.5)
+    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.1, (2400, 3100))
+    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 0.6, (1750, 2450))
+    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 1.0, (1450, 2450))
+    DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 4.0)
     DrawSignalEff(cut_rel_lst, inputdir, inputroot, outputname, 300, logy=1)
 
 def options():
@@ -110,7 +110,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", inputroot="sum", outputname="", norma
     # load input MC file
     input_mc = ROOT.TFile.Open(CONF.inputpath + inputdir + "/" + inputroot + "_" + inputdir + ".root")
     maxbincontent = normalization
-    minbincontent = 0.00001
+    minbincontent = 0.0001
     temp_all = input_mc.Get(cut_lst[0] + histname).Clone()
     temp_all.SetName("Combined")
 

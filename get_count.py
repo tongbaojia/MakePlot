@@ -218,7 +218,7 @@ def main():
         WriteYield(masterinfo, yield_tex, tag)
 
     #save time if do systematics ## turn it off now...
-    if (not ops.dosyst and False):
+    if (not ops.dosyst and True):
         ##Do overlay signal region predictions
         print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
         npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -784,10 +784,12 @@ def GetSensitivity(h_signal, h_bkg):
             return(0, 0, S, B)
         # sensitivity = 1.0*S/ROOT.TMath.Sqrt(B)
         # sensitivity_err = sensitivity * ROOT.TMath.Sqrt((1.0*S_err/S)**2 + (1.0*B_err/(2*B))**2)
-        # a better definition for low stats
-        sensitivity = (1.0*S)/(1 + ROOT.TMath.Sqrt(B))
-        sensitivity_err = sensitivity * ROOT.TMath.Sqrt((1.0*S_err/S)**2 + (1./(4*B))*((1.0*B_err/(1+ROOT.TMath.Sqrt(B)))**2))
-
+        ## a better definition for low stats
+        #sensitivity = (1.0*S)/(1 + ROOT.TMath.Sqrt(B))
+        #sensitivity_err = sensitivity * ROOT.TMath.Sqrt((1.0*S_err/S)**2 + (1./(4*B))*((1.0*B_err/(1+ROOT.TMath.Sqrt(B)))**2))
+        ## real sensitivity, see https://www.pp.rhul.ac.uk/~cowan/stat/notes/SigCalcNote.pdf
+        sensitivity = ROOT.TMath.Sqrt(2 * ((S + B) * ROOT.TMath.Log(1 + S / B) - S))
+        sensitivity_err = (ROOT.TMath.Log(1 + S / B) * S_err + (ROOT.TMath.Log(1 + S / B) - S / B) * B_err) / sensitivity
         #return the sensitivity, error, number of signal and number of background estimated in this window
         return (sensitivity, sensitivity_err, S, B)
 
