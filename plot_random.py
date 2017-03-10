@@ -55,12 +55,12 @@ def main():
     DrawSRcomparison(inputroot, inputdata="RSG1_1000", Logy=1, Xrange=[0, 4000])
     DrawSRcomparison(inputroot, inputdata="RSG1_2000", Logy=1, Xrange=[0, 4000])
     DrawSRcomparison(inputroot, inputdata="RSG1_3000", Logy=1, Xrange=[0, 4000])
-    DrawSRcomparison(inputroot, inputdata="RSG1_1000", keyword="leadHCand_Mass_s", Xrange=[50, 200])
-    DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="leadHCand_Mass_s", Xrange=[50, 200])
-    DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="leadHCand_Mass_s", Xrange=[50, 200])
-    DrawSRcomparison(inputroot, inputdata="RSG1_1000", keyword="sublHCand_Mass_s", Xrange=[50, 200])
-    DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="sublHCand_Mass_s", Xrange=[50, 200])
-    DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="sublHCand_Mass_s", Xrange=[50, 200])
+    DrawSRcomparison(inputroot, inputdata="RSG1_1000", keyword="leadHCand_Mass_s", Xrange=[90, 180])
+    DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="leadHCand_Mass_s", Xrange=[90, 180])
+    DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="leadHCand_Mass_s", Xrange=[90, 180])
+    DrawSRcomparison(inputroot, inputdata="RSG1_1000", keyword="sublHCand_Mass_s", Xrange=[90, 180])
+    DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="sublHCand_Mass_s", Xrange=[90, 180])
+    DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="sublHCand_Mass_s", Xrange=[90, 180])
 
     # # ###draw the mhh before and after scale
     # # DrawScalecomparison(inputroot, norm=False)
