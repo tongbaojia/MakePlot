@@ -43,6 +43,12 @@ def main():
     DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_2000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_2000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_2000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_1000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_1000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_1000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_3000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_3000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_3000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "NoTag_Incl", prename="Top_NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "OneTag_Incl", prename="Top_OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])

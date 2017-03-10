@@ -47,11 +47,20 @@ def main():
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
     # ###signalregion shape comparison
-    # inputroot = "sum_" + inputdir + ".root"
+    inputroot = "sum_" + inputdir + ".root"
     # DrawSRcomparison(inputroot, inputdata="ttbar")
     # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
     # DrawSRcomparison(inputroot, inputdata="qcd_est")
     # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="RSG1_1000", Logy=1, Xrange=[0, 4000])
+    DrawSRcomparison(inputroot, inputdata="RSG1_2000", Logy=1, Xrange=[0, 4000])
+    DrawSRcomparison(inputroot, inputdata="RSG1_3000", Logy=1, Xrange=[0, 4000])
+    DrawSRcomparison(inputroot, inputdata="RSG1_1000", keyword="leadHCand_Mass_s", Xrange=[50, 200])
+    DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="leadHCand_Mass_s", Xrange=[50, 200])
+    DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="leadHCand_Mass_s", Xrange=[50, 200])
+    DrawSRcomparison(inputroot, inputdata="RSG1_1000", keyword="sublHCand_Mass_s", Xrange=[50, 200])
+    DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="sublHCand_Mass_s", Xrange=[50, 200])
+    DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="sublHCand_Mass_s", Xrange=[50, 200])
 
     # # ###draw the mhh before and after scale
     # # DrawScalecomparison(inputroot, norm=False)
@@ -131,73 +140,73 @@ def main():
     #         ], keyword=histname, norm=True)
 
     ##for reweighting shape comparison
-    for histname in ["data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",
-    "data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l"]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+    # for histname in ["data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",
+    # "data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l"]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
 
-    for histname in ["data_est_FourTag_Sideband_leadHCand_trk0_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk0_Pt",
-    "data_est_FourTag_Control_leadHCand_trk0_Pt", "data_est_ThreeTag_Control_leadHCand_trk0_Pt", "data_est_TwoTag_split_Control_leadHCand_trk0_Pt"]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
+    # for histname in ["data_est_FourTag_Sideband_leadHCand_trk0_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk0_Pt",
+    # "data_est_FourTag_Control_leadHCand_trk0_Pt", "data_est_ThreeTag_Control_leadHCand_trk0_Pt", "data_est_TwoTag_split_Control_leadHCand_trk0_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
 
-    for histname in ["data_est_FourTag_Sideband_sublHCand_trk0_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk0_Pt",
-    "data_est_FourTag_Control_sublHCand_trk0_Pt", "data_est_ThreeTag_Control_sublHCand_trk0_Pt", "data_est_TwoTag_split_Control_sublHCand_trk0_Pt"]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
+    # for histname in ["data_est_FourTag_Sideband_sublHCand_trk0_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk0_Pt",
+    # "data_est_FourTag_Control_sublHCand_trk0_Pt", "data_est_ThreeTag_Control_sublHCand_trk0_Pt", "data_est_TwoTag_split_Control_sublHCand_trk0_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
 
-    for histname in ["data_est_FourTag_Sideband_leadHCand_trk1_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk1_Pt",
-    "data_est_FourTag_Control_leadHCand_trk1_Pt", "data_est_ThreeTag_Control_leadHCand_trk1_Pt", "data_est_TwoTag_split_Control_leadHCand_trk1_Pt"]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
+    # for histname in ["data_est_FourTag_Sideband_leadHCand_trk1_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk1_Pt",
+    # "data_est_FourTag_Control_leadHCand_trk1_Pt", "data_est_ThreeTag_Control_leadHCand_trk1_Pt", "data_est_TwoTag_split_Control_leadHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
 
-    for histname in ["data_est_FourTag_Sideband_sublHCand_trk1_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk1_Pt",
-    "data_est_FourTag_Control_sublHCand_trk1_Pt", "data_est_ThreeTag_Control_sublHCand_trk1_Pt", "data_est_TwoTag_split_Control_sublHCand_trk1_Pt"]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
+    # for histname in ["data_est_FourTag_Sideband_sublHCand_trk1_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk1_Pt",
+    # "data_est_FourTag_Control_sublHCand_trk1_Pt", "data_est_ThreeTag_Control_sublHCand_trk1_Pt", "data_est_TwoTag_split_Control_sublHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
 
-    for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l",]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
-            ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+    # for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l",]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
+    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
 
-    for histname in ["data_est_FourTag_Signal_sublHCand_trk0_Pt", "data_est_ThreeTag_Signal_sublHCand_trk0_Pt", "data_est_TwoTag_split_Signal_sublHCand_trk0_Pt",]:
-        DrawMulticomparison([
-            {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-            {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-            {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-            {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-            {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
-            ], keyword=histname, norm=False, Xrange=[0, 400], Rebin=5, Logy=1)
+    # for histname in ["data_est_FourTag_Signal_sublHCand_trk0_Pt", "data_est_ThreeTag_Signal_sublHCand_trk0_Pt", "data_est_TwoTag_split_Signal_sublHCand_trk0_Pt",]:
+    #     DrawMulticomparison([
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
+    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
+    #         ], keyword=histname, norm=False, Xrange=[0, 400], Rebin=5, Logy=1)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):

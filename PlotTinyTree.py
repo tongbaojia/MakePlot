@@ -680,7 +680,7 @@ def main():
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
-    split_list = ["data_test", "ttbar_comb_test"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    split_list = ["data_test", "ttbar_comb_test", "signal_QCD"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
     #split_list = []
     inputtasks = []
