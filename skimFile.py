@@ -78,7 +78,7 @@ def skim(targetpath=""):
     print targetpath
 
     #setup files
-    files = glob.glob(targetpath + "*_MiniNTuple.root")
+    files = glob.glob(targetpath + "*.MiniNTuple.root")
     config = []
     #setup the dictionary
     for file in files:
@@ -110,8 +110,9 @@ def main():
     eospath = CONF.toppath + "/eos/atlas/user/b/btong/bb/"
     #skim(targetpath=eospath + "data/vBT-01-00/gridOutput/MiniNTuple/")
     #eospath = CONF.toppath + "/eos/atlas/user/g/gputnam/bb/"
-    skim(targetpath=eospath + "data/v02-00-00/gridOutput/MiniNTuple/")
+    #skim(targetpath=eospath + "data/v02-00-00/gridOutput/MiniNTuple/")
     #skim(targetpath=eospath + "mc/v02-00-00/gridOutput/MiniNTuple/")
+    #skim(targetpath=eospath + "mc/v02-02-03/gridOutput/rawDownload/user.btong.mc15_13TeV.410000.PowhegPythiaEvtGen_P2012_ttbar_hdamp172p5_nonallhad.hh4b-02-02-03_MiniNTuple.root/")
     #skim(targetpath="../test_mini/data-MiniNTuple/")
     #split(targetpath="signal_QCD")
 

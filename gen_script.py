@@ -39,9 +39,9 @@ def write_reweight(fname="TEST", reweight_dic={},
         for region, region_fname in region_dic:
             for var, var_fname in reweight_dic.iteritems():
                 if split: #this is to reweight leading pT and trk pT seperately
-                    if "j0_pt" in var and i%2 == 1: #for even skip j0_pt
+                    if "j0_" in var and i%2 == 1: #for even skip j0_pt
                         continue
-                    elif "j0_pt" not in var and i%2 != 1: #for odd, skip other
+                    elif "j0_" not in var and i%2 != 1: #for odd, skip other
                         continue
                     # if "j0_pt" in var and i%4 > 1: #for even skip j0_pt
                     #     continue
@@ -122,8 +122,10 @@ def main():
         "j0_trk1_pt":"leadHCand_trk1_Pt",
         "j1_trk0_pt":"sublHCand_trk0_Pt",
         "j1_trk1_pt":"sublHCand_trk1_Pt",
-        #"j0_pt":"leadHCand_Pt_m",
-        #"j1_pt":"sublHCand_Pt_m",
+        "j0_pt":"leadHCand_Pt_m",
+        "j1_pt":"sublHCand_Pt_m",
+        "j0_eta":"leadHCand_Eta",
+        "j1_eta":"sublHCand_Eta",
         }
     region_dic = [
         ("2bs","NoTag_2Trk_split_lead_Incl"),
@@ -133,7 +135,7 @@ def main():
         ("4b", "NoTag_4Trk_lead_Incl"),
         ("4b", "NoTag_4Trk_subl_Incl"),
     ]
-    write_reweight("bkgtrk", reweight_dic, region_dic, cond=True)
+    write_reweight("bkgeta", reweight_dic, region_dic, cond=True)
     
     print "DONE"
 
