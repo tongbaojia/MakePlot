@@ -533,13 +533,13 @@ class regionHists:
         self.ThreeTag_subl.Write(outputroot)
         ##for extra extra b-tagging on which jet studies
         self.OneTag_lead_lead.Write(outputroot)
-        self.OneTag_subl_subl.Write(outputroot)
+        self.OneTag_subl_lead.Write(outputroot)
         self.OneTag_lead_subl.Write(outputroot)
         self.OneTag_subl_subl.Write(outputroot)
         self.TwoTag_split_lead_lead.Write(outputroot)
-        self.TwoTag_split_subl_subl.Write(outputroot)
-        self.TwoTag_split_lead_subl.Write(outputroot)
         self.TwoTag_split_subl_lead.Write(outputroot)
+        self.TwoTag_split_lead_subl.Write(outputroot)
+        self.TwoTag_split_subl_subl.Write(outputroot)
 
 
 def analysis(inputconfig):
@@ -676,7 +676,7 @@ def main():
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
-    split_list = ["data_test", "ttbar_comb_test"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    split_list = ["data_test", "ttbar_comb_test", "signal_QCD"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
     #split_list = []
     inputtasks = []
