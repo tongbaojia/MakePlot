@@ -124,8 +124,8 @@ def main():
         "j1_trk1_pt":"sublHCand_trk1_Pt",
         "j0_pt":"leadHCand_Pt_m",
         "j1_pt":"sublHCand_Pt_m",
-        "j0_eta":"leadHCand_Eta",
-        "j1_eta":"sublHCand_Eta",
+        #"j0_eta":"leadHCand_Eta",
+        #"j1_eta":"sublHCand_Eta",
         }
     region_dic = [
         ("2bs","NoTag_2Trk_split_lead_Incl"),
@@ -135,7 +135,7 @@ def main():
         ("4b", "NoTag_4Trk_lead_Incl"),
         ("4b", "NoTag_4Trk_subl_Incl"),
     ]
-    write_reweight("bkgeta", reweight_dic, region_dic, cond=True)
+    write_reweight("bkgsb", reweight_dic, region_dic, cond=True)
     
     print "DONE"
 

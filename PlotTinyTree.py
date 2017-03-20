@@ -19,7 +19,7 @@ def options():
     parser.add_argument("--dosyst",    default=None)
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
-    parser.add_argument("--MV2",       default=0.6455)
+    parser.add_argument("--MV2",       default=0.6455) #0.3706, 0.6455
     parser.add_argument("--resveto",   action='store_true')
     parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
     parser.add_argument("--debug",     action='store_true')
@@ -396,14 +396,14 @@ class regionHists:
         self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #2tag, lead H tag 2 tag
         self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #2tag, subl H tag 2 tag
         # ##for extra extra b-tagging on which jet studies
-        self.OneTag_lead_lead    = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
-        self.OneTag_subl_subl    = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
-        self.OneTag_lead_subl    = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
-        self.OneTag_subl_lead    = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
-        self.TwoTag_split_lead_lead    = massregionHists("TwoTag_split_lead_lead", outputroot) #2bs, lead H lead trk tag, subl H lead trk tag
-        self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
-        self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
-        self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
+        # self.OneTag_lead_lead    = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
+        # self.OneTag_subl_subl    = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
+        # self.OneTag_lead_subl    = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
+        # self.OneTag_subl_lead    = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
+        # self.TwoTag_split_lead_lead    = massregionHists("TwoTag_split_lead_lead", outputroot) #2bs, lead H lead trk tag, subl H lead trk tag
+        # self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
+        # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
+        # self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -438,14 +438,14 @@ class regionHists:
                 #if (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
                 self.TwoTag_split.Fill(event) #this is 2 tight 2 tight, on both side; if not the last tight, then 2bs
                 ##for extra extra b-tagging on which jet studies
-                if (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
-                    self.TwoTag_split_lead_lead.Fill(event)
-                elif (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 < b_tagging_cut):
-                    self.TwoTag_split_lead_subl.Fill(event)
-                elif (event.j0_trk1_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 < b_tagging_cut):
-                    self.TwoTag_split_subl_subl.Fill(event)
-                elif (event.j0_trk1_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
-                    self.TwoTag_split_subl_lead.Fill(event)
+                # if (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
+                #     self.TwoTag_split_lead_lead.Fill(event)
+                # elif (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 < b_tagging_cut):
+                #     self.TwoTag_split_lead_subl.Fill(event)
+                # elif (event.j0_trk1_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 < b_tagging_cut):
+                #     self.TwoTag_split_subl_subl.Fill(event)
+                # elif (event.j0_trk1_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
+                #    self.TwoTag_split_subl_lead.Fill(event)
 
             elif (nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2): 
                 self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
@@ -469,11 +469,17 @@ class regionHists:
                     self.TwoTag_split_lead_bkg.Fill(event)
                 elif (nb_j0 == 0 and nb_j1 == 1):
                     self.TwoTag_split_subl_bkg.Fill(event)
-            if ((nb_j0 == 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 1)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
+            # if ((nb_j0 == 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 1)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
+            #     self.ThreeTag_bkg.Fill(event)
+            #     if (nb_j0 == 1 and nb_j1 == 0):
+            #         self.ThreeTag_lead_bkg.Fill(event)
+            #     elif (nb_j0 == 0 and nb_j1 == 1):
+            #         self.ThreeTag_subl_bkg.Fill(event)
+            if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
                 self.ThreeTag_bkg.Fill(event)
-                if (nb_j0 == 1 and nb_j1 == 0):
+                if (nb_j0 == 2 and nb_j1 == 0):
                     self.ThreeTag_lead_bkg.Fill(event)
-                elif (nb_j0 == 0 and nb_j1 == 1):
+                elif (nb_j0 == 0 and nb_j1 == 2):
                     self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 self.FourTag_bkg.Fill(event)
@@ -486,17 +492,17 @@ class regionHists:
             if (nb_j0 == 1 and nb_j1 == 0):
                 self.OneTag_lead.Fill(event)
                 ##for extra extra b-tagging on which jet studies
-                if (event.j0_trk0_Mv2 > b_tagging_cut):
-                    self.OneTag_lead_lead.Fill(event)
-                else:
-                    self.OneTag_lead_subl.Fill(event)
+                # if (event.j0_trk0_Mv2 > b_tagging_cut):
+                #     self.OneTag_lead_lead.Fill(event)
+                # else:
+                #     self.OneTag_lead_subl.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 1):
                 self.OneTag_subl.Fill(event)
                 ##for extra extra b-tagging on which jet studies
-                if (event.j1_trk0_Mv2 > b_tagging_cut):
-                    self.OneTag_subl_lead.Fill(event)
-                else:
-                    self.OneTag_subl_subl.Fill(event)
+                # if (event.j1_trk0_Mv2 > b_tagging_cut):
+                #     self.OneTag_subl_lead.Fill(event)
+                # else:
+                #     self.OneTag_subl_subl.Fill(event)
             elif (nb_j0 == 2 and nb_j1 == 0):
                 self.TwoTag_lead.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 2):
@@ -532,14 +538,14 @@ class regionHists:
         self.ThreeTag_lead.Write(outputroot)
         self.ThreeTag_subl.Write(outputroot)
         ##for extra extra b-tagging on which jet studies
-        self.OneTag_lead_lead.Write(outputroot)
-        self.OneTag_subl_lead.Write(outputroot)
-        self.OneTag_lead_subl.Write(outputroot)
-        self.OneTag_subl_subl.Write(outputroot)
-        self.TwoTag_split_lead_lead.Write(outputroot)
-        self.TwoTag_split_subl_lead.Write(outputroot)
-        self.TwoTag_split_lead_subl.Write(outputroot)
-        self.TwoTag_split_subl_subl.Write(outputroot)
+        # self.OneTag_lead_lead.Write(outputroot)
+        # self.OneTag_subl_lead.Write(outputroot)
+        # self.OneTag_lead_subl.Write(outputroot)
+        # self.OneTag_subl_subl.Write(outputroot)
+        # self.TwoTag_split_lead_lead.Write(outputroot)
+        # self.TwoTag_split_subl_lead.Write(outputroot)
+        # self.TwoTag_split_lead_subl.Write(outputroot)
+        # self.TwoTag_split_subl_subl.Write(outputroot)
 
 
 def analysis(inputconfig):
@@ -676,8 +682,10 @@ def main():
 
     #real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
-    split_list = ["data_test", "ttbar_comb_test", "signal_QCD"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
+    split_list = ["data_test", "ttbar_comb_test"] #, "signal_QCD"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
+    if turnon_reweight:
+        split_list = ["data_test"]
     #split_list = []
     inputtasks = []
     for split_file in split_list:
@@ -688,7 +696,7 @@ def main():
     if not turnon_reweight:
         inputtasks.append(pack_input("zjets_test"))
     else:
-        linklist = ["zjets_test"]
+        linklist = ["zjets_test", "ttbar_comb_test"] ##don't reweight ttbar and zjets
         for target in linklist:
             helpers.checkpath(outputpath + target)
             ori_link = inputpath.replace(ops.inputdir, "Moriond") + target + "/hist-MiniNTuple.root"

@@ -468,11 +468,11 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]       = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]    = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j0_Pt"]       = array('d', range(450, 600, 30) + range(600, 800, 40) + [800, 850, 910, 980, 1100, 2000]) #9.5 version
+        rebin_dic["j0_Pt"]       = array('d', range(450, 600, 30) + range(600, 1000, 40) + [1000, 1100, 2000]) #9.5 version
         rebin_dic["j1_Pt"]       = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
-        rebin_dic["j0_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
-        rebin_dic["j1_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 620, 820, 1200, 2000]) #9.5 version
+        rebin_dic["j0_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]     = array('d', range(0, 150, 15) + [150, 170, 190, 220, 250, 600]) #tuned
         rebin_dic["trk_dr"]      = array('d', [0, 0.2] + [x * 0.1 for x in range(2, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"] = array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
@@ -483,8 +483,8 @@ def dumpRegion(config):
         #rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
         rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 840, 50) + [840, 900, 1000, 2000])#9.5 version
         rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 800, 900, 1000, 2000])
-        rebin_dic["j0_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 2000])
-        rebin_dic["j1_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 820, 2000])
+        rebin_dic["j0_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
+        rebin_dic["j1_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
         rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 500])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -576,13 +576,19 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    #region_lst = ["Sideband"]
-    #cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
-    region_lst  = ["Incl"]
+    region_lst = ["Sideband"]
+    cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
+    
     ##these are the distributios we want to look like 
     ##these are the disbrituions we are changing
-    cut_lst     = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
-    comp_lst    = ["OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead", "TwoTag_subl", "TwoTag_lead"]
+    ##this is the one tag rewieght
+    #region_lst  = ["Incl"]
+    #cut_lst     = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
+    #comp_lst    = ["OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead", "TwoTag_subl", "TwoTag_lead"]
+    #comp_region_lst  = ["Incl"]
+    ##this is to the sidebands rewieght
+    ##comp_lst    = ["TwoTag_split", "TwoTag_split", "ThreeTag", "ThreeTag", "FourTag", "FourTag"]
+    ##comp_region_lst  = ["Sideband"]
     #comp_lst   = ["NoTag_2Trk_split_subl", "NoTag_2Trk_split_lead", "NoTag_3Trk_subl", "NoTag_3Trk_lead", "NoTag_4Trk_subl", "NoTag_4Trk_lead"]
 
     #create master list
@@ -600,9 +606,9 @@ def main():
             config["inputdir"] = inputdir
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
-            if comp_lst[j]:
-                config["compcut"] = comp_lst[j] + "_" + region + "_"
-            else:
+            try:
+                config["compcut"] = comp_lst[j] + "_" + comp_region_lst[i] + "_" ##change this to be flexiable to regions
+            except NameError:
                 config["compcut"] = "" ##by default this is disabled
             inputtasks.append(config)
     #parallel compute!

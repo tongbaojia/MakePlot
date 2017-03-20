@@ -32,8 +32,9 @@ def main():
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #4
-        #analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Sideband"})
-        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Incl"})
+        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Sideband"})
+        ##this is for the oneTag reweights
+        #analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Incl"})
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def analysis_pipeline(config):
@@ -61,13 +62,13 @@ def analysis_pipeline(config):
     ##list of plots
     if CONF.fullstudy:
         plt_lst = ["mHH_l_1",\
-            "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
-            "sublHCand_Pt_m", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
+            "leadHCand_Pt_m_1", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
+            "sublHCand_Pt_m_1", "sublHCand_Eta", "sublHCand_Phi", "sublHCand_Mass", "sublHCand_Mass_s", "sublHCand_trk_dr",\
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     else:
         plt_lst = ["mHH_l_1", \
-            "leadHCand_Pt_m",\
-            "sublHCand_Pt_m",\
+            "leadHCand_Pt_m_1",\
+            "sublHCand_Pt_m_1",\
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     #"hCandDr", "hCandDeta", "hCandDphi",\
     ##clean up the current plots

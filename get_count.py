@@ -132,8 +132,8 @@ def main():
     useOneTop = False
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass", "sublHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
-        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=False) #Weight_dic = weight_dict, 
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
+        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=True) #Weight_dic = weight_dict, 
     
     # global fitresult_NoTag
     # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
@@ -275,7 +275,7 @@ def GetdataEst(inputdic, histname="", dosyst=False):
                 if (region + "_syst_muqcd_fit_up") in inputdic["qcd_est"][cut].keys():
                     cutcounts[region + "_syst_muqcd_fit_up"]   = helpers.syst_adderror(inputdic["qcd_est"][cut][region + "_syst_muqcd_fit_up"], inputdic["ttbar_est"][cut][region + "_syst_muqcd_fit_up"], corr=inputdic["qcd_est"][cut][region + "_corr"])
                     cutcounts[region + "_syst_muqcd_fit_down"] = helpers.syst_adderror(inputdic["qcd_est"][cut][region + "_syst_muqcd_fit_down"], inputdic["ttbar_est"][cut][region + "_syst_muqcd_fit_down"], corr=inputdic["qcd_est"][cut][region + "_corr"])
-                    
+                    ##for now the total systematics is just the muqcd fit systematics
                     cutcounts[region + "_syst_up"]   = cutcounts[region + "_syst_muqcd_fit_up"]
                     cutcounts[region + "_syst_down"] = cutcounts[region + "_syst_muqcd_fit_down"]
         data_est[cut] = cutcounts
@@ -565,9 +565,17 @@ def Getqcd(inputdic, histname=""):
                     htemp_ttbar = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_zjet  = outroot.Get("zjet" + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd   = outroot.Get("data" + "_" + cut + "_" + region + "_" + hst).Clone()
+                ##check error
+                ## if hst is "mHH_l":
+                ##     print "data", cut, region, htemp_qcd.GetBinCenter(200), "content:", htemp_qcd.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_qcd.GetBinContent(200)), "err:", htemp_qcd.GetBinError(200)
+                ##     print "top", cut, region, htemp_ttbar.GetBinCenter(200),"content:", htemp_ttbar.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_ttbar.GetBinContent(200)), "err:", htemp_ttbar.GetBinError(200)
+                ##     print "zjet", cut, region, htemp_zjet.GetBinCenter(200),"content:", htemp_zjet.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_zjet.GetBinContent(200)), "err:", htemp_zjet.GetBinError(200)
                 htemp_qcd.SetName("qcd" + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, -1) #substract the ttbar from MC
                 htemp_qcd.Add(htemp_zjet, -1)
+                ##check error
+                ## if hst is "mHH_l":
+                ##     print "after", cut, region, htemp_qcd.GetBinCenter(200), "content:", htemp_qcd.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_qcd.GetBinContent(200)), "err:", htemp_qcd.GetBinError(200)
                 helpers.clear_negbin(htemp_qcd)
                 htemp_qcd.Write()
                 del(htemp_qcd)

@@ -9,6 +9,10 @@ import helpers
 import rootlogon
 #for parallel processing!
 import multiprocessing as mp
+try:
+    import simplejson as json                 
+except ImportError:
+    import json
 #other setups
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
@@ -102,10 +106,35 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
 
+    ##add in normalization error at least
+    syst_up = []
+    syst_down = []
+    f1 = open(filepath + filename + ".txt")
+    masterdic = json.load(f1)
+
+    ##find the systmatics from the fit
+    cut_temp = cut.split("_")
+    if cut_temp[1] == "split":
+        cut_temp.remove("split")
+        cut_temp[0] = "TwoTag_split"
+    #for key_temp, value_temp in masterdic["data_est_nofit"][cut_temp[0]].iteritems():
+        #print key_temp, value_temp, cut_temp[1]
+        #print key_temp, value_temp, 
+    ##this is the total error in the region from the fit
+    #print masterdic["data_est_nofit"][cut_temp[0]][cut_temp[1] + "_err"]
+    temp_syst_up = data_est.Clone(data_est.GetName() + "_syst_up")
+    temp_syst_up.Scale((data_est.Integral() + masterdic["data_est_nofit"][cut_temp[0]][cut_temp[1] + "_err"])/data_est.Integral())
+    #print "here", (data_est.Integral() + masterdic["data_est_nofit"][cut_temp[0]][cut_temp[1] + "_err"])/data_est.Integral()
+    temp_syst_down = data_est.Clone(data_est.GetName() + "_syst_down")
+    temp_syst_down.Scale((data_est.Integral() - masterdic["data_est_nofit"][cut_temp[0]][cut_temp[1] + "_err"])/data_est.Integral())
+    syst_up.append(temp_syst_up)
+    syst_down.append(temp_syst_down)
+
     #setup data and bkg estiamtes
     data = h_plt.makeTotBkg([data])[1]
     bkg = h_plt.makeTotBkg([ttbar,qcd])
-    #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet])
+    #bkg = h_plt.makeTotBkg([ttbar,qcd], syst_up, syst_down)
+    #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet], syst_up, syst_down)
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
     ratios = h_plt.makeDataRatio(data, bkg[1])
 
@@ -342,6 +371,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     pad0.Close()
     pad1.Close()
     c0.Close()
+    f1.close()
     del(leg)
 
 def dumpRegion(config):
