@@ -4,7 +4,7 @@
 ###For a more proper anlaysis, do the c++ standard way please
 import ROOT, helpers
 import config as CONF
-import time, os, subprocess, glob, argparse, compiler
+import time, os, subprocess, glob, argparse, compiler, gc
 #for parallel processing!
 import multiprocessing as mp
 #import tree configuration
@@ -79,7 +79,7 @@ def get_reweight(curriter, folder, filename, spline=True):
     f_reweight = open(reweightfolder + filename, "r")
     par_weight = {}
     for line in f_reweight:
-        lstline =  line.split()#default split by space
+        lstline =  line.split() #default split by space
         #print lstline
         if "par0" in line:
             par_weight["par0"] = float(lstline[1]) if abs(float(lstline[1])) > 1E-13 else 0
@@ -240,8 +240,8 @@ class eventHists:
             self.h1_eta.Fill(event.j1_eta, weight)     
             self.h0_phi.Fill(event.j0_phi, weight)    
             self.h1_phi.Fill(event.j1_phi, weight)   
-            self.h0_trk_dr.Fill(helpers.dR(event.j0_trk0_eta, event.j0_trk0_phi, event.j0_trk1_eta, event.j0_trk1_phi), weight) 
-            self.h1_trk_dr.Fill(helpers.dR(event.j1_trk0_eta, event.j1_trk0_phi, event.j1_trk1_eta, event.j1_trk1_phi), weight) 
+            self.h0_trk_dr.Fill(event.j0_trkdr, weight) 
+            self.h1_trk_dr.Fill(event.j1_trkdr, weight) 
             self.h0_ntrk.Fill(event.j0_nTrk, weight)    
             self.h1_ntrk.Fill(event.j1_nTrk, weight)    
             self.h0_trks_pt.Fill(event.j0_trk0_pt, weight)
@@ -259,9 +259,9 @@ class eventHists:
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
             self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
-            self.dRH0H1.Fill(helpers.dR(event.j0_trk0_eta, event.j0_trk0_phi, event.j0_trk1_eta, event.j0_trk1_phi), helpers.dR(event.j1_trk0_eta, event.j1_trk0_phi, event.j1_trk1_eta, event.j1_trk1_phi), weight)
+            self.dRH0H1.Fill(event.j0_trkdr, event.j1_trkdr, weight)
             self.trkfracH0H1.Fill(event.j0_trk0_pt/(event.j0_trk0_pt + event.j0_trk1_pt), event.j1_trk0_pt/(event.j1_trk0_pt + event.j1_trk1_pt), weight)
-            self.mHHdRH0.Fill(event.mHH, helpers.dR(event.j0_trk0_eta, event.j0_trk0_phi, event.j0_trk1_eta, event.j0_trk1_phi), weight)
+            self.mHHdRH0.Fill(event.mHH, event.j0_trkdr, weight)
             #self.MV2H0H1.Fill(event.j0_trk0_Mv2 + event.j0_trk1_Mv2, event.j1_trk0_Mv2 + event.j1_trk1_Mv2, weight)
             #self.MV2H0.Fill(event.j0_trk0_Mv2, event.j0_trk1_Mv2, weight)
             #self.MV2H1.Fill(event.j1_trk0_Mv2, event.j1_trk1_Mv2, weight)
@@ -371,35 +371,35 @@ class bkgregionHists:
 #these are the different regions
 class regionHists:
     def __init__(self, outputroot, reweight):
-        self.AllTag       = massregionHists("AllTag", outputroot)
-        self.NoTag        = massregionHists("NoTag", outputroot)
-        self.OneTag       = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
-        self.TwoTag       = massregionHists("TwoTag", outputroot)
-        self.TwoTag_split = massregionHists("TwoTag_split", outputroot)
-        self.ThreeTag     = massregionHists("ThreeTag", outputroot)
-        self.FourTag      = massregionHists("FourTag", outputroot)
+        self.AllTag                    = massregionHists("AllTag", outputroot)
+        self.NoTag                     = massregionHists("NoTag", outputroot)
+        self.OneTag                    = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
+        self.TwoTag                    = massregionHists("TwoTag", outputroot)
+        self.TwoTag_split              = massregionHists("TwoTag_split", outputroot)
+        self.ThreeTag                  = massregionHists("ThreeTag", outputroot)
+        self.FourTag                   = massregionHists("FourTag", outputroot)
         #for background modeling; not really NoTag!!!
-        self.TwoTag_split_bkg       = bkgregionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
-        self.TwoTag_split_lead_bkg  = bkgregionHists("NoTag" + "_" + "2Trk_split_lead", outputroot, reweight)
-        self.TwoTag_split_subl_bkg  = bkgregionHists("NoTag" + "_" + "2Trk_split_subl", outputroot, reweight)
-        self.ThreeTag_bkg           = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
-        self.ThreeTag_lead_bkg      = bkgregionHists("NoTag" + "_" + "3Trk_lead", outputroot, reweight)
-        self.ThreeTag_subl_bkg      = bkgregionHists("NoTag" + "_" + "3Trk_subl", outputroot, reweight)
-        self.FourTag_bkg            = bkgregionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
-        self.FourTag_lead_bkg       = bkgregionHists("NoTag" + "_" + "4Trk_lead", outputroot, reweight)
-        self.FourTag_subl_bkg       = bkgregionHists("NoTag" + "_" + "4Trk_subl", outputroot, reweight)
+        self.TwoTag_split_bkg          = bkgregionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
+        self.TwoTag_split_lead_bkg     = bkgregionHists("NoTag" + "_" + "2Trk_split_lead", outputroot, reweight)
+        self.TwoTag_split_subl_bkg     = bkgregionHists("NoTag" + "_" + "2Trk_split_subl", outputroot, reweight)
+        self.ThreeTag_bkg              = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
+        self.ThreeTag_lead_bkg         = bkgregionHists("NoTag" + "_" + "3Trk_lead", outputroot, reweight)
+        self.ThreeTag_subl_bkg         = bkgregionHists("NoTag" + "_" + "3Trk_subl", outputroot, reweight)
+        self.FourTag_bkg               = bkgregionHists("NoTag" + "_" + "4Trk", outputroot, reweight)
+        self.FourTag_lead_bkg          = bkgregionHists("NoTag" + "_" + "4Trk_lead", outputroot, reweight)
+        self.FourTag_subl_bkg          = bkgregionHists("NoTag" + "_" + "4Trk_subl", outputroot, reweight)
         # #for extra studies
-        self.OneTag_lead         = massregionHists("OneTag_lead", outputroot) #1tag, lead H tag
-        self.OneTag_subl         = massregionHists("OneTag_subl", outputroot) #1tag, subl H tag
-        self.TwoTag_lead         = massregionHists("TwoTag_lead", outputroot) #2tag, lead H tag
-        self.TwoTag_subl         = massregionHists("TwoTag_subl", outputroot) #2tag, lead H tag
-        self.ThreeTag_lead       = massregionHists("ThreeTag_lead", outputroot) #2tag, lead H tag 2 tag
-        self.ThreeTag_subl       = massregionHists("ThreeTag_subl", outputroot) #2tag, subl H tag 2 tag
-        # ##for extra extra b-tagging on which jet studies
-        # self.OneTag_lead_lead    = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
-        # self.OneTag_subl_subl    = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
-        # self.OneTag_lead_subl    = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
-        # self.OneTag_subl_lead    = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
+        self.OneTag_lead               = massregionHists("OneTag_lead", outputroot) #1tag, lead H tag
+        self.OneTag_subl               = massregionHists("OneTag_subl", outputroot) #1tag, subl H tag
+        self.TwoTag_lead               = massregionHists("TwoTag_lead", outputroot) #2tag, lead H tag
+        self.TwoTag_subl               = massregionHists("TwoTag_subl", outputroot) #2tag, lead H tag
+        self.ThreeTag_lead             = massregionHists("ThreeTag_lead", outputroot) #2tag, lead H tag 2 tag
+        self.ThreeTag_subl             = massregionHists("ThreeTag_subl", outputroot) #2tag, subl H tag 2 tag
+        # # # ##for extra extra b-tagging on which jet studies
+        # self.OneTag_lead_lead          = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
+        # self.OneTag_subl_subl          = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
+        # self.OneTag_lead_subl          = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
+        # self.OneTag_subl_lead          = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
         # self.TwoTag_split_lead_lead    = massregionHists("TwoTag_split_lead_lead", outputroot) #2bs, lead H lead trk tag, subl H lead trk tag
         # self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
@@ -437,7 +437,7 @@ class regionHists:
             elif nb_j0 == 1 and nb_j1 == 1:
                 #if (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
                 self.TwoTag_split.Fill(event) #this is 2 tight 2 tight, on both side; if not the last tight, then 2bs
-                ##for extra extra b-tagging on which jet studies
+                # ##for extra extra b-tagging on which jet studies
                 # if (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 > b_tagging_cut):
                 #     self.TwoTag_split_lead_lead.Fill(event)
                 # elif (event.j0_trk0_Mv2 > b_tagging_cut) and (event.j1_trk0_Mv2 < b_tagging_cut):
@@ -491,14 +491,14 @@ class regionHists:
             ##for extra studies; need to be moved to default; notice b-tagging is already sorted here
             if (nb_j0 == 1 and nb_j1 == 0):
                 self.OneTag_lead.Fill(event)
-                ##for extra extra b-tagging on which jet studies
+                # ##for extra extra b-tagging on which jet studies
                 # if (event.j0_trk0_Mv2 > b_tagging_cut):
                 #     self.OneTag_lead_lead.Fill(event)
                 # else:
                 #     self.OneTag_lead_subl.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 1):
                 self.OneTag_subl.Fill(event)
-                ##for extra extra b-tagging on which jet studies
+                # ##for extra extra b-tagging on which jet studies
                 # if (event.j1_trk0_Mv2 > b_tagging_cut):
                 #     self.OneTag_subl_lead.Fill(event)
                 # else:
@@ -537,7 +537,7 @@ class regionHists:
         self.TwoTag_subl.Write(outputroot)
         self.ThreeTag_lead.Write(outputroot)
         self.ThreeTag_subl.Write(outputroot)
-        ##for extra extra b-tagging on which jet studies
+        # ##for extra extra b-tagging on which jet studies
         # self.OneTag_lead_lead.Write(outputroot)
         # self.OneTag_subl_lead.Write(outputroot)
         # self.OneTag_lead_subl.Write(outputroot)
@@ -591,12 +591,13 @@ def analysis(inputconfig):
 
         #AllHists.Fill(t)
         ##or, add in resovled veto whenever feel like it
-        if (ops.resveto):
-            if (abs(t.nresj) < 4):
-                #print "here"
+        #if (ops.resveto):
+        if (True): ##enable resolved veto for now and on
+            #if (abs(t.nresj) < 4):
+            if (t.nresj > -0.1):
                 AllHists.Fill(t)
             else:
-                continue
+                pass
         else:
             AllHists.Fill(t)
 
@@ -608,6 +609,7 @@ def analysis(inputconfig):
     del(AllHists)
     del(t)
     del(f)
+    gc.collect()
 
 #pack the input into a configuration dictionary
 def pack_input(inputfile, inputsplit=-1):

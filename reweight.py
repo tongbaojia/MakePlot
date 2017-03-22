@@ -474,7 +474,7 @@ def dumpRegion(config):
         rebin_dic["j0_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
         rebin_dic["j1_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]     = array('d', range(0, 150, 15) + [150, 170, 190, 220, 250, 600]) #tuned
-        rebin_dic["trk_dr"]      = array('d', [0, 0.2] + [x * 0.1 for x in range(2, 10)] + [1, 1.5, 2])
+        rebin_dic["trk_dr"]      = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
         rebin_dic["trk_pT_diff"] = array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]     = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
@@ -486,7 +486,7 @@ def dumpRegion(config):
         rebin_dic["j0_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
         rebin_dic["j1_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
         rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 500])
-        rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.5, 2])
+        rebin_dic["trk_dr"]      = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
@@ -499,7 +499,7 @@ def dumpRegion(config):
         rebin_dic["j0_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
         rebin_dic["j1_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 150, 30) + [150, 500])
-        rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10, 2)] + [1, 1.5, 2])
+        rebin_dic["trk_dr"]      = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
@@ -525,10 +525,10 @@ def dumpRegion(config):
         plotRegion(config, cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
         plotRegion(config, cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta", rebin=3, fitrange=[-2, 2])
         plotRegion(config, cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi", rebin=4, fitrange=[-3, 3])
-        plotRegion(config, cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebin=2, rebinarry=rebin_dic["trk_dr"], fitrange=[0.2, 1.2])
+        plotRegion(config, cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk", rebinarry=rebin_dic["trk_dr"], fitrange=[0, 2])
         plotRegion(config, cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta", rebin=3, fitrange=[-2, 2])
         plotRegion(config, cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi", rebin=4, fitrange=[-3, 3])
-        plotRegion(config, cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebin=2, rebinarry=rebin_dic["trk_dr"], fitrange=[0.2, 1.2])
+        plotRegion(config, cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk", rebinarry=rebin_dic["trk_dr"], fitrange=[0, 2])
         plotRegion(config, cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk", fitrange=([1, 6] if "TwoTag" in config["cut"] else [2, 4]))
         plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk", fitrange=([1, 6] if "TwoTag" in config["cut"] else [2, 4]))
         plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebinarry=rebin_dic["trk_pT_diff"], fitrange=[0, 600])
@@ -576,16 +576,16 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
-    region_lst = ["Sideband"]
-    cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
+    #region_lst = ["Sideband"]
+    #cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
     
     ##these are the distributios we want to look like 
     ##these are the disbrituions we are changing
     ##this is the one tag rewieght
-    #region_lst  = ["Incl"]
-    #cut_lst     = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
-    #comp_lst    = ["OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead", "TwoTag_subl", "TwoTag_lead"]
-    #comp_region_lst  = ["Incl"]
+    region_lst  = ["Incl"]
+    cut_lst     = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
+    comp_lst    = ["OneTag_subl", "OneTag_lead", "OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead"]
+    comp_region_lst  = ["Incl"]
     ##this is to the sidebands rewieght
     ##comp_lst    = ["TwoTag_split", "TwoTag_split", "ThreeTag", "ThreeTag", "FourTag", "FourTag"]
     ##comp_region_lst  = ["Sideband"]

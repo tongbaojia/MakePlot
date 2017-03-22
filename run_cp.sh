@@ -31,7 +31,7 @@ fi
 if [ ! -d $homepath"/www/share/hh4b/express/"$ch ]; then
   mkdir $homepath"/www/share/hh4b/express/"$ch
 fi
-for plt in leadHCand_Mass sublHCand_Mass mHH_l_1 trk0_Pt trk1_Pt leadHCand_Pt_m sublHCand_Pt_m; do
+for plt in leadHCand_Mass sublHCand_Mass mHH_l_1 trk0_Pt trk1_Pt leadHCand_Pt_m_1 sublHCand_Pt_m_1 trk_dr; do
 	find $workpath$ch$"/Plot_r"$(($iter + 1))$"/Incl/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
 	find $workpath$ch$"/Plot_r"$(($iter + 1))$"/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/reweight/"$ch \;
 	find $workpath$ch$"/Plot/Sideband/" -name "*"$plt".png" -exec cp {} $homepath"/www/share/hh4b/plot/"$ch \;

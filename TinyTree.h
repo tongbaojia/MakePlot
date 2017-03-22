@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sun May 22 21:32:10 2016 by ROOT version 5.34/36
+// Tue Mar 21 19:43:32 2017 by ROOT version 6.04/16
 // from TTree TinyTree/TinyTree
-// found on file: ttbar_comb_test.root
+// found on file: hist-MiniNTuple.root
 //////////////////////////////////////////////////////////
 
 #ifndef TinyTree_h
@@ -14,12 +14,12 @@
 
 // Header file for the classes stored in the TTree if any.
 
-// Fixed size dimensions of array or collections stored in the TTree if any.
-
 class TinyTree {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
+
+// Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
    Float_t         runNumber;
@@ -36,12 +36,14 @@ public :
    Float_t         j0_phi;
    Float_t         j0_nTrk;
    Float_t         j0_nb;
+   Float_t         j0_trkdr;
    Float_t         j1_m;
    Float_t         j1_pt;
    Float_t         j1_eta;
    Float_t         j1_phi;
    Float_t         j1_nTrk;
    Float_t         j1_nb;
+   Float_t         j1_trkdr;
    Float_t         j0_trk0_m;
    Float_t         j0_trk0_pt;
    Float_t         j0_trk0_eta;
@@ -85,12 +87,14 @@ public :
    TBranch        *b_j0_phi;   //!
    TBranch        *b_j0_nTrk;   //!
    TBranch        *b_j0_nb;   //!
+   TBranch        *b_j0_trkdr;   //!
    TBranch        *b_j1_m;   //!
    TBranch        *b_j1_pt;   //!
    TBranch        *b_j1_eta;   //!
    TBranch        *b_j1_phi;   //!
    TBranch        *b_j1_nTrk;   //!
    TBranch        *b_j1_nb;   //!
+   TBranch        *b_j1_trkdr;   //!
    TBranch        *b_j0_trk0_m;   //!
    TBranch        *b_j0_trk0_pt;   //!
    TBranch        *b_j0_trk0_eta;   //!
@@ -133,14 +137,14 @@ public :
 #endif
 
 #ifdef TinyTree_cxx
-TinyTree::TinyTree(TTree *tree) : fChain(0)
+TinyTree::TinyTree(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("ttbar_comb_test.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("hist-MiniNTuple.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("ttbar_comb_test.root");
+         f = new TFile("hist-MiniNTuple.root");
       }
       f->GetObject("TinyTree",tree);
 
@@ -203,12 +207,14 @@ void TinyTree::Init(TTree *tree)
    fChain->SetBranchAddress("j0_phi", &j0_phi, &b_j0_phi);
    fChain->SetBranchAddress("j0_nTrk", &j0_nTrk, &b_j0_nTrk);
    fChain->SetBranchAddress("j0_nb", &j0_nb, &b_j0_nb);
+   fChain->SetBranchAddress("j0_trkdr", &j0_trkdr, &b_j0_trkdr);
    fChain->SetBranchAddress("j1_m", &j1_m, &b_j1_m);
    fChain->SetBranchAddress("j1_pt", &j1_pt, &b_j1_pt);
    fChain->SetBranchAddress("j1_eta", &j1_eta, &b_j1_eta);
    fChain->SetBranchAddress("j1_phi", &j1_phi, &b_j1_phi);
    fChain->SetBranchAddress("j1_nTrk", &j1_nTrk, &b_j1_nTrk);
    fChain->SetBranchAddress("j1_nb", &j1_nb, &b_j1_nb);
+   fChain->SetBranchAddress("j1_trkdr", &j1_trkdr, &b_j1_trkdr);
    fChain->SetBranchAddress("j0_trk0_m", &j0_trk0_m, &b_j0_trk0_m);
    fChain->SetBranchAddress("j0_trk0_pt", &j0_trk0_pt, &b_j0_trk0_pt);
    fChain->SetBranchAddress("j0_trk0_eta", &j0_trk0_eta, &b_j0_trk0_eta);
@@ -229,7 +235,7 @@ void TinyTree::Init(TTree *tree)
    fChain->SetBranchAddress("j1_trk1_eta", &j1_trk1_eta, &b_j1_trk1_eta);
    fChain->SetBranchAddress("j1_trk1_phi", &j1_trk1_phi, &b_j1_trk1_phi);
    fChain->SetBranchAddress("j1_trk1_Mv2", &j1_trk1_Mv2, &b_j1_trk1_Mv2);
-   fChain->SetBranchAddress("Xzz", &Xzz, &b_Xzz); //FOR SYST ZZ
+   fChain->SetBranchAddress("Xzz", &Xzz, &b_Xzz);
    //fChain->SetBranchAddress("Xww", &Xww, &b_Xww);
    fChain->SetBranchAddress("Xhh", &Xhh, &b_Xhh);
    fChain->SetBranchAddress("Rhh", &Rhh, &b_Rhh);

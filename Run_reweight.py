@@ -32,9 +32,9 @@ def main():
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #4
-        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Sideband"})
+        #analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Sideband"})
         ##this is for the oneTag reweights
-        #analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Incl"})
+        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Incl"})
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def analysis_pipeline(config):

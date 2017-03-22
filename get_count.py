@@ -28,8 +28,8 @@ evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "Pas
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 ##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
-"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
+#"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
+#"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
 #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
@@ -174,7 +174,7 @@ def main():
     #         del(plt)
     # #WriteEvtCount(masterinfo["ttbar"], output, "$t\\bar{t}$")
     # #WriteEvtCount(masterinfo["zjet"], output, "z+jets")
-    #WriteEvtCount(masterinfo["data"], output, "data")
+    WriteEvtCount(masterinfo["data"], output, "data")
     # # Get qcd from data 
     masterinfo.update(Getqcd(masterinfo, "qcd"))
     #WriteEvtCount(masterinfo["qcd"], output, "qcd")
