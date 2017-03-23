@@ -66,9 +66,9 @@ def write_reweight(fname="TEST", reweight_dic={},
                     if "2Trk_split_subl" in region_fname:
                         templine += "((event.j0_nb==0)and(event.j1_nb==1))" + " " #condition
                     if "3Trk_lead" in region_fname:
-                        templine += "((event.j0_nb==1)and(event.j1_nb==0))" + " " #condition
+                        templine += "((event.j0_nb==2)and(event.j1_nb==0))" + " " #condition
                     if "3Trk_subl" in region_fname:
-                        templine += "((event.j0_nb==0)and(event.j1_nb==1))" + " " #condition
+                        templine += "((event.j0_nb==0)and(event.j1_nb==2))" + " " #condition
                     if "4Trk_lead" in region_fname:
                         templine += "((event.j0_nb==2)and(event.j1_nb==0))" + " " #condition
                     if "4Trk_subl" in region_fname:
@@ -100,14 +100,14 @@ def main():
     #     }
     # write_reweight("j0pT-leadtrk-fin", reweight_dic)
     #next one; leadtrk + dr
-    reweight_dic = {
-        "j0_trk0_pt":"leadHCand_trk0_Pt",
-        "j0_trkdr":"leadHCand_trk_dr",
-        "j1_trk0_pt":"sublHCand_trk0_Pt",
-        "j1_trkdr":"sublHCand_trk_dr",
-        "j0_pt":"leadHCand_Pt_m",
-        }
-    write_reweight("j0pT-leadtrk-trkdr-fin", reweight_dic)
+    # reweight_dic = {
+    #     "j0_trk0_pt":"leadHCand_trk0_Pt",
+    #     "j0_trkdr":"leadHCand_trk_dr",
+    #     "j1_trk0_pt":"sublHCand_trk0_Pt",
+    #     "j1_trkdr":"sublHCand_trk_dr",
+    #     "j0_pt":"leadHCand_Pt_m",
+    #     }
+    # write_reweight("j0pT-leadtrk-trkdr-fin", reweight_dic)
     # #next one; subltrk
     # reweight_dic = {
     #     "j0_trk1_pt":"leadHCand_trk1_Pt",
@@ -126,25 +126,25 @@ def main():
     # write_reweight("j0pT-trks-fin", reweight_dic)
 
 
-    # reweight_dic = {
-    #     "j0_trk0_pt":"leadHCand_trk0_Pt",
-    #     "j0_trk1_pt":"leadHCand_trk1_Pt",
-    #     "j1_trk0_pt":"sublHCand_trk0_Pt",
-    #     "j1_trk1_pt":"sublHCand_trk1_Pt",
-    #     "j0_pt":"leadHCand_Pt_m",
-    #     "j1_pt":"sublHCand_Pt_m",
-    #     #"j0_eta":"leadHCand_Eta",
-    #     #"j1_eta":"sublHCand_Eta",
-    #     }
-    # region_dic = [
-    #     ("2bs","NoTag_2Trk_split_lead_Incl"),
-    #     ("2bs", "NoTag_2Trk_split_subl_Incl"),
-    #     ("3b", "NoTag_3Trk_lead_Incl"),
-    #     ("3b", "NoTag_3Trk_subl_Incl"),
-    #     ("4b", "NoTag_4Trk_lead_Incl"),
-    #     ("4b", "NoTag_4Trk_subl_Incl"),
-    # ]
-    # write_reweight("bkgsb", reweight_dic, region_dic, cond=True)
+    reweight_dic = {
+        "j0_trk0_pt":"leadHCand_trk0_Pt",
+        "j0_trk1_pt":"leadHCand_trk1_Pt",
+        "j1_trk0_pt":"sublHCand_trk0_Pt",
+        "j1_trk1_pt":"sublHCand_trk1_Pt",
+        "j0_pt":"leadHCand_Pt_m",
+        "j1_pt":"sublHCand_Pt_m",
+        #"j0_eta":"leadHCand_Eta",
+        #"j1_eta":"sublHCand_Eta",
+        }
+    region_dic = [
+        ("2bs","NoTag_2Trk_split_lead_Incl"),
+        ("2bs", "NoTag_2Trk_split_subl_Incl"),
+        ("3b", "NoTag_3Trk_lead_Incl"),
+        ("3b", "NoTag_3Trk_subl_Incl"),
+        ("4b", "NoTag_4Trk_lead_Incl"),
+        ("4b", "NoTag_4Trk_subl_Incl"),
+    ]
+    write_reweight("bkg", reweight_dic, region_dic, cond=True)
     
     print "DONE"
 

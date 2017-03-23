@@ -18,7 +18,7 @@ ROOT.SetAtlasStyle()
 #set global variables
 #set output directory
 outputdir = CONF.outplotpath
-mass_lst = [1500, 2000, 3000, 4000, 5000]
+mass_lst = [1500, 2000, 3000]
 # mass_lst = [700, 800, 900, 1000, 1100, 1200, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
 # mass_lst = mass_lst[3:-1]
 

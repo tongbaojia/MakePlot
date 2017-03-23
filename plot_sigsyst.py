@@ -186,8 +186,18 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     ifile.cd()
     for key in ROOT.gDirectory.GetListOfKeys():
         kname = key.GetName()
-        if "QCDShape" in kname: ##these are buggy now!
+        ##print kname
+        if "QCD" in kname: ##this is are buggy now!
             continue
+        # if "smooth" not in kname: ##this is reasonable
+        #     continue
+        # if "norm" not in kname: ##this is reasonable
+        #     continue
+        # if "syst_" in kname: ##this is reasonable
+        #     continue
+        if "FT_" in kname: ##these are buggy now!
+            continue
+
         if "totalbkg_hh" in kname and "up" in kname:
             syst_up.append(ifile.Get(kname).Clone(kname))
             #print kname
@@ -255,7 +265,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #make the total backgroudn with sytematics
     data = makeTotBkg([data])[1]
     #bkg = makeTotBkg([ttbar,qcd])
-    bkg = makeTotBkg([data_est], syst_up, syst_down)
+    bkg = makeTotBkg([ttbar, qcd], syst_up, syst_down)
     #bkg = makeTotBkg([ttbar,qcd,zjet])
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
     ratios = makeDataRatio(data, bkg[1])

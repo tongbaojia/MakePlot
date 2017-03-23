@@ -123,13 +123,13 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    inputtasks.append({"inputdir":"syst_tt_frag"})
-    inputtasks.append({"inputdir":"syst_tt_had"})
-    inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
-    inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    inputtasks.append({"inputdir":"syst_tt_mass_up"})
-    inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    inputtasks.append({"inputdir":"syst_tt_rad_up"})
+    # inputtasks.append({"inputdir":"syst_tt_frag"})
+    # inputtasks.append({"inputdir":"syst_tt_had"})
+    # inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
+    # inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    # inputtasks.append({"inputdir":"syst_tt_mass_up"})
+    # inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    # inputtasks.append({"inputdir":"syst_tt_rad_up"})
     for i in range(1, len(bsyst)):
         # if i == 11 or i == 37 or i == 40 or i == 45:
         #     continue
