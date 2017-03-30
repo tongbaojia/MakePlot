@@ -29,6 +29,8 @@ dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] 
 ##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 "NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
+"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
+"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
 "OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
