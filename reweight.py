@@ -21,9 +21,10 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default=CONF.workdir)
+    parser.add_argument("--inputdir",  default=CONF.workdir)
     parser.add_argument("--inputroot", default="sum")
-    parser.add_argument("--iter", default=0)
+    parser.add_argument("--iter",      default=0)
+    parser.add_argument("--var",       default="j0pT")
     return parser.parse_args()
 
 ####################################################################################
@@ -575,26 +576,30 @@ def main():
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
-
-    #region_lst = ["Sideband"]
-    #cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
     
-    ##these are the distributios we want to look like 
-    ##these are the disbrituions we are changing
-    ##this is the one tag rewieght
-    # region_lst  = ["Incl"]
-    # cut_lst     = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
-    # comp_lst    = ["OneTag_subl", "OneTag_lead", "OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead"]
-    # comp_region_lst  = ["Incl"]
-    ##this is the detailed trk reweight
-    region_lst  = ["Incl"]
-    cut_lst     = ["NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
-    comp_lst    = ["OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl", "OneTag_lead_lead", "OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead"]
-    comp_region_lst  = ["Incl"]
+    ##comp_lst are the distributios we want to look like 
+    ##cut_lst are the disbrituions we are changing
+    ##this is the default
+    if "j0pT" in ops.var:
+        region_lst = ["Sideband"]
+        cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
+    #this is the one tag rewieght
+    if "bkg" in ops.var:
+        region_lst       = ["Incl"]
+        cut_lst          = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
+        comp_lst         = ["OneTag_subl", "OneTag_lead", "OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead"]
+        comp_region_lst  = ["Incl"]
     ##this is to the sidebands rewieght
-    ##comp_lst    = ["TwoTag_split", "TwoTag_split", "ThreeTag", "ThreeTag", "FourTag", "FourTag"]
-    ##comp_region_lst  = ["Sideband"]
-    #comp_lst   = ["NoTag_2Trk_split_subl", "NoTag_2Trk_split_lead", "NoTag_3Trk_subl", "NoTag_3Trk_lead", "NoTag_4Trk_subl", "NoTag_4Trk_lead"]
+    if "bkgsb" in ops.var:
+        region_lst       = ["Sideband"]
+        comp_region_lst  = ["Sideband"]
+        cut_lst          = ["NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"]
+        comp_lst         = ["TwoTag_split", "TwoTag_split", "ThreeTag", "ThreeTag", "FourTag", "FourTag"]
+    ##this is the detailed trk reweight
+    # region_lst  = ["Incl"]
+    # cut_lst     = ["NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl"] 
+    # comp_lst    = ["OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl", "OneTag_lead_lead", "OneTag_subl", "OneTag_lead", "TwoTag_subl", "TwoTag_lead"]
+    # comp_region_lst  = ["Incl"]
 
     #create master list
     inputtasks = []

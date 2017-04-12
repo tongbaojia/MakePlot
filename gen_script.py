@@ -71,19 +71,19 @@ def write_reweight(fname="TEST", reweight_dic={},
                 ##add in condition; be very careful, this means the TinyNtuple has to be produced with the correct b-tagging MV2Cut
                 ##also the definition of condition needs to agree with the PlotTinyTree region condition!!! STUPID but be very careful!!!
                 if cond:
-                    # if "2Trk_split_lead_Incl" in region_fname:
-                    #     templine += "((event.j0_nb==1)and(event.j1_nb==0))" + " " #condition
-                    # if "2Trk_split_subl_Incl" in region_fname:
-                    #     templine += "((event.j0_nb==0)and(event.j1_nb==1))" + " " #condition
+                    if "2Trk_split_lead_Incl" in region_fname:
+                        templine += "((event.j0_nb==1)and(event.j1_nb==0))" + " " #condition
+                    if "2Trk_split_subl_Incl" in region_fname:
+                        templine += "((event.j0_nb==0)and(event.j1_nb==1))" + " " #condition
 
-                    if "2Trk_split_lead_lead_Incl" in region_fname:
-                        templine += "((event.j0_nb==1)and(event.j1_nb==0)and(event.j0_trk0_Mv2>0.6455))" + " " #condition
-                    if "2Trk_split_subl_lead_Incl" in region_fname:
-                        templine += "((event.j0_nb==0)and(event.j1_nb==1)and(event.j1_trk0_Mv2>0.6455))" + " " #condition
-                    if "2Trk_split_lead_subl_Incl" in region_fname:
-                        templine += "((event.j0_nb==1)and(event.j1_nb==0)and(event.j0_trk0_Mv2<0.6455))" + " " #condition
-                    if "2Trk_split_subl_subl_Incl" in region_fname:
-                        templine += "((event.j0_nb==0)and(event.j1_nb==1)and(event.j1_trk0_Mv2<0.6455))" + " " #condition
+                    # if "2Trk_split_lead_lead_Incl" in region_fname:
+                    #     templine += "((event.j0_nb==1)and(event.j1_nb==0)and(event.j0_trk0_Mv2>0.6455))" + " " #condition
+                    # if "2Trk_split_subl_lead_Incl" in region_fname:
+                    #     templine += "((event.j0_nb==0)and(event.j1_nb==1)and(event.j1_trk0_Mv2>0.6455))" + " " #condition
+                    # if "2Trk_split_lead_subl_Incl" in region_fname:
+                    #     templine += "((event.j0_nb==1)and(event.j1_nb==0)and(event.j0_trk0_Mv2<0.6455))" + " " #condition
+                    # if "2Trk_split_subl_subl_Incl" in region_fname:
+                    #     templine += "((event.j0_nb==0)and(event.j1_nb==1)and(event.j1_trk0_Mv2<0.6455))" + " " #condition
 
                     if "3Trk_lead" in region_fname:
                         templine += "((event.j0_nb==2)and(event.j1_nb==0))" + " " #condition
@@ -146,6 +146,51 @@ def main():
     # write_reweight("j0pT-trks-fin", reweight_dic)
 
 
+    reweight_dic = {
+        "j0_trk0_pt":"leadHCand_trk0_Pt",
+        "j0_trk1_pt":"leadHCand_trk1_Pt",
+        "j1_trk0_pt":"sublHCand_trk0_Pt",
+        "j1_trk1_pt":"sublHCand_trk1_Pt",
+        #"j0_pt":"leadHCand_Pt_m",
+        #"j1_pt":"sublHCand_Pt_m",
+        #"j0_eta":"leadHCand_Eta",
+        #"j1_eta":"sublHCand_Eta",
+        #"j0_trkdr":"leadHCand_trk_dr",
+        #"j1_trkdr":"sublHCand_trk_dr",
+        }
+    region_dic = [
+        ("2bs","NoTag_2Trk_split_lead_Incl"),
+        ("2bs", "NoTag_2Trk_split_subl_Incl"),
+        ("3b", "NoTag_3Trk_lead_Incl"),
+        ("3b", "NoTag_3Trk_subl_Incl"),
+        ("4b", "NoTag_4Trk_lead_Incl"),
+        ("4b", "NoTag_4Trk_subl_Incl"),
+    ]
+    write_reweight("bkgtrk", reweight_dic, region_dic, cond=True)
+    
+
+    # reweight_dic = {
+    #     "j0_trk0_pt":"leadHCand_trk0_Pt",
+    #     "j0_trk1_pt":"leadHCand_trk1_Pt",
+    #     "j1_trk0_pt":"sublHCand_trk0_Pt",
+    #     "j1_trk1_pt":"sublHCand_trk1_Pt",
+    #     "j0_pt":"leadHCand_Pt_m",
+    #     "j1_pt":"sublHCand_Pt_m",
+    #     #"j0_eta":"leadHCand_Eta",
+    #     #"j1_eta":"sublHCand_Eta",
+    #     #"j0_trkdr":"leadHCand_trk_dr",
+    #     #"j1_trkdr":"sublHCand_trk_dr",
+    #     }
+    # region_dic = [
+    #     ("2bs","NoTag_2Trk_split_lead_Sideband"),
+    #     ("2bs", "NoTag_2Trk_split_subl_Sideband"),
+    #     ("3b", "NoTag_3Trk_lead_Sideband"),
+    #     ("3b", "NoTag_3Trk_subl_Sideband"),
+    #     ("4b", "NoTag_4Trk_lead_Sideband"),
+    #     ("4b", "NoTag_4Trk_subl_Sideband"),
+    # ]
+    # write_reweight("bkgsb", reweight_dic, region_dic, cond=True)
+
     # reweight_dic = {
     #     "j0_trk0_pt":"leadHCand_trk0_Pt",
     #     "j0_trk1_pt":"leadHCand_trk1_Pt",
@@ -157,38 +202,17 @@ def main():
     #     #"j1_eta":"sublHCand_Eta",
     #     }
     # region_dic = [
-    #     ("2bs","NoTag_2Trk_split_lead_Incl"),
-    #     ("2bs", "NoTag_2Trk_split_subl_Incl"),
+    #     ("2bs","NoTag_2Trk_split_lead_lead_Incl"),
+    #     ("2bs","NoTag_2Trk_split_subl_lead_Incl"),
+    #     ("2bs","NoTag_2Trk_split_lead_subl_Incl"),
+    #     ("2bs","NoTag_2Trk_split_subl_subl_Incl"),
     #     ("3b", "NoTag_3Trk_lead_Incl"),
     #     ("3b", "NoTag_3Trk_subl_Incl"),
     #     ("4b", "NoTag_4Trk_lead_Incl"),
     #     ("4b", "NoTag_4Trk_subl_Incl"),
     # ]
-    # write_reweight("bkg", reweight_dic, region_dic, cond=True)
-    
+    # write_reweight("bkg_test", reweight_dic, region_dic, cond=True)
 
-
-    reweight_dic = {
-        "j0_trk0_pt":"leadHCand_trk0_Pt",
-        "j0_trk1_pt":"leadHCand_trk1_Pt",
-        "j1_trk0_pt":"sublHCand_trk0_Pt",
-        "j1_trk1_pt":"sublHCand_trk1_Pt",
-        "j0_pt":"leadHCand_Pt_m",
-        "j1_pt":"sublHCand_Pt_m",
-        #"j0_eta":"leadHCand_Eta",
-        #"j1_eta":"sublHCand_Eta",
-        }
-    region_dic = [
-        ("2bs","NoTag_2Trk_split_lead_lead_Incl"),
-        ("2bs","NoTag_2Trk_split_subl_lead_Incl"),
-        ("2bs","NoTag_2Trk_split_lead_subl_Incl"),
-        ("2bs","NoTag_2Trk_split_subl_subl_Incl"),
-        ("3b", "NoTag_3Trk_lead_Incl"),
-        ("3b", "NoTag_3Trk_subl_Incl"),
-        ("4b", "NoTag_4Trk_lead_Incl"),
-        ("4b", "NoTag_4Trk_subl_Incl"),
-    ]
-    write_reweight("bkg_test", reweight_dic, region_dic, cond=True)
     print "DONE"
 
 ### end

@@ -29,8 +29,8 @@ dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] 
 ##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
 "NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
-"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
-"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
+#"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
+#"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
 "OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 #"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
@@ -135,7 +135,17 @@ def main():
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
-        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=True) #Weight_dic = weight_dict, 
+        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=True, a_ttbar=1.0)
+    global best_attbar
+    best_attbar = 1
+    ##iterative fit method
+    while (abs(fitresult["muttbar"][2] - best_attbar) > 0.01):##use 2bs here for the normalization estiamte
+        print "Refit!!!"
+        best_attbar = fitresult["muttbar"][2]
+        fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
+            inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
+            distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
+            BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=True, a_ttbar=best_attbar) #Weight_dic = weight_dict, 
     
     # global fitresult_NoTag
     # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
@@ -573,7 +583,7 @@ def Getqcd(inputdic, histname=""):
                 ##     print "top", cut, region, htemp_ttbar.GetBinCenter(200),"content:", htemp_ttbar.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_ttbar.GetBinContent(200)), "err:", htemp_ttbar.GetBinError(200)
                 ##     print "zjet", cut, region, htemp_zjet.GetBinCenter(200),"content:", htemp_zjet.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_zjet.GetBinContent(200)), "err:", htemp_zjet.GetBinError(200)
                 htemp_qcd.SetName("qcd" + "_" + cut + "_" + region + "_" + hst)
-                htemp_qcd.Add(htemp_ttbar, -1) #substract the ttbar from MC
+                htemp_qcd.Add(htemp_ttbar, -1 * best_attbar) #substract the ttbar from MC
                 htemp_qcd.Add(htemp_zjet, -1)
                 ##check error
                 ## if hst is "mHH_l":

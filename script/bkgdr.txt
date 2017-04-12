@@ -1,0 +1,251 @@
+#reweighting script for hh4b analysis 
+#iteration:0
+0 2bs event.j1_pt Moriond r0_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+0 2bs event.j1_trk1_pt Moriond r0_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+0 2bs event.j1_trkdr Moriond r0_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+0 2bs event.j1_trk0_pt Moriond r0_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+0 2bs event.j0_trk1_pt Moriond r0_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+0 2bs event.j0_trkdr Moriond r0_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+0 2bs event.j0_trk0_pt Moriond r0_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+0 2bs event.j0_pt Moriond r0_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+0 3b event.j1_pt Moriond r0_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 3b event.j1_trk1_pt Moriond r0_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 3b event.j1_trkdr Moriond r0_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 3b event.j1_trk0_pt Moriond r0_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 3b event.j0_trk1_pt Moriond r0_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 3b event.j0_trkdr Moriond r0_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 3b event.j0_trk0_pt Moriond r0_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 3b event.j0_pt Moriond r0_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 4b event.j1_pt Moriond r0_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 4b event.j1_trk1_pt Moriond r0_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 4b event.j1_trkdr Moriond r0_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 4b event.j1_trk0_pt Moriond r0_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+0 4b event.j0_trk1_pt Moriond r0_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 4b event.j0_trkdr Moriond r0_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 4b event.j0_trk0_pt Moriond r0_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+0 4b event.j0_pt Moriond r0_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:1
+1 2bs event.j1_pt Moriond_bkgdr_0 r1_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+1 2bs event.j1_trk1_pt Moriond_bkgdr_0 r1_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+1 2bs event.j1_trkdr Moriond_bkgdr_0 r1_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+1 2bs event.j1_trk0_pt Moriond_bkgdr_0 r1_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+1 2bs event.j0_trk1_pt Moriond_bkgdr_0 r1_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+1 2bs event.j0_trkdr Moriond_bkgdr_0 r1_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+1 2bs event.j0_trk0_pt Moriond_bkgdr_0 r1_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+1 2bs event.j0_pt Moriond_bkgdr_0 r1_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+1 3b event.j1_pt Moriond_bkgdr_0 r1_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 3b event.j1_trk1_pt Moriond_bkgdr_0 r1_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 3b event.j1_trkdr Moriond_bkgdr_0 r1_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 3b event.j1_trk0_pt Moriond_bkgdr_0 r1_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 3b event.j0_trk1_pt Moriond_bkgdr_0 r1_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 3b event.j0_trkdr Moriond_bkgdr_0 r1_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 3b event.j0_trk0_pt Moriond_bkgdr_0 r1_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 3b event.j0_pt Moriond_bkgdr_0 r1_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 4b event.j1_pt Moriond_bkgdr_0 r1_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 4b event.j1_trk1_pt Moriond_bkgdr_0 r1_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 4b event.j1_trkdr Moriond_bkgdr_0 r1_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 4b event.j1_trk0_pt Moriond_bkgdr_0 r1_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+1 4b event.j0_trk1_pt Moriond_bkgdr_0 r1_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 4b event.j0_trkdr Moriond_bkgdr_0 r1_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 4b event.j0_trk0_pt Moriond_bkgdr_0 r1_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+1 4b event.j0_pt Moriond_bkgdr_0 r1_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:2
+2 2bs event.j1_pt Moriond_bkgdr_1 r2_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+2 2bs event.j1_trk1_pt Moriond_bkgdr_1 r2_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+2 2bs event.j1_trkdr Moriond_bkgdr_1 r2_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+2 2bs event.j1_trk0_pt Moriond_bkgdr_1 r2_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+2 2bs event.j0_trk1_pt Moriond_bkgdr_1 r2_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+2 2bs event.j0_trkdr Moriond_bkgdr_1 r2_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+2 2bs event.j0_trk0_pt Moriond_bkgdr_1 r2_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+2 2bs event.j0_pt Moriond_bkgdr_1 r2_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+2 3b event.j1_pt Moriond_bkgdr_1 r2_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 3b event.j1_trk1_pt Moriond_bkgdr_1 r2_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 3b event.j1_trkdr Moriond_bkgdr_1 r2_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 3b event.j1_trk0_pt Moriond_bkgdr_1 r2_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 3b event.j0_trk1_pt Moriond_bkgdr_1 r2_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 3b event.j0_trkdr Moriond_bkgdr_1 r2_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 3b event.j0_trk0_pt Moriond_bkgdr_1 r2_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 3b event.j0_pt Moriond_bkgdr_1 r2_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 4b event.j1_pt Moriond_bkgdr_1 r2_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 4b event.j1_trk1_pt Moriond_bkgdr_1 r2_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 4b event.j1_trkdr Moriond_bkgdr_1 r2_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 4b event.j1_trk0_pt Moriond_bkgdr_1 r2_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+2 4b event.j0_trk1_pt Moriond_bkgdr_1 r2_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 4b event.j0_trkdr Moriond_bkgdr_1 r2_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 4b event.j0_trk0_pt Moriond_bkgdr_1 r2_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+2 4b event.j0_pt Moriond_bkgdr_1 r2_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:3
+3 2bs event.j1_pt Moriond_bkgdr_2 r3_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+3 2bs event.j1_trk1_pt Moriond_bkgdr_2 r3_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+3 2bs event.j1_trkdr Moriond_bkgdr_2 r3_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+3 2bs event.j1_trk0_pt Moriond_bkgdr_2 r3_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+3 2bs event.j0_trk1_pt Moriond_bkgdr_2 r3_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+3 2bs event.j0_trkdr Moriond_bkgdr_2 r3_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+3 2bs event.j0_trk0_pt Moriond_bkgdr_2 r3_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+3 2bs event.j0_pt Moriond_bkgdr_2 r3_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+3 3b event.j1_pt Moriond_bkgdr_2 r3_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 3b event.j1_trk1_pt Moriond_bkgdr_2 r3_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 3b event.j1_trkdr Moriond_bkgdr_2 r3_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 3b event.j1_trk0_pt Moriond_bkgdr_2 r3_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 3b event.j0_trk1_pt Moriond_bkgdr_2 r3_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 3b event.j0_trkdr Moriond_bkgdr_2 r3_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 3b event.j0_trk0_pt Moriond_bkgdr_2 r3_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 3b event.j0_pt Moriond_bkgdr_2 r3_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 4b event.j1_pt Moriond_bkgdr_2 r3_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 4b event.j1_trk1_pt Moriond_bkgdr_2 r3_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 4b event.j1_trkdr Moriond_bkgdr_2 r3_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 4b event.j1_trk0_pt Moriond_bkgdr_2 r3_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+3 4b event.j0_trk1_pt Moriond_bkgdr_2 r3_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 4b event.j0_trkdr Moriond_bkgdr_2 r3_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 4b event.j0_trk0_pt Moriond_bkgdr_2 r3_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+3 4b event.j0_pt Moriond_bkgdr_2 r3_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:4
+4 2bs event.j1_pt Moriond_bkgdr_3 r4_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+4 2bs event.j1_trk1_pt Moriond_bkgdr_3 r4_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+4 2bs event.j1_trkdr Moriond_bkgdr_3 r4_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+4 2bs event.j1_trk0_pt Moriond_bkgdr_3 r4_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+4 2bs event.j0_trk1_pt Moriond_bkgdr_3 r4_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+4 2bs event.j0_trkdr Moriond_bkgdr_3 r4_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+4 2bs event.j0_trk0_pt Moriond_bkgdr_3 r4_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+4 2bs event.j0_pt Moriond_bkgdr_3 r4_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+4 3b event.j1_pt Moriond_bkgdr_3 r4_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 3b event.j1_trk1_pt Moriond_bkgdr_3 r4_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 3b event.j1_trkdr Moriond_bkgdr_3 r4_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 3b event.j1_trk0_pt Moriond_bkgdr_3 r4_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 3b event.j0_trk1_pt Moriond_bkgdr_3 r4_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 3b event.j0_trkdr Moriond_bkgdr_3 r4_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 3b event.j0_trk0_pt Moriond_bkgdr_3 r4_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 3b event.j0_pt Moriond_bkgdr_3 r4_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 4b event.j1_pt Moriond_bkgdr_3 r4_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 4b event.j1_trk1_pt Moriond_bkgdr_3 r4_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 4b event.j1_trkdr Moriond_bkgdr_3 r4_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 4b event.j1_trk0_pt Moriond_bkgdr_3 r4_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+4 4b event.j0_trk1_pt Moriond_bkgdr_3 r4_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 4b event.j0_trkdr Moriond_bkgdr_3 r4_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 4b event.j0_trk0_pt Moriond_bkgdr_3 r4_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+4 4b event.j0_pt Moriond_bkgdr_3 r4_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:5
+5 2bs event.j1_pt Moriond_bkgdr_4 r5_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+5 2bs event.j1_trk1_pt Moriond_bkgdr_4 r5_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+5 2bs event.j1_trkdr Moriond_bkgdr_4 r5_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+5 2bs event.j1_trk0_pt Moriond_bkgdr_4 r5_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+5 2bs event.j0_trk1_pt Moriond_bkgdr_4 r5_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+5 2bs event.j0_trkdr Moriond_bkgdr_4 r5_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+5 2bs event.j0_trk0_pt Moriond_bkgdr_4 r5_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+5 2bs event.j0_pt Moriond_bkgdr_4 r5_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+5 3b event.j1_pt Moriond_bkgdr_4 r5_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 3b event.j1_trk1_pt Moriond_bkgdr_4 r5_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 3b event.j1_trkdr Moriond_bkgdr_4 r5_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 3b event.j1_trk0_pt Moriond_bkgdr_4 r5_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 3b event.j0_trk1_pt Moriond_bkgdr_4 r5_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 3b event.j0_trkdr Moriond_bkgdr_4 r5_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 3b event.j0_trk0_pt Moriond_bkgdr_4 r5_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 3b event.j0_pt Moriond_bkgdr_4 r5_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 4b event.j1_pt Moriond_bkgdr_4 r5_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 4b event.j1_trk1_pt Moriond_bkgdr_4 r5_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 4b event.j1_trkdr Moriond_bkgdr_4 r5_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 4b event.j1_trk0_pt Moriond_bkgdr_4 r5_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+5 4b event.j0_trk1_pt Moriond_bkgdr_4 r5_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 4b event.j0_trkdr Moriond_bkgdr_4 r5_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 4b event.j0_trk0_pt Moriond_bkgdr_4 r5_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+5 4b event.j0_pt Moriond_bkgdr_4 r5_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:6
+6 2bs event.j1_pt Moriond_bkgdr_5 r6_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+6 2bs event.j1_trk1_pt Moriond_bkgdr_5 r6_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+6 2bs event.j1_trkdr Moriond_bkgdr_5 r6_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+6 2bs event.j1_trk0_pt Moriond_bkgdr_5 r6_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+6 2bs event.j0_trk1_pt Moriond_bkgdr_5 r6_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+6 2bs event.j0_trkdr Moriond_bkgdr_5 r6_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+6 2bs event.j0_trk0_pt Moriond_bkgdr_5 r6_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+6 2bs event.j0_pt Moriond_bkgdr_5 r6_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+6 3b event.j1_pt Moriond_bkgdr_5 r6_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 3b event.j1_trk1_pt Moriond_bkgdr_5 r6_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 3b event.j1_trkdr Moriond_bkgdr_5 r6_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 3b event.j1_trk0_pt Moriond_bkgdr_5 r6_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 3b event.j0_trk1_pt Moriond_bkgdr_5 r6_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 3b event.j0_trkdr Moriond_bkgdr_5 r6_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 3b event.j0_trk0_pt Moriond_bkgdr_5 r6_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 3b event.j0_pt Moriond_bkgdr_5 r6_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 4b event.j1_pt Moriond_bkgdr_5 r6_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 4b event.j1_trk1_pt Moriond_bkgdr_5 r6_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 4b event.j1_trkdr Moriond_bkgdr_5 r6_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 4b event.j1_trk0_pt Moriond_bkgdr_5 r6_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+6 4b event.j0_trk1_pt Moriond_bkgdr_5 r6_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 4b event.j0_trkdr Moriond_bkgdr_5 r6_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 4b event.j0_trk0_pt Moriond_bkgdr_5 r6_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+6 4b event.j0_pt Moriond_bkgdr_5 r6_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:7
+7 2bs event.j1_pt Moriond_bkgdr_6 r7_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+7 2bs event.j1_trk1_pt Moriond_bkgdr_6 r7_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+7 2bs event.j1_trkdr Moriond_bkgdr_6 r7_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+7 2bs event.j1_trk0_pt Moriond_bkgdr_6 r7_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+7 2bs event.j0_trk1_pt Moriond_bkgdr_6 r7_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+7 2bs event.j0_trkdr Moriond_bkgdr_6 r7_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+7 2bs event.j0_trk0_pt Moriond_bkgdr_6 r7_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+7 2bs event.j0_pt Moriond_bkgdr_6 r7_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+7 3b event.j1_pt Moriond_bkgdr_6 r7_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 3b event.j1_trk1_pt Moriond_bkgdr_6 r7_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 3b event.j1_trkdr Moriond_bkgdr_6 r7_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 3b event.j1_trk0_pt Moriond_bkgdr_6 r7_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 3b event.j0_trk1_pt Moriond_bkgdr_6 r7_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 3b event.j0_trkdr Moriond_bkgdr_6 r7_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 3b event.j0_trk0_pt Moriond_bkgdr_6 r7_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 3b event.j0_pt Moriond_bkgdr_6 r7_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 4b event.j1_pt Moriond_bkgdr_6 r7_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 4b event.j1_trk1_pt Moriond_bkgdr_6 r7_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 4b event.j1_trkdr Moriond_bkgdr_6 r7_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 4b event.j1_trk0_pt Moriond_bkgdr_6 r7_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+7 4b event.j0_trk1_pt Moriond_bkgdr_6 r7_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 4b event.j0_trkdr Moriond_bkgdr_6 r7_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 4b event.j0_trk0_pt Moriond_bkgdr_6 r7_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+7 4b event.j0_pt Moriond_bkgdr_6 r7_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:8
+8 2bs event.j1_pt Moriond_bkgdr_7 r8_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+8 2bs event.j1_trk1_pt Moriond_bkgdr_7 r8_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+8 2bs event.j1_trkdr Moriond_bkgdr_7 r8_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+8 2bs event.j1_trk0_pt Moriond_bkgdr_7 r8_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+8 2bs event.j0_trk1_pt Moriond_bkgdr_7 r8_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+8 2bs event.j0_trkdr Moriond_bkgdr_7 r8_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+8 2bs event.j0_trk0_pt Moriond_bkgdr_7 r8_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+8 2bs event.j0_pt Moriond_bkgdr_7 r8_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+8 3b event.j1_pt Moriond_bkgdr_7 r8_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 3b event.j1_trk1_pt Moriond_bkgdr_7 r8_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 3b event.j1_trkdr Moriond_bkgdr_7 r8_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 3b event.j1_trk0_pt Moriond_bkgdr_7 r8_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 3b event.j0_trk1_pt Moriond_bkgdr_7 r8_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 3b event.j0_trkdr Moriond_bkgdr_7 r8_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 3b event.j0_trk0_pt Moriond_bkgdr_7 r8_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 3b event.j0_pt Moriond_bkgdr_7 r8_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 4b event.j1_pt Moriond_bkgdr_7 r8_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 4b event.j1_trk1_pt Moriond_bkgdr_7 r8_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 4b event.j1_trkdr Moriond_bkgdr_7 r8_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 4b event.j1_trk0_pt Moriond_bkgdr_7 r8_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+8 4b event.j0_trk1_pt Moriond_bkgdr_7 r8_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 4b event.j0_trkdr Moriond_bkgdr_7 r8_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 4b event.j0_trk0_pt Moriond_bkgdr_7 r8_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+8 4b event.j0_pt Moriond_bkgdr_7 r8_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+#iteration:9
+9 2bs event.j1_pt Moriond_bkgdr_8 r9_NoTag_2Trk_split_lead_Incl_sublHCand_Pt_m.txt 
+9 2bs event.j1_trk1_pt Moriond_bkgdr_8 r9_NoTag_2Trk_split_lead_Incl_sublHCand_trk1_Pt.txt 
+9 2bs event.j1_trkdr Moriond_bkgdr_8 r9_NoTag_2Trk_split_lead_Incl_sublHCand_trk_dr.txt 
+9 2bs event.j1_trk0_pt Moriond_bkgdr_8 r9_NoTag_2Trk_split_lead_Incl_sublHCand_trk0_Pt.txt 
+9 2bs event.j0_trk1_pt Moriond_bkgdr_8 r9_NoTag_2Trk_split_subl_Incl_leadHCand_trk1_Pt.txt 
+9 2bs event.j0_trkdr Moriond_bkgdr_8 r9_NoTag_2Trk_split_subl_Incl_leadHCand_trk_dr.txt 
+9 2bs event.j0_trk0_pt Moriond_bkgdr_8 r9_NoTag_2Trk_split_subl_Incl_leadHCand_trk0_Pt.txt 
+9 2bs event.j0_pt Moriond_bkgdr_8 r9_NoTag_2Trk_split_subl_Incl_leadHCand_Pt_m.txt 
+9 3b event.j1_pt Moriond_bkgdr_8 r9_NoTag_3Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 3b event.j1_trk1_pt Moriond_bkgdr_8 r9_NoTag_3Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 3b event.j1_trkdr Moriond_bkgdr_8 r9_NoTag_3Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 3b event.j1_trk0_pt Moriond_bkgdr_8 r9_NoTag_3Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 3b event.j0_trk1_pt Moriond_bkgdr_8 r9_NoTag_3Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 3b event.j0_trkdr Moriond_bkgdr_8 r9_NoTag_3Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 3b event.j0_trk0_pt Moriond_bkgdr_8 r9_NoTag_3Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 3b event.j0_pt Moriond_bkgdr_8 r9_NoTag_3Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 4b event.j1_pt Moriond_bkgdr_8 r9_NoTag_4Trk_lead_Incl_sublHCand_Pt_m.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 4b event.j1_trk1_pt Moriond_bkgdr_8 r9_NoTag_4Trk_lead_Incl_sublHCand_trk1_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 4b event.j1_trkdr Moriond_bkgdr_8 r9_NoTag_4Trk_lead_Incl_sublHCand_trk_dr.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 4b event.j1_trk0_pt Moriond_bkgdr_8 r9_NoTag_4Trk_lead_Incl_sublHCand_trk0_Pt.txt ((event.j0_nb==2)and(event.j1_nb==0)) 
+9 4b event.j0_trk1_pt Moriond_bkgdr_8 r9_NoTag_4Trk_subl_Incl_leadHCand_trk1_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 4b event.j0_trkdr Moriond_bkgdr_8 r9_NoTag_4Trk_subl_Incl_leadHCand_trk_dr.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 4b event.j0_trk0_pt Moriond_bkgdr_8 r9_NoTag_4Trk_subl_Incl_leadHCand_trk0_Pt.txt ((event.j0_nb==0)and(event.j1_nb==2)) 
+9 4b event.j0_pt Moriond_bkgdr_8 r9_NoTag_4Trk_subl_Incl_leadHCand_Pt_m.txt ((event.j0_nb==0)and(event.j1_nb==2)) 

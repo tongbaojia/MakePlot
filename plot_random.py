@@ -139,16 +139,7 @@ def main():
     #         {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
     #         ], keyword=histname, norm=True)
 
-    ##for reweighting shape comparison
-    # for histname in ["data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",
-    # "data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l"]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+    #for reweighting shape comparison
 
     # for histname in ["data_est_FourTag_Sideband_leadHCand_trk0_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk0_Pt",
     # "data_est_FourTag_Control_leadHCand_trk0_Pt", "data_est_ThreeTag_Control_leadHCand_trk0_Pt", "data_est_TwoTag_split_Control_leadHCand_trk0_Pt"]:
@@ -190,23 +181,35 @@ def main():
     #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
     #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
 
+
+    for histname in ["data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l",
+    "data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",]:
+        DrawMulticomparison([
+            {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"no reweight; Obs"}, 
+            {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":histname, "leg":"SB:leadTrks"},
+            {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":histname, "leg":"SB:sublTrks"},
+            {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root",   "path":histname, "leg":"SB:allTrks"},
+            {"file":"../Moriond_j0pT-leadtrk-trkdr-fin_5/sum_Moriond_j0pT-leadtrk-trkdr-fin_5.root",   "path":histname, "leg":"SB:leadTrk+dr"},
+            {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"Add:allTrks+pt"},
+            {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root",   "path":histname, "leg":"Add:allTrks"},
+            {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root",   "path":histname, "leg":"Add:allTrks+pt+eta"},
+            {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root",   "path":histname, "leg":"Add:allTrks+pt+dr"},
+            {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root",   "path":histname, "leg":"Add:SB"},
+            ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
+
     # for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l",]:
     #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
+    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight; Est"}, 
+    #         {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":histname, "leg":"SB:leadTrks"},
+    #         {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":histname, "leg":"SB:sublTrks"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root",   "path":histname, "leg":"SB:allTrks"},
+    #         {"file":"../Moriond_j0pT-leadtrk-trkdr-fin_5/sum_Moriond_j0pT-leadtrk-trkdr-fin_5.root",   "path":histname, "leg":"SB:leadTrk+dr"},
+    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"Add:allTrks+pt"},
+    #         {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root",   "path":histname, "leg":"Add:allTrks"},
+    #         {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root",   "path":histname, "leg":"Add:allTrks+pt+eta"},
+    #         {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root",   "path":histname, "leg":"Add:allTrks+pt+dr"},
+    #         {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root",   "path":histname, "leg":"Add:SB"},
     #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
-
-    # for histname in ["data_est_FourTag_Signal_sublHCand_trk0_Pt", "data_est_ThreeTag_Signal_sublHCand_trk0_Pt", "data_est_TwoTag_split_Signal_sublHCand_trk0_Pt",]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"new method"},
-    #         ], keyword=histname, norm=False, Xrange=[0, 400], Rebin=5, Logy=1)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
@@ -631,8 +634,8 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
     pad0.Draw()
     pad0.cd()
 
-    xleg, yleg = 0.68, 0.68
-    legend = ROOT.TLegend(xleg, yleg, xleg+0.2, yleg+0.2)
+    xleg, yleg = 0.5, 0.6
+    legend = ROOT.TLegend(xleg, yleg, xleg+0.2, yleg+0.3)
     counter = 0
     maxbincontent = (0.05 if Logy ==0 else 10)
     temphst_lst = []
@@ -650,8 +653,6 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
         if Rebin != 1:
             temphst_lst[i].Rebin(Rebin)
             tempratio_lst[i].Rebin(Rebin)
-        if norm:
-            temphst_lst[i].Scale(1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
 
         for j in range(1, temphst_lst[0].GetNbinsX()+1):
             try:
@@ -662,6 +663,9 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
             except ZeroDivisionError:
                 pass
                 #print "Divide by zero! Check bin content in", canv.GetName()
+        if norm:
+            temphst_lst[i].Scale(1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
+
 
         maxbincontent = max(maxbincontent, temphst_lst[i].GetMaximum())
         #graph_lst.append(helpers.TH1toTAsym(temphst_lst[i], efficiency=False))
@@ -674,7 +678,7 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
         temphst_lst[i].SetMinimum(0.001 if Logy == 0 else 0.2)
         if Xrange != [0, 0]:
             temphst_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
-        legend.AddEntry(temphst_lst[i], dic["leg"], "pl")
+        legend.AddEntry(temphst_lst[i], dic["leg"] + " KS: " + str(('%.3g' % temphst_lst[i].KolmogorovTest(temphst_lst[0], "QU"))), "pl")
         temphst_lst[i].Draw("EP" if i==0 else "hist same")
         refroot.Close()
     
@@ -684,7 +688,7 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
     legend.Draw()
 
     # draw watermarks
-    xatlas, yatlas = 0.4, 0.87
+    xatlas, yatlas = 0.28, 0.87
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "Simulations")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")

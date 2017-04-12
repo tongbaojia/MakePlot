@@ -149,8 +149,8 @@ def GetRhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
     return RhhExp
 
-def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
-    XhhExp = "((ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.09*event.j0_m), 2) + 0.95*ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s) if (event.j1_m > 115) else (ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.09*event.j0_m), 2) + 0.95*ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s))" % (XhhCenterX, XhhCenterY, XhhCut, XhhCenterX, XhhCenterY, XhhCut)
+def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.60):
+    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + 0.9 * ROOT.TMath.Power((event.j1_m - %s)/(0.115*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
     return XhhExp
 
 class eventHists:
@@ -179,7 +179,7 @@ class eventHists:
             self.h_deta       = ROOT.TH1F("hCandDeta",          "hCand #Delta#eta",  40,    0,  2.0)
             self.h_dphi       = ROOT.TH1F("hCandDphi",          "hCand #Delta#phi",  66, -3.3,  3.3)
             self.h_dr         = ROOT.TH1F("hCandDr",            "hCand #Deltar",     100,   0,    5)
-            self.h_pt_assy    = ROOT.TH1F("hCand_Pt_assy",      ";hCand p_{T} assym", 22, -0.05, 1.05)
+            self.h_pt_assy    = ROOT.TH1F("hCand_Pt_assy",      ";hCand p_{T} assym",22, -0.05, 1.05)
             self.h0_m_s       = ROOT.TH1F("leadHCand_Mass_s",   ";Mass [GeV]",       14,   60,  200)
             self.h1_m_s       = ROOT.TH1F("sublHCand_Mass_s",   ";Mass [GeV]",       14,   60,  200)
             self.h0_eta       = ROOT.TH1F("leadHCand_Eta",      ";#Eta",             42, -2.1,  2.1)
@@ -199,10 +199,10 @@ class eventHists:
             #self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
             #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
-            self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 50,  50,  250,  50,  50,  250)
+            self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 200,  50,  250,  200,  50,  250)
             self.dRH0H1       = ROOT.TH2F("dRH0H1",             ";#Deltar_{trk}^{lead}; #Deltar_{trk}^{subl};", 50, 0.2,  1.2, 50, 0.2, 1.2)
-            self.trkfracH0H1  = ROOT.TH2F("trkfracH0H1",        ";H0:p_{T}^{Trk0}/(p_{T}^{Trk0} + p_{T}^{Trk1});H1:p_{T}^{Trk0}}/(p_{T}^{Trk0} + p_{T}^{Trk1});", 50, 0.5, 1.0, 50, 0.5, 1.0)
-            self.mHHdRH0      = ROOT.TH2F("mHHdRH0",            ";mHH [GeV]; #Deltar_{trk}^{lead};", 300, 500, 3500,  50, 0.2,  1.2)
+            #self.trkfracH0H1  = ROOT.TH2F("trkfracH0H1",        ";H0:p_{T}^{Trk0}/(p_{T}^{Trk0} + p_{T}^{Trk1});H1:p_{T}^{Trk0}}/(p_{T}^{Trk0} + p_{T}^{Trk1});", 50, 0.5, 1.0, 50, 0.5, 1.0)
+            #self.mHHdRH0      = ROOT.TH2F("mHHdRH0",            ";mHH [GeV]; #Deltar_{trk}^{lead};", 300, 500, 3500,  50, 0.2,  1.2)
             #self.MV2H0H1      = ROOT.TH2F("MV2H0H1",              ";MV2 sum H0;MV2 sum H1;", 400,  -2,  2,  400,  -2,  2)
             #self.MV2H0        = ROOT.TH2F("MV2H0",                ";MV2 H0, j0;MV2 H0, j1;", 400,  -2,  2,  400,  -2,  2)
             #self.MV2H1        = ROOT.TH2F("MV2H1",                ";MV2 H1, j0;MV2 H1, j1;", 400,  -2,  2,  400,  -2,  2)
@@ -260,8 +260,8 @@ class eventHists:
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
             self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
             self.dRH0H1.Fill(event.j0_trkdr, event.j1_trkdr, weight)
-            self.trkfracH0H1.Fill(event.j0_trk0_pt/(event.j0_trk0_pt + event.j0_trk1_pt), event.j1_trk0_pt/(event.j1_trk0_pt + event.j1_trk1_pt), weight)
-            self.mHHdRH0.Fill(event.mHH, event.j0_trkdr, weight)
+            #self.trkfracH0H1.Fill(event.j0_trk0_pt/(event.j0_trk0_pt + event.j0_trk1_pt), event.j1_trk0_pt/(event.j1_trk0_pt + event.j1_trk1_pt), weight)
+            #self.mHHdRH0.Fill(event.mHH, event.j0_trkdr, weight)
             #self.MV2H0H1.Fill(event.j0_trk0_Mv2 + event.j0_trk1_Mv2, event.j1_trk0_Mv2 + event.j1_trk1_Mv2, weight)
             #self.MV2H0.Fill(event.j0_trk0_Mv2, event.j0_trk1_Mv2, weight)
             #self.MV2H1.Fill(event.j1_trk0_Mv2, event.j1_trk1_Mv2, weight)
@@ -307,8 +307,8 @@ class eventHists:
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
             self.dRH0H1.Write()
-            self.trkfracH0H1.Write()
-            self.mHHdRH0.Write()
+            #self.trkfracH0H1.Write()
+            #self.mHHdRH0.Write()
             #self.MV2H0H1.Write()
             #self.MV2H0.Write()
             #self.MV2H1.Write()
@@ -382,10 +382,10 @@ class regionHists:
         self.TwoTag_split_bkg          = bkgregionHists("NoTag" + "_" + "2Trk_split", outputroot, reweight)
         self.TwoTag_split_lead_bkg     = bkgregionHists("NoTag" + "_" + "2Trk_split_lead", outputroot, reweight)
         self.TwoTag_split_subl_bkg     = bkgregionHists("NoTag" + "_" + "2Trk_split_subl", outputroot, reweight)
-        self.TwoTag_split_lead_lead_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_lead_lead", outputroot, reweight)
-        self.TwoTag_split_subl_lead_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_subl_lead", outputroot, reweight)
-        self.TwoTag_split_lead_subl_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_lead_subl", outputroot, reweight)
-        self.TwoTag_split_subl_subl_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_subl_subl", outputroot, reweight)
+        # self.TwoTag_split_lead_lead_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_lead_lead", outputroot, reweight)
+        # self.TwoTag_split_subl_lead_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_subl_lead", outputroot, reweight)
+        # self.TwoTag_split_lead_subl_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_lead_subl", outputroot, reweight)
+        # self.TwoTag_split_subl_subl_bkg= bkgregionHists("NoTag" + "_" + "2Trk_split_subl_subl", outputroot, reweight)
         self.ThreeTag_bkg              = bkgregionHists("NoTag" + "_" + "3Trk", outputroot, reweight)
         self.ThreeTag_lead_bkg         = bkgregionHists("NoTag" + "_" + "3Trk_lead", outputroot, reweight)
         self.ThreeTag_subl_bkg         = bkgregionHists("NoTag" + "_" + "3Trk_subl", outputroot, reweight)
@@ -404,10 +404,10 @@ class regionHists:
         self.ThreeTag_lead             = massregionHists("ThreeTag_lead", outputroot) #2tag, lead H tag 2 tag
         self.ThreeTag_subl             = massregionHists("ThreeTag_subl", outputroot) #2tag, subl H tag 2 tag
         # # # ##for extra extra b-tagging on which jet studies
-        self.OneTag_lead_lead          = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
-        self.OneTag_subl_subl          = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
-        self.OneTag_lead_subl          = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
-        self.OneTag_subl_lead          = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
+        # self.OneTag_lead_lead          = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
+        # self.OneTag_subl_subl          = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
+        # self.OneTag_lead_subl          = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
+        # self.OneTag_subl_lead          = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
         # self.TwoTag_split_lead_lead    = massregionHists("TwoTag_split_lead_lead", outputroot) #2bs, lead H lead trk tag, subl H lead trk tag
         # self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
@@ -475,16 +475,16 @@ class regionHists:
                 self.TwoTag_split_bkg.Fill(event)
                 if (nb_j0 == 1 and nb_j1 == 0):
                     self.TwoTag_split_lead_bkg.Fill(event)
-                    if (event.j0_trk0_Mv2 > b_tagging_cut):
-                        self.TwoTag_split_lead_lead_bkg.Fill(event)
-                    else:
-                        self.TwoTag_split_lead_subl_bkg.Fill(event)
+                    # if (event.j0_trk0_Mv2 > b_tagging_cut):
+                    #     self.TwoTag_split_lead_lead_bkg.Fill(event)
+                    # else:
+                    #     self.TwoTag_split_lead_subl_bkg.Fill(event)
                 elif (nb_j0 == 0 and nb_j1 == 1):
                     self.TwoTag_split_subl_bkg.Fill(event)
-                    if (event.j1_trk0_Mv2 > b_tagging_cut):
-                        self.TwoTag_split_subl_lead_bkg.Fill(event)
-                    else:
-                        self.TwoTag_split_subl_subl_bkg.Fill(event)
+                    # if (event.j1_trk0_Mv2 > b_tagging_cut):
+                    #     self.TwoTag_split_subl_lead_bkg.Fill(event)
+                    # else:
+                    #     self.TwoTag_split_subl_subl_bkg.Fill(event)
             # if ((nb_j0 == 1 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 1)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
             #     self.ThreeTag_bkg.Fill(event)
             #     if (nb_j0 == 1 and nb_j1 == 0):
@@ -507,18 +507,18 @@ class regionHists:
             ##for extra studies; need to be moved to default; notice b-tagging is already sorted here
             if (nb_j0 == 1 and nb_j1 == 0):
                 self.OneTag_lead.Fill(event)
-                ##for extra extra b-tagging on which jet studies
-                if (event.j0_trk0_Mv2 > b_tagging_cut):
-                    self.OneTag_lead_lead.Fill(event)
-                else:
-                    self.OneTag_lead_subl.Fill(event)
+                # ##for extra extra b-tagging on which jet studies
+                # if (event.j0_trk0_Mv2 > b_tagging_cut):
+                #     self.OneTag_lead_lead.Fill(event)
+                # else:
+                #     self.OneTag_lead_subl.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 1):
                 self.OneTag_subl.Fill(event)
-                ##for extra extra b-tagging on which jet studies
-                if (event.j1_trk0_Mv2 > b_tagging_cut):
-                    self.OneTag_subl_lead.Fill(event)
-                else:
-                    self.OneTag_subl_subl.Fill(event)
+                # ##for extra extra b-tagging on which jet studies
+                # if (event.j1_trk0_Mv2 > b_tagging_cut):
+                #     self.OneTag_subl_lead.Fill(event)
+                # else:
+                #     self.OneTag_subl_subl.Fill(event)
             elif (nb_j0 == 2 and nb_j1 == 0):
                 self.TwoTag_lead.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 2):
@@ -546,10 +546,10 @@ class regionHists:
         self.FourTag_bkg.Write(outputroot)
         self.FourTag_lead_bkg.Write(outputroot)
         self.FourTag_subl_bkg.Write(outputroot)
-        self.TwoTag_split_lead_lead_bkg.Write(outputroot)
-        self.TwoTag_split_subl_lead_bkg.Write(outputroot)
-        self.TwoTag_split_lead_subl_bkg.Write(outputroot)
-        self.TwoTag_split_subl_subl_bkg.Write(outputroot)
+        # self.TwoTag_split_lead_lead_bkg.Write(outputroot)
+        # self.TwoTag_split_subl_lead_bkg.Write(outputroot)
+        # self.TwoTag_split_lead_subl_bkg.Write(outputroot)
+        # self.TwoTag_split_subl_subl_bkg.Write(outputroot)
         # #for other bkg modeling
         self.OneTag_lead.Write(outputroot)
         self.OneTag_subl.Write(outputroot)
@@ -558,10 +558,10 @@ class regionHists:
         self.ThreeTag_lead.Write(outputroot)
         self.ThreeTag_subl.Write(outputroot)
         # ##for extra extra b-tagging on which jet studies
-        self.OneTag_lead_lead.Write(outputroot)
-        self.OneTag_subl_lead.Write(outputroot)
-        self.OneTag_lead_subl.Write(outputroot)
-        self.OneTag_subl_subl.Write(outputroot)
+        # self.OneTag_lead_lead.Write(outputroot)
+        # self.OneTag_subl_lead.Write(outputroot)
+        # self.OneTag_lead_subl.Write(outputroot)
+        # self.OneTag_subl_subl.Write(outputroot)
         # self.TwoTag_split_lead_lead.Write(outputroot)
         # self.TwoTag_split_subl_lead.Write(outputroot)
         # self.TwoTag_split_lead_subl.Write(outputroot)
@@ -609,12 +609,21 @@ def analysis(inputconfig):
         #if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
             #continue
 
+        ##add blinding
+        if (CONF.blind and "data" in inputfile):
+            if (t.Xhh < 1.6):
+                if (t.j0_nb + t.j1_nb >= 3): ##3b and 4b
+                    continue
+                elif (t.j0_nb == 1  and t.j1_nb == 1):##2b
+                    continue
+
         #AllHists.Fill(t)
         ##or, add in resovled veto whenever feel like it
         #if (ops.resveto):
         if (True): ##enable resolved veto for now and on
-            #if (abs(t.nresj) < 4):
-            if (t.nresj > -0.1):
+            #print t.Xhh, (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124.0)/(0.1*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115.0)/(0.1*t.j1_m), 2)))
+            #if (abs(t.nresj) < 4): ##veto all 4 jets
+            if (t.nresj > -0.1): ##negative is SR regions
                 AllHists.Fill(t)
             else:
                 pass
@@ -665,7 +674,7 @@ def main():
     CR_size = 33 #this needs to be fixed; so good so far
     SB_size = 53 #53 is the new default; should be between 48-58 due to stats
     Syst_cut = {
-        "SR"         : "event.Xhh < 1.6", #GetXhh()
+        "SR"         : GetXhh(), #GetXhh(), #"event.Xhh < 1.6", #
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
         "SB"         : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size),#"event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetRhh(RhhCenterX=124.+5,  RhhCenterY=115.+5,  RhhCut=CR_size),

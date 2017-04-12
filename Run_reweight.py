@@ -28,19 +28,27 @@ def main():
     iter_total = 6
     print "total iteration: ", iter_total
     inputtasks = []
+
+    ##make sure it is reweighted to the correct directory
+    reweightplotdir = "Sideband"
+    if "bkg" in ops.var and "bkgsb" not in ops.var:
+        reweightplotdir = "Incl"
+
+    ##reweight iterations
     for i in range(0, iter_total):
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #4
-        #analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Sideband"})
+        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":reweightplotdir})
         ##this is for the oneTag reweights
-        analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Incl"})
+        #analysis_pipeline({"motherdir":"TEST", "reweight":ops.var, "iter_re": i, "reweightplotdir":"Incl"})
+    
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def analysis_pipeline(config):
     #setup the directories
     motherdir       = config["motherdir"] #the one with TinyTree
-    reweight        = config["reweight"]
+    reweight        = config["reweight"] #this is the reweight method
     iter_re         = config["iter_re"]
     reweightplotdir = config["reweightplotdir"]
     outputdir       = ops.inputdir + "_" + reweight + "_" + str(iter_re) #the output from Plot TinyTree, input for analysis code
@@ -51,7 +59,7 @@ def analysis_pipeline(config):
     ##fit and produce plot
     os.system("python get_count.py --full --inputdir " + outputdir)
     os.system("python plot.py --inputdir " + outputdir)
-    os.system("python reweight.py --inputdir " + outputdir + " --iter " + str(iter_re + 1)) ##+1 because it is really for the next iteration
+    os.system("python reweight.py --inputdir " + outputdir + " --iter " + str(iter_re + 1) + " --var " + reweight) ##+1 because it is really for the next iteration
     ##for publication purpose
     homepath="/afs/cern.ch/user/b/btong/"
     workpath=CONF.outputpath + outputdir
@@ -72,17 +80,15 @@ def analysis_pipeline(config):
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     #"hCandDr", "hCandDeta", "hCandDphi",\
     ##clean up the current plots
-    for pic in glob.glob(homepath + "/www/share/hh4b/reweight/" + outputdir +"/*"):
-        os.remove(pic)
-    for pic in glob.glob(homepath + "/www/share/hh4b/express/" + outputdir +"/*"):
-        os.remove(pic)
-    for pic in glob.glob(homepath + "/www/share/hh4b/plot/" + outputdir +"/*"):
-        os.remove(pic)
-    ##add description file
-    descript = open(homepath + "/www/share/hh4b/express/" + outputdir +"/shortdescription.txt", "w")
-    descript.write(" reweight: " +  reweight + " iteration: " + str(iter_re))
-    descript.write(" time: " + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())) 
-    descript.close()
+    pubDirs = ["reweight", "express", "plot"]
+    for pubdir  in pubDirs:
+        for pic in glob.glob(homepath + "/www/share/hh4b/" + pubdir + "/" + outputdir +"/*"):
+            os.remove(pic)
+        ##add description file
+        descript = open(homepath + "/www/share/hh4b/" + pubdir + "/" + outputdir +"/shortdescription.txt", "w")
+        descript.write(" reweight: " +  reweight + " iteration: " + str(iter_re))
+        descript.write(" time: " + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())) 
+        descript.close()
     ##copy
     for plot in plt_lst:
         for pic in glob.glob(workpath + "/Plot_r" + str(iter_re + 1) + "/" + reweightplotdir + "/*" + plot + ".png"):
@@ -97,6 +103,7 @@ def analysis_pipeline(config):
             if "mHH_l_1" in pic:
                 os.system("cp " + pic + " " + homepath + "/www/share/hh4b/express/" + outputdir +"/.")
                 #print "cp " + pic + " " + homepath + "/www/share/hh4b/express/" + outputdir +"/."
+    
     ##publish
     os.chdir(homepath + "/www/share/")
     os.system("python createHtmlOverview.py")
