@@ -149,8 +149,8 @@ def GetRhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     RhhExp = "ROOT.TMath.Sqrt(ROOT.TMath.Power(event.j0_m - %s, 2) + ROOT.TMath.Power(event.j1_m - %s, 2)) < %s" % (RhhCenterX, RhhCenterY, RhhCut)
     return RhhExp
 
-def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.60):
-    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + 0.9 * ROOT.TMath.Power((event.j1_m - %s)/(0.115*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
+def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
+    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + 0.9 * ROOT.TMath.Power((event.j1_m - %s)/(0.115*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut)
     return XhhExp
 
 class eventHists:
