@@ -2,11 +2,7 @@ import ROOT, rootlogon
 import argparse
 import array
 import copy
-import glob
-import helpers
-import os
-import sys
-import time
+import glob, helpers, os, sys, time
 import config as CONF
 import numpy as np
 
@@ -24,6 +20,7 @@ def options():
 
 def main():
 
+    start_time = time.time()
     global StatusLabel
     StatusLabel = "Internal" ##StatusLabel = "Preliminary"
     ops = options()
@@ -38,25 +35,28 @@ def main():
 
     # # paper plot
     DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DPrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "AllTag_Incl", prename="Sig_2000_AllTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DPrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
-    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_2000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_2000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_2000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_1000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_1000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_1000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_3000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_3000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_3000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_2000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_2000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_2000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_1000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_1000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M1000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_1000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_3000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_3000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "FourTag_Incl", prename="Sig_3000_FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
-    DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "NoTag_Incl", prename="Top_NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "OneTag_Incl", prename="Top_OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "NoTag_Incl", prename="Top_NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2D("ttbar_comb_test/hist-MiniNTuple.root", "OneTag_Incl", prename="Top_OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
-    # ## for muqcd study
-    # # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
-    # # if not os.path.exists(outputpath):
-    # #     os.makedirs(outputpath)
+    #special 2D optimization study
+
+    ## for muqcd study
+    # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
+    # if not os.path.exists(outputpath):
+    #     os.makedirs(outputpath)
     # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
@@ -67,17 +67,25 @@ def main():
     # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
     # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
 
+    DrawPaper2DOptimzie("data_test/hist-MiniNTuple.root", "OneTag_Incl", prename="AllTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
+    print("--- %s seconds ---" % (time.time() - start_time))
 # functions for the different regions
 def mySB(x):
     #return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
     return  ROOT.TMath.Sqrt( (x[0]-134)**2 + (x[1]-125)**2)
 
 def myCR(x):
-    return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
-
-def mySR(x):
+    #return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
     return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
+
+def mySR(x, leadC=124, sublC=115, leadW=0.085, tilt=1.4, tilt2=1.8):
+    value = 0
+    if (x[1] >= sublC):
+        value = ROOT.TMath.Sqrt( ((x[0]-leadC)/(leadW*x[0]))**2 + ((x[1]-sublC)/(tilt * leadW*x[1]))**2)
+    if (x[1] < sublC):
+        value = ROOT.TMath.Sqrt( ((x[0]-leadC)/(leadW*x[0]))**2 + ((x[1]-sublC)/(tilt2 * leadW*x[1]))**2)
+    return value
 
 def myTop(x):
     return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 ) 
@@ -108,7 +116,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     temp_hist.GetXaxis().SetTitle("m_{J}^{lead} [GeV]")
     temp_hist.GetYaxis().SetTitle("m_{J}^{subl} [GeV]")
     temp_hist.GetZaxis().SetTitle("Events/10 GeV^{2}")
-    temp_hist.GetZaxis().SetTitleOffset(1.8)
+    temp_hist.GetZaxis().SetTitleOffset(1.6)
     temp_hist.GetZaxis().SetRangeUser(0, temp_hist.GetMaximum())
     # change divisions
     temp_hist.GetXaxis().SetNdivisions(505)
@@ -124,17 +132,17 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fSR.SetContour(len(contorsSR),contorsSR)
     fSR.SetNpx(100)
     fSR.SetLineColor(ROOT.kRed)
-    fSR.SetLineWidth(6)
+    fSR.SetLineWidth(1)
     fSR.SetLineStyle(5)
     fSR.Draw("same, cont3")
 
     # get control:
     fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
-    contoursCR = array.array("d", [33.0])
+    contoursCR = array.array("d", [1.6])
     fCR.SetContour(1, contoursCR)
     fCR.SetNpx(400)
     fCR.SetLineColor(ROOT.kOrange+7)
-    fCR.SetLineWidth(6)
+    fCR.SetLineWidth(1)
     fCR.Draw("same, cont3")
 
     # sideband:
@@ -605,6 +613,145 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
     inputroot.Close()
     inputroot_top.Close()
     f1.close()
+
+
+def DrawPaper2DOptimzie(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], subTop=True, extra=""):
+    ## functions for the different regions; specifcally for muqcd studies
+    SB_rad = 53
+    CR_rad = 33
+    SR_rad = 1.6
+
+    rebin_factor = 1 #default 5
+    inputroot = ROOT.TFile.Open(inputpath + inputname)
+    temp_hist      = inputroot.Get(inputdir + "/mH0H1").Clone()
+    temp_hist.Rebin2D(rebin_factor, rebin_factor)
+    outputroot = ROOT.TFile.Open(outputpath + "Optimize_cut.root", "recreate")
+
+    hist_cuts_Xhh   = ROOT.TH1F("cuts_Xhh_G", ";mass; Xhh", 23, 750, 3050)
+    hist_cuts_leadC = ROOT.TH1F("cuts_leadC_G", ";mass;  leadH Center, GeV;", 23, 750, 3050)
+    hist_cuts_sublC = ROOT.TH1F("cuts_sublC_G", ";mass;  sublH Center, GeV;", 23, 750, 3050)
+    hist_cuts_leadW = ROOT.TH1F("cuts_leadW_G", ";mass;  leadH Width ratio;", 23, 750, 3050)
+    hist_cuts_tilt  = ROOT.TH1F("cuts_tilt_G",  ";mass;  sublH/leadH Width ratio;", 23, 750, 3050)
+    hist_cuts_tilt2 = ROOT.TH1F("cuts_tilt2_G",  ";mass;  sublH/leadH Width ratio;", 23, 750, 3050)
+    
+    hist_cuts_dict = {
+        0:hist_cuts_Xhh, 
+        1:hist_cuts_leadC, 
+        2:hist_cuts_sublC, 
+        3:hist_cuts_leadW, 
+        4:hist_cuts_tilt,  
+        5:hist_cuts_tilt2, 
+        }
+
+    for mass in [800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]:
+    #for mass in [2000]:
+        #print inputdir
+        #print inputdir
+        inputroot_sig = ROOT.TFile.Open(inputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root")
+        #zero tag background estiamte string
+        temp_hist_sig  = inputroot_sig.Get(prename + "/mH0H1").Clone("mH0H1_" + str(mass))
+        #rebin
+        temp_hist_sig.Rebin2D(rebin_factor, rebin_factor)
+
+        #add    ##blind SR and CR; notice it is exclusive!
+        hist_sens_Xhh   = ROOT.TH1F("sens_Xhh_G"+str(mass), "; Xhh; Sensitivity;", 40, 1.3, 2.1)
+        hist_sens_leadC = ROOT.TH1F("sens_leadC_G"+str(mass), "; leadH Center, GeV; Sensitivity;", 40, 115, 135)
+        hist_sens_sublC = ROOT.TH1F("sens_sublC_G"+str(mass), "; sublH Center, GeV; Sensitivity;", 40, 108, 128)
+        hist_sens_leadW = ROOT.TH1F("sens_leadW_G"+str(mass), "; leadH Width ratio, GeV; Sensitivity;", 40, 0.06, 0.1)
+        hist_sens_tilt  = ROOT.TH1F("sens_tilt_G"+str(mass),  "; sublH/leadH Width ratio; Sensitivity;", 40, 1.2, 2.0)
+        hist_sens_tilt2 = ROOT.TH1F("sens_tilt2_G"+str(mass),  "; sublH/leadH Width ratio2; Sensitivity;", 40, 1.4, 2.2)
+        
+        hist_sens_dict = {
+            0:hist_sens_Xhh, 
+            1:hist_sens_leadC, 
+            2:hist_sens_sublC, 
+            3:hist_sens_leadW, 
+            4:hist_sens_tilt,  
+            5:hist_sens_tilt2, 
+            }
+
+        maxj = 0
+        maxsensitivity = 0
+        def update_SB(x_bin, y_bin, S, B, S_err, B_err):
+            B += temp_hist.GetBinContent(x_bin, y_bin)
+            S += temp_hist_sig.GetBinContent(x_bin, y_bin)
+            S_err = ROOT.TMath.Sqrt(S_err * S_err + temp_hist_sig.GetBinError(x_bin, y_bin) ** 2)
+            B_err = ROOT.TMath.Sqrt(B_err * B_err + temp_hist.GetBinError(x_bin, y_bin) ** 2)
+            return S, B, S_err, B_err
+
+        for j in range(40):
+            S = [0, 0, 0, 0, 0, 0]
+            B = [0, 0, 0, 0, 0, 0]
+            S_err = [0, 0, 0, 0, 0, 0]
+            B_err = [0, 0, 0, 0, 0, 0]
+            for x_bin in range(temp_hist.GetXaxis().FindBin(100), temp_hist.GetXaxis().FindBin(160)):
+                for y_bin in range(temp_hist.GetYaxis().FindBin(80), temp_hist.GetYaxis().FindBin(150)):
+                    if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin))) < 1.3 + j * 0.02:
+                        S[0], B[0], S_err[0], B_err[0] = update_SB( x_bin, y_bin, S[0], B[0], S_err[0], B_err[0])
+                    if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin)), leadC=115 +  j*0.5) < SR_rad:
+                        S[1], B[1], S_err[1], B_err[1] = update_SB( x_bin, y_bin, S[1], B[1], S_err[1], B_err[1])
+                    if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin)), sublC=108 +  j*0.5) < SR_rad:
+                        S[2], B[2], S_err[2], B_err[2] = update_SB( x_bin, y_bin, S[2], B[2], S_err[2], B_err[2])
+                    if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin)), leadW=0.06 +  j*0.001) < SR_rad:
+                        S[3], B[3], S_err[3], B_err[3] = update_SB( x_bin, y_bin, S[3], B[3], S_err[3], B_err[3])
+                    if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin)), tilt=1.2 + j*0.02) < SR_rad:
+                        S[4], B[4], S_err[4], B_err[4] = update_SB( x_bin, y_bin, S[4], B[4], S_err[4], B_err[4])
+                    if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin)), tilt2=1.4 + j*0.02) < SR_rad:
+                        S[5], B[5], S_err[5], B_err[5] = update_SB( x_bin, y_bin, S[5], B[5], S_err[5], B_err[5])
+
+                    #if mySR((temp_hist.GetXaxis().GetBinCenter(x_bin), temp_hist.GetYaxis().GetBinCenter(y_bin)), tilt= 1 - 0.2 + j * 0.02) < 1.6:
+            for i in range(6):
+                sensitivity = (1.0*S[i])/(1 + ROOT.TMath.Sqrt(B[i]))
+                try:
+                    sensitivity_err = sensitivity * ROOT.TMath.Sqrt((1.0*S_err[i]/S[i])**2 + (1./(4*B[i]))*((1.0*B_err[i]/(1+ROOT.TMath.Sqrt(B[i])))**2))
+                except ZeroDivisionError:
+                    sensitivity_err = 0
+
+                hist_sens_dict[i].SetBinContent(j, sensitivity)
+                hist_sens_dict[i].SetBinError(j, sensitivity_err)
+            #print "quick estimate ", j, " sens ", sensitivity - 0.163538536032, " pm ", sensitivity_err
+            #print "quick estimate ", j, " sens ", sensitivity, " pm ", sensitivity_err
+            if sensitivity > maxsensitivity:
+                maxsensitivity = sensitivity
+                maxj = j
+
+        for i in range(6):
+            print i, hist_sens_dict[i].GetName(), hist_sens_dict[i].GetMaximum(), " bin: ", hist_sens_dict[i].GetBinCenter(hist_sens_dict[i].GetMaximumBin())
+            hist_cuts_dict[i].Fill(mass, hist_sens_dict[i].GetBinCenter(hist_sens_dict[i].GetMaximumBin()))##only fill the maximum here
+            bin_error = 0
+            for j in range(40):
+                #print abs(hist_sens_dict[i].GetBinContent(j) -  hist_sens_dict[i].GetMaximum()), hist_sens_dict[i].GetBinError(hist_sens_dict[i].GetMaximumBin())
+                if abs(hist_sens_dict[i].GetBinContent(j) -  hist_sens_dict[i].GetMaximum()) < hist_sens_dict[i].GetBinError(hist_sens_dict[i].GetMaximumBin()):
+                    bin_error = hist_sens_dict[i].GetBinCenter(hist_sens_dict[i].GetMaximumBin()) - hist_sens_dict[i].GetBinCenter(j) 
+                    print hist_sens_dict[i].GetBinContent(j),  hist_sens_dict[i].GetMaximum(), j, bin_error
+                    break
+            hist_cuts_dict[i].SetBinError(hist_cuts_dict[i].GetXaxis().FindBin(mass), bin_error)##only set the maximum error here
+
+        outputroot.cd()
+        canv = ROOT.TCanvas(temp_hist.GetName(), temp_hist.GetTitle(), 1000, 800)
+        for i in range(6):
+            hist_sens_dict[i].GetYaxis().SetRangeUser(hist_sens_dict[i].GetMaximum() * 0.8, hist_sens_dict[i].GetMaximum() * 1.1)
+            hist_sens_dict[i].Draw()
+            hist_sens_dict[i].Write()
+            canv.SaveAs(outputpath + hist_sens_dict[i].GetName() + ".pdf")
+            canv.Clear()
+        
+        #del temp_hist_sig
+        inputroot_sig.Close()
+    
+    #shut it down
+    outputroot.cd()
+    for i in range(6):
+        average_value = hist_cuts_dict[i].Integral()/(15.0)
+        print i, hist_cuts_dict[i].GetName(), average_value
+        hist_cuts_dict[i].GetYaxis().SetRangeUser(average_value * 0.8, average_value * 1.2)
+        hist_cuts_dict[i].Draw()
+        hist_cuts_dict[i].Write()
+        canv.SaveAs(outputpath + hist_cuts_dict[i].GetName() + ".pdf")
+        canv.Clear()
+    outputroot.Close()
+    inputroot.Close()
+
 
 if __name__ == "__main__":
     main()
