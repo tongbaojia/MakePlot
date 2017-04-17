@@ -41,8 +41,12 @@ def main():
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
-            #{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, norm=True, Xrange=[500, 3500], Rebin=10, Logy=1, prename="2bs_")
@@ -51,8 +55,12 @@ def main():
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
-            #{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, norm=True, prename="2bs_")
@@ -61,8 +69,12 @@ def main():
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
-            #{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, Xrange=[500, 1200], norm=True, prename="2bs_")
@@ -71,11 +83,76 @@ def main():
             {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
-            #{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
             {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
             #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
             ], keyword=histname, Xrange=[0, 600], norm=True, prename="2bs_", Rebin=4, Logy=1)
+    for histname in ["leadHCand_trk_dr", "sublHCand_trk_dr"]:
+        DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
+            # {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
+            #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
+            ], keyword=histname, Xrange=[0, 1.1], norm=True, prename="2bs_", Rebin=1)
+    ##check only the b-tagged one
+    DrawMulti1Dcomparison([
+            #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + "leadHCand_trk0_Pt", "leg":"0b, leadH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Sideband" + "/" + "leadHCand_trk0_Pt", "leg":"2bs SB leadH, leadtrk"},
+            #{"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Sideband" + "/" + "sublHCand_trk0_Pt", "leg":"2bs SB sublH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + "leadHCand_trk0_Pt", "leg":"1b Incl leadH, leadtrk"},
+            #{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + "leadHCand_trk1_Pt", "leg":"OneTag lead on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + "sublHCand_trk0_Pt", "leg":"1b Incl sublH, leadtrk"},
+            #{"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + "sublHCand_trk1_Pt", "leg":"OneTag subl on subl"},
+            #{"file":"data_test/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl" + "/" + histname, "leg":"2bs prediction"},
+            ], keyword="leadH_trk0_Pt", Xrange=[0, 600], norm=True, prename="btagged_2bs_", Rebin=4, Logy=1)
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Sideband" + "/" + "leadHCand_trk1_Pt", "leg":"2bs SB sublH, subltrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + "leadHCand_trk1_Pt", "leg":"OneTag lead on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + "sublHCand_trk1_Pt", "leg":"OneTag subl on subl"},
+            ], keyword="leadH_trk1_Pt", Xrange=[0, 600], norm=True, prename="btagged_2bs_", Rebin=4, Logy=1)
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Sideband" + "/" + "sublHCand_trk0_Pt", "leg":"2bs SB sublH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + "leadHCand_trk0_Pt", "leg":"1b Incl leadH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + "sublHCand_trk0_Pt", "leg":"1b Incl sublH, leadtrk"},
+            ], keyword="sublH_trk0_Pt", Xrange=[0, 600], norm=True, prename="btagged_2bs_", Rebin=4, Logy=1)
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Sideband" + "/" + "sublHCand_trk1_Pt", "leg":"2bs SB sublH, subltrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + "leadHCand_trk1_Pt", "leg":"OneTag lead on subl"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + "sublHCand_trk1_Pt", "leg":"OneTag subl on subl"},
+            ], keyword="sublH_trk1_Pt", Xrange=[0, 600], norm=True, prename="btagged_2bs_", Rebin=4, Logy=1)
+
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + "leadHCand_trk0_Pt", "leg":"2b Incl leadH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + "leadHCand_trk0_Pt", "leg":"1b Incl leadH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + "sublHCand_trk0_Pt", "leg":"1b Incl sublH, leadtrk"},
+            ], keyword="leadH_trk0_Pt", Xrange=[0, 600], norm=True, prename="btagged_2b_", Rebin=4, Logy=1)
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_lead_Incl" + "/" + "leadHCand_trk1_Pt", "leg":"2b Incl leadH, subltrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + "leadHCand_trk1_Pt", "leg":"1b Incl leadH, subltrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + "sublHCand_trk1_Pt", "leg":"1b Incl sublH, subltrk"},
+            ], keyword="leadH_trk1_Pt", Xrange=[0, 600], norm=True, prename="btagged_2b_", Rebin=4, Logy=1)
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + "sublHCand_trk0_Pt", "leg":"2b Incl sublH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + "leadHCand_trk0_Pt", "leg":"1b Incl leadH, leadtrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + "sublHCand_trk0_Pt", "leg":"1b Incl sublH, leadtrk"},
+            ], keyword="sublH_trk0_Pt", Xrange=[0, 600], norm=True, prename="btagged_2b_", Rebin=4, Logy=1)
+    DrawMulti1Dcomparison([
+            {"file":"data_test/hist-MiniNTuple.root", "path":"TwoTag_subl_Incl" + "/" + "sublHCand_trk1_Pt", "leg":"2b Incl sublH, subltrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + "leadHCand_trk1_Pt", "leg":"1b Incl leadH, subltrk"},
+            {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + "sublHCand_trk1_Pt", "leg":"1b Incl sublH, subltrk"},
+            ], keyword="sublH_trk1_Pt", Xrange=[0, 600], norm=True, prename="btagged_2b_", Rebin=4, Logy=1)
     # for histname in ["leadHCand_trk_dr", "sublHCand_trk_dr"]:
     #     DrawMulti1Dcomparison([
     #         {"file":"data_test/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on lead"},
@@ -296,7 +373,9 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
         temphst_lst[i].SetDirectory(0) #otherwise the hist lives in the current open file
         tempratio_lst[i].SetDirectory(0) #otherwise the hist lives in the current open file
 
-        #print dic["file"], dic["path"], temphst_lst[i].Integral()
+        ##check the number of events
+        print dic["file"], dic["path"], temphst_lst[i].Integral()
+        
         if Rebin != 1:
             temphst_lst[i].Rebin(Rebin)
             tempratio_lst[i].Rebin(Rebin)
@@ -332,7 +411,13 @@ def DrawMulti1Dcomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrang
         temphst_lst[i].SetMarkerColor(1 if i == 0 else CONF.clr_lst[i])
         temphst_lst[i].SetMarkerSize(1)
         temphst_lst[i].GetYaxis().SetTitle("Norm" if norm else "N Events")
-        temphst_lst[i].SetMaximum(maxbincontent * (15 if (Logy == 0 or norm) else 150))
+        y_scale_factor = 15
+        if (Logy == 0 and norm):##not log scale, but norm
+            y_scale_factor = 1.5
+        elif (Logy == 1 and norm):##not log scale, but norm
+            y_scale_factor = 150
+        #print dic["path"], maxbincontent, y_scale_factor
+        temphst_lst[i].SetMaximum(maxbincontent * y_scale_factor)
         temphst_lst[i].SetMinimum(0.001 if Logy == 0 else minbincontent)
         if Xrange != [0, 0]:
             temphst_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
