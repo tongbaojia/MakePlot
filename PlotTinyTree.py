@@ -150,7 +150,9 @@ def GetRhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     return RhhExp
 
 def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
-    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + 0.9 * ROOT.TMath.Power((event.j1_m - %s)/(0.115*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut)
+    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/( (0.15 if (event.j1_m < %s) else 0.12) * event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY,  XhhCenterY, XhhCut) ##assymetric
+    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut) ##with pT dependent cut
+    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
     return XhhExp
 
 class eventHists:
@@ -674,7 +676,7 @@ def main():
     CR_size = 33 #this needs to be fixed; so good so far
     SB_size = 53 #53 is the new default; should be between 48-58 due to stats
     Syst_cut = {
-        "SR"         : GetXhh(), #GetXhh(), #"event.Xhh < 1.6", #
+        "SR"         : "event.Xhh < 1.6", #GetXhh(), #"event.Xhh < 1.6", #
         "CR"         : "event.Rhh < %s" % str(CR_size) ,
         "SB"         : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size),#"event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetRhh(RhhCenterX=124.+5,  RhhCenterY=115.+5,  RhhCut=CR_size),

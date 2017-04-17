@@ -19,7 +19,7 @@ workdir     =  "Moriond" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if reference folder exists
-fullstudy   =  False
+fullstudy   =  True
 #check if doing my thesis; if so, disable all the ATLAS labels
 thesis      =  False
 #check if the path exists
