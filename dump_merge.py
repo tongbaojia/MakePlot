@@ -41,12 +41,12 @@ def main():
         "FT_EFF_Eigen_B_3__1down",
         "FT_EFF_Eigen_B_3__1up",
         "FT_EFF_Eigen_B_4__1down",
-        "FT_EFF_Eigen_B_4__1up",
+        "FT_EFF_Eigen_B_4__1up", #10
         "FT_EFF_Eigen_C_0__1down",
         "FT_EFF_Eigen_C_0__1up",
         "FT_EFF_Eigen_C_1__1down",
         "FT_EFF_Eigen_C_1__1up",
-        "FT_EFF_Eigen_C_2__1down",
+        "FT_EFF_Eigen_C_2__1down",#15
         "FT_EFF_Eigen_C_2__1up",
         "FT_EFF_Eigen_C_3__1down",
         "FT_EFF_Eigen_C_3__1up",
@@ -60,7 +60,7 @@ def main():
         "FT_EFF_Eigen_Light_11__1up",
         "FT_EFF_Eigen_Light_12__1down",
         "FT_EFF_Eigen_Light_12__1up",
-        "FT_EFF_Eigen_Light_13__1down",
+        "FT_EFF_Eigen_Light_13__1down", #buggy one
         "FT_EFF_Eigen_Light_13__1up",
         "FT_EFF_Eigen_Light_2__1down",
         "FT_EFF_Eigen_Light_2__1up",
@@ -131,7 +131,7 @@ def main():
     # inputtasks.append({"inputdir":"syst_tt_rad_down"})
     # inputtasks.append({"inputdir":"syst_tt_rad_up"})
     for i in range(1, len(bsyst)):
-        # if i == 11 or i == 37 or i == 40 or i == 45:
+        # if i == 16 or i == 45:
         #     continue
         inputtasks.append({"inputdir":"syst_b_" + str(i)})
 
@@ -427,7 +427,7 @@ def plot_RSG_syst(masterdic, cut):
     systag_dic = {"JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "EFF":"b-tag SF", "Stat":"Stats"}
     eff_lst = []
     graph_lst = []
-    maxbincontent = 100.0
+    maxbincontent = 40.0
     minbincontent = -0.001
     lowmass  = 950
     highmass = 3150
@@ -522,10 +522,11 @@ def plot_RSG_syst_detail(masterdic, cut):
             #print syst, syst_eff[0]
             maxbincontent = max(maxbincontent, syst_eff[0] * 100)
             maxsyst = max(maxsyst, syst_eff[0] * 100)
+        #print maxsyst, i
         #start the canvas
         canv.cd()
         #convert it to a graph
-        if maxsyst < 3:#don't draw everything
+        if maxsyst < 3: #don't draw everything
             print syst
             continue
         graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))

@@ -19,7 +19,7 @@ workdir     =  "Moriond" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if reference folder exists
-fullstudy   =  True
+fullstudy   =  False
 #check if doing my thesis; if so, disable all the ATLAS labels
 thesis      =  False
 #check if the path exists
@@ -36,7 +36,8 @@ splits     = 14
 #plot color variables
 clr_lst    = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPink-8, 
 	ROOT.kSpring-7, ROOT.kMagenta+2, ROOT.kCyan+1, ROOT.kViolet-6, ROOT.kTeal+3, ROOT.kBlue+6, 
-	ROOT.kRed-1, ROOT.kBlue-1, ROOT.kOrange-7, ROOT.kGreen-3, ROOT.kPink+8]
+	ROOT.kRed-1, ROOT.kBlue-1, ROOT.kOrange-7, ROOT.kGreen-3, ROOT.kPink+8,
+	ROOT.kRed-2, ROOT.kBlue-2, ROOT.kOrange-6, ROOT.kGreen-4, ROOT.kPink+7]
 #plot marker style variables
 mrk_lst  = range(20, 40)
 #defuault root file name

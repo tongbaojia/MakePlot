@@ -85,6 +85,8 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
             helpers.drawProgressBar(i/(N*1.0))
 
         t.fChain.GetEntry(i)
+
+
         #print t.Xzz
         ''' ##this peak can be faked because around 1250, 2m/pT ~ 0.2, thus the two track jet start to merge to one
             ##so requiring a large R jet to have one and only one track jet basically is selecting 
@@ -103,40 +105,44 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
         #         elif (t.Xhh < 2.1):     
         #             plt.Plot1D("m_HH_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
 
+        ''' check the Xhh vs pT '''
+        XhhExp = (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124)/(0.085*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115)/(0.12*t.j1_m), 2))) ##with pT dependent cut
+        plt.Plot2D("pT_Xhh", ";pT leadH; Xhh;", t.j0_pt, XhhExp, 50, 500, 2000, 42, -0.1, 2)
+        plt.Plot2D("pT_Xhh_Corr", ";pT leadH; Xhh Corr;", t.j0_pt, t.Xhh, 50, 500, 2000, 42, -0.1, 2)
 
         '''check if the number of events in consistent in runs'''
-        if t.Xhh > 1.6 and t.Rhh < 35.8:
-            #print t.runNumber
-            if (t.j0_nb == 0 and t.j1_nb == 0) :
-                plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
-                plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
-                plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 1):
-                plt.Plot1D("N_2bs_CR", "N_2bs; RunNumber; 2bs-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 2) or (t.j0_nb == 2 and t.j1_nb == 1) :
-                plt.Plot1D("N_3b_CR", "N_3b; RunNumber; 3b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 2 and t.j1_nb == 2):
-                plt.Plot1D("N_4b_CR", "N_4b; RunNumber; 4b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-        if t.Xhh < 1.6:
-            #print t.runNumber
-            if (t.j0_nb == 0 and t.j1_nb == 0) :
-                plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
-                plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
-                plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 1):
-                plt.Plot1D("N_2bs_SR", "N_2bs; RunNumber; 2bs-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 1 and t.j1_nb == 2) or (t.j0_nb == 2 and t.j1_nb == 1) :
-                plt.Plot1D("N_3b_SR", "N_3b; RunNumber; 3b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
-            if (t.j0_nb == 2 and t.j1_nb == 2):
-                plt.Plot1D("N_4b_SR", "N_4b; RunNumber; 4b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        # if t.Xhh > 1.6 and t.Rhh < 35.8:
+        #     #print t.runNumber
+        #     if (t.j0_nb == 0 and t.j1_nb == 0) :
+        #         plt.Plot1D("N_0b_CR", "N_0b; RunNumber; 0b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+        #         plt.Plot1D("N_1b_CR", "N_1b; RunNumber; 1b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+        #         plt.Plot1D("N_2b_CR", "N_2b; RunNumber; 2b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 1):
+        #         plt.Plot1D("N_2bs_CR", "N_2bs; RunNumber; 2bs-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 2) or (t.j0_nb == 2 and t.j1_nb == 1) :
+        #         plt.Plot1D("N_3b_CR", "N_3b; RunNumber; 3b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 2 and t.j1_nb == 2):
+        #         plt.Plot1D("N_4b_CR", "N_4b; RunNumber; 4b-tag events in CR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        # if t.Xhh < 1.6:
+        #     #print t.runNumber
+        #     if (t.j0_nb == 0 and t.j1_nb == 0) :
+        #         plt.Plot1D("N_0b_SR", "N_0b; RunNumber; 0b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 1) :
+        #         plt.Plot1D("N_1b_SR", "N_1b; RunNumber; 1b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2) :
+        #         plt.Plot1D("N_2b_SR", "N_2b; RunNumber; 2b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 1):
+        #         plt.Plot1D("N_2bs_SR", "N_2bs; RunNumber; 2bs-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 1 and t.j1_nb == 2) or (t.j0_nb == 2 and t.j1_nb == 1) :
+        #         plt.Plot1D("N_3b_SR", "N_3b; RunNumber; 3b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
+        #     if (t.j0_nb == 2 and t.j1_nb == 2):
+        #         plt.Plot1D("N_4b_SR", "N_4b; RunNumber; 4b-tag events in SR per ipb", t.runNumber,  lastrun - firstrun + 10000, firstrun - 5000, lastrun + 5000, 1/float(lumitable[str(int(t.runNumber))]))
         
         ##for signal region studies
         #if t.Xhh < 1.6:
-            ''' understad if 2b events, the b-tagged jet and the un-b tagged jet have any difference '''
+            ## understad if 2b events, the b-tagged jet and the un-b tagged jet have any difference ##
             # if (t.j0_nb == 2 and t.j1_nb == 0):
             #     plt.Plot1D("2b_bjet_pT", "pT; b-tagged large R jet, pT, GeV;", t.j0_pt,  36, 200, 2000) #, t.weight)
             #     plt.Plot1D("2b_non_bjet_pT", "pT; non b-tagged large R jet, pT, GeV;", t.j1_pt,  36, 200, 2000) #, t.weight)
@@ -160,7 +166,7 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
             #     plt.Plot2D("2b_non_bjet_pT_drtrk", "pT J vs trk dR; b-tagged large R jet, pT, GeV; dR trkjets;", t.j0_pt, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 36, 200, 2000, 11, -0.2, 2) #, t.weight)
 
 
-            ''' test rest frame reco '''
+            ### test rest frame reco ###
             # if (t.mHH > 2300 or t.mHH < 1700):
             #     continue
             # hcand0 = ROOT.TLorentzVector()
@@ -289,14 +295,14 @@ def main():
     eosmcpath = CONF.toppath + "/eos/atlas/user/b/btong/bb/mc/v02-00-00/gridOutput/MiniNTuple/*mc15_13TeV"
     eosdatapath = CONF.toppath + "/eos/atlas/user/b/btong/bb/data/v02-00-00/gridOutput/MiniNTuple/*16_*periodB.*.root_skim"
     #start analysis on TinyNtuple
-    mass = 2000
-    #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
+    mass = 3000
+    TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
     #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
     #TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root_skim")[0], "signal_M" + str(mass)) #MC
     #MiniAnalysis(glob.glob(eosdatapath)[0], "data16") #data
-    MiniAnalysis(glob.glob("../test_mini/data-MiniNTuple/*.root_skim")[0], "signal_M" + str(mass)) #MC
+    #MiniAnalysis(glob.glob("../test_mini/data-MiniNTuple/*.root_skim")[0], "signal_M" + str(mass)) #MC
 
     #finish
     print("--- %s seconds ---" % (time.time() - start_time))

@@ -109,7 +109,8 @@ def main():
 
     # for i in inputtasks:
     #     syst_pipeline(i)
-    # syst_pipeline(inputtasks[62])
+    #syst_pipeline(inputtasks[28])
+
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def syst_pipeline(config):
@@ -152,6 +153,10 @@ def syst_pipeline(config):
                 os.symlink(ori_link, dst_link)
 
     #start running programs
+    #print (inputpath)
+    os.system("rm " + inputpath + "sum_" + t + ".root")
+    os.system("rm -r " + inputpath + "Limitinput")
+    print "done clearing!"
     os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
     os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
 

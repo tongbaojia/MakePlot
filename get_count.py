@@ -28,8 +28,8 @@ evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "Pas
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 ##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
-"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
+#"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
+#"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
 #"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
 #"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
@@ -69,6 +69,7 @@ def options():
     return parser.parse_args()
 
 def main():
+    '''here is where everything is setup, basic options of plots and direcotries, fits'''
     start_time = time.time()
     ops = options()
     inputdir = ops.inputdir
@@ -129,13 +130,15 @@ def main():
     ####################################################
     #Do qcd background estimation from the fit
     print "Start Fit!"
-    global fitresult
     global useOneTop
     useOneTop = False
+    global doZjets 
+    doZjets = False
+    global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
         distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
-        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=True, a_ttbar=1.0)
+        BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=doZjets, a_ttbar=1.0)
     global best_attbar
     best_attbar = 1
     ##iterative fit method
@@ -145,25 +148,8 @@ def main():
         fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
             inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
             distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
-            BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=True, a_ttbar=best_attbar) #Weight_dic = weight_dict, 
+            BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=doZjets, a_ttbar=best_attbar) #Weight_dic = weight_dict, 
     
-    # global fitresult_NoTag
-    # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_lst=bkgest_lst, BKG_dic=bkgest_dict_NoTag, fitzjets=False)
-    # global fitresult_OneTag
-    # fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_lst=bkgest_lst, BKG_dic=bkgest_dict_OneTag, fitzjets=False)
-    
-    # global fitresult_NoTag
-    # fitresult_NoTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=0, fitzjets=False)
-    # global fitresult_OneTag
-    # fitresult_OneTag = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
-    #     inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-    #     distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, BKG_model=1, fitzjets=False)
     print "End of Fit!"
 
     #setup multiprocessing
@@ -270,7 +256,8 @@ def GetdataEst(inputdic, histname="", dosyst=False):
                 htemp_qcd   = outroot.Get(optionalqcd + "_" + cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd.SetName(histname + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, 1)
-                #htemp_qcd.Add(htemp_zjet, 1) #disable adding zjets
+                if (doZjets):
+                    htemp_qcd.Add(htemp_zjet, 1) #disable adding zjets
                 htemp_qcd.Write()
                 del(htemp_qcd)
                 del(htemp_zjet)
@@ -584,7 +571,8 @@ def Getqcd(inputdic, histname=""):
                 ##     print "zjet", cut, region, htemp_zjet.GetBinCenter(200),"content:", htemp_zjet.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_zjet.GetBinContent(200)), "err:", htemp_zjet.GetBinError(200)
                 htemp_qcd.SetName("qcd" + "_" + cut + "_" + region + "_" + hst)
                 htemp_qcd.Add(htemp_ttbar, -1 * best_attbar) #substract the ttbar from MC
-                htemp_qcd.Add(htemp_zjet, -1)
+                if (doZjets):
+                    htemp_qcd.Add(htemp_zjet, -1)
                 ##check error
                 ## if hst is "mHH_l":
                 ##     print "after", cut, region, htemp_qcd.GetBinCenter(200), "content:", htemp_qcd.GetBinContent(200), "sqrt:", ROOT.TMath.Sqrt(htemp_qcd.GetBinContent(200)), "err:", htemp_qcd.GetBinError(200)

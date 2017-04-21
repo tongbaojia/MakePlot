@@ -46,7 +46,7 @@ var=$ch
 ##start actual running
 if [ $dopythonrun == "true" ]; then
 	cd MakePlot
-	python Run_reweight.py --var var
+	python Run_reweight.py --var $var
 fi
 echo "DONE!!!"
 

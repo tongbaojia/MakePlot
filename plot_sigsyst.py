@@ -189,13 +189,15 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ##print kname
         if "QCD" in kname: ##this is are buggy now!
             continue
-        # if "smooth" not in kname: ##this is reasonable
-        #     continue
-        # if "norm" not in kname: ##this is reasonable
-        #     continue
-        # if "syst_" in kname: ##this is reasonable
+        if "smooth" in kname: ##this is reasonable
+            continue
+        if "norm" in kname: ##this is reasonable
+            continue
+        # if "JET" in kname: ##this is reasonable
         #     continue
         if "FT_" in kname: ##these are buggy now!
+            continue
+        if "totalbkg_hh" is kname:
             continue
 
         if "totalbkg_hh" in kname and "up" in kname:

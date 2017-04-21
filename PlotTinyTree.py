@@ -175,7 +175,6 @@ class eventHists:
         self.h1_trk1_pt   = ROOT.TH1F("sublHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
         self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
         self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
-        self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
 
         if self.fullhist:
             self.h_deta       = ROOT.TH1F("hCandDeta",          "hCand #Delta#eta",  40,    0,  2.0)
@@ -200,6 +199,7 @@ class eventHists:
             #self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             #self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
             #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
+            self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
             self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 200,  50,  250,  200,  50,  250)
             self.dRH0H1       = ROOT.TH2F("dRH0H1",             ";#Deltar_{trk}^{lead}; #Deltar_{trk}^{subl};", 50, 0.2,  1.2, 50, 0.2, 1.2)
@@ -227,7 +227,6 @@ class eventHists:
         self.h1_trk0_pt.Fill(event.j1_trk0_pt, weight)
         self.h0_trk1_pt.Fill(event.j0_trk1_pt, weight)
         self.h1_trk1_pt.Fill(event.j1_trk1_pt, weight)
-        self.Rhh.Fill(event.Rhh, weight) 
         self.h0_pt_m.Fill(event.j0_pt, weight)
         self.h1_pt_m.Fill(event.j1_pt, weight) 
 
@@ -258,6 +257,7 @@ class eventHists:
             #self.h0_trk0_phi.Fill(event.j0_trk0_phi, weight)
             #self.h1_trk0_eta.Fill(event.j1_trk0_eta, weight)
             #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
+            self.Rhh.Fill(event.Rhh, weight) 
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
             self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
@@ -286,7 +286,7 @@ class eventHists:
         self.h1_trk1_pt.Write()
         self.h0_pt_m.Write()    
         self.h1_pt_m.Write() 
-        self.Rhh.Write()
+
         if self.fullhist:
             self.mH0H1.Write() 
             self.h_deta.Write()    
@@ -305,6 +305,7 @@ class eventHists:
             self.h1_ntrk.Write()   
             self.h0_trks_pt.Write() 
             self.h1_trks_pt.Write()   
+            self.Rhh.Write()
             self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
@@ -675,17 +676,21 @@ def main():
     global Syst_cut
     CR_size = 33 #this needs to be fixed; so good so far
     SB_size = 53 #53 is the new default; should be between 48-58 due to stats
+    CR_X    = 124. ##center for control region
+    CR_Y    = 115. ##center for control region
+    SB_X    = 124. + 10 ##center for sideband region
+    SB_Y    = 115. + 10 ##center for sideband region
     Syst_cut = {
         "SR"         : "event.Xhh < 1.6", #GetXhh(), #"event.Xhh < 1.6", #
-        "CR"         : "event.Rhh < %s" % str(CR_size) ,
-        "SB"         : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size),#"event.Rhh < %s" % str(SB_size) ,
-        "CR_High"    : GetRhh(RhhCenterX=124.+5,  RhhCenterY=115.+5,  RhhCut=CR_size),
-        "CR_Low"     : GetRhh(RhhCenterX=124.-5,  RhhCenterY=115.-5,  RhhCut=CR_size),
+        "CR"         : GetRhh(RhhCenterX=CR_X, RhhCenterY=CR_Y, RhhCut=CR_size), #"event.Rhh < %s" % str(CR_size) ,
+        "SB"         : GetRhh(RhhCenterX=SB_X, RhhCenterY=SB_Y, RhhCut=SB_size), #"event.Rhh < %s" % str(SB_size) ,
+        "CR_High"    : GetRhh(RhhCenterX=CR_X+5,  RhhCenterY=CR_Y+5,  RhhCut=CR_size),
+        "CR_Low"     : GetRhh(RhhCenterX=CR_X-5,  RhhCenterY=CR_Y-5,  RhhCut=CR_size),
         "CR_Small"   : "event.Xhh > 2.0 and event.Rhh < %s" % str(CR_size) ,
-        "SB_High"    : GetRhh(RhhCenterX=124.+15, RhhCenterY=115.+15, RhhCut=SB_size),
-        "SB_Low"     : GetRhh(RhhCenterX=124.+5,  RhhCenterY=115.+5,  RhhCut=SB_size),
-        "SB_Large"   : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size + 5), #"event.Rhh < %s" % str(SB_size + 5) ,
-        "SB_Small"   : GetRhh(RhhCenterX=124.+10, RhhCenterY=115.+10, RhhCut=SB_size - 5), #"event.Rhh < %s" % str(SB_size - 5) ,
+        "SB_High"    : GetRhh(RhhCenterX=SB_X+5,  RhhCenterY=SB_Y+5,  RhhCut=SB_size),
+        "SB_Low"     : GetRhh(RhhCenterX=SB_X-5,  RhhCenterY=SB_Y-5,  RhhCut=SB_size),
+        "SB_Large"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size + 5), #"event.Rhh < %s" % str(SB_size + 5) ,
+        "SB_Small"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size - 5), #"event.Rhh < %s" % str(SB_size - 5) ,
         "ZZ"         : "event.Xzz < 2.1" ,
         }
     global SR_cut
@@ -719,6 +724,7 @@ def main():
     #split_list = ["signal_QCD"]
     if turnon_reweight:
         split_list = ["data_test"]
+        #split_list = ["signal_QCD"]
     #split_list = []
     inputtasks = []
     for split_file in split_list:
