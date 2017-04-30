@@ -19,7 +19,7 @@ workdir     =  "Moriond" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if reference folder exists
-fullstudy   =  False
+fullstudy   =  True
 #check if doing my thesis; if so, disable all the ATLAS labels
 thesis      =  False
 #check if the path exists
@@ -43,7 +43,7 @@ mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r = "hist-MiniNTuple.root"
 #set the blinding status
-blind  = False
+blind  = True
  #False
 #current total luminiosity, in fb 22.1; 13.0
 totlumi = 36.1

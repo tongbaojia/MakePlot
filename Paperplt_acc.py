@@ -108,6 +108,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             input_mc.Close()
 
         canv.cd()
+        #maxbincontent = 0.15
         #convert it to a TGraph
         graph_lst.append(helpers.TH1toTAsym(eff_lst[i]))
         graph_lst[i].SetLineColor(CONF.clr_lst[i])
