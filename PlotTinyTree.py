@@ -151,8 +151,12 @@ def GetRhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
 
 def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
     #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/( (0.15 if (event.j1_m < %s) else 0.12) * event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY,  XhhCenterY, XhhCut) ##assymetric
-    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut) ##with pT dependent cut
+    #just pT dependent
+    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut) ##with pT dependent cut
+    #just assymetric resolution
     #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
+    #old definition
+    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
     return XhhExp
 
 class eventHists:
@@ -681,7 +685,7 @@ def main():
     SB_X    = 124. + 10 ##center for sideband region
     SB_Y    = 115. + 10 ##center for sideband region
     Syst_cut = {
-        "SR"         : "event.Xhh < 1.6", #GetXhh(), #"event.Xhh < 1.6", #
+        "SR"         : GetXhh(), #"event.Xhh < 1.6", #GetXhh(), #"event.Xhh < 1.6", #
         "CR"         : GetRhh(RhhCenterX=CR_X, RhhCenterY=CR_Y, RhhCut=CR_size), #"event.Rhh < %s" % str(CR_size) ,
         "SB"         : GetRhh(RhhCenterX=SB_X, RhhCenterY=SB_Y, RhhCut=SB_size), #"event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetRhh(RhhCenterX=CR_X+5,  RhhCenterY=CR_Y+5,  RhhCut=CR_size),

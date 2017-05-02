@@ -19,10 +19,10 @@ def options():
     return parser.parse_args()
 
 def main():
-
+    '''run this to produce 2D MJ0-J1 plots for paper'''
     start_time = time.time()
     global StatusLabel
-    StatusLabel = "Internal" ##StatusLabel = "Preliminary"
+    StatusLabel = CONF.StatusLabel
     ops = options()
     inputdir = ops.inputdir
     global inputpath
@@ -37,7 +37,7 @@ def main():
     DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2D("signal_G_hh_c10_M1200/hist-MiniNTuple.root", "AllTag_Incl", prename="Sig_1200_AllTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
     DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "AllTag_Incl", prename="Sig_2000_AllTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    # DrawPaper2DPrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DPrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     # DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "TwoTag_split_Incl", prename="Sig_2000_TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
     # DrawPaper2D("signal_G_hh_c10_M2000/hist-MiniNTuple.root", "ThreeTag_Incl", prename="Sig_2000_ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
@@ -58,11 +58,11 @@ def main():
     # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
     # if not os.path.exists(outputpath):
     #     os.makedirs(outputpath)
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    #DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    #DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    #DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    #DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    #DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     # ## only if QCD sample exists
     # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
@@ -108,10 +108,11 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
         temp_hist.GetYaxis().SetTitleOffset(1.5)
 
     #print Xrange, Yrange, temp_hist.GetXaxis().GetMinimum(), temp_hist.GetXaxis().GetMaximum()
-
     canv.SetLeftMargin(0.17)
     canv.SetRightMargin(0.23)
     # log scale
+    rebin_factor = 5 #default 5
+    temp_hist.Rebin2D(rebin_factor, rebin_factor)
     #canv.SetLogz(1)
     temp_hist.Draw("colz")
     # Set Axis Labels
@@ -212,9 +213,12 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     #scale and add
     inputtex = CONF.inputpath + CONF.workdir + "/Plot/Tables/normfit.tex"
     f1 = open(inputtex, 'r')
+    rebin_factor = 5 #default 5
+    temp_hist.Rebin2D(rebin_factor, rebin_factor)
+    temp_hist_top.Rebin2D(rebin_factor, rebin_factor)
     for line in f1: 
         #very stupid protection to distinguish 2b and 2bs
-        if ("Nb=2s") in line:
+        if ("TwoTag") in line:
             templine = line.split("&")
             tempqcd = templine[1].split(" ")
             muqcd = float(tempqcd[1])
@@ -266,7 +270,7 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
 
     # get control:
     fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
-    contoursCR = array.array("d", [35.8])
+    contoursCR = array.array("d", [33.0])
     fCR.SetContour(1, contoursCR)
     fCR.SetNpx(400)
     fCR.SetLineColor(ROOT.kOrange+7)
@@ -274,8 +278,8 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     fCR.Draw("same, cont3")
 
     # sideband:
-    fSB = ROOT.TF2("SB", myCR,0,Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [63.0])
+    fSB = ROOT.TF2("SB", mySB,0,Xrange[1],0,Xrange[1])
+    contoursSB = array.array("d", [53.0])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(400)
     fSB.SetLineColor(ROOT.kYellow)
@@ -290,7 +294,7 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     fTT.SetLineColor(46)
     fTT.SetLineWidth(3)
     fTT.SetLineStyle(5)
-    #fTT.Draw("same, cont3")
+    fTT.Draw("same, cont3")
     # ttbar label:
     ttb_txt = ROOT.TLatex(0.65, 0.75, "#splitline{t#bar{t} enriched}{region}")
     ttb_txt.SetTextColor(46)

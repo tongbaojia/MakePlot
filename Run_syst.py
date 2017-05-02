@@ -15,7 +15,7 @@ import multiprocessing as mp
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="Moriond")
+    parser.add_argument("--inputdir", default="Moriond_bkg_5")
     parser.add_argument("--Xhh",      action='store_true') #4times more time
     return parser.parse_args()
 

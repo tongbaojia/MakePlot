@@ -28,8 +28,8 @@ evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "Pas
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 ##setup the list of folders to process; these histograms are savedls
 cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
-"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
+#"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
+#"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
 #"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
 #"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
 "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
@@ -137,7 +137,7 @@ def main():
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
+        distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=1, \
         BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=doZjets, a_ttbar=1.0)
     global best_attbar
     best_attbar = 1
@@ -147,7 +147,7 @@ def main():
         best_attbar = fitresult["muttbar"][2]
         fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
             inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
-            distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=2, \
+            distributionName = ["leadHCand_Mass"], whichFunc = "XhhBoosted", output = inputpath + "Plot/", NRebin=1, \
             BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=doZjets, a_ttbar=best_attbar) #Weight_dic = weight_dict, 
     
     print "End of Fit!"

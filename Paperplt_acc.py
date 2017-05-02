@@ -149,7 +149,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     atlas.SetTextFont(72)
     atlas.SetNDC()
     atlas.Draw()
-    status = ROOT.TLatex(xatlas + 0.14, yatlas, "Preliminary")
+    status = ROOT.TLatex(xatlas + 0.14, yatlas, CONF.StatusLabel)
     #status.SetTextAlign(22)
     status.SetTextSize(0.04)
     status.SetTextFont(42)
