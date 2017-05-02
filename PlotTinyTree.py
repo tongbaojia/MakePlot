@@ -150,9 +150,9 @@ def GetRhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6, RhhCenterX=124., RhhCen
     return RhhExp
 
 def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
-    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/( (0.15 if (event.j1_m < %s) else 0.12) * event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY,  XhhCenterY, XhhCut) ##assymetric
+    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut) ##with pT dependent cut
     #just pT dependent
-    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut) ##with pT dependent cut
+    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s + (0 if (event.j0_pt < 900) else (event.j0_pt - 900)/900.0 * 0.4) )" % (XhhCenterX, XhhCenterY, XhhCut) ##with pT dependent cut
     #just assymetric resolution
     #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
     #old definition
@@ -377,7 +377,7 @@ class bkgregionHists:
 
 #these are the different regions
 class regionHists:
-    def __init__(self, outputroot, reweight):
+    def __init__(self, outputroot, reweight, isData=False):
         self.AllTag                    = massregionHists("AllTag", outputroot)
         self.NoTag                     = massregionHists("NoTag", outputroot)
         self.OneTag                    = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
@@ -419,6 +419,8 @@ class regionHists:
         # self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
         # self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
+        self.isData   = isData
+        self.splitter = False ##to split events into halves for bkg estimation
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -464,6 +466,7 @@ class regionHists:
 
             elif (nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2): 
                 self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
+                self.splitter = (not self.splitter) ##flip the splitter
             elif nb_j0 + nb_j1 == 1:
                 self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
             elif nb_j0 + nb_j1 == 0:
@@ -499,13 +502,21 @@ class regionHists:
             #     elif (nb_j0 == 0 and nb_j1 == 1):
             #         self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
-                self.ThreeTag_bkg.Fill(event)
+                if (not self.isData): ##if not Data
+                    self.ThreeTag_bkg.Fill(event)
+                elif (self.splitter): ##if true, then fill into 3b
+                    self.ThreeTag_bkg.Fill(event)
+
                 if (nb_j0 == 2 and nb_j1 == 0):
                     self.ThreeTag_lead_bkg.Fill(event)
                 elif (nb_j0 == 0 and nb_j1 == 2):
                     self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
-                self.FourTag_bkg.Fill(event)
+                if (not self.isData): ##if not Data
+                    self.FourTag_bkg.Fill(event)
+                elif (not self.splitter): ##if true, then fill into 4b
+                    self.FourTag_bkg.Fill(event)
+
                 if (nb_j0 == 2 and nb_j1 == 0):
                     self.FourTag_lead_bkg.Fill(event)
                 elif (nb_j0 == 0 and nb_j1 == 2):
@@ -534,6 +545,8 @@ class regionHists:
                 self.ThreeTag_lead.Fill(event)
             elif (nb_j0 == 1 and nb_j1 == 2):
                 self.ThreeTag_subl.Fill(event)
+
+
 
     def Write(self, outputroot):
         self.AllTag.Write(outputroot)
@@ -581,7 +594,7 @@ def analysis(inputconfig):
     outputroot = inputconfig["outputroot"]
 
     outroot = ROOT.TFile.Open(outputpath + inputfile + "/" + outputroot, "recreate")
-    AllHists = regionHists(outroot, turnon_reweight)
+    AllHists = regionHists(outroot, turnon_reweight, isData=("data" in inputfile))
     #read the input file
     f = ROOT.TFile(inputpath + inputfile + "/" + inputroot, "read")
     #load the target tree
@@ -685,7 +698,7 @@ def main():
     SB_X    = 124. + 10 ##center for sideband region
     SB_Y    = 115. + 10 ##center for sideband region
     Syst_cut = {
-        "SR"         : GetXhh(), #"event.Xhh < 1.6", #GetXhh(), #"event.Xhh < 1.6", #
+        "SR"         : "event.Xhh < 1.6", # #GetXhh(), #"event.Xhh < 1.6", #
         "CR"         : GetRhh(RhhCenterX=CR_X, RhhCenterY=CR_Y, RhhCut=CR_size), #"event.Rhh < %s" % str(CR_size) ,
         "SB"         : GetRhh(RhhCenterX=SB_X, RhhCenterY=SB_Y, RhhCut=SB_size), #"event.Rhh < %s" % str(SB_size) ,
         "CR_High"    : GetRhh(RhhCenterX=CR_X+5,  RhhCenterY=CR_Y+5,  RhhCut=CR_size),
