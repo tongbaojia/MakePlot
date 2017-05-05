@@ -1,0 +1,632 @@
+@(#)CERN job starter $Date: 2010/06/23 14:22:16 $
+Working directory is </pool/lsf/btong/19374632.3> on <b6e8493130.cern.ch>
+
+the input file is 
+/pool/spool/1494016928.19374632.3.shell: line 15: [: ==: unary operator expected
+[7mlsetup              [0m lsetup <tool1> [ <tool2> ...] (see lsetup -h):
+[7m lsetup agis        [0m  ATLAS Grid Information System
+[7m lsetup asetup      [0m  (or asetup) to setup an Athena release
+[7m lsetup atlantis    [0m  Atlantis: event display
+[7m lsetup eiclient    [0m  Event Index 
+[7m lsetup emi         [0m  EMI: grid middleware user interface 
+[7m lsetup fax         [0m  Federated XRootD data storage access (FAX)
+[7m lsetup ganga       [0m  Ganga: job definition and management client
+[7m lsetup lcgenv      [0m  lcgenv: setup tools from cvmfs SFT repository
+[7m lsetup panda       [0m  Panda: Production ANd Distributed Analysis
+[7m lsetup pod         [0m  Proof-on-Demand (obsolete)
+[7m lsetup pyami       [0m  pyAMI: ATLAS Metadata Interface python client
+[7m lsetup rcsetup     [0m  (or rcSetup) to setup an ASG release
+[7m lsetup root        [0m  ROOT data processing framework
+[7m lsetup rucio       [0m  distributed data management system client
+[7m lsetup sft         [0m  setup tools from SFT repo (use lcgenv instead)
+[7m lsetup xrootd      [0m  XRootD data access
+[7madvancedTools       [0m advanced tools menu
+[7mdiagnostics         [0m diagnostic tools menu
+[7mhelpMe              [0m more help
+[7mprintMenu           [0m show this menu
+[7mshowVersions        [0m show versions of installed software
+lsetup: invalid option -- 'u'
+'lsetup --help' for more information
+ If it is an option for a tool, you need to put it in double quotes.
+************************************************************************
+Requested:  rcsetup ... 
+ Setting up [4mrcsetup 00-04-17[0m ... 
+In current directory, found previous release with config=x86_64-slc6-gcc49-opt at the following location, going to set up its env: 
+	/cvmfs/atlas.cern.ch/repo/sw/ASG/AnalysisBase/2.4.28
+Going to set up ROOT-6.04.16-x86_64-slc6-gcc49-opt from cvmfs
+>>>>>>>>>>>>>>>>>>>>>>>>> Information for user <<<<<<<<<<<<<<<<<<<<<<<<<
+************************************************************************
+************************************************************************
+Requested:  sft ... 
+ Setting up [4mgcc gcc493_x86_64_slc6[0m ... 
+  Skipping: gcc493 already setup.
+ Setting up [4mpython 2.7.4-x86_64-slc6-gcc48[0m ... 
+  Skipping: python 2.7 x86_64 already setup.
+ Setting up [4msft  pyanalysis[0m ... 
+  Setting up pyanalysis 1.5_python2.7-d641e ...
+>>>>>>>>>>>>>>>>>>>>>>>>> Information for user <<<<<<<<<<<<<<<<<<<<<<<<<
+ sft:
+  pyanalysis:
+    The env $SFT_HOME_pyanalysis is the home dir
+************************************************************************
+ch:Moriond:ch syst:CR_Small:syst
+plotting channel:  Moriond
+plotting syst:  CR_Small
+Start TinyTree--->Plots!
+ START: Running 47 jobs on 15 cores
+hadd Target file: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root
+hadd Source file 1: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_0.root
+hadd Source file 2: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_1.root
+hadd Source file 3: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_2.root
+hadd Source file 4: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_3.root
+hadd Source file 5: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_4.root
+hadd Source file 6: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_5.root
+hadd Source file 7: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_6.root
+hadd Source file 8: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_7.root
+hadd Source file 9: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_8.root
+hadd Source file 10: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_9.root
+hadd Source file 11: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_10.root
+hadd Source file 12: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_11.root
+hadd Source file 13: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_12.root
+hadd Source file 14: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple_13.root
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/AllTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/AllTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/AllTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/AllTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/FourTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/FourTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/FourTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/FourTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/OneTag_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/TwoTag_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/data_test/hist-MiniNTuple.root:/ThreeTag_subl_Incl
+hadd Target file: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root
+hadd Source file 1: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_0.root
+hadd Source file 2: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_1.root
+hadd Source file 3: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_2.root
+hadd Source file 4: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_3.root
+hadd Source file 5: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_4.root
+hadd Source file 6: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_5.root
+hadd Source file 7: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_6.root
+hadd Source file 8: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_7.root
+hadd Source file 9: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_8.root
+hadd Source file 10: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_9.root
+hadd Source file 11: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_10.root
+hadd Source file 12: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_11.root
+hadd Source file 13: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_12.root
+hadd Source file 14: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple_13.root
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/AllTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/AllTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/AllTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/AllTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/FourTag_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_2Trk_split_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_3Trk_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/NoTag_4Trk_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/OneTag_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/TwoTag_subl_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_lead_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_lead_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_lead_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_lead_Incl
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_subl_Control
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_subl_Sideband
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_subl_Signal
+hadd Target path: /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/ttbar_comb_test/hist-MiniNTuple.root:/ThreeTag_subl_Incl
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_0.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_1.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_2.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_3.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_4.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_5.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_6.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_7.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_8.root analysis! 23334  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_9.root analysis! 23333  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_10.root analysis! 23333  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M500 hist-MiniNTuple.root analysis! 1450  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M900 hist-MiniNTuple.root analysis! 18734  events!
+[ >                    ] 0.00%
+[ >                    ] 4.56%
+[ =>                   ] 9.12%
+[ ==>                  ] 13.69%
+[ ===>                 ] 18.25%
+[ ====>                ] 22.81%
+[ =====>               ] 27.37%
+[ ======>              ] 31.94%
+[ =======>             ] 36.50%
+[ ========>            ] 41.06%
+[ =========>           ] 45.62%
+[ ==========>          ] 50.19%
+[ ==========>          ] 54.75%
+[ ===========>         ] 59.31%
+[ ============>        ] 63.87%
+[ =============>       ] 68.44%
+[ ==============>      ] 73.00%
+[ ===============>     ] 77.56%
+[ ================>    ] 82.12%
+[ =================>   ] 86.69%
+[ ==================>  ] 91.25%
+[ ===================> ] 95.81%
+DONE with the data_test hist-MiniNTuple_2.root analysis! 547946  events!
+[ >                    ] 0.00%
+[ >                    ] 4.56%
+[ =>                   ] 9.12%
+[ ==>                  ] 13.69%
+[ ===>                 ] 18.25%
+[ ====>                ] 22.81%
+[ =====>               ] 27.37%
+[ ======>              ] 31.94%
+[ =======>             ] 36.50%
+[ ========>            ] 41.06%
+[ =========>           ] 45.62%
+[ ==========>          ] 50.19%
+[ ==========>          ] 54.75%
+[ ===========>         ] 59.31%
+[ ============>        ] 63.87%
+[ =============>       ] 68.44%
+[ ==============>      ] 73.00%
+[ ===============>     ] 77.56%
+[ ================>    ] 82.12%
+[ =================>   ] 86.69%
+[ ==================>  ] 91.25%
+[ ===================> ] 95.81%
+DONE with the data_test hist-MiniNTuple_4.root analysis! 547946  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_11.root analysis! 23333  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M1300 hist-MiniNTuple.root analysis! 13163  events!
+[ >                    ] 0.00%
+[ >                    ] 4.56%
+[ =>                   ] 9.12%
+[ ==>                  ] 13.69%
+[ ===>                 ] 18.25%
+[ ====>                ] 22.81%
+[ =====>               ] 27.37%
+[ ======>              ] 31.94%
+[ =======>             ] 36.50%
+[ ========>            ] 41.06%
+[ =========>           ] 45.62%
+[ ==========>          ] 50.19%
+[ ==========>          ] 54.75%
+[ ===========>         ] 59.31%
+[ ============>        ] 63.87%
+[ =============>       ] 68.44%
+[ ==============>      ] 73.00%
+[ ===============>     ] 77.56%
+[ ================>    ] 82.12%
+[ =================>   ] 86.69%
+[ ==================>  ] 91.25%
+[ ===================> ] 95.81%
+DONE with the data_test hist-MiniNTuple_7.root analysis! 547946  events!
+[ >                    ] 0.00%
+DONE with the ttbar_comb_test hist-MiniNTuple_13.root analysis! 23333  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M1800 hist-MiniNTuple.root analysis! 11109  events!
+[ >                    ] 0.00%
+[ >                    ] 4.56%
+[ =>                   ] 9.12%
+[ ==>                  ] 13.69%
+[ ===>                 ] 18.25%
+[ ====>                ] 22.81%
+[ =====>               ] 27.37%
+[ ======>              ] 31.94%
+[ =======>             ] 36.50%
+[ ========>            ] 41.06%
+[ =========>           ] 45.62%
+[ ==========>          ] 50.19%
+[ ==========>          ] 54.75%
+[ ===========>         ] 59.31%
+[ ============>        ] 63.87%
+[ =============>       ] 68.44%
+[ ==============>      ] 73.00%
+[ ===============>     ] 77.56%
+[ ================>    ] 82.12%
+[ =================>   ] 86.69%
+[ ==================>  ] 91.25%
+[ ===================> ] 95.81%
+DONE with the data_test hist-MiniNTuple_9.root analysis! 547946  events!
+[ >                    ] 0.00%
+[ ============>        ] 61.26%
+DONE with the signal_G_hh_c10_M1000 hist-MiniNTuple.root analysis! 40812  events!
+[ >                    ] 0.00%
+[ >                    ] 4.56%
+[ =>                   ] 9.12%
+[ ==>                  ] 13.69%
+[ ===>                 ] 18.25%
+[ ====>                ] 22.81%
+[ =====>               ] 27.37%
+[ ======>              ] 31.94%
+[ =======>             ] 36.50%
+[ ========>            ] 41.06%
+[ =========>           ] 45.62%
+[ ==========>          ] 50.19%
+[ ==========>          ] 54.75%
+[ ===========>         ] 59.31%
+[ ============>        ] 63.87%
+[ =============>       ] 68.44%
+[ ==============>      ] 73.00%
+[ ===============>     ] 77.56%
+[ ================>    ] 82.12%
+[ =================>   ] 86.69%
+[ ==================>  ] 91.25%
+[ ===================> ] 95.81%
+DONE with the data_test hist-MiniNTuple_10.root analysis! 547946  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M700 hist-MiniNTuple.root analysis! 2828  events!
+[ >                    ] 0.00%
+[ =========>           ] 45.93%
+[ ==================>  ] 91.87%
+DONE with the signal_G_hh_c10_M1100 hist-MiniNTuple.root analysis! 54425  events!
+[ >                    ] 0.00%
+[ >                    ] 4.56%
+[ =>                   ] 9.12%
+[ ==>                  ] 13.69%
+[ ===>                 ] 18.25%
+[ ====>                ] 22.81%
+[ =====>               ] 27.37%
+[ ======>              ] 31.94%
+[ =======>             ] 36.50%
+[ ========>            ] 41.06%
+[ =========>           ] 45.62%
+[ ==========>          ] 50.19%
+[ ==========>          ] 54.75%
+[ ===========>         ] 59.31%
+[ ============>        ] 63.87%
+[ =============>       ] 68.44%
+[ ==============>      ] 73.00%
+[ ===============>     ] 77.56%
+[ ================>    ] 82.12%
+[ =================>   ] 86.69%
+[ ==================>  ] 91.25%
+[ ===================> ] 95.81%
+DONE with the data_test hist-MiniNTuple_11.root analysis! 547946  events!
+[ >                    ] 0.00%
+DONE with the signal_G_hh_c10_M600 hist-MiniNTuple.root analysis! 2761  events!
+[ >                    ] 0.00%
+[ ========>            ] 40.37%
+[ ================>    ] 80.74%
+DONE with the signal_G_hh_c10_M1200 hist-MiniNTuple.root analysis! 61929  events!
+--- 254.686083078 seconds ---
+Finish!
+2773.0
+
+Applying ATLAS style settings...
+
+
+Applying ATLAS style settings...
+
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_FourTag_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_ThreeTag_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_TwoTag_split_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_FourTag_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_ThreeTag_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_TwoTag_split_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_FourTag_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_ThreeTag_leadHCand_Mass_s.pdf has been created
+Info in <TCanvas::Print>: pdf file /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Fit/fitNorm_TwoTag_split_leadHCand_Mass_s.pdf has been created
+full histos: true
+input is /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/
+Start Fit!
+s  is the background model!
+list of hists and fits: ['FourTag', 'ThreeTag', 'TwoTag_split', 'NoTag_4Trk', 'NoTag_3Trk', 'NoTag_2Trk_split']
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+Sample & $\mu_{qcd}$ & $\alpha_{t\bar{t}}$ & $\rho(\mu_{qcd}, \alpha_{t\bar{t}})$ \\
+\hline\hline
+& & & \\
+FourTag & 0.0132 $\pm$ 0.00146 & 0.626 $\pm$ 1.214 & -0.717\\
+ThreeTag & 0.243 $\pm$ 0.00604 & 1.4 $\pm$ 0.146 & -0.666\\
+TwoTag split & 0.0658 $\pm$ 0.000812 & 1.131 $\pm$ 0.0391 & -0.715\\
+& & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+Refit!!!
+s  is the background model!
+list of hists and fits: ['FourTag', 'ThreeTag', 'TwoTag_split', 'NoTag_4Trk', 'NoTag_3Trk', 'NoTag_2Trk_split']
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+Sample & $\mu_{qcd}$ & $\alpha_{t\bar{t}}$ & $\rho(\mu_{qcd}, \alpha_{t\bar{t}})$ \\
+\hline\hline
+& & & \\
+FourTag & 0.0133 $\pm$ 0.00146 & 0.647 $\pm$ 1.213 & -0.714\\
+ThreeTag & 0.243 $\pm$ 0.00604 & 1.415 $\pm$ 0.146 & -0.665\\
+TwoTag split & 0.0659 $\pm$ 0.000813 & 1.144 $\pm$ 0.039 & -0.713\\
+& & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+Refit!!!
+s  is the background model!
+list of hists and fits: ['FourTag', 'ThreeTag', 'TwoTag_split', 'NoTag_4Trk', 'NoTag_3Trk', 'NoTag_2Trk_split']
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+Sample & $\mu_{qcd}$ & $\alpha_{t\bar{t}}$ & $\rho(\mu_{qcd}, \alpha_{t\bar{t}})$ \\
+\hline\hline
+& & & \\
+FourTag & 0.0133 $\pm$ 0.00146 & 0.649 $\pm$ 1.211 & -0.714\\
+ThreeTag & 0.243 $\pm$ 0.00604 & 1.417 $\pm$ 0.146 & -0.665\\
+TwoTag split & 0.0659 $\pm$ 0.000813 & 1.145 $\pm$ 0.039 & -0.713\\
+& & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+End of Fit!
+ Running 21 jobs on 15 cores
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+data & Sideband & Control & Signal \\
+\hline\hline
+& & & \\
+NoTag & 1029050.0 $\pm$ 1014.42 $\pm$ sys & 290021.0 $\pm$ 538.54 $\pm$ sys & 200052.0 $\pm$ 447.27 $\pm$ sys\\
+OneTag & 267252.0 $\pm$ 516.96 $\pm$ sys & 75181.0 $\pm$ 274.19 $\pm$ sys & 52817.0 $\pm$ 229.82 $\pm$ sys\\
+TwoTag & 28521.0 $\pm$ 168.88 $\pm$ sys & 8137.0 $\pm$ 90.21 $\pm$ sys & 5548.0 $\pm$ 74.48 $\pm$ sys\\
+TwoTag split & 22045.0 $\pm$ 148.48 $\pm$ sys & 5942.0 $\pm$ 77.08 $\pm$ sys & 0 $\pm$ 0 $\pm$ sys\\
+ThreeTag & 3992.0 $\pm$ 63.18 $\pm$ sys & 1124.0 $\pm$ 33.53 $\pm$ sys & 0 $\pm$ 0 $\pm$ sys\\
+FourTag & 182.0 $\pm$ 13.49 $\pm$ sys & 60.0 $\pm$ 7.75 $\pm$ sys & 0 $\pm$ 0 $\pm$ sys\\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+***** estimation *****
+***** estimation *****
+***** estimation *****
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+data Est & Sideband & Control & Signal \\
+\hline\hline
+& & & \\
+NoTag & 1028214.31 $\pm$ 1019.42 $\substack{+ 1430.0\\- 1430.0}$  & 289855.87 $\pm$ 540.36 $\substack{+ 403.8\\- 403.8}$  & 199944.48 $\pm$ 448.72 $\substack{+ 278.6\\- 278.6}$ \\
+OneTag & 265746.75 $\pm$ 267.81 $\substack{+ 565.58\\- 565.58}$  & 74358.31 $\pm$ 140.29 $\substack{+ 159.62\\- 159.62}$  & 51524.92 $\pm$ 117.13 $\substack{+ 110.16\\- 110.16}$ \\
+TwoTag & 28425.53 $\pm$ 61.73 $\substack{+ 175.51\\- 175.51}$  & 8034.42 $\pm$ 32.04 $\substack{+ 49.89\\- 49.89}$  & 5640.43 $\pm$ 27.12 $\substack{+ 34.9\\- 34.9}$ \\
+TwoTag split & 22045.11 $\pm$ 68.52 $\substack{+ 148.51\\- 148.51}$  & 5884.11 $\pm$ 32.3 $\substack{+ 41.64\\- 41.64}$  & 4367.43 $\pm$ 30.0 $\substack{+ 29.43\\- 29.43}$ \\
+ThreeTag & 3992.17 $\pm$ 30.21 $\substack{+ 63.2\\- 63.2}$  & 1112.91 $\pm$ 15.94 $\substack{+ 17.86\\- 17.86}$  & 771.19 $\pm$ 13.22 $\substack{+ 12.29\\- 12.29}$ \\
+FourTag & 182.03 $\pm$ 1.56 $\substack{+ 13.51\\- 13.51}$  & 51.73 $\pm$ 0.84 $\substack{+ 5.13\\- 5.13}$  & 35.6 $\pm$ 0.7 $\substack{+ 2.84\\- 2.84}$ \\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+Data Est Diff Percentage & Sideband & Control & Signal \\
+\hline\hline
+& & & \\
+NoTag & -0.081 $\pm$ 0.2 $\substack{+ 0.14\\- 0.14}$  & -0.057 $\pm$ 0.37 $\substack{+ 0.14\\- 0.14}$  & -0.054 $\pm$ 0.45 $\substack{+ 0.14\\- 0.14}$ \\
+OneTag & -0.56 $\pm$ 0.29 $\substack{+ 0.21\\- 0.21}$  & -1.09 $\pm$ 0.55 $\substack{+ 0.21\\- 0.21}$  & -2.45 $\pm$ 0.65 $\substack{+ 0.21\\- 0.21}$ \\
+TwoTag & -0.33 $\pm$ 0.81 $\substack{+ 0.62\\- 0.62}$  & -1.26 $\pm$ 1.49 $\substack{+ 0.61\\- 0.61}$  & 1.67 $\pm$ 1.85 $\substack{+ 0.63\\- 0.63}$ \\
+TwoTag split & 0.00052 $\pm$ 0.98 $\substack{+ 0.67\\- 0.67}$  & -0.97 $\pm$ 1.83 $\substack{+ 0.7\\- 0.7}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+ThreeTag & 0.0042 $\pm$ 2.34 $\substack{+ 1.58\\- 1.58}$  & -0.99 $\pm$ 4.37 $\substack{+ 1.59\\- 1.59}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+FourTag & 0.016 $\pm$ 8.27 $\substack{+ 7.42\\- 7.42}$  & -13.8 $\pm$ 12.54 $\substack{+ 8.56\\- 8.56}$  & 0 $\pm$ 0 $\substack{+ 0\\- 0}$ \\
+& & & & \\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+--- 58.6357691288 seconds ---
+Using /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/MakePlot/rootlogon.pyc
+
+Applying ATLAS style settings...
+
+input root file is:  /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/sum_
+ Running 9 jobs on 15 cores
+/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Sideband done!
+/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Signal done!
+/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Control done!
+/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/Output/Moriond_CR_Small/Plot/Sideband done!
+--- 13.2492668629 seconds ---
+Using /afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/MakePlot/rootlogon.pyc
+start  FourTag  file conversion 
+[1;33;43m WARNING!!! [0m <ROOT.TH1F object ("zjet_hh") at 0x71aeae0>  HISTOGRAM EMPTY
+[1;33;43m WARNING!!! [0m <ROOT.TH1F object ("signal_RSG_c10_hh_m500") at 0x7116530>  HISTOGRAM EMPTY
+start  ThreeTag  file conversion 
+start  TwoTag_split  file conversion 
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c|c|c|c}
+Region & $ a_{t\bar{t}}$ & $ b_{t\bar{t}}$ & $ c_{t\bar{t}}$ & $ a_{qcd}$ & $ b_{qcd}$ & $c_{qcd}$ \\
+\hline\hline
+& & & & & &\\
+FourTag & -5.99 $\pm$ 6.32 & 37.88 $\pm$ 14.34 & -3.07 $\pm$ 2.09 & -14.3 $\pm$ 7.69 & 3.78 $\pm$ 17.7 & -6.83 $\pm$ 2.54\\
+ThreeTag & -1.22 $\pm$ 6.32 & 37.88 $\pm$ 14.35 & -3.07 $\pm$ 2.1 & -10.7 $\pm$ 10.47 & 10.81 $\pm$ 25.15 & -6.88 $\pm$ 3.4\\
+TwoTag split & 1.0 $\pm$ 6.33 & 37.88 $\pm$ 14.36 & -3.07 $\pm$ 2.1 & -9.29 $\pm$ 1.5 & 2.32 $\pm$ 3.42 & -6.59 $\pm$ 0.5\\
+& & & & & &\\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+Done! 
+start  FourTag  file conversion 
+[1;33;43m WARNING!!! [0m <ROOT.TH1F object ("zjet_hh") at 0x51cebf0>  HISTOGRAM EMPTY
+[1;33;43m WARNING!!! [0m <ROOT.TH1F object ("signal_RSG_c10_hh_m500") at 0x505fdc0>  HISTOGRAM EMPTY
+start  ThreeTag  file conversion 
+start  TwoTag_split  file conversion 
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c|c|c|c}
+Region & $ a_{t\bar{t}}$ & $ b_{t\bar{t}}$ & $ c_{t\bar{t}}$ & $ a_{qcd}$ & $ b_{qcd}$ & $c_{qcd}$ \\
+\hline\hline
+& & & & & &\\
+FourTag & -4.98 $\pm$ 5.6 & 38.7 $\pm$ 12.54 & -2.73 $\pm$ 1.87 & -15.6 $\pm$ 7.48 & -0.96 $\pm$ 17.34 & -7.27 $\pm$ 2.46\\
+ThreeTag & -0.21 $\pm$ 5.61 & 38.7 $\pm$ 12.55 & -2.73 $\pm$ 1.87 & -5.52 $\pm$ 12.93 & 17.9 $\pm$ 31.01 & -5.04 $\pm$ 4.2\\
+TwoTag split & 2.01 $\pm$ 5.61 & 38.7 $\pm$ 12.57 & -2.73 $\pm$ 1.87 & -4.39 $\pm$ 1.56 & 11.97 $\pm$ 3.56 & -4.98 $\pm$ 0.51\\
+& & & & & &\\
+\hline\hline
+\end{tabular}
+\end{footnotesize}
+\newline
+Done! 
+DONE!!!
+
+Job finished at Fri May  5 22:51:38 CEST 2017 on node 
+ under linux version Scientific Linux CERN SLC release 6.9 (Carbon)
+
+CERN statistics: This process used approximately : 1:20:28 KSI2K hours (4828 KSI2K seconds)
+                 This process corresponds to     : 5:13:49 HS06  hours (18829 HS06  seconds)

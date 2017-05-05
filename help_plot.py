@@ -80,7 +80,7 @@ def makeDataRatio(data, bkg):
             pass
             #gRatioDataBkg.SetPoint(i, 0.0, -1000)
 
-    return [gRatioBand,gRatioDataBkg]
+    return [gRatioBand, gRatioDataBkg]
 
 def do_variable_rebinning(hist,bins, scale=1):
     a=hist.GetXaxis()

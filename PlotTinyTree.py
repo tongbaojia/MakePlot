@@ -419,8 +419,8 @@ class regionHists:
         # self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
         # self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
-        self.isData   = isData
-        self.splitter = False ##to split events into halves for bkg estimation
+        self.isData   = isData ##this is for special treatments to data
+        self.splitter = False ##to split events into halves for bkg estimation; for ttbar as well...
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -502,9 +502,7 @@ class regionHists:
             #     elif (nb_j0 == 0 and nb_j1 == 1):
             #         self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
-                if (not self.isData): ##if not Data
-                    self.ThreeTag_bkg.Fill(event)
-                elif (self.splitter): ##if true, then fill into 3b
+                if (self.splitter): ##if true, then fill into 3b
                     self.ThreeTag_bkg.Fill(event)
 
                 if (nb_j0 == 2 and nb_j1 == 0):
@@ -512,9 +510,7 @@ class regionHists:
                 elif (nb_j0 == 0 and nb_j1 == 2):
                     self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
-                if (not self.isData): ##if not Data
-                    self.FourTag_bkg.Fill(event)
-                elif (not self.splitter): ##if true, then fill into 4b
+                if (not self.splitter): ##if true, then fill into 4b
                     self.FourTag_bkg.Fill(event)
 
                 if (nb_j0 == 2 and nb_j1 == 0):
@@ -617,6 +613,7 @@ def analysis(inputconfig):
             helpers.drawProgressBar(i/(N*1.0))
         t.fChain.GetEntry(i)
         #print t.Xzz
+        
         ##place a cut if necessary
         # def selection():
         #     passed = True
@@ -628,6 +625,10 @@ def analysis(inputconfig):
         # dR cut
         #if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
             #continue
+
+        ##speed up selection a bit; skip events with jet mass less than 60 for now
+        if (t.j0_m < 60 or t.j1_m < 60):
+            continue
 
         ##add blinding
         if (CONF.blind and "data" in inputfile):

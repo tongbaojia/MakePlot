@@ -125,12 +125,19 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
 
+    hist_ratio = data.Clone("ratio")
+    hist_ratio.Divide(qcd)
+    hist_ratio.Smooth()
     #this is the important part...where the backgrounds are set
     data = h_plt.makeTotBkg([data])[1]
     bkg  = h_plt.makeTotBkg([qcd])
     #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet]) #original
     # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
     ratios = h_plt.makeDataRatio(data, bkg[1])
+    ##Tony: a fix for only the ratios used in reweighting:
+    #ratios[1] = hist_ratio
+    #ratios[1].Smooth()
+
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
     c0.SetRightMargin(0.05)
@@ -331,7 +338,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         #done with the fit!!
         #try spline interpolation: CSPLINE, LINEAR, POLYNOMIAL, CSPLINE_PERIODIC, AKIMA, AKIMA_PERIODIC
         inter = ROOT.Math.Interpolator(0, ROOT.Math.Interpolation.kCSPLINE)
-        ni = ratios[1].GetN()
+        ni = ratios[1].GetN() ##GetN()
         xi = ROOT.vector('double')(ni + 2)
         yi = ROOT.vector('double')(ni + 2)
         #deal with the beginning
@@ -350,24 +357,28 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         temp_graph = ROOT.TGraph(ni + 2)
         for k in range(0, ni + 2):
             temp_graph.SetPoint(k, xi[k], yi[k])
-        spline = ROOT.TSpline3(cut, temp_graph)
+
+        #spline = ROOT.TSpline3(cut, temp_graph)
+        spline = ROOT.TSpline3(hist_ratio)
         spline.SaveAs(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx")
+        hist_ratio.SetMarkerColor(ROOT.kGreen)
+        hist_ratio.Draw("SAME")
 
         inter_step = 5
         xf = ROOT.vector('double')(ni * inter_step)
         yf = ROOT.vector('double')(ni * inter_step)
-        inter_graph = ROOT.TGraph(ratios[1].GetN() * inter_step)
-        spline_graph = ROOT.TGraph(ratios[1].GetN() * inter_step)
+        inter_graph = ROOT.TGraph(ni * inter_step)
+        spline_graph = ROOT.TGraph(ni * inter_step)
         for k in range(0, (ni * inter_step)):
             xf[k] = xi[0] + (xi[ni + 1] - xi[0])/(ni * inter_step * 1.0) * k
             #print k, xf[k], inter.Eval(xf[k])
             inter_graph.SetPoint(k, xf[k], inter.Eval(xf[k]))
             spline_graph.SetPoint(k, xf[k], spline.Eval(xf[k]))
 
-        inter_graph.SetLineColor(ROOT.kBlue)
+        inter_graph.SetLineColor(ROOT.kBlue) ## this is the interpolation
         inter_graph.SetLineWidth(2)
         inter_graph.Draw("SAME L")
-        spline_graph.SetLineColor(ROOT.kGreen)
+        spline_graph.SetLineColor(ROOT.kGreen) ## this is the spline fit
         spline_graph.SetLineWidth(2)
         spline_graph.Draw("SAME L")
 
