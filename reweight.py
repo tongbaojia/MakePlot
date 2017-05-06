@@ -35,16 +35,13 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     filepath = config["root"] 
     filename = config["inputdir"] 
     outputFolder= config["outputdir"]
-    ##print config, filepath, filename
     #debug
     #print filepath, filename, cut
     ROOT.gStyle.SetErrorX(0)
     ROOT.gStyle.SetHatchesSpacing(0.7)
     ROOT.gStyle.SetHatchesLineWidth(1)
-
     # input file
     ifile = ROOT.TFile(filepath + filename + ".root")
-
     # read stuff
     #print "data_" + cut
     if config["compcut"] is not "": ## this means qcd estimate is something special now; NOTICE: things are inverted here!!!
@@ -56,7 +53,6 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         #zjet = ifile.Get("zjet_" + cut )
         data.Add(ttbar, -1)
         qcd.Add(ttbar_est, -1) ##special treatment here; directly subtracting the MC component
-
     else: ##default method
         data = ifile.Get("data_" + cut )
         qcd = ifile.Get("qcd_est_" + cut )
@@ -65,12 +61,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         #modify data
         data.Add(ttbar, -1)
         #data.Add(zjet, -1)
-
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
-    #RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
-    #RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
-    #RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
 
     #clear factioned binns; only for reweighting purpose
     # for b in range(1, data.GetNbinsX()+1): 
@@ -87,24 +79,17 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         qcd.Rebin(rebin)
         ttbar.Rebin(rebin)
         #zjet.Rebin(rebin)
-        #RSG1_1000.Rebin(rebin)
-        #RSG1_1500.Rebin(rebin)
-        #RSG1_2500.Rebin(rebin)
     if rebinarry != []:
         data      = h_plt.do_variable_rebinning(data, rebinarry)
         qcd       = h_plt.do_variable_rebinning(qcd, rebinarry)
         ttbar     = h_plt.do_variable_rebinning(ttbar, rebinarry)
         #zjet      = h_plt.do_variable_rebinning(zjet, rebinarry)
-        #RSG1_1000 = h_plt.do_variable_rebinning(RSG1_1000, rebinarry)
-        #RSG1_1500 = h_plt.do_variable_rebinning(RSG1_1500, rebinarry)
-        #RSG1_2500 = h_plt.do_variable_rebinning(RSG1_2500, rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
         ks = 0
     else:
         ks   = data.KolmogorovTest(qcd, "QU")
-
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_qcd = qcd.Integral(0, qcd.GetXaxis().GetNbins()+1)
     percentdiff   = (int_qcd - int_data)/int_data * 100.0
@@ -115,16 +100,13 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         ##thus the number of events is kept the same!
         data.Scale(int_qcd/int_data)
 
-
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
     yMax = data.GetMaximum() * 1.5
     if Logy==1:
         yMax = yMax * 100
-    #qcd_fit = ifile.Get("qcd_fit")
-    #qcd_fitUp = ifile.Get("qcd_fitUp")
-    #qcd_fitDown = ifile.Get("qcd_fitDown")
 
+    ##Tony: a fix for only the ratios used in reweighting; idea from Patrick
     hist_ratio = data.Clone("ratio")
     hist_ratio.Divide(qcd)
     hist_ratio.Smooth()
@@ -134,9 +116,6 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet]) #original
     # bkg/data ratios: [0] band for bkg errors, [1] bkg/data with stat errors only
     ratios = h_plt.makeDataRatio(data, bkg[1])
-    ##Tony: a fix for only the ratios used in reweighting:
-    #ratios[1] = hist_ratio
-    #ratios[1].Smooth()
 
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
@@ -213,13 +192,14 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
 
     hratio = ROOT.TH1F("hratio","", 1, xMin, xMax)
     hratio.SetStats(0)
-    
+    ratio_ylow  = 0.5 ##this the ratio low bin
+    ratio_yhigh = 1.5 ##this the ratio high bin
     hratio.GetYaxis().SetTitleFont(43)
     hratio.GetYaxis().SetTitleSize(28)
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(ratio_ylow, ratio_yhigh) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -244,14 +224,24 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
     ratios[1].SetLineWidth(2)
     if not ("Signal" in cut and blinded):
         ratios[1].Draw("E0PZ SAME")
-    # qcd_fit.SetLineColor(ROOT.kRed)
-    # qcd_fitUp.SetLineColor(ROOT.kRed)
-    # qcd_fitUp.SetLineStyle(2)
-    # qcd_fitDown.SetLineColor(ROOT.kRed)
-    # qcd_fitDown.SetLineStyle(2)
-    # qcd_fit.Draw("SAME")
-    # qcd_fitUp.Draw("SAME")
-    # qcd_fitDown.Draw("SAME")
+
+    ##add arrows; call this function
+    h_plt.drawarrow(ratios[1], ratio_ylow, ratio_yhigh)
+    # ratio_arrow = ROOT.TArrow(0, 0, 0, 0, 0.01, "|>")
+    # ratio_arrow.SetLineWidth(3)
+    # ratio_arrow.SetLineColor(ROOT.kBlue)
+    # ratio_arrow.SetFillColor(ROOT.kBlue)
+
+    # for pt in xrange(ratios[1].GetN()):
+    #     y = ratios[1].GetY()[pt]
+    #     x = ratios[1].GetX()[pt]
+    #     y_low  = y + ratios[1].GetEYhigh()[pt]
+    #     y_high = y - ratios[1].GetEYlow()[pt]
+    #     if y_low < ratio_ylow * 1.1:
+    #         ratio_arrow.DrawArrow(x, 1 - abs(1 - ratio_ylow)*2./3., x, ratio_ylow)
+    #     elif y_high > ratio_yhigh * 0.9:
+    #         ratio_arrow.DrawArrow(x, 1 + abs(1 - ratio_yhigh)*2./3., x, ratio_yhigh)
+
 
     testfit={}
     # Fit the ratio with a TF1
@@ -480,8 +470,8 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]       = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]    = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j0_Pt"]       = array('d', range(450, 600, 30) + range(600, 1000, 40) + [1000, 1050, 1100, 1200, 2000]) #9.5 version
-        rebin_dic["j1_Pt"]       = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 1060, 2000])
+        rebin_dic["j0_Pt"]       = array('d', range(450, 600, 30) + range(600, 1000, 40) + [1000, 1050, 1100, 1170, 1270, 1500, 2000]) #9.5 version
+        rebin_dic["j1_Pt"]       = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 1060, 1260, 2000])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
         rebin_dic["j0_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
         rebin_dic["j1_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version

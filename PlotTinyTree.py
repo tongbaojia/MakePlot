@@ -106,7 +106,7 @@ def get_reweight(curriter, folder, filename, spline=True):
 def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
     maxscale = 2.0 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.1 #this means the minimum correction is this for each reweighting; used to be 0.5
+    minscale = 0.2 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v, cond in dic:#this "dic" really is not a dic, but a tuple! #variable, weight, condition
         if not eval(cond): ##if doesn't pass the condition, do not apply the weight!
             continue
@@ -126,10 +126,10 @@ def calc_reweight(dic, event, poly=False, spline=True):
         # if ((event.j0_nb==1)and(event.j1_nb==0)):
         #     print value, tempweight, x, v, cond
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.8:
-            tempweight = 0.8
-        elif tempweight > 1.2:
-            tempweight = 1.2
+        if tempweight < 0.75:
+            tempweight = 0.75
+        elif tempweight > 1.25:
+            tempweight = 1.25
         totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
         #totalweight *= tempweight
 

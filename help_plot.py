@@ -140,4 +140,23 @@ def rebinData(ifile, rebin, scale=1):
     dataHistNew = do_variable_rebinning(dataHist, rebin, scale)
     return graphFromHist(dataHistNew)
 
+def drawarrow(graph, ratio_ylow=0.5, ratio_yhigh=1.5):
+    '''this function adds arrows on overflow/underflow bins'''
+    ratio_arrow = ROOT.TArrow(0, 0, 0, 0, 0.01, "|>")
+    ratio_arrow.SetLineWidth(3)
+    ratio_arrow.SetLineColor(ROOT.kRed)
+    ratio_arrow.SetFillColor(ROOT.kRed)
+
+    for pt in xrange(graph.GetN()):
+        y = graph.GetY()[pt]
+        x = graph.GetX()[pt]
+        if y <= 0 : ##pass the empty bins
+            continue
+        y_low  = y + graph.GetEYhigh()[pt]
+        y_high = y - graph.GetEYlow()[pt]
+        if y_low < ratio_ylow * 1.1:
+            ratio_arrow.DrawArrow(x, 1 - abs(1 - ratio_ylow)*2./3., x, ratio_ylow)
+            #print y, y_low
+        elif y_high > ratio_yhigh * 0.9:
+            ratio_arrow.DrawArrow(x, 1 + abs(1 - ratio_yhigh)*2./3., x, ratio_yhigh)
 ####################################################################################
