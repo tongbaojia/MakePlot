@@ -58,7 +58,7 @@ def analysis_pipeline(config):
     #print "python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re)
     os.system("python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re)) #+ " --debug")
     if (iter_re == iter_total - 1): ## reweight the dijet MC for the last iteration
-        os.system("python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re) " --dijet")
+        os.system("python PlotTinyTree.py --inputdir " + motherdir + " --outputdir " + outputdir +  " --reweight " + reweight + " --iter " + str(iter_re) + " --dijet")
     ##fit and produce plot
     os.system("python get_count.py --full --inputdir " + outputdir)
     os.system("python plot.py --inputdir " + outputdir)
