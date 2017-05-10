@@ -72,6 +72,8 @@ def main():
     # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
     # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
     DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    DrawRegionPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G1500", Xrange=[40, 250], Yrange=[40, 250])
+    DrawRegionPlot("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G3000", Xrange=[40, 250], Yrange=[40, 250])
     # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
     
     ##correlations of the jet mass and jet pT
@@ -214,7 +216,7 @@ def main():
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
-    region_lst = ["Signal", "Control", "Sideband"]
+    region_lst = ["Sideband", "Control", "Signal"]
     region_dic = {"Sideband":1, "Control":2, "Signal":3}
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
@@ -222,7 +224,7 @@ def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[
     canv = ROOT.TCanvas(inputdir + "_" +  keyword, " ", 800, 800)
     temp_hist_lst = []
     for i, region in enumerate(region_lst):
-        #print inputdir + "_" + region + "/" + keyword
+        print inputdir + "_" + region + "/" + keyword
         temp_hist_lst.append(inputroot.Get(inputdir + "_" + region + "/" + keyword).Clone())
         if Xrange != [0, 0]:
             temp_hist_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
@@ -263,6 +265,7 @@ def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[
 
     #done
     del(temp_hist_lst)
+    del(canv)
     inputroot.Close()
 
 def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0]):
@@ -354,15 +357,16 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
 
 def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], compinputname="", compinputdir=""):
     # functions for the different regions
+    def mySB(x):
+        return  ROOT.TMath.Sqrt( (x[0]-134)**2 + (x[1]-125)**2)
     def myCR(x):
         return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
         # if x[1] >= 115:
         #     return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.09*x[0]))**2 + 0.95*((x[1]-115)/(0.1*x[1]))**2)
         # elif x[1] < 115:
         #     return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.09*x[0]))**2 + 0.95*((x[1]-115)/(0.12*x[1]))**2)
-
     def mySR(x):
-	   return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
+	   return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.085*x[0]))**2 + ((x[1]-115)/(0.12*x[1]))**2)
 
     def myTop(x):
 	   return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )	
@@ -410,16 +414,16 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fSR.Draw("same, cont3")
 
     # get control:
-    fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
-    contoursCR = array.array("d", [35.8])
+    fCR = ROOT.TF2("CR", myCR, 0,Xrange[1],0,Xrange[1])
+    contoursCR = array.array("d", [33.0])
     fCR.SetContour(1, contoursCR)
     fCR.SetNpx(200)
     fCR.SetLineWidth(2)
     fCR.Draw("same, cont3")
 
     # sideband:
-    fSB = ROOT.TF2("SB", myCR,0,Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [63.0])
+    fSB = ROOT.TF2("SB", mySB, 0, Xrange[1],0,Xrange[1])
+    contoursSB = array.array("d", [53.0])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(200)
     fSB.SetLineWidth(2)
@@ -654,6 +658,9 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
         if Rebin != 1:
             temphst_lst[i].Rebin(Rebin)
             tempratio_lst[i].Rebin(Rebin)
+        
+        if norm:
+            temphst_lst[i].Scale(temphst_lst[0].Integral(0, temphst_lst[0].GetXaxis().GetNbins()+1)/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
 
         for j in range(1, temphst_lst[0].GetNbinsX()+1):
             try:
@@ -664,8 +671,6 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
             except ZeroDivisionError:
                 pass
                 #print "Divide by zero! Check bin content in", canv.GetName()
-        if norm:
-            temphst_lst[i].Scale(1/temphst_lst[i].Integral(0, temphst_lst[i].GetXaxis().GetNbins()+1))
 
 
         maxbincontent = max(maxbincontent, temphst_lst[i].GetMaximum())
@@ -734,7 +739,7 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
     line.Draw()
 
     #save and clean up
-    canv.SaveAs(outputpath + canv.GetName() + ".pdf")
+    canv.SaveAs(outputpath + canv.GetName() + ("_" + prename + "_" if prename is not "" else "") + ".pdf")
     pad0.Close()
     pad1.Close()
     canv.Close()

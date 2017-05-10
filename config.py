@@ -35,7 +35,7 @@ mass_lst   = [500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600,
 splits     = 14
 #plot color variables
 clr_lst    = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPink-8, 
-	ROOT.kSpring-7, ROOT.kMagenta+2, ROOT.kCyan+1, ROOT.kViolet-6, ROOT.kTeal+3, ROOT.kBlue+6, 
+	ROOT.kMagenta+2, ROOT.kCyan+1, ROOT.kViolet-6, ROOT.kTeal+3, ROOT.kBlue+6, ROOT.kSpring-7, 
 	ROOT.kRed-1, ROOT.kBlue-1, ROOT.kOrange-7, ROOT.kGreen-3, ROOT.kPink+8,
 	ROOT.kRed-2, ROOT.kBlue-2, ROOT.kOrange-6, ROOT.kGreen-4, ROOT.kPink+7]
 #plot marker style variables

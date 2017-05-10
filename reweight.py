@@ -348,8 +348,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         for k in range(0, ni + 2):
             temp_graph.SetPoint(k, xi[k], yi[k])
 
-        #spline = ROOT.TSpline3(cut, temp_graph)
-        spline = ROOT.TSpline3(hist_ratio)
+        spline = ROOT.TSpline3(cut, temp_graph)
+        #spline = ROOT.TSpline3(hist_ratio)
         spline.SaveAs(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx")
         hist_ratio.SetMarkerColor(ROOT.kGreen)
         hist_ratio.Draw("SAME")
@@ -480,28 +480,28 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"] = array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]     = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
+        rebin_dic["mHH_l"]       = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
+        rebin_dic["mHH_pole"]    = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
-        rebin_dic["j0_Pt"]      = array('d', range(450, 690, 40) + range(690, 840, 50) + [840, 900, 1000, 2000])#9.5 version
-        rebin_dic["j1_Pt"]      = array('d', range(250, 650, 40) + [650, 700, 800, 900, 1000, 2000])
-        rebin_dic["j0_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
-        rebin_dic["j1_trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
-        rebin_dic["trk1_Pt"]    = array('d',range(0, 200, 20) + [200, 500])
+        rebin_dic["j0_Pt"]       = array('d', range(450, 690, 40) + range(690, 840, 50) + [840, 900, 1000, 2000])#9.5 version
+        rebin_dic["j1_Pt"]       = array('d', range(250, 650, 40) + [650, 700, 800, 900, 1000, 2000])
+        rebin_dic["j0_trk0_Pt"]  = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
+        rebin_dic["j1_trk0_Pt"]  = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 560, 640, 730, 820, 2000])
+        rebin_dic["trk1_Pt"]     = array('d',range(0, 200, 20) + [200, 500])
         rebin_dic["trk_dr"]      = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
-        rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
-        rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
+        rebin_dic["trk_pT_diff"] = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
+        rebin_dic["trks_Pt"]     = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]   = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
-        #rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
+        #rebin_dic["j0_Pt"]     = array('d', [450, 500, 570, 650, 800, 1000, 2000])
         rebin_dic["j0_Pt"]      = array('d', [450, 550, 650, 750, 850, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
-        #rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
-        rebin_dic["j0_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
-        rebin_dic["j1_trk0_Pt"]    = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
+        #rebin_dic["trk0_Pt"]   = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
+        rebin_dic["j0_trk0_Pt"] = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
+        rebin_dic["j1_trk0_Pt"] = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 150, 30) + [150, 500])
-        rebin_dic["trk_dr"]      = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
+        rebin_dic["trk_dr"]     = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1

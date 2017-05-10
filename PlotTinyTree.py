@@ -22,6 +22,7 @@ def options():
     parser.add_argument("--MV2",       default=0.6455) #0.3706, 0.6455
     parser.add_argument("--resveto",   action='store_true')
     parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
+    parser.add_argument("--dijet",     action='store_true') #do Dijet samples if necessary
     parser.add_argument("--debug",     action='store_true')
 
     return parser.parse_args()
@@ -156,7 +157,7 @@ def GetXhh(XhhCenterX=124., XhhCenterY=115., XhhCut=1.6):
     #just assymetric resolution
     #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.085*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.12*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
     #old definition
-    #XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
+    XhhExp = "(ROOT.TMath.Sqrt(ROOT.TMath.Power((event.j0_m - %s)/(0.1*event.j0_m), 2) + ROOT.TMath.Power((event.j1_m - %s)/(0.1*event.j1_m), 2)) < %s)" % (XhhCenterX, XhhCenterY, XhhCut)
     return XhhExp
 
 class eventHists:
@@ -197,16 +198,17 @@ class eventHists:
             self.h1_ntrk      = ROOT.TH1F("sublHCand_ntrk",     "number of trkjet",  10,  -0.5, 9.5)
             self.h0_trkpt_diff= ROOT.TH1F("leadHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
-            self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
-            self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
-            #self.h0_trk0_eta  = ROOT.TH1F("leadHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
-            #self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
-            #self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
-            #self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
+            #self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+            #self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
+            self.h0_trk0_eta  = ROOT.TH1F("leadHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
+            self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
+            self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
+            self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
-            self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
+            #self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 200,  50,  250,  200,  50,  250)
             self.dRH0H1       = ROOT.TH2F("dRH0H1",             ";#Deltar_{trk}^{lead}; #Deltar_{trk}^{subl};", 50, 0.2,  1.2, 50, 0.2, 1.2)
+            self.MV2          = ROOT.TH1F("MV2",                ";MV2",              110,  -1.1,  1.1)
             #self.trkfracH0H1  = ROOT.TH2F("trkfracH0H1",        ";H0:p_{T}^{Trk0}/(p_{T}^{Trk0} + p_{T}^{Trk1});H1:p_{T}^{Trk0}}/(p_{T}^{Trk0} + p_{T}^{Trk1});", 50, 0.5, 1.0, 50, 0.5, 1.0)
             #self.mHHdRH0      = ROOT.TH2F("mHHdRH0",            ";mHH [GeV]; #Deltar_{trk}^{lead};", 300, 500, 3500,  50, 0.2,  1.2)
             #self.MV2H0H1      = ROOT.TH2F("MV2H0H1",              ";MV2 sum H0;MV2 sum H1;", 400,  -2,  2,  400,  -2,  2)
@@ -214,10 +216,10 @@ class eventHists:
             #self.MV2H1        = ROOT.TH2F("MV2H1",                ";MV2 H1, j0;MV2 H1, j1;", 400,  -2,  2,  400,  -2,  2)
         #save reweight weights
         if self.reweight:
-            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0, 4000, 28, 0.3, 1.7)
-            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,   2000, 28, 0.3, 1.7)
-            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,   400, 28, 0.3, 1.7)
-            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 28, 0.3, 1.7)
+            self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0,    4000, 32, 0.3, 1.9)
+            self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,    2000, 32, 0.3, 1.9)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,     400, 32, 0.3, 1.9)
+            self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 32, 0.3, 1.9)
 
     def Fill(self, event, weight=-1):
         if (weight < 0):#default will use event.weight!
@@ -249,23 +251,27 @@ class eventHists:
             self.h1_trk_dr.Fill(event.j1_trkdr, weight) 
             self.h0_ntrk.Fill(event.j0_nTrk, weight)    
             self.h1_ntrk.Fill(event.j1_nTrk, weight)    
-            self.h0_trks_pt.Fill(event.j0_trk0_pt, weight)
-            self.h0_trks_pt.Fill(event.j0_trk1_pt, weight)
-            self.h1_trks_pt.Fill(event.j1_trk0_pt, weight)
-            self.h1_trks_pt.Fill(event.j1_trk1_pt, weight)
-            self.trks_pt.Fill(event.j0_trk0_pt, weight)
-            self.trks_pt.Fill(event.j0_trk1_pt, weight)
-            self.trks_pt.Fill(event.j1_trk0_pt, weight)
-            self.trks_pt.Fill(event.j1_trk1_pt, weight)
-            #self.h0_trk0_eta.Fill(event.j0_trk0_eta, weight)
-            #self.h0_trk0_phi.Fill(event.j0_trk0_phi, weight)
-            #self.h1_trk0_eta.Fill(event.j1_trk0_eta, weight)
-            #self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
+            #self.h0_trks_pt.Fill(event.j0_trk0_pt, weight)
+            #self.h0_trks_pt.Fill(event.j0_trk1_pt, weight)
+            #self.h1_trks_pt.Fill(event.j1_trk0_pt, weight)
+            #self.h1_trks_pt.Fill(event.j1_trk1_pt, weight)
+            #self.trks_pt.Fill(event.j0_trk0_pt, weight)
+            #self.trks_pt.Fill(event.j0_trk1_pt, weight)
+            #self.trks_pt.Fill(event.j1_trk0_pt, weight)
+            #self.trks_pt.Fill(event.j1_trk1_pt, weight)
+            self.h0_trk0_eta.Fill(event.j0_trk0_eta, weight)
+            self.h0_trk0_phi.Fill(event.j0_trk0_phi, weight)
+            self.h1_trk0_eta.Fill(event.j1_trk0_eta, weight)
+            self.h1_trk0_phi.Fill(event.j1_trk0_phi, weight)
             self.Rhh.Fill(event.Rhh, weight) 
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
             self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
             self.dRH0H1.Fill(event.j0_trkdr, event.j1_trkdr, weight)
+            self.MV2.Fill(event.j0_trk0_Mv2, weight)
+            self.MV2.Fill(event.j0_trk1_Mv2, weight)
+            self.MV2.Fill(event.j1_trk0_Mv2, weight)
+            self.MV2.Fill(event.j1_trk1_Mv2, weight)
             #self.trkfracH0H1.Fill(event.j0_trk0_pt/(event.j0_trk0_pt + event.j0_trk1_pt), event.j1_trk0_pt/(event.j1_trk0_pt + event.j1_trk1_pt), weight)
             #self.mHHdRH0.Fill(event.mHH, event.j0_trkdr, weight)
             #self.MV2H0H1.Fill(event.j0_trk0_Mv2 + event.j0_trk1_Mv2, event.j1_trk0_Mv2 + event.j1_trk1_Mv2, weight)
@@ -305,15 +311,20 @@ class eventHists:
             self.h1_phi.Write()    
             self.h0_trk_dr.Write() 
             self.h1_trk_dr.Write() 
+            self.h0_trk0_eta.Write() 
+            self.h0_trk0_phi.Write() 
+            self.h1_trk0_eta.Write() 
+            self.h1_trk0_phi.Write() 
             self.h0_ntrk.Write()   
             self.h1_ntrk.Write()   
-            self.h0_trks_pt.Write() 
-            self.h1_trks_pt.Write()   
+            #self.h0_trks_pt.Write() 
+            #self.h1_trks_pt.Write()   
+            #self.trks_pt.Write()
             self.Rhh.Write()
-            self.trks_pt.Write()
             self.h0_trkpt_diff.Write()
             self.h1_trkpt_diff.Write()
             self.dRH0H1.Write()
+            self.MV2.Write()
             #self.trkfracH0H1.Write()
             #self.mHHdRH0.Write()
             #self.MV2H0H1.Write()
@@ -626,8 +637,8 @@ def analysis(inputconfig):
         #if (helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi) > 0.6 or helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi) > 0.6):
             #continue
 
-        ##speed up selection a bit; skip events with jet mass less than 60 for now
-        if (t.j0_m < 60 or t.j1_m < 60):
+        ##speed up selection a bit; skip events with jet mass less than 65 for now
+        if (t.j0_m < 65 or t.j1_m < 65): ##as far as the cut can go
             continue
 
         ##add blinding
@@ -641,15 +652,14 @@ def analysis(inputconfig):
         #AllHists.Fill(t)
         ##or, add in resovled veto whenever feel like it
         #if (ops.resveto):
-        if (True): ##enable resolved veto for now and on
-            #print t.Xhh, (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124.0)/(0.1*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115.0)/(0.1*t.j1_m), 2)))
-            #if (abs(t.nresj) < 4): ##veto all 4 jets
-            if (t.nresj > -0.1): ##negative is SR regions
-                AllHists.Fill(t)
-            else:
-                pass
-        else:
+        ##enable resolved veto for now and on
+        #print t.Xhh, (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124.0)/(0.1*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115.0)/(0.1*t.j1_m), 2)))
+        #if (abs(t.nresj) < 4): ##veto all 4 jets
+        if (t.nresj > -0.1): ##negative is SR regions
             AllHists.Fill(t)
+        else:
+            pass
+        
 
     #write all the output
     AllHists.Write(outroot)
@@ -742,7 +752,9 @@ def main():
     #split_list = ["signal_QCD"]
     if turnon_reweight:
         split_list = ["data_test"]
-        #split_list = ["signal_QCD"]
+    if (ops.dijet): ##only do dijet in this case, always
+        split_list = ["signal_QCD"]
+
     #split_list = []
     inputtasks = []
     for split_file in split_list:
@@ -751,7 +763,8 @@ def main():
     ##for other MCs
     ##for reweighting condition; copy zjet and ttbar
     if not turnon_reweight:
-        inputtasks.append(pack_input("zjets_test"))
+        if (not ops.dijet): 
+            inputtasks.append(pack_input("zjets_test"))
     else:
         linklist = ["zjets_test", "ttbar_comb_test"] ##don't reweight ttbar and zjets
         for target in linklist:
@@ -768,6 +781,8 @@ def main():
             os.symlink(ori_link, dst_link)
 
     for i, mass in enumerate(CONF.mass_lst):
+        if (ops.dijet): ##don't do anything for the dijet case
+            continue
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight or ops.dosyst is not None :
             inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))

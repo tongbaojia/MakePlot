@@ -17,8 +17,10 @@ echo $workpath$ch$"/Plot_r"$(($iter + 1))$"/Sideband/"
 #echo $ch, "is the channel and iteration!"
 #python PlotTinyTree.py --inputdir $inch --outputdir $ch --reweight $re --iter $iter #$re
 #python get_count.py --inputdir $ch --full
-#python plot.py --inputdir $ch 
-python reweight.py --inputdir $ch --iter $(($iter + 1))
+python plot.py --inputdir $ch 
+python reweight.py --inputdir $ch --iter $(($iter + 1)) --var j0pT
+python reweight.py --inputdir $ch --iter $(($iter + 1)) --var bkg
+python reweight.py --inputdir $ch --iter $(($iter + 1)) --var bkgsb
 #publish online
 echo "Publish!"
 #rm -rf $homepath"/www/share/hh4b/reweight/"$ch
