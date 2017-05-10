@@ -17,24 +17,9 @@ ROOT.SetAtlasStyle()
 ROOT.gROOT.SetBatch(True)
 
 #set global variables
-# cut_lst = ["2Trk_in1_NoTag", "2Trk_in1_OneTag", "2Trk_in1_TwoTag", \
-#     "2Trk_NoTag", "2Trk_OneTag", "2Trk_TwoTag_split", \
-#     "3Trk_NoTag", "3Trk_OneTag", "3Trk_TwoTag", "3Trk_TwoTag_split", "3Trk_ThreeTag", \
-#     "4Trk_NoTag", "4Trk_OneTag", "4Trk_TwoTag", "4Trk_TwoTag_split", "4Trk_ThreeTag", "4Trk_FourTag",
-#     "NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
-# input are exclusive trkjets
-
 evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
 dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] #"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 ##setup the list of folders to process; these histograms are savedls
-cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
-"NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
-"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
-#"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
-#"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
-"OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
-#"OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",
-#"ThreeTag_1loose", "TwoTag_split_1loose", "TwoTag_split_2loose"]
 word_dict  = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict  = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
 region_lst = ["Incl", "Sideband", "Control", "Signal"]
@@ -76,14 +61,14 @@ def main():
     #set the defult options
     global background_model #0 is NoTag, 1 is OneTag, s is the special case
     background_model = 0
-    global fullhists
-    fullhists = ops.full
+
     global mass_lst
-    #mass_lst = [1000, 2000, 3000]
     mass_lst = CONF.mass_lst
+    #mass_lst = [1000, 2000, 3000]
+    
     global plt_lst
     plt_lst = []
-    if fullhists is True and CONF.fullstudy: 
+    if ops.full is True and CONF.fullstudy: 
         print "full histos: true"
         plt_lst = ["mHH_l", "mHH_pole", "hCandDr", "hCandDeta", "hCandDphi",\
             "leadHCand_Pt_m", "leadHCand_Eta", "leadHCand_Phi", "leadHCand_Mass", "leadHCand_Mass_s", "leadHCand_trk_dr",\
@@ -91,7 +76,7 @@ def main():
             "leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt",\
             "leadHCand_ntrk", "sublHCand_ntrk", "leadHCand_trk_pt_diff_frac", "sublHCand_trk_pt_diff_frac"]
             #"leadHCand_trk0_Eta", "leadHCand_trk0_Phi", "sublHCand_trk0_Eta", "sublHCand_trk0_Phi",\
-    elif fullhists is True : ##this is used to skip histograms
+    elif ops.full is True : ##this is used to skip histograms
         plt_lst = ["mHH_l", "mHH_pole",\
             "leadHCand_Pt_m",\
             "sublHCand_Pt_m",\
@@ -100,9 +85,20 @@ def main():
         print "full histos: false"
         plt_lst = ["mHH_l", "mHH_pole"]
         #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
-    global plt_m
+
+    global plt_m ##this is the key histogram to calculate total yields
     plt_m = "mHH_l"
-    #set fast test version, with all the significance output still
+
+    global cut_lst ##this is the list of directories which the hists will be saved
+    if ops.dosyst: ##keep things simple for systematics; no additional reweighting folders
+        cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
+    else: ##do the full chain and keep hists for reweighting        
+        cut_lst = ["NoTag", "NoTag_2Trk_split", "NoTag_3Trk", "NoTag_4Trk", \
+            "NoTag_2Trk_split_lead", "NoTag_2Trk_split_subl", "NoTag_3Trk_lead", "NoTag_3Trk_subl", "NoTag_4Trk_lead", "NoTag_4Trk_subl",\
+            "OneTag_lead", "TwoTag_lead", "OneTag_subl", "TwoTag_subl",\
+            #"NoTag_2Trk_split_lead_lead", "NoTag_2Trk_split_subl_lead", "NoTag_2Trk_split_lead_subl", "NoTag_2Trk_split_subl_subl",\
+            #"OneTag_lead_lead", "OneTag_subl_lead", "OneTag_lead_subl", "OneTag_subl_subl",\
+            "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"]
 
     # create output file
     inputpath = CONF.inputpath + inputdir + "/"
@@ -114,7 +110,6 @@ def main():
 
     # Create the master dictionary for cutflows and plots
     masterinfo = {}
-
     #set the input tasks!
     inputtasks = []
     inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "histname":"ttbar"})
@@ -151,6 +146,8 @@ def main():
             BKG_lst=bkgest_lst, BKG_dic=bkgest_dict, use_one_top_nuis=useOneTop, fitzjets=doZjets, a_ttbar=best_attbar) #Weight_dic = weight_dict, 
     
     print "End of Fit!"
+
+
 
     #setup multiprocessing
     #start calculating the dictionary

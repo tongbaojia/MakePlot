@@ -45,6 +45,10 @@ echo "plotting channel: " $ch
 syst=$(grep -o -P '(?<=syst:).*(?=:syst)' <<< $INOPTION)
 echo "plotting syst: " $syst
 inputdir=$ch$"_"$syst
+echo  "inputdir is: " $inputdir
+re=$"bkg"
+iter="5"
+echo  "reweight: " $re " iteration: " $iter
 
 ##start actual running
 if [ $dopythonrun == "true" ]; then
@@ -52,6 +56,7 @@ if [ $dopythonrun == "true" ]; then
 	python PlotTinyTree.py --outputdir $ch --dosyst $syst #--reweight $re --iter $iter
 	python get_count.py    --inputdir $inputdir --full
 	python plot.py         --inputdir $inputdir
+	python plot_random.py  --inputdir $inputdir
 	python dump_hists.py   --inputdir $inputdir
 fi
 echo "DONE!!!"

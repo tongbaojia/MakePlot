@@ -712,13 +712,13 @@ def main():
         "SR"         : "event.Xhh < 1.6", # #GetXhh(), #"event.Xhh < 1.6", #
         "CR"         : GetRhh(RhhCenterX=CR_X, RhhCenterY=CR_Y, RhhCut=CR_size), #"event.Rhh < %s" % str(CR_size) ,
         "SB"         : GetRhh(RhhCenterX=SB_X, RhhCenterY=SB_Y, RhhCut=SB_size), #"event.Rhh < %s" % str(SB_size) ,
-        "CR_High"    : GetRhh(RhhCenterX=CR_X+5,  RhhCenterY=CR_Y+5,  RhhCut=CR_size),
-        "CR_Low"     : GetRhh(RhhCenterX=CR_X-5,  RhhCenterY=CR_Y-5,  RhhCut=CR_size),
+        "CR_High"    : GetRhh(RhhCenterX=CR_X+3,  RhhCenterY=CR_Y+3,  RhhCut=CR_size),
+        "CR_Low"     : GetRhh(RhhCenterX=CR_X-3,  RhhCenterY=CR_Y-3,  RhhCut=CR_size),
         "CR_Small"   : "event.Xhh > 2.0 and event.Rhh < %s" % str(CR_size) ,
-        "SB_High"    : GetRhh(RhhCenterX=SB_X+5,  RhhCenterY=SB_Y+5,  RhhCut=SB_size),
-        "SB_Low"     : GetRhh(RhhCenterX=SB_X-5,  RhhCenterY=SB_Y-5,  RhhCut=SB_size),
-        "SB_Large"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size + 5), #"event.Rhh < %s" % str(SB_size + 5) ,
-        "SB_Small"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size - 5), #"event.Rhh < %s" % str(SB_size - 5) ,
+        "SB_High"    : GetRhh(RhhCenterX=SB_X+3,  RhhCenterY=SB_Y+3,  RhhCut=SB_size),
+        "SB_Low"     : GetRhh(RhhCenterX=SB_X-3,  RhhCenterY=SB_Y-3,  RhhCut=SB_size),
+        "SB_Large"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size + 3), #"event.Rhh < %s" % str(SB_size + 5) ,
+        "SB_Small"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size - 3), #"event.Rhh < %s" % str(SB_size - 5) ,
         "ZZ"         : "event.Xzz < 2.1" ,
         }
     global SR_cut
@@ -730,8 +730,9 @@ def main():
     if ops.dosyst is not None:
         if "CR" in ops.dosyst:
             CR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut[ops.dosyst]
+            SB_cut = "not " + Syst_cut[ops.dosyst] + " and " + Syst_cut["SB"] ##fix this
             if "Small" in ops.dosyst: #sepecial treatment for this asshole
-                SB_cut = "%s < event.Rhh < %s" % (str(CR_size), str(SB_size))
+                SB_cut = ("event.Rhh > %s " % (str(CR_size))) + " and " + Syst_cut["SB"]
         elif "SB" in ops.dosyst:
             SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut[ops.dosyst]
         elif "ZZ" in ops.dosyst:

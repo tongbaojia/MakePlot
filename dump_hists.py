@@ -4,6 +4,7 @@ import numpy as np
 import ROOT, rootlogon
 import Xhh4bUtils.BkgFit.smoothfit_Ultimate as smoothfit
 from helpers import round_sig
+import multiprocessing as mp
 import config as CONF
 ROOT.gROOT.SetBatch()
 
@@ -12,9 +13,9 @@ cut_lst   = ["FourTag", "ThreeTag", "TwoTag_split"]#"TwoTag", "OneTag"
 #setup fit initial values; tricky for the fits...
 init_dic = {
     "l":{
-        "FourTag":{"ttbar":[-10, 20, -5], "qcd":[-10, 10, -5]},
-        "ThreeTag":{"ttbar":[-10, 30, -10], "qcd":[-10, 20, -5]},
-        "TwoTag_split":{"ttbar":[-10, 30, -5], "qcd":[-10, 10, -5]},
+        "FourTag":{"ttbar":[-10, 20, -5], "qcd":[-10, 10, 10]},
+        "ThreeTag":{"ttbar":[-10, 20, -5], "qcd":[-10, 10, 10]},
+        "TwoTag_split":{"ttbar":[-10, 30, -5], "qcd":[-10, 10, 10]},
         #"TwoTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]},
         #"OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
     },
@@ -97,7 +98,7 @@ def dump(finaldis="l"):
             if(ops.Xhh):
                 savehist(ifile, "Xhh_" + str(mass) + "_" + cut, "signal_X_hh_m" + str(mass))
         outfile.Close()
-        makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c), pltoutputpath + c + pltname + "_smoothed.pdf")
+        makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("_pole" if "pole" in finaldis else "")), pltoutputpath + c + pltname + "_smoothed.pdf")
         masterdic[c] = tempdic
 
     #print masterdic
@@ -107,7 +108,7 @@ def dump(finaldis="l"):
     ifile.Close()
     print "Done! "
 
-def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3000), smoothfunc="Dijet", initpar=[], Rebin=True):
+def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3000), smoothfunc="MJ8", initpar=[], Rebin=True):
     hist  = inputroot.Get(inname).Clone()
     if ("totalbkg" in outname):
         #hist_zjet = inputroot.Get(inname.replace("data_est", "zjet")).Clone()
@@ -210,8 +211,7 @@ def makeSmoothedMJJPlots( infileName, outfileName):
 
     f = ROOT.TFile(infileName, "READ")
     
-    qcd = f.Get("qcd_hh").Clone()
-    bkg = qcd.Clone("bkg_hh")
+    bkg = f.Get("qcd_hh").Clone("bkg_hh")
 
     #stack qcd on top of top
     if not ignore_ttbar:
@@ -226,21 +226,17 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     bkg.SetFillColor(ROOT.kAzure-9)
     bkg.SetXTitle("m_{JJ} [GeV]")
     bkg.SetYTitle("Events")
-
     bkg.GetXaxis().SetTitleOffset(1.2)
     bkg.GetXaxis().SetTitleSize(0.04)
     bkg.GetYaxis().SetTitleOffset(1.2)
     bkg.GetYaxis().SetTitleSize(0.04)
-
     bkg.Draw("HIST")
-
 
     bkg_err = bkg.Clone("bkg_err")
     bkg_err.SetFillColor(ROOT.kBlack)
     bkg_err.SetFillStyle(3001)
     bkg_err.Draw("sameE2")
     
-
     if not ignore_ttbar:
         top.SetLineColor(ROOT.kBlack)
         top.SetFillColor(ROOT.kRed)
@@ -258,9 +254,7 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     if not ignore_ttbar:
         leg.AddEntry(top, "t #bar{t}", "F")
     leg.Draw()
-
     c.SaveAs(outfileName)
-
     return
 
 def do_variable_rebinning(hist,bins, scale=1):

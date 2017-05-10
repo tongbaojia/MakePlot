@@ -47,7 +47,9 @@ def main():
     # Fill the histogram from the table
 
     for tag in tag_lst:
+        print "CR variations"
         Dump_Compare(tag=tag, title="CR_Varations", region="Control")
+        print "SR variations"
         Dump_BKGCompare(tag=tag, title="SR_Varations", region="Signal")
         #for SR region shape variations
         for inputname in syst_lst:

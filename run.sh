@@ -17,7 +17,7 @@ for ch in ${channels[@]}; do
 	# rm hist-MiniNTuple.root
 	# ln -s ../../b77/data_est/hist-MiniNTuple.root hist-MiniNTuple.root
 	# cd ../../..
-	#python get_count.py --inputdir $ch --full
+	#python get_count.py --inputdir $ch
 	#python test.py --inputdir $ch --full True
 	#python get_count.py --inputdir $ch --full True
 	#python plot.py --inputdir $ch
@@ -26,19 +26,19 @@ for ch in ${channels[@]}; do
 	#python plot_sigeff.py --inputdir $ch
 	#python plot_cutflow.py --inputdir $ch
 	#python plot_prediction.py --inputdir $ch
-	#python dump_hists.py --inputdir $ch
-	python plot_random.py --inputdir $ch
+	python dump_hists.py --inputdir $ch
+	#python plot_random.py --inputdir $ch
 	#python plot_smooth.py --inputdir $ch
 done
 
 
 #specify the paths to gather!
-inputpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
-plotpath="/Plot/SigEff/"
-plotname="_relsig_0_3100_1.pdf"
-tablepath="/Plot/Tables/"
-tablename="normfit.tex"
-outputpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Plot/"
+# inputpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"
+# plotpath="/Plot/SigEff/"
+# plotname="_relsig_0_3100_1.pdf"
+# tablepath="/Plot/Tables/"
+# tablename="normfit.tex"
+# outputpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Plot/"
 
 #pick scipt
 # for ch in ${channels[@]}; do

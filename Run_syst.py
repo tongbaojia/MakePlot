@@ -15,7 +15,7 @@ import multiprocessing as mp
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="Moriond_bkg_5")
+    parser.add_argument("--inputdir", default="Moriond")
     parser.add_argument("--Xhh",      action='store_true') #4times more time
     return parser.parse_args()
 
@@ -94,13 +94,13 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"}) #58
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     #for ttbar
-    # inputtasks.append({"inputdir":"syst_tt_frag"}) #60
-    # inputtasks.append({"inputdir":"syst_tt_had"})
-    # inputtasks.append({"inputdir":"syst_tt_ppcs"}) #62 
-    # inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    # inputtasks.append({"inputdir":"syst_tt_mass_up"}) #64
-    # inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    # inputtasks.append({"inputdir":"syst_tt_rad_up"}) #66
+    inputtasks.append({"inputdir":"syst_tt_frag"}) #60
+    inputtasks.append({"inputdir":"syst_tt_had"})
+    inputtasks.append({"inputdir":"syst_tt_ppcs"}) #62 
+    inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    inputtasks.append({"inputdir":"syst_tt_mass_up"}) #64
+    inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    inputtasks.append({"inputdir":"syst_tt_rad_up"}) #66
 
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
