@@ -19,7 +19,7 @@ workdir     =  "Moriond" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #check if reference folder exists
-fullstudy   =  True
+fullstudy   =  True	
 #check if doing my thesis; if so, disable all the ATLAS labels
 thesis      =  False
 #check if the path exists
@@ -41,15 +41,15 @@ clr_lst    = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPi
 #plot marker style variables
 mrk_lst  = range(20, 40)
 #defuault root file name
-hist_r = "hist-MiniNTuple.root"
+hist_r   = "hist-MiniNTuple.root"
 #set the blinding status
-blind  = True
+blind    = True
  #False
 #current total luminiosity, in fb 22.1; 13.0
-totlumi = 36.1
+totlumi  = 36.1
 #color dictionary for plotting style
-col_dic = {"syst":ROOT.kGray+2}
+col_dic  = {"syst":ROOT.kGray+2}
 #size for legend
-legsize = 20
-paperlegsize = 28
-StatusLabel = "Internal" #"Preliminary"
+legsize       = 20
+paperlegsize  = 28
+StatusLabel   = "Internal" #"Preliminary"

@@ -110,8 +110,8 @@ def Dump_Compare(tag="FourTag", title="CR_Varations", region="Control"):
 
 def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
 
-    column_lst = ["Prediction", "QCD", "ttbar"]
-    column_key_lst = ["data_est", "qcd_est", "ttbar_est"] #for looping through the objects
+    column_lst = ["Prediction", "Diff", "QCD", "ttbar"]
+    column_key_lst = ["data_est", "data_est", "qcd_est", "ttbar_est"] #for looping through the objects
     texoutpath = inputpath + inputdir + "/" + "Plot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
@@ -137,11 +137,16 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
                 nominal[Types]  = helpers.round_sig(masterdic[Types][tag][region], 2)
                 nominal[Types+"_err"]  = helpers.round_sig(masterdic[Types][tag][region+"_err"], 2)
         #print masterdic, tag
-        for Types in column_key_lst:
-            value = (masterdic[Types][tag][region]/nominal[Types] - 1) * 100
-            error = helpers.ratioerror(masterdic[Types][tag][region], nominal[Types],
-                masterdic[Types][tag][region+"_err"], nominal[Types+"_err"]) * 100
-            outstr += add_entry(value, error, percent=True)
+        for j, Types in enumerate(column_key_lst):
+            if j == 0: ##for the first entry
+                value = masterdic[Types][tag][region]
+                error = masterdic[Types][tag][region+"_err"]
+                outstr += add_entry(value, error, percent=False)
+            else: ##do percentage
+                value = (masterdic[Types][tag][region]/nominal[Types] - 1) * 100
+                error = helpers.ratioerror(masterdic[Types][tag][region], nominal[Types],
+                    masterdic[Types][tag][region+"_err"], nominal[Types+"_err"]) * 100
+                outstr += add_entry(value, error, percent=True)
         #finish up
         del(masterdic)
         f1.close()
@@ -214,7 +219,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     counter = 0
     maxbincontent = (0.2 if Logy ==0 else 10)
 
-
+    print keyword, histdir
     temp_hist = inputroot.Get(keyword)
     #print temp_hist.GetName()
     temp_hist.SetLineColor(2)

@@ -36,22 +36,22 @@ def main():
 
     ##starndard plots
     # ##paper plot
-    #DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG1500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
-    DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG1500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
-    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG3000_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350]) 
+    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG3000_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])   
+    #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG1500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
+    #DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    #DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
+    #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "FourTag_Incl", prename="RSG1500_FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
     ###for 2D comparison
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
     # ###signalregion shape comparison
     inputroot = "sum_" + inputdir + ".root"
-    # DrawSRcomparison(inputroot, inputdata="ttbar")
-    # DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    # DrawSRcomparison(inputroot, inputdata="qcd_est")
-    # DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="ttbar")
+    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    DrawSRcomparison(inputroot, inputdata="qcd_est")
+    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
     # DrawSRcomparison(inputroot, inputdata="RSG1_1000", Logy=1, Xrange=[0, 4000])
     # DrawSRcomparison(inputroot, inputdata="RSG1_2000", Logy=1, Xrange=[0, 4000])
     # DrawSRcomparison(inputroot, inputdata="RSG1_3000", Logy=1, Xrange=[0, 4000])
@@ -63,8 +63,8 @@ def main():
     # DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="sublHCand_Mass_s", Xrange=[90, 180])
 
     # # ###draw the mhh before and after scale
-    # # DrawScalecomparison(inputroot, norm=False)
-    # # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    DrawScalecomparison(inputroot, norm=False)
+    DrawScalecomparison(inputroot, norm=True, Logy=1)
     # ###end of standard plots
 
     # ##region shape comparisons
@@ -251,7 +251,7 @@ def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "Data #sqrt{s} = 13 TeV")
-    watermarks = [atlas, hh4b, lumi]
+    watermarks = [atlas, hh4b, lumi] if not CONF.thesis else [hh4b, lumi]
     for wm in watermarks:
         wm.SetTextAlign(22)
         wm.SetTextSize(0.04)
@@ -291,9 +291,9 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
             lumi  = ROOT.TLatex(xatlas, yatlas-0.04, "#sqrt{s} = 13 TeV")
             hh4b  = ROOT.TLatex(xatlas, yatlas-0.08, "RSG c=1.0")
             if "data" in inputname:
-                watermarks = [atlas, lumi]
+                watermarks = [atlas, lumi] if not CONF.thesis else [lumi]
             else:
-                watermarks = [atlas, hh4b, lumi]
+                watermarks = [atlas, hh4b, lumi] if not CONF.thesis else [hh4b, lumi]
             for wm in watermarks:
                 wm.SetTextAlign(22)
                 wm.SetTextSize(0.025)
@@ -366,7 +366,8 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
         # elif x[1] < 115:
         #     return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.09*x[0]))**2 + 0.95*((x[1]-115)/(0.12*x[1]))**2)
     def mySR(x):
-	   return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.085*x[0]))**2 + ((x[1]-115)/(0.12*x[1]))**2)
+	   #return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.085*x[0]))**2 + ((x[1]-115)/(0.12*x[1]))**2)
+       return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
 
     def myTop(x):
 	   return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 )	
@@ -423,7 +424,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
 
     # sideband:
     fSB = ROOT.TF2("SB", mySB, 0, Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [53.0])
+    contoursSB = array.array("d", [58.0])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(200)
     fSB.SetLineWidth(2)
@@ -439,7 +440,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fTT.SetLineStyle(5)
     fTT.Draw("same, cont3")
     # ttbar label:
-    ttb_txt = ROOT.TLatex(0.72, 0.52, "#splitline{t#bar{t} enriched}{region}")
+    ttb_txt = ROOT.TLatex(0.72, 0.72, "#splitline{t#bar{t} enriched}{region}")
     ttb_txt.SetTextColor(46)
     helpers.DrawWords(ttb_txt)
 
@@ -459,7 +460,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
 
     # Draw Watermarks
     wm = helpers.DrawWatermarks(0.35, 0.875, deltax=[0.3,], 
-		watermarks=["ATLAS Internal", "#sqrt{s} = 13 TeV"])
+		watermarks=["ATLAS Internal", "#sqrt{s} = 13 TeV"] if not CONF.thesis else ["#sqrt{s} = 13 TeV"] )
 
     canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ("_comp" if compinputname != "" else "") + ".pdf")
 
@@ -469,7 +470,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     if (compinputname != ""):
         compinputroot.Close()
 
-def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0):
+def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], keyword="mHH_l", prename="", Xrange=[0, 4000], Yrange=[0, 0], norm=True, Logy=0):
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
     tempname = inputdata + "_" + "compare" + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
@@ -506,6 +507,7 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
 
                 maxbincontent = max(maxbincontent, temp_hist.GetMaximum())
                 temp_hist.SetMaximum(maxbincontent * 1.5)
+                temp_hist.GetXaxis().SetNdivisions(405)
                 legend.AddEntry(temp_hist, region.replace("_", " "), "apl")
 
                 if counter==0:
@@ -516,7 +518,7 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
-    legend.SetTextSize(0.04)
+    legend.SetTextSize(0.025)
     legend.Draw()
 
     # draw watermarks
@@ -524,10 +526,10 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    watermarks = [atlas]
+    watermarks = [atlas] if not CONF.thesis else [lumi]
     for wm in watermarks:
         wm.SetTextAlign(22)
-        wm.SetTextSize(0.04)
+        wm.SetTextSize(0.025)
         wm.SetTextFont(42)
         wm.SetNDC()
         wm.Draw()
@@ -537,7 +539,7 @@ def DrawSRcomparison(inputname, inputdata="ttbar", inputtype=["TwoTag_split_Sign
 
     inputroot.Close()
 
-def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], prename="", Xrange=[0, 3000], Yrange=[0, 0], norm=True, Logy=0):
+def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_Signal", "FourTag_Signal"], prename="", Xrange=[0, 4000], Yrange=[0, 0], norm=True, Logy=0):
     #print inputdir
     inputroot = ROOT.TFile.Open(inputpath + inputname)
     inputdata= ["data_est", "RSG1_1500", "RSG1_2500"]
@@ -549,7 +551,7 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
         xleg, yleg = 0.52, 0.73
         legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
         counter = 0
-        maxbincontent = (0.3 if Logy ==0 else 10)
+        maxbincontent = (0.3 if Logy ==0 else 30)
 
         for j, data in enumerate(inputdata):
             for key in ROOT.gDirectory.GetListOfKeys():
@@ -575,6 +577,8 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
                     maxbincontent = max(maxbincontent, temp_hist.GetMaximum())
                     
                     temp_hist.SetMaximum(maxbincontent * 1.5)
+                    temp_hist.SetMinimum(0.001)
+                    temp_hist.GetXaxis().SetNdivisions(405)
                     legend.AddEntry(temp_hist, data.replace("_", " ") + ("" if "pole" not in kname else " scaled"), "apl")
 
                     if counter==0:
@@ -594,7 +598,7 @@ def DrawScalecomparison(inputname, inputtype=["TwoTag_split_Signal", "ThreeTag_S
         atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
         hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
         lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-        watermarks = [atlas]
+        watermarks = [atlas] if not CONF.thesis else [lumi]
         for wm in watermarks:
             wm.SetTextAlign(22)
             wm.SetTextSize(0.04)
@@ -699,7 +703,7 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "Simulations")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
     info  = ROOT.TLatex(xatlas, yatlas-0.06, keyword.replace("data_est_", "").replace("_mHH_l", "").replace("_", " "))
-    watermarks = [atlas, info]
+    watermarks = [atlas, info] if not CONF.thesis else [info]
     for wm in watermarks:
         wm.SetTextAlign(22)
         wm.SetTextSize(0.04)
@@ -773,9 +777,9 @@ def DrawBTaggingPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0]
             lumi  = ROOT.TLatex(xatlas, yatlas-0.04, "#sqrt{s} = 13 TeV")
             hh4b  = ROOT.TLatex(xatlas, yatlas-0.08, "RSG c=1.0")
             if "data" in inputname:
-                watermarks = [atlas, lumi]
+                watermarks = [atlas, lumi] if not CONF.thesis else [lumi]
             else:
-                watermarks = [atlas, hh4b, lumi]
+                watermarks = [atlas, hh4b, lumi] if not CONF.thesis else [hh4b, lumi]
             for wm in watermarks:
                 wm.SetTextAlign(22)
                 wm.SetTextSize(0.025)

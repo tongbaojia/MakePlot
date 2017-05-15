@@ -20,6 +20,9 @@ def options():
     parser.add_argument("--reweight",  default=None)
     parser.add_argument("--iter",      default=0)
     parser.add_argument("--MV2",       default=0.6455) #0.3706, 0.6455
+    parser.add_argument("--CR",        default=33) ##default CR size is 33
+    parser.add_argument("--SB",        default=58) ##default SB size is 58
+    parser.add_argument("--SBshift",   default=10) ##default SBshift size is 10
     parser.add_argument("--resveto",   action='store_true')
     parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
     parser.add_argument("--dijet",     action='store_true') #do Dijet samples if necessary
@@ -180,6 +183,7 @@ class eventHists:
         self.h1_trk1_pt   = ROOT.TH1F("sublHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
         self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
         self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
+        self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 200,  50,  250,  200,  50,  250)
 
         if self.fullhist:
             self.h_deta       = ROOT.TH1F("hCandDeta",          "hCand #Delta#eta",  40,    0,  2.0)
@@ -206,7 +210,6 @@ class eventHists:
             self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
             self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
             #self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
-            self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 200,  50,  250,  200,  50,  250)
             self.dRH0H1       = ROOT.TH2F("dRH0H1",             ";#Deltar_{trk}^{lead}; #Deltar_{trk}^{subl};", 50, 0.2,  1.2, 50, 0.2, 1.2)
             self.MV2          = ROOT.TH1F("MV2",                ";MV2",              110,  -1.1,  1.1)
             #self.trkfracH0H1  = ROOT.TH2F("trkfracH0H1",        ";H0:p_{T}^{Trk0}/(p_{T}^{Trk0} + p_{T}^{Trk1});H1:p_{T}^{Trk0}}/(p_{T}^{Trk0} + p_{T}^{Trk1});", 50, 0.5, 1.0, 50, 0.5, 1.0)
@@ -235,6 +238,7 @@ class eventHists:
         self.h1_trk1_pt.Fill(event.j1_trk1_pt, weight)
         self.h0_pt_m.Fill(event.j0_pt, weight)
         self.h1_pt_m.Fill(event.j1_pt, weight) 
+        self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
 
         if self.fullhist:
             self.h_deta.Fill(event.detaHH, weight)    
@@ -266,7 +270,6 @@ class eventHists:
             self.Rhh.Fill(event.Rhh, weight) 
             self.h0_trkpt_diff.Fill((event.j0_trk0_pt - event.j0_trk1_pt), weight)
             self.h1_trkpt_diff.Fill((event.j1_trk0_pt - event.j1_trk1_pt), weight)
-            self.mH0H1.Fill(event.j0_m, event.j1_m, weight)
             self.dRH0H1.Fill(event.j0_trkdr, event.j1_trkdr, weight)
             self.MV2.Fill(event.j0_trk0_Mv2, weight)
             self.MV2.Fill(event.j0_trk1_Mv2, weight)
@@ -296,9 +299,9 @@ class eventHists:
         self.h1_trk1_pt.Write()
         self.h0_pt_m.Write()    
         self.h1_pt_m.Write() 
+        self.mH0H1.Write() 
 
         if self.fullhist:
-            self.mH0H1.Write() 
             self.h_deta.Write()    
             self.h_dphi.Write()    
             self.h_dr.Write()  
@@ -422,16 +425,18 @@ class regionHists:
         self.ThreeTag_lead             = massregionHists("ThreeTag_lead", outputroot) #2tag, lead H tag 2 tag
         self.ThreeTag_subl             = massregionHists("ThreeTag_subl", outputroot) #2tag, subl H tag 2 tag
         # # # ##for extra extra b-tagging on which jet studies
-        # self.OneTag_lead_lead          = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
-        # self.OneTag_subl_subl          = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
-        # self.OneTag_lead_subl          = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
-        # self.OneTag_subl_lead          = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
         # self.TwoTag_split_lead_lead    = massregionHists("TwoTag_split_lead_lead", outputroot) #2bs, lead H lead trk tag, subl H lead trk tag
         # self.TwoTag_split_subl_subl    = massregionHists("TwoTag_split_subl_subl", outputroot) #2bs, lead H subl trk tag, subl H subl trk tag
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
         # self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
         self.isData   = isData ##this is for special treatments to data
         self.splitter = False ##to split events into halves for bkg estimation; for ttbar as well...
+        self.doDetail = False ##to split events into halves for bkg estimation; for ttbar as well...
+        if self.doDetail:
+            self.OneTag_lead_lead          = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
+            self.OneTag_subl_subl          = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
+            self.OneTag_lead_subl          = massregionHists("OneTag_lead_subl", outputroot) #1tag, lead H tag, lead trk tag
+            self.OneTag_subl_lead          = massregionHists("OneTag_subl_lead", outputroot) #1tag, subl H tag, subl trk tag
 
     def Fill(self, event):
         ##modeling requires at least one track jets on each side
@@ -533,17 +538,19 @@ class regionHists:
             if (nb_j0 == 1 and nb_j1 == 0):
                 self.OneTag_lead.Fill(event)
                 # ##for extra extra b-tagging on which jet studies
-                # if (event.j0_trk0_Mv2 > b_tagging_cut):
-                #     self.OneTag_lead_lead.Fill(event)
-                # else:
-                #     self.OneTag_lead_subl.Fill(event)
+                if self.doDetail:
+                    if (event.j0_trk0_Mv2 > b_tagging_cut):
+                        self.OneTag_lead_lead.Fill(event)
+                    else:
+                        self.OneTag_lead_subl.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 1):
                 self.OneTag_subl.Fill(event)
                 # ##for extra extra b-tagging on which jet studies
-                # if (event.j1_trk0_Mv2 > b_tagging_cut):
-                #     self.OneTag_subl_lead.Fill(event)
-                # else:
-                #     self.OneTag_subl_subl.Fill(event)
+                if self.doDetail:
+                    if (event.j1_trk0_Mv2 > b_tagging_cut):
+                        self.OneTag_subl_lead.Fill(event)
+                    else:
+                        self.OneTag_subl_subl.Fill(event)
             elif (nb_j0 == 2 and nb_j1 == 0):
                 self.TwoTag_lead.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 2):
@@ -585,14 +592,15 @@ class regionHists:
         self.ThreeTag_lead.Write(outputroot)
         self.ThreeTag_subl.Write(outputroot)
         # ##for extra extra b-tagging on which jet studies
-        # self.OneTag_lead_lead.Write(outputroot)
-        # self.OneTag_subl_lead.Write(outputroot)
-        # self.OneTag_lead_subl.Write(outputroot)
-        # self.OneTag_subl_subl.Write(outputroot)
-        # self.TwoTag_split_lead_lead.Write(outputroot)
-        # self.TwoTag_split_subl_lead.Write(outputroot)
-        # self.TwoTag_split_lead_subl.Write(outputroot)
-        # self.TwoTag_split_subl_subl.Write(outputroot)
+        if self.doDetail:
+            self.OneTag_lead_lead.Write(outputroot)
+            self.OneTag_subl_lead.Write(outputroot)
+            self.OneTag_lead_subl.Write(outputroot)
+            self.OneTag_subl_subl.Write(outputroot)
+            # self.TwoTag_split_lead_lead.Write(outputroot)
+            # self.TwoTag_split_subl_lead.Write(outputroot)
+            # self.TwoTag_split_lead_subl.Write(outputroot)
+            # self.TwoTag_split_subl_subl.Write(outputroot)
 
 
 def analysis(inputconfig):
@@ -638,7 +646,7 @@ def analysis(inputconfig):
             #continue
 
         ##speed up selection a bit; skip events with jet mass less than 65 for now
-        if (t.j0_m < 65 or t.j1_m < 65): ##as far as the cut can go
+        if (t.j0_m < 60 or t.j1_m < 60): ##as far as the cut can go
             continue
 
         ##add blinding
@@ -702,12 +710,13 @@ def main():
 
     ##setup control region size, and sideband region size
     global Syst_cut
-    CR_size = 33 #this needs to be fixed; so good so far
-    SB_size = 53 #53 is the new default; should be between 48-58 due to stats
+    ##36-60 is not bad; but 4b CR is off
+    CR_size = float(ops.CR) #this needs to be fixed; so good so far
+    SB_size = float(ops.SB) #56 is the new default; should be between 48-58 due to stats
     CR_X    = 124. ##center for control region
     CR_Y    = 115. ##center for control region
-    SB_X    = 124. + 10 ##center for sideband region
-    SB_Y    = 115. + 10 ##center for sideband region
+    SB_X    = 124. + float(ops.SBshift) ##center for sideband region; 12 is also ok
+    SB_Y    = 115. + float(ops.SBshift) ##center for sideband region; 12 is also ok
     Syst_cut = {
         "SR"         : "event.Xhh < 1.6", # #GetXhh(), #"event.Xhh < 1.6", #
         "CR"         : GetRhh(RhhCenterX=CR_X, RhhCenterY=CR_Y, RhhCut=CR_size), #"event.Rhh < %s" % str(CR_size) ,
@@ -719,7 +728,8 @@ def main():
         "SB_Low"     : GetRhh(RhhCenterX=SB_X-3,  RhhCenterY=SB_Y-3,  RhhCut=SB_size),
         "SB_Large"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size + 3), #"event.Rhh < %s" % str(SB_size + 5) ,
         "SB_Small"   : GetRhh(RhhCenterX=SB_X,    RhhCenterY=SB_Y,    RhhCut=SB_size - 3), #"event.Rhh < %s" % str(SB_size - 5) ,
-        "ZZ"         : "event.Xzz < 2.1" ,
+        "ZZ"         : GetXhh(XhhCenterX=103., XhhCenterY=96.,  XhhCut=1.6), #"event.Xzz < 1.6" , ##use to be 2.1
+        "TT"         : GetXhh(XhhCenterX=164., XhhCenterY=155., XhhCut=1.6)  #"event.Xzz < 1.6" , ##use to be 2.1
         }
     global SR_cut
     SR_cut = Syst_cut["SR"]
@@ -763,7 +773,7 @@ def main():
             inputtasks.append(pack_input(split_file, inputsplit=i))    
     ##for other MCs
     ##for reweighting condition; copy zjet and ttbar
-    if not turnon_reweight:
+    if not turnon_reweight or ops.dosyst is not None :
         if (not ops.dijet): 
             inputtasks.append(pack_input("zjets_test"))
     else:

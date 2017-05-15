@@ -22,7 +22,12 @@ def main():
     inputdir = ops.inputdir
 
     global channels
-    channels=["SB53", "SB58", "SB63", "SB68", "SB73", "SB78", "SB88", "SB98", "SB108", "SB128", "SB168"]#, "b70", "b77", "b80", "b85", "b90"]
+    # channels = ["SB53", "SB56", "SB58", "SB60", "SB63", "SB68", "SB73", "SB78", "SB83", "SB88"] #, "SB98", "SB108", "SB128", "SB168"]#, "b70", "b77", "b80", "b85", "b90"]
+    # Vari = "SB" #SB
+    # channels = ["CR28", "CR31", "CR33", "CR35", "CR37", "CR39"]  ##SB value is 56
+    # Vari = "CR"
+    channels = ["SBshift2", "SBshift5", "SBshift7", "SBshift10", "SBshift12", "SBshift15"]  ##SB value is 56
+    Vari = "SBshift"
 
     global region_lst
     region_lst = ["Sideband", "Control", "Signal"]
@@ -37,17 +42,16 @@ def main():
     global outputroot
     outputroot = ROOT.TFile.Open(outputpath + "temp.root", "recreate")
     # Fill the histogram from the table
-    DrawFitParameters("Nb=4")
-    DrawFitParameters("Nb=3")
-    DrawFitParameters("Nb=2s")
-    DrawFitParameters("Nb=2")
-    DrawFitParameters("Nb=1")
+    DrawFitParameters("FourTag", Vari=Vari)
+    DrawFitParameters("ThreeTag", Vari=Vari)
+    DrawFitParameters("TwoTag_split", Vari=Vari)
+    #DrawFitParameters("Nb=2")
+    #DrawFitParameters("Nb=1")
 
     for types in ["qcd_est", "ttbar_est", "data_est"]:
-        DrawUncertaintyCompare("FourTag", types)
-        DrawUncertaintyCompare("ThreeTag", types)
-        DrawUncertaintyCompare("TwoTag_split", types)
-
+        DrawUncertaintyCompare("FourTag", types, Vari=Vari)
+        DrawUncertaintyCompare("ThreeTag", types, Vari=Vari)
+        DrawUncertaintyCompare("TwoTag_split", types, Vari=Vari)
 
     # Finish the work
     print("--- %s seconds ---" % (time.time() - start_time))
@@ -58,16 +62,16 @@ def options():
     return parser.parse_args()
 
 ### 
-def DrawFitParameters(region="4b"):
+def DrawFitParameters(region="4b", Vari="SB"):
     outputroot.cd()
-    canv = ROOT.TCanvas(region.replace("Nb=", "Nb") + "_" + "mustudy", "mustudy", 800, 800)
-    h_muqcd = ROOT.TH1D(region.replace("Nb=", "Nb") + "_" + "muqcd","muqcd",1,1,2)
+    canv = ROOT.TCanvas(region + "_" + "mustudy", "mustudy", 800, 800)
+    h_muqcd = ROOT.TH1D(region + "_" + "muqcd" + Vari,"muqcd",1,1,2)
     h_muqcd.SetMarkerStyle(20)
     h_muqcd.SetMarkerColor(1)
     h_muqcd.SetLineColor(1)
     h_muqcd.SetMarkerSize(1)
     h_muqcd.GetYaxis().SetTitle("#mu qcd")
-    h_mutop = ROOT.TH1D(region.replace("Nb=", "Nb") + "_" + "mutop","mutop",1,1,2)
+    h_mutop = ROOT.TH1D(region + "_" + "mutop" + Vari,"mutop",1,1,2)
     h_mutop.SetMarkerStyle(21)
     h_mutop.SetMarkerColor(1)
     h_mutop.SetLineColor(1)
@@ -75,11 +79,12 @@ def DrawFitParameters(region="4b"):
     h_mutop.GetYaxis().SetTitle("#mu top")
 
     for i, ch in enumerate(channels):
-        inputtex = inputpath + ch + "/" + "/Plot/Tables/normfit.tex"
+        inputtex = inputpath + ch + "/Plot/Tables/normfit.tex"
+        #print inputtex
         f1 = open(inputtex, 'r')
         for line in f1: 
             #very stupid protection to distinguish 2b and 2bs
-            if (region  + " ") in line:
+            if (region.replace("_", " ")  + " ") in line:
                 templine = line.split("&")
                 tempqcd = templine[1].split(" ")
                 muqcd = float(tempqcd[1])
@@ -87,36 +92,41 @@ def DrawFitParameters(region="4b"):
                 temptop = templine[2].split(" ")
                 mutop = float(temptop[1])
                 mutop_err = float(temptop[3])
-                #print tempqcd
+                #print muqcd
                 h_muqcd.Fill(ch, muqcd)
                 h_muqcd.SetBinError(h_muqcd.GetXaxis().FindBin(ch), muqcd_err)
                 h_mutop.Fill(ch, mutop)
                 h_mutop.SetBinError(h_mutop.GetXaxis().FindBin(ch), mutop_err)
         f1.close()
-    h_muqcd.SetMaximum(h_muqcd.GetMaximum() * 1.5)   
+
+    h_muqcd.SetMaximum(h_muqcd.GetMaximum() * 1.3)  
+    h_muqcd.SetMinimum(h_muqcd.GetMinimum() * 0.8)   
+    h_muqcd.GetXaxis().LabelsOption("v") 
     h_muqcd.Draw("EPL")
-    myText(0.5, 0.87, 1, "Region: %s" % region, 42)
+    myText(0.4, 0.87, 1, "Region: %s" % region, 42)
     canv.SaveAs(outputpath + h_muqcd.GetName() + ".pdf")
     canv.Clear()
-    h_mutop.SetMaximum(h_mutop.GetMaximum() * 1.5) 
+    h_mutop.SetMaximum(h_mutop.GetMaximum() * 1.3) 
+    h_mutop.SetMinimum(h_mutop.GetMinimum() * 0.8)  
+    h_mutop.GetXaxis().LabelsOption("v")  
     h_mutop.Draw("EPL")
-    myText(0.5, 0.87, 1, "Region: %s" % region, 42)
+    myText(0.4, 0.87, 1, "Region: %s" % region, 42)
     canv.SaveAs(outputpath + h_mutop.GetName() + ".pdf")
     canv.Close()
 
 
 ### 
-def DrawUncertaintyCompare(cut="FourTag", Types="qcd_est"):
+def DrawUncertaintyCompare(cut="FourTag", Types="qcd_est", Vari="SB"):
     #very slow...needs to imporve performance...yeah...
     outputroot.cd()
-    canv = ROOT.TCanvas(Types + "_" + cut.replace(" ", "_") + "_" + "sigma_compare", "sigma_compare", 800, 800)
+    canv = ROOT.TCanvas(Types + "_" + cut.replace(" ", "_") + "_" + "sigma_compare" + Vari, "sigma_compare", 800, 800)
     xleg, yleg = 0.62, 0.7
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
     h_lst = []
 
     temp_h_max = 1
     for j, region in enumerate(region_lst):
-        h_muqcd = ROOT.TH1D(cut + "_" + region + "_" + "sigma_compare_SB", "sigma_compare;SB size",1,1,2)
+        h_muqcd = ROOT.TH1D(cut + "_" + region + "_" + "sigma_compare_SB", "sigma_compare;" + Vari + " size",1,1,2)
         
         for i, ch in enumerate(channels):
             inputtex = inputpath + ch + "/" + "sum_" + ch + ".txt"
@@ -143,6 +153,8 @@ def DrawUncertaintyCompare(cut="FourTag", Types="qcd_est"):
 
     for j, h_muqcd in enumerate(h_lst):
         h_muqcd.SetMaximum(temp_h_max * 1.5)
+        h_muqcd.SetMinimum(0)
+        h_muqcd.GetXaxis().LabelsOption("v")  
         h_muqcd.Draw("EPL" if j== 0 else "same EPL")
 
 

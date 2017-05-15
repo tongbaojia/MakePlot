@@ -11,7 +11,6 @@ import Xhh4bUtils.BkgFit.smoothfit as smoothfit
 #for parallel processing!
 import multiprocessing as mp
 
-
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
@@ -36,7 +35,7 @@ def main():
         reweightplotdir = "Incl"
 
     ##reweight iterations
-    for i in range(5, iter_total):
+    for i in range(0, iter_total):
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-alltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #inputtasks.append({"motherdir":"TEST", "reweight":"j0pT-subltrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #2
         #analysis_pipeline({"motherdir":"TEST", "reweight":"j0pT-leadtrk-fin", "iter_re": i, "reweightplotdir":"Sideband"}) #4

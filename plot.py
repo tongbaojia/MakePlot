@@ -463,7 +463,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
     region_lst = ["Sideband", "Control", "Signal"]
-    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+    cut_lst    = ["TwoTag_split", "ThreeTag", "FourTag"]
     #cut_lst = ["OneTag"]
     #create master list
     inputtasks = []

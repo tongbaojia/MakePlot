@@ -62,6 +62,8 @@ def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
             err = math.pow(gBkg.GetErrorYhigh(i),2)
             # loop over backgrounds
             for ih in range(0, len(bkgsUp)):
+                # if math.pow(gBkg.GetErrorYhigh(i),2) < 5 * math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2):
+                #     print bkgsUp[ih].GetName()
                 err += math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2)
             gBkg.SetPointEYhigh(i, math.sqrt(err))
             ### error down
@@ -195,10 +197,14 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
             continue
         # if "JET" in kname: ##this is reasonable
         #     continue
-        if "FT_" in kname: ##these are buggy now!
-            continue
+        # if "FT_" in kname: ##these are buggy now!
+        #     continue
+
         if "totalbkg_hh" is kname:
             continue
+        # if "Tracking_All" not in kname:
+        #     continue
+        #print kname
 
         if "totalbkg_hh" in kname and "up" in kname:
             syst_up.append(ifile.Get(kname).Clone(kname))
@@ -414,7 +420,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.5, 1.8) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.2, 3.8) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -609,15 +615,15 @@ def main():
         outputFolder = inputpath + inputroot + "Plot/Signal_Syst"
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
-        for j, cut in enumerate(cut_lst):
-            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-            config = {}
-            config["root"] = rootinputpath
-            config["inputdir"] = inputdir
-            config["outputdir"] = outputFolder
-            config["cut"] = cut + "_" + region + "_"
-            config["blind"] = False
-            inputtasks.append(config)
+        # for j, cut in enumerate(cut_lst):
+        #     rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
+        #     config = {}
+        #     config["root"] = rootinputpath
+        #     config["inputdir"] = inputdir
+        #     config["outputdir"] = outputFolder
+        #     config["cut"] = cut + "_" + region + "_"
+        #     config["blind"] = False
+        #     inputtasks.append(config)
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
             config = {}

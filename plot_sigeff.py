@@ -36,11 +36,12 @@ def main():
     # select the cuts
     # the list must start from the largest to the smallest!
     #evtsel_lst = ["PassTrig", "pT520", "pT460_m40", "2pT370_m40"]
-    evtsel_lst = ["PassSignal", "pT520_SR", "pT460_m40_SR", "2pT370_m40_SR"]
-    #evtsel_lst = ["PassTrig", "PassFatJetMass", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
+    #evtsel_lst = ["PassSignal", "pT520_SR", "pT460_m40_SR", "2pT370_m40_SR"]
+    evtsel_lst = ["PassTrig", "PassFatJetMass", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
     detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
     "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
-    region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"]
+    #region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"] ##we want to hide this
+    region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_split_Signal"] 
     region_4b_lst = ["FourTag_Signal", "FourTag_Control", "FourTag_Sideband"]
     region_3b_lst = ["ThreeTag_Signal", "ThreeTag_Control", "ThreeTag_Sideband"]
     region_2b_lst = ["TwoTag_split_Signal", "TwoTag_split_Control", "TwoTag_split_Sideband"]
@@ -168,7 +169,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
     legend.SetBorderSize(0)
     legend.SetMargin(0.3)
-    legend.SetTextSize(0.04)
+    legend.SetTextSize(0.03)
     legend.Draw()
 
     # draw reference lines
@@ -183,7 +184,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
     hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0" if not ops.Xhh else "2HDM")
     lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-    watermarks = [atlas, hh4b, lumi]
+    watermarks = [atlas, hh4b, lumi] if not CONF.thesis else [hh4b, lumi]
     for wm in watermarks:
         wm.SetTextAlign(22)
         wm.SetTextSize(0.04)

@@ -145,7 +145,6 @@ def main():
     ##run it, order matters, because the pole file replaces the previous one!
     masterdic = {}
     masterdic.update(merge_method_sys())
-    ## if debug
     ##masterdic.update(merge_mc_sys(inputtasks[0]))
     ## if already load the files: express
     for task in inputtasks:
@@ -289,6 +288,7 @@ def GetTable(masterdic, c):
         outstr = ""
         outstr += systagname
         #print masterdic, systag
+        print systag
         for col in column_lst:
             
             temp_col_dic = find_syst(masterdic, c, systag, col)
@@ -342,6 +342,7 @@ def GetTable(masterdic, c):
 
 #find a bunch of systematics
 def find_syst(masterdic, c, systag, col):
+    global debug
     debug = False
     sys_lst = {}
     #loopoing throught the dictionary
@@ -349,11 +350,11 @@ def find_syst(masterdic, c, systag, col):
         if (c in key1) and (systag in key1):
             for key2 in masterdic[key1]:#get to the qcd/ttbar/rsg region
                 if col in key2:
-                    if debug: 
-                        print systag, col, key1, key2
                     value_def  = abs(masterdic[key1][key2]["int"] / masterdic[c][key2]["int"] - 1) 
                     value_def_err  = abs(helpers.ratioerror(masterdic[key1][key2]["int"], masterdic[c][key2]["int"], masterdic[key1][key2]["int_err"], masterdic[c][key2]["int_err"]))
                     sys_lst.update({key1: (value_def, value_def_err)})
+                    if debug: 
+                        print systag, col, key1, key2, value_def
     return sys_lst
 
 #add them up!
@@ -362,7 +363,8 @@ def add_syst(sys_lst):
     value_err = 0
 
     for sysname, temp in sys_lst.iteritems():
-        #print sysname, temp
+        if debug: 
+            print sysname, temp
         value_temp = temp[0]
         value_temp_err = temp[1]
         if "up" in sysname:

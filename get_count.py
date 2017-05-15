@@ -29,8 +29,9 @@ region_lst = ["Incl", "Sideband", "Control", "Signal"]
 bkgest_lst = ["FourTag", "ThreeTag", "TwoTag_split"] 
 #setup the dictionary for background estiamtions
 ##default: {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
-#bkgest_dict = {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
+##bkgest_dict = {"FourTag":"NoTag_4Trk", "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split", "TwoTag":"NoTag", "OneTag":"NoTag"}
 bkgest_dict       = {"FourTag":"NoTag_4Trk",  "ThreeTag":"NoTag_3Trk", "TwoTag_split":"NoTag_2Trk_split",  "TwoTag":"OneTag",  "OneTag":"NoTag"}
+##bkgest_dict       = {"FourTag":"NoTag",  "ThreeTag":"NoTag", "TwoTag_split":"NoTag",  "TwoTag":"OneTag",  "OneTag":"NoTag"}
 #bkgest_dict_NoTag = {"FourTag":"NoTag",       "ThreeTag":"NoTag",      "TwoTag_split":"NoTag",       "TwoTag":"NoTag", "OneTag":"NoTag"}
 #bkgest_dict_OneTag= {"FourTag":"TwoTag",      "ThreeTag":"TwoTag",     "TwoTag_split":"OneTag", "TwoTag":"NoTag", "OneTag":"NoTag"}
 weight_dict       = {"FourTag":("NoTag", "NoTag_2Trk_split"),  "ThreeTag":("NoTag", "NoTag_2Trk_split"), "TwoTag_split":("NoTag", "NoTag_2Trk_split"), "TwoTag":("NoTag", "OneTag")}
@@ -128,7 +129,7 @@ def main():
     global useOneTop
     useOneTop = False
     global doZjets 
-    doZjets = False
+    doZjets   = False
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \
@@ -188,9 +189,9 @@ def main():
     #print "old method"
     #masterinfo.update(fitestimation("qcd_est", masterinfo))
     masterinfo.update(fitestimation("qcd_est", masterinfo, weight=False))
-    #WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
+    WriteEvtCount(masterinfo["qcd_est"], output, "qcd Est")
     masterinfo.update(fitestimation("ttbar_est", masterinfo, weight=False))
-    #WriteEvtCount(masterinfo["ttbar_est"], output, "ttbar Est")
+    WriteEvtCount(masterinfo["ttbar_est"], output, "ttbar Est")
     # print "new method"
     #masterinfo.update(fitestimation_test("qcd_est", masterinfo))
     #masterinfo.update(fitestimation_test("ttbar_est", masterinfo))
