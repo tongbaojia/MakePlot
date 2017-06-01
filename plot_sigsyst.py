@@ -62,8 +62,9 @@ def makeTotBkg(bkgs=[], bkgsUp=[], bkgsDown=[]):
             err = math.pow(gBkg.GetErrorYhigh(i),2)
             # loop over backgrounds
             for ih in range(0, len(bkgsUp)):
-                # if math.pow(gBkg.GetErrorYhigh(i),2) < 5 * math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2):
-                #     print bkgsUp[ih].GetName()
+                #if "smooth" in bkgsUp[ih].GetName():
+                #if math.pow(hBkg.GetBinContent(i+1),2) > 1 and math.pow(hBkg.GetBinContent(i+1),2) < 1 * math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2):
+                    #print bkgsUp[ih].GetName(), math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2), hBkg.GetBinContent(i+1), bkgsUp[ih].GetBinContent(i+1), hBkg.GetBinCenter(i+1)
                 err += math.pow(math.fabs( hBkg.GetBinContent(i+1) - bkgsUp[ih].GetBinContent(i+1) ), 2)
             gBkg.SetPointEYhigh(i, math.sqrt(err))
             ### error down
@@ -189,12 +190,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     for key in ROOT.gDirectory.GetListOfKeys():
         kname = key.GetName()
         ##print kname
-        if "QCD" in kname: ##this is are buggy now!
-            continue
-        if "smooth" in kname: ##this is reasonable
-            continue
-        if "norm" in kname: ##this is reasonable
-            continue
+        # if "QCD" in kname: ##this is are buggy now!
+        #     continue
+        # if "smooth" in kname: ##this is reasonable
+        #     continue
+        # if "norm" in kname: ##this is reasonable
+        #     continue
         # if "JET" in kname: ##this is reasonable
         #     continue
         # if "FT_" in kname: ##these are buggy now!
@@ -236,6 +237,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
+        for jhist in syst_up:
+            jhist.Rebin(rebin)
+        for jhist in syst_down:
+            jhist.Rebin(rebin)
 
     #use array to rebin histgrams
     if not rebinarry == None:
@@ -247,6 +252,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
         RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
+        for jhist in syst_up:
+            jhist = jhist.Rebin(len(rebinarry) - 1, jhist.GetName()+"_rebinned", rebinarry)
+        for jhist in syst_down:
+            jhist = jhist.Rebin(len(rebinarry) - 1, jhist.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -273,7 +282,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #make the total backgroudn with sytematics
     data = makeTotBkg([data])[1]
     #bkg = makeTotBkg([ttbar,qcd])
-    bkg = makeTotBkg([ttbar, qcd], syst_up, syst_down)
+    bkg  = makeTotBkg([ttbar, qcd], syst_up, syst_down)
     #bkg = makeTotBkg([ttbar,qcd,zjet])
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
     ratios = makeDataRatio(data, bkg[1])
@@ -363,7 +372,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     bkg[0].GetYaxis().SetLabelFont(43)
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
-    bkg[0].GetYaxis().SetRangeUser(0.001, yMax)
+    bkg[0].GetYaxis().SetRangeUser(0.06, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -420,7 +429,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.2, 3.8) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.2, 3.5) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -572,11 +581,11 @@ def dumpRegion(config):
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
     if "pole" in finaldis:
-        plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
-        plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
+        plotRegion(config, cut=config["cut"] + "mHH_pole",        xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"])
+        plotRegion(config, cut=config["cut"] + "mHH_pole",        xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1)
     else:
-        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]")
-        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]", Logy=1)
+        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"])
+        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1)
 
     print config["outputdir"], "done!"
 
@@ -615,15 +624,15 @@ def main():
         outputFolder = inputpath + inputroot + "Plot/Signal_Syst"
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
-        # for j, cut in enumerate(cut_lst):
-        #     rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-        #     config = {}
-        #     config["root"] = rootinputpath
-        #     config["inputdir"] = inputdir
-        #     config["outputdir"] = outputFolder
-        #     config["cut"] = cut + "_" + region + "_"
-        #     config["blind"] = False
-        #     inputtasks.append(config)
+        for j, cut in enumerate(cut_lst):
+            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
+            config = {}
+            config["root"] = rootinputpath
+            config["inputdir"] = inputdir
+            config["outputdir"] = outputFolder
+            config["cut"] = cut + "_" + region + "_"
+            config["blind"] = False
+            inputtasks.append(config)
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
             config = {}

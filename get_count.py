@@ -148,8 +148,6 @@ def main():
     
     print "End of Fit!"
 
-
-
     #setup multiprocessing
     #start calculating the dictionary
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
@@ -333,8 +331,8 @@ def fitestimation_test(histname="", inputdic={}):
                 htemp_qcd_NoTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_NoTag + "_" + region + "_" + hst).Clone()
                 htemp_qcd_OneTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_OneTag + "_" + region + "_" + hst).Clone()
                 #for ttbar, for mscale and mll, use 3b instead of 4b
-                if "ttbar" in histname and ("FourTag" in cut or "ThreeTag" in cut):
-                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
+                if "ttbar" in histname and ("FourTag" in cut):
+                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
                     htemp_qcd = hist_temp.Clone()
                     del(hist_temp)
@@ -436,9 +434,9 @@ def fitestimation(histname="", inputdic={}, weight=False):
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
                 #for ttbar, for mscale and mll, use 3b instead of 4b
-                if "ttbar" in histname and ("FourTag" in cut or "ThreeTag" in cut):
+                if "ttbar" in histname and ("FourTag" in cut):
                     #print ref_cut, histname, cut, region, htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)
-                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
+                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
                     #print ref_cut, histname, cut, region, hist_temp.Integral(0, hist_temp.GetNbinsX()+1)
                     htemp_qcd = hist_temp.Clone()
@@ -553,8 +551,8 @@ def Getqcd(inputdic, histname=""):
         for j, region in enumerate(region_lst):
             for hst in plt_lst:
                 ##do the ttbar correction here as well
-                if ("FourTag" in cut or "ThreeTag" in cut):
-                    htemp_ttbar = outroot.Get("ttbar" + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
+                if ("FourTag" in cut):
+                    htemp_ttbar = outroot.Get("ttbar" + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
                     htemp_ttbar_temp = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
                     htemp_ttbar.Scale(htemp_ttbar_temp.Integral(0, htemp_ttbar_temp.GetNbinsX()+1)/htemp_ttbar.Integral(0, htemp_ttbar.GetNbinsX()+1))
                     del(htemp_ttbar_temp)

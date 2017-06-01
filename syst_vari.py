@@ -141,7 +141,7 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
             if j == 0: ##for the first entry
                 value = masterdic[Types][tag][region]
                 error = masterdic[Types][tag][region+"_err"]
-                outstr += add_entry(value, error, percent=False)
+                outstr += add_entry(value, error, percent=True)
             else: ##do percentage
                 value = (masterdic[Types][tag][region]/nominal[Types] - 1) * 100
                 error = helpers.ratioerror(masterdic[Types][tag][region], nominal[Types],
@@ -152,7 +152,7 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
         f1.close()
         #finish the current entry
         outstr+="\\\\"
-        if (syst!=syst_lst[0]):
+        if (syst!=syst_lst[-1]):
             tableList.append(outstr)
 
     #finish the table

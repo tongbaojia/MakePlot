@@ -716,6 +716,11 @@ def round_sig(x, sig=2):
         return round(x, sig)
     else:
         return round(x, sig-int(ROOT.TMath.Log10(abs(x))))
+        # try:
+        #     return round(x, sig-int(ROOT.TMath.Log10(abs(x))))
+        # except ValueError:
+        #     print x, sig
+        #     return 0
 
 def checkpath(outputpath):
     if not os.path.exists(outputpath):

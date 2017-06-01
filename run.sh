@@ -5,10 +5,11 @@ channels=(56 60)
 #channels=(syst_b_0)
 #channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ)
 #channels=(b77)
+channels=(bkgdr bkgeta bkgsb bkgtrk j0pT-alltrk-fin j0pT-leadtrk-fin j0pT-leadtrk-trkdr-fin j0pT-subltrk-fin)
 #for gather tables and histograms
 
 for ch in ${channels[@]}; do
-	out=$"SB"$ch
+	# out=$"SB"$ch
 	# cd Output
 	# if [ ! -d $ch$"/data_est" ]; then
 	# 	mkdir $ch$"/data_est"
@@ -17,8 +18,9 @@ for ch in ${channels[@]}; do
 	# rm hist-MiniNTuple.root
 	# ln -s ../../b77/data_est/hist-MiniNTuple.root hist-MiniNTuple.root
 	# cd ../../..
-	python PlotTinyTree.py --outputdir $out --SB $ch
-	python get_count.py --inputdir $out
+	python Run_reweight.py --var $ch
+	#python PlotTinyTree.py --outputdir $out --SB $ch
+	#python get_count.py --inputdir $out
 	#python test.py --inputdir $ch --full True
 	#python get_count.py --inputdir $ch --full True
 	#python plot.py --inputdir $ch

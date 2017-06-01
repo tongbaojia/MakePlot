@@ -132,8 +132,8 @@ def calc_reweight(dic, event, poly=False, spline=True):
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
         if tempweight < 0.75:
             tempweight = 0.75
-        elif tempweight > 1.25:
-            tempweight = 1.25
+        elif tempweight > 1.4:
+            tempweight = 1.4
         totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
         #totalweight *= tempweight
 
@@ -520,19 +520,19 @@ class regionHists:
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
                 if (self.splitter): ##if true, then fill into 3b
                     self.ThreeTag_bkg.Fill(event)
-
-                if (nb_j0 == 2 and nb_j1 == 0):
-                    self.ThreeTag_lead_bkg.Fill(event)
-                elif (nb_j0 == 0 and nb_j1 == 2):
-                    self.ThreeTag_subl_bkg.Fill(event)
+                    ##sub this in
+                    if (nb_j0 == 2 and nb_j1 == 0):
+                        self.ThreeTag_lead_bkg.Fill(event)
+                    elif (nb_j0 == 0 and nb_j1 == 2):
+                        self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 if (not self.splitter): ##if true, then fill into 4b
                     self.FourTag_bkg.Fill(event)
-
-                if (nb_j0 == 2 and nb_j1 == 0):
-                    self.FourTag_lead_bkg.Fill(event)
-                elif (nb_j0 == 0 and nb_j1 == 2):
-                    self.FourTag_subl_bkg.Fill(event)
+                    ##sub this in
+                    if (nb_j0 == 2 and nb_j1 == 0):
+                        self.FourTag_lead_bkg.Fill(event)
+                    elif (nb_j0 == 0 and nb_j1 == 2):
+                        self.FourTag_subl_bkg.Fill(event)
 
             ##for extra studies; need to be moved to default; notice b-tagging is already sorted here
             if (nb_j0 == 1 and nb_j1 == 0):
@@ -745,10 +745,10 @@ def main():
                 SB_cut = ("event.Rhh > %s " % (str(CR_size))) + " and " + Syst_cut["SB"]
         elif "SB" in ops.dosyst:
             SB_cut = "not " + Syst_cut["CR"] + " and " + Syst_cut[ops.dosyst]
-        elif "ZZ" in ops.dosyst:
-            SR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut["ZZ"]
-            CR_cut = "not " + Syst_cut["SR"] + " and not " + Syst_cut["ZZ"] + " and " + Syst_cut["CR"]
-            SB_cut = "not " + Syst_cut["CR"] + " and not " + Syst_cut["ZZ"] + " and " + Syst_cut["SB"]
+        elif "ZZ" in ops.dosyst or "TT" in ops.dosyst:
+            SR_cut = "not " + Syst_cut["SR"] + " and " + Syst_cut[ops.dosyst]
+            CR_cut = "not " + Syst_cut["SR"] + " and not " + Syst_cut[ops.dosyst] + " and " + Syst_cut["CR"]
+            SB_cut = "not " + Syst_cut["CR"] + " and not " + Syst_cut[ops.dosyst] + " and " + Syst_cut["SB"]
 
 
     ##for testing
@@ -757,7 +757,7 @@ def main():
         print("--- %s seconds ---" % (time.time() - start_time))
         return
 
-    #real job; full chain 2 mins...just data is 50 seconds
+    ##real job; full chain 2 mins...just data is 50 seconds
     nsplit = CONF.splits
     split_list = ["data_test", "ttbar_comb_test"] #, "signal_QCD"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
@@ -844,7 +844,7 @@ def main():
             subprocess.call(hrmcommand)
 
 
-    #analysis("data_test") #2 mins! 4 mins with expanded...
+    #analysis(pack_input("signal_BQCD_200")) #2 mins! 4 mins with expanded...
     #analysis("signal_QCD") #2 mins! 10 mins...
     print("--- %s seconds ---" % (time.time() - start_time))
     print "Finish!"

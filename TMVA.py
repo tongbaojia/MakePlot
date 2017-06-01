@@ -8,7 +8,7 @@ from ROOT import gSystem, gROOT, gApplication, TFile, TTree, TCut
 # --------------------------------------------
 
 # Default settings for command line arguments
-DEFAULT_METHODS  = "Cuts" #BDT,Likelihood,KNN,
+DEFAULT_METHODS  = "Cuts, BDT" #BDT,Likelihood,KNN,
 #Cuts,CutsD,CutsPCA,CutsGA,CutsSA,Likelihood,LikelihoodD,LikelihoodPCA,LikelihoodKDE,LikelihoodMIX,PDERS,PDERSD,PDERSPCA,PDEFoam,PDEFoamBoost,KNN,LD,Fisher,FisherG,BoostedFisher,HMatrix,FDA_GA,FDA_SA,FDA_MC,FDA_MT,FDA_GAMT,FDA_MCMT,MLP,MLPBFGS,MLPBNN,CFMlpANN,TMlpANN,SVM,BDT,BDTD,BDTG,BDTB,RuleFit"
 
 ##for different selections, just aiming at the signal regions:
@@ -364,7 +364,8 @@ def main():
     
     # Save the output.
     outputFile.Close()
-    
+    fBackground.Close()
+    fSiganl.Close()
     print "=== wrote root file %s\n" % outfname
     print "=== TMVAClassification is done!\n"
     

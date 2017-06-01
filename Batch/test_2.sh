@@ -1,4 +1,4 @@
-for var in 1 2 3
+for var in 4 5 6
 do
    sh ./runreweight.sh --test $var
 done

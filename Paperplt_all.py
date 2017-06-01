@@ -58,11 +58,11 @@ def main():
     # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
     # if not os.path.exists(outputpath):
     #     os.makedirs(outputpath)
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     # ## only if QCD sample exists
     # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
@@ -74,7 +74,7 @@ def main():
 # functions for the different regions
 def mySB(x):
     #return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
-    return  ROOT.TMath.Sqrt( (x[0]-124-10)**2 + (x[1]-115-10)**2)
+    return  ROOT.TMath.Sqrt( (x[0]-134)**2 + (x[1]-125)**2)
 
 def myCR(x):
     return  ROOT.TMath.Sqrt( (x[0]-124)**2 + (x[1]-115)**2)
@@ -87,7 +87,8 @@ def mySR(x, leadC=124, sublC=115, leadW=0.085, tilt=1.4, tilt2=1.8):
     # if (x[1] < sublC):
     #     value = ROOT.TMath.Sqrt( ((x[0]-leadC)/(leadW*x[0]))**2 + ((x[1]-sublC)/(tilt2 * leadW*x[1]))**2)
     # return value
-    return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.085*x[0]))**2 + ((x[1]-115)/(0.12*x[1]))**2)
+    # return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.085*x[0]))**2 + ((x[1]-115)/(0.12*x[1]))**2)
+    return  ROOT.TMath.Sqrt( ((x[0]-124)/(0.1*x[0]))**2 + ((x[1]-115)/(0.1*x[1]))**2)
 
 def myTop(x):
     return  ROOT.TMath.Sqrt( ((x[0]-175)/(0.1*x[0]))**2 + ((x[1]-164)/(0.1*x[1]))**2 ) 
@@ -150,7 +151,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
 
     # sideband:
     fSB = ROOT.TF2("SB", mySB,0,Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [53.0])
+    contoursSB = array.array("d", [58.0])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(400)
     fSB.SetLineColor(ROOT.kYellow)
@@ -279,7 +280,7 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
 
     # sideband:
     fSB = ROOT.TF2("SB", mySB,0,Xrange[1],0,Xrange[1])
-    contoursSB = array.array("d", [53.0])
+    contoursSB = array.array("d", [58.0])
     fSB.SetContour(1, contoursSB)
     fSB.SetNpx(400)
     fSB.SetLineColor(ROOT.kYellow)

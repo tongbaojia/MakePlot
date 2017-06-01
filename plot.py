@@ -29,7 +29,7 @@ def options():
     return parser.parse_args()
 
 #plot
-def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebinarry=None, outputFolder=""):
+def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebinarry=None, outputFolder="", doZjet=False):
     #load configurations from config file
     filepath = config["root"] 
     filename = config["inputdir"]
@@ -51,7 +51,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
     ttbar = ifile.Get("ttbar_est_" + cut )
-    #zjet = ifile.Get("zjet_" + cut )
+    if (doZjet):
+        zjet = ifile.Get("zjet_" + cut )
     RSG1_1000 = ifile.Get("RSG1_1000_" + cut )
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
     RSG1_1500.Scale(10)
@@ -65,8 +66,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         data.Rebin(rebin)
         data_est.Rebin(rebin)
         qcd.Rebin(rebin)
-        ttbar.Rebin(rebin)
-        #zjet.Rebin(rebin)
+        ttbar.Rebin(rebin) 
+        if (doZjet):
+            zjet.Rebin(rebin)
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
         RSG1_2000.Rebin(rebin)
@@ -77,7 +79,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         data_est  = data_est.Rebin(len(rebinarry) - 1, data_est.GetName()+"_rebinned", rebinarry)
         qcd       = qcd.Rebin(len(rebinarry) - 1, qcd.GetName()+"_rebinned", rebinarry)
         ttbar     = ttbar.Rebin(len(rebinarry) - 1, ttbar.GetName()+"_rebinned", rebinarry)
-        #zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
+        if (doZjet):
+            zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
         RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
@@ -133,6 +136,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #setup data and bkg estiamtes
     data = h_plt.makeTotBkg([data])[1]
     bkg = h_plt.makeTotBkg([ttbar,qcd])
+    if (doZjet):
+        bkg = h_plt.makeTotBkg([ttbar,qcd,zjet])
     #bkg = h_plt.makeTotBkg([ttbar,qcd], syst_up, syst_down)
     #bkg = h_plt.makeTotBkg([ttbar,qcd,zjet], syst_up, syst_down)
     # bkg/data ratios: [0] band for stat errors, [1] bkg/data with syst errors
@@ -220,10 +225,11 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     ttbar.SetFillColor(ROOT.kAzure-9)
     ttbar.Draw("HISTO SAME")
 
-    #zjet.SetLineWidth(2)
-    #zjet.SetLineColor(ROOT.kBlack)
-    #zjet.SetFillColor(ROOT.kGreen+4)
-    #zjet.Draw("HISTO SAME")
+    if (doZjet):
+        zjet.SetLineWidth(2)
+        zjet.SetLineColor(ROOT.kBlack)
+        zjet.SetFillColor(ROOT.kGreen+4)
+        zjet.Draw("HISTO SAME")
 
     h_plt.zeroXerror(data)
     data.SetMarkerStyle(20)
@@ -346,7 +352,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.AddEntry(data, "Data", "PE")
     leg.AddEntry(bkg[0], "Multijet", "F")
     leg.AddEntry(ttbar, "t#bar{t}","F")
-    #leg.AddEntry(zjet, "Z+jets","F")
+    if (doZjet):
+        leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncer.", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
@@ -393,10 +400,10 @@ def dumpRegion(config):
     if "ThreeTag" in config["cut"]:
         rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
         rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
-        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 900, 1000, 1200, 2000])
-        rebin_dic["j1_Pt"]      = array('d', range(250, 800, 50) + [800, 860, 920, 1000, 1100, 1300, 2000])
-        rebin_dic["trk0_Pt"]    = array('d', [0, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
-        rebin_dic["trk1_Pt"]    = array('d', range(0, 200, 20) + [200, 250, 400])
+        rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 680, 730, 790, 860, 940, 1030, 1150, 1350, 2000])
+        rebin_dic["j1_Pt"]      = array('d', range(250, 850, 50) + [850, 910, 980, 1060, 1150, 1250, 2000])
+        rebin_dic["trk0_Pt"]    = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 580, 700, 1000, 2000])
+        rebin_dic["trk1_Pt"]    = array('d', range(0, 160, 20) + [160, 190, 250, 400])
         rebin_dic["trk_dr"]     = array('d', [x * 0.1 for x in range(0, 10)] + [1, 1.2, 1.5, 1.7, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -430,11 +437,11 @@ def dumpRegion(config):
         plotRegion(config, cut=config["cut"] + "hCandDphi",          xTitle="#Delta #phi", rebin=2)
         plotRegion(config, cut=config["cut"] + "leadHCand_Eta",      xTitle="J0 #eta",     rebin=2)
         plotRegion(config, cut=config["cut"] + "leadHCand_Phi",      xTitle="J0 #phi",     rebin=2)
-        plotRegion(config, cut=config["cut"] + "leadHCand_Mass_s",   xTitle="J0 m [GeV]",  rebin=2)
+        plotRegion(config, cut=config["cut"] + "leadHCand_Mass_s",   xTitle="J0 m [GeV]",  rebin=1)
         plotRegion(config, cut=config["cut"] + "leadHCand_trk_dr",   xTitle="J0 dRtrk",    rebinarry=rebin_dic["trk_dr"])
         plotRegion(config, cut=config["cut"] + "sublHCand_Eta",      xTitle="J1 #eta",     rebin=2)
         plotRegion(config, cut=config["cut"] + "sublHCand_Phi",      xTitle="J1 #phi",     rebin=2)
-        plotRegion(config, cut=config["cut"] + "sublHCand_Mass_s",   xTitle="J1 m [GeV]",  rebin=2)
+        plotRegion(config, cut=config["cut"] + "sublHCand_Mass_s",   xTitle="J1 m [GeV]",  rebin=1)
         plotRegion(config, cut=config["cut"] + "sublHCand_trk_dr",   xTitle="J1 dRtrk",    rebinarry=rebin_dic["trk_dr"])
         plotRegion(config, cut=config["cut"] + "leadHCand_ntrk",     xTitle="J0 Ntrk")
         plotRegion(config, cut=config["cut"] + "sublHCand_ntrk",     xTitle="J1 Ntrk")
