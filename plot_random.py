@@ -37,8 +37,8 @@ def main():
     ##starndard plots
     # ##paper plot
     DrawPaper2D("data_test/hist-MiniNTuple.root", "NoTag_Incl", prename="NoTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
-    DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350]) 
-    DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG3000_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])   
+    #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350]) 
+    #DrawPaper2D("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG3000_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])   
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "ThreeTag_Incl", prename="RSG1500_ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])
     #DrawPaper2D("data_test/hist-MiniNTuple.root", "ThreeTag_Incl", prename="ThreeTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
     #DrawPaper2D("data_test/hist-MiniNTuple.root", "FourTag_Incl", prename="FourTag_Incl_paper", Xrange=[10, 300], Yrange=[10, 350])  
@@ -48,10 +48,10 @@ def main():
 
     # ###signalregion shape comparison
     inputroot = "sum_" + inputdir + ".root"
-    DrawSRcomparison(inputroot, inputdata="ttbar")
-    DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    DrawSRcomparison(inputroot, inputdata="qcd_est")
-    DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
+    #DrawSRcomparison(inputroot, inputdata="ttbar")
+    #DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    #DrawSRcomparison(inputroot, inputdata="qcd_est")
+    #DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
     # DrawSRcomparison(inputroot, inputdata="RSG1_1000", Logy=1, Xrange=[0, 4000])
     # DrawSRcomparison(inputroot, inputdata="RSG1_2000", Logy=1, Xrange=[0, 4000])
     # DrawSRcomparison(inputroot, inputdata="RSG1_3000", Logy=1, Xrange=[0, 4000])
@@ -69,14 +69,16 @@ def main():
 
     # ##region shape comparisons
     # ##side band shapes
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Sideband", keyword="mH0H1", prename="Sideband", Xrange=[40, 250], Yrange=[40, 250])
-    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Control", keyword="mH0H1", prename="Control", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "OneTag_Sideband", keyword="mH0H1", prename="Sideband_OneTag", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "OneTag_Control", keyword="mH0H1", prename="Control_OneTag", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_Sideband", keyword="mH0H1", prename="Sideband_TwoTag", Xrange=[40, 250], Yrange=[40, 250])
+    DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_Control", keyword="mH0H1", prename="Control_TwoTag", Xrange=[40, 250], Yrange=[40, 250])
     DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
     #DrawRegionPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G1500", Xrange=[40, 250], Yrange=[40, 250])
     #DrawRegionPlot("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G3000", Xrange=[40, 250], Yrange=[40, 250])
     # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
     
-    ##correlations of the jet mass and jet pT
+    ##correlations of the jet mass and jet pT;
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk1_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="sublHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
@@ -100,20 +102,20 @@ def main():
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
-    # ##draw the reweighted 2D distributions; works conditionally!
-    # inputpath = CONF.inputpath + "Moriond_j0pT-alltrk-fin_3" + "/"
-    # outputpath = CONF.inputpath + "Moriond_j0pT-alltrk-fin_3" + "/" + "Plot/Other/"
+    ##draw the reweighted 2D distributions; works conditionally! for appendix weight section
+    # inputpath = CONF.inputpath + "Moriond_bkg_5" + "/"
+    # outputpath = CONF.inputpath + "Moriond_bkg_5" + "/" + "Plot/Other/"
     # if not os.path.exists(outputpath):
     #     os.makedirs(outputpath)
     # for i in ["2Trk_split", "3Trk", "4Trk"]:
-    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i, Xrange=[500, 3500], Yrange=[0.5, 1.5])
-    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="sublHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
-    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="mHH_l_weight", prename=i, Xrange=[0, 4000], Yrange=[0.5, 1.5])
-    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk0_Pt_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
-    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk1_Pt_weight", prename=i, Xrange=[0, 400], Yrange=[0.5, 1.5])
-    #     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_Pt_m_weight", prename=i, Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="mHH_l_weight", prename=i + "_Sideband" , Xrange=[500, 3500], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_trk0_Pt_weight", prename=i + "_Sideband", Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="sublHCand_trk0_Pt_weight", prename=i + "_Sideband", Xrange=[0, 400], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Sideband", keyword="leadHCand_Pt_m_weight", prename=i + "_Sideband", Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="mHH_l_weight", prename=i + "_Signal", Xrange=[0, 4000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_trk0_Pt_weight", prename=i + "_Signal", Xrange=[0, 2000], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="sublHCand_trk0_Pt_weight", prename=i + "_Signal", Xrange=[0, 400], Yrange=[0.5, 1.5])
+    #     DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_" + i + "_Signal", keyword="leadHCand_Pt_m_weight", prename=i + "_Signal", Xrange=[0, 2000], Yrange=[0.5, 1.5])
 
     # ##draw the reweighted 1D distributions; for study only, not in the main production
     # #DrawSRcomparison(inputroot, inputdata="qcd_est", keyword = "leadHCand_Mass")
@@ -140,80 +142,6 @@ def main():
     #         {"file":"signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"CB"}, 
     #         {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
     #         ], keyword=histname, norm=True)
-
-    #for reweighting shape comparison
-
-    # for histname in ["data_est_FourTag_Sideband_leadHCand_trk0_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk0_Pt",
-    # "data_est_FourTag_Control_leadHCand_trk0_Pt", "data_est_ThreeTag_Control_leadHCand_trk0_Pt", "data_est_TwoTag_split_Control_leadHCand_trk0_Pt"]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
-
-    # for histname in ["data_est_FourTag_Sideband_sublHCand_trk0_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk0_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk0_Pt",
-    # "data_est_FourTag_Control_sublHCand_trk0_Pt", "data_est_ThreeTag_Control_sublHCand_trk0_Pt", "data_est_TwoTag_split_Control_sublHCand_trk0_Pt"]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         ], keyword=histname, norm=False, Xrange=[0, 1000], Rebin=10, Logy=1)
-
-    # for histname in ["data_est_FourTag_Sideband_leadHCand_trk1_Pt", "data_est_ThreeTag_Sideband_leadHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_leadHCand_trk1_Pt",
-    # "data_est_FourTag_Control_leadHCand_trk1_Pt", "data_est_ThreeTag_Control_leadHCand_trk1_Pt", "data_est_TwoTag_split_Control_leadHCand_trk1_Pt"]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
-
-    # for histname in ["data_est_FourTag_Sideband_sublHCand_trk1_Pt", "data_est_ThreeTag_Sideband_sublHCand_trk1_Pt", "data_est_TwoTag_split_Sideband_sublHCand_trk1_Pt",
-    # "data_est_FourTag_Control_sublHCand_trk1_Pt", "data_est_ThreeTag_Control_sublHCand_trk1_Pt", "data_est_TwoTag_split_Control_sublHCand_trk1_Pt"]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data"},
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_3/sum_Moriond_j0pT-leadtrk-fin_3.root", "path":histname, "leg":"leadTrk"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_3/sum_Moriond_j0pT-subltrk-fin_3.root", "path":histname, "leg":"sublTrk"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_3/sum_Moriond_j0pT-alltrk-fin_3.root",   "path":histname, "leg":"allTrk"},
-    #         ], keyword=histname, norm=False, Xrange=[0, 300], Rebin=5, Logy=1)
-
-
-    # for histname in ["data_est_FourTag_Control_mHH_l", "data_est_ThreeTag_Control_mHH_l", "data_est_TwoTag_split_Control_mHH_l",
-    # "data_est_FourTag_Sideband_mHH_l", "data_est_ThreeTag_Sideband_mHH_l", "data_est_TwoTag_split_Sideband_mHH_l",]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname.replace("data_est", "data"), "leg":"Data;"}, 
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight;"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":histname, "leg":"SB:leadTrks"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":histname, "leg":"SB:sublTrks"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root",   "path":histname, "leg":"SB:allTrks"},
-    #         {"file":"../Moriond_j0pT-leadtrk-trkdr-fin_5/sum_Moriond_j0pT-leadtrk-trkdr-fin_5.root",   "path":histname, "leg":"SB:leadTrk+dr"},
-    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"Add:allTrks+pt"},
-    #         {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root",   "path":histname, "leg":"Add:allTrks"},
-    #         {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root",   "path":histname, "leg":"Add:allTrks+pt+eta"},
-    #         {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root",   "path":histname, "leg":"Add:allTrks+pt+dr"},
-    #         {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root",   "path":histname, "leg":"Add:SB"},
-    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
-
-    # for histname in ["data_est_FourTag_Signal_mHH_l", "data_est_ThreeTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l",]:
-    #     DrawMulticomparison([
-    #         {"file":"sum_Moriond.root", "path":histname, "leg":"no reweight; Est"}, 
-    #         {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":histname, "leg":"SB:leadTrks"},
-    #         {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":histname, "leg":"SB:sublTrks"},
-    #         {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root",   "path":histname, "leg":"SB:allTrks"},
-    #         {"file":"../Moriond_j0pT-leadtrk-trkdr-fin_5/sum_Moriond_j0pT-leadtrk-trkdr-fin_5.root",   "path":histname, "leg":"SB:leadTrk+dr"},
-    #         {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root",   "path":histname, "leg":"Add:allTrks+pt"},
-    #         {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root",   "path":histname, "leg":"Add:allTrks"},
-    #         {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root",   "path":histname, "leg":"Add:allTrks+pt+eta"},
-    #         {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root",   "path":histname, "leg":"Add:allTrks+pt+dr"},
-    #         {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root",   "path":histname, "leg":"Add:SB"},
-    #         ], keyword=histname, norm=False, Xrange=[500, 3500], Rebin=10, Logy=1)
-
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
     region_lst = ["Sideband", "Control", "Signal"]
@@ -283,6 +211,9 @@ def DrawSignalPlot(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], 
             if Yrange != [0, 0]:
                 temp_hist.GetYaxis().SetRangeUser(Yrange[0], Yrange[1])
                 temp_hist.GetYaxis().SetTitleOffset(1.4)
+                temp_hist.GetYaxis().SetTitleOffset(1.4)
+                temp_hist.GetXaxis().SetNdivisions(405)
+                temp_hist.GetYaxis().SetNdivisions(405)
 
             temp_hist.Draw("colz")
 

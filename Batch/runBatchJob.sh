@@ -53,11 +53,11 @@ echo  "reweight: " $re " iteration: " $iter
 ##start actual running
 if [ $dopythonrun == "true" ]; then
 	cd MakePlot
-	python PlotTinyTree.py --outputdir $ch --dosyst $syst #--reweight $re --iter $iter
+	python PlotTinyTree.py --outputdir $ch --dosyst $syst --reweight $re --iter $iter
 	python get_count.py    --inputdir $inputdir --full
 	python plot.py         --inputdir $inputdir
 	python plot_random.py  --inputdir $inputdir
-	python dump_hists.py   --inputdir $inputdir
+	python dump_smooth.py   --inputdir $inputdir
 fi
 echo "DONE!!!"
 

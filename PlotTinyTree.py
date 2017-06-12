@@ -221,7 +221,7 @@ class eventHists:
         if self.reweight:
             self.mHH_weight          = ROOT.TH2F("mHH_l_weight",             ";mHH [GeV]; reweight",        80,   0,    4000, 32, 0.3, 1.9)
             self.h0_trk0_pt_weight   = ROOT.TH2F("leadHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      100,  0,    2000, 32, 0.3, 1.9)
-            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk1_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,     400, 32, 0.3, 1.9)
+            self.h1_trk0_pt_weight   = ROOT.TH2F("sublHCand_trk0_Pt_weight", ";p_{T} [GeV]; reweight",      80,   0,     400, 32, 0.3, 1.9)
             self.h0_pt_m_weight      = ROOT.TH2F("leadHCand_Pt_m_weight",    ";p_{T} [GeV]; reweight",      100,  200,  2200, 32, 0.3, 1.9)
 
     def Fill(self, event, weight=-1):
@@ -430,8 +430,9 @@ class regionHists:
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
         # self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
         self.isData   = isData ##this is for special treatments to data
-        self.splitter = False ##to split events into halves for bkg estimation; for ttbar as well...
+        self.splitter = 0 ##to split events into halves for bkg estimation; for ttbar as well...
         self.doDetail = False ##to split events into halves for bkg estimation; for ttbar as well...
+        self.split_factor = CONF.split_factor
         if self.doDetail:
             self.OneTag_lead_lead          = massregionHists("OneTag_lead_lead", outputroot) #1tag, lead H tag, lead trk tag
             self.OneTag_subl_subl          = massregionHists("OneTag_subl_subl", outputroot) #1tag, subl H tag, subl trk tag
@@ -482,7 +483,7 @@ class regionHists:
 
             elif (nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2): 
                 self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
-                self.splitter = (not self.splitter) ##flip the splitter
+                self.splitter += 1 ##flip the splitter
             elif nb_j0 + nb_j1 == 1:
                 self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
             elif nb_j0 + nb_j1 == 0:
@@ -518,7 +519,7 @@ class regionHists:
             #     elif (nb_j0 == 0 and nb_j1 == 1):
             #         self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
-                if (self.splitter): ##if true, then fill into 3b
+                if (self.splitter%self.split_factor != 0): ##if true, then fill into 3b
                     self.ThreeTag_bkg.Fill(event)
                     ##sub this in
                     if (nb_j0 == 2 and nb_j1 == 0):
@@ -526,7 +527,7 @@ class regionHists:
                     elif (nb_j0 == 0 and nb_j1 == 2):
                         self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
-                if (not self.splitter): ##if true, then fill into 4b
+                if (self.splitter%self.split_factor == 0): ##if true, then fill into 4b
                     self.FourTag_bkg.Fill(event)
                     ##sub this in
                     if (nb_j0 == 2 and nb_j1 == 0):

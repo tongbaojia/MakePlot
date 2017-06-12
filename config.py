@@ -1,6 +1,5 @@
 #Tony: master configuration file, specifies all the necessary paths
 import ROOT, helpers, os
-
 #get current directory
 currpath    = os.path.abspath(os.curdir)
 #change this to your home directory of everything; should be where the code is checked out
@@ -44,9 +43,10 @@ mrk_lst  = range(20, 40)
 hist_r   = "hist-MiniNTuple.root"
 #set the blinding status
 blind    = True
- #False
 #current total luminiosity, in fb 22.1; 13.0
 totlumi  = 36.1
+#3b/4b split 2b samples in: (2 for half and half, 5 for )
+split_factor  = 2
 #color dictionary for plotting style
 col_dic  = {"syst":ROOT.kGray+2}
 #size for legend

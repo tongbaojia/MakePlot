@@ -158,7 +158,7 @@ def syst_pipeline(config):
     os.system("rm -r " + inputpath + "Limitinput")
     print "done clearing!"
     os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
-    os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    os.system("python dump_smooth.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
 
 
 if __name__ == '__main__': 

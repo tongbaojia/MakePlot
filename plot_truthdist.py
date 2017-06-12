@@ -91,6 +91,7 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir="", outputname="", 
             temp_mc.GetXaxis().SetNdivisions(510)
             temp_mc.GetXaxis().SetLabelSize(0.03)
             temp_mc.GetYaxis().SetNdivisions(505)
+            temp_mc.GetXaxis().SetNdivisions(505)
 	    if cut.split("_")[-1] == "pt":
 		temp_mc.Rebin(10)
 		temp_mc.GetXaxis().SetTitle( temp_mc.GetXaxis().GetTitle() + " [GeV]")
@@ -172,7 +173,8 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir="", outputname="", 
         atlas = ROOT.TLatex(xatlas, yatlas, "ATLAS Internal")
         hh4b  = ROOT.TLatex(xatlas, yatlas-0.06, "RSG c=1.0")
         lumi  = ROOT.TLatex(xatlas, yatlas-0.12, "MC #sqrt{s} = 13 TeV")
-        watermarks = [atlas, hh4b, lumi]
+        taglabel = ROOT.TLatex(xatlas, yatlas-0.18, scut.split("_")[0])
+        watermarks = [atlas, hh4b, lumi, taglabel]
 
         for wm in watermarks:
             wm.SetTextAlign(22)

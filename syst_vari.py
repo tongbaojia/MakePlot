@@ -244,7 +244,6 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     legend.AddEntry(temp_hist, inputname.replace("_", " "), "apl")
     legend.AddEntry(ref_hist, "ref", "apl")
 
-
     # top pad
     pad0 = ROOT.TPad("pad0", "pad0", 0.0, 0.31, 1., 1.)
     pad0.SetLogy(1)

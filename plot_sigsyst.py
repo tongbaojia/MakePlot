@@ -5,6 +5,7 @@ import math
 import ROOT
 import time
 import help_table
+import help_plot as h_plt
 from ROOT import *
 import rootlogon  
 import config as CONF
@@ -429,7 +430,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.2, 3.5) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.5, 2.1) #set range for ratio plot
+    h_plt.drawarrow(ratios[1], 0.5, 2.1)
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)

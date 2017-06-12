@@ -40,8 +40,8 @@ def main():
     evtsel_lst = ["PassTrig", "PassFatJetMass", "PassDiJetEta", "PassDetaHH",  "PassBJetSkim", "PassSignal"]
     detail_lst = ["4trk_3tag_signal", "4trk_4tag_signal", "4trk_2tag_signal", \
     "4trk_2tag_split_signal", "3trk_3tag_signal", "3trk_2tag_signal", "3trk_2tag_split_signal", "2trk_2tag_split_signal"]
-    #region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"] ##we want to hide this
-    region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_split_Signal"] 
+    region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_Signal", "TwoTag_split_Signal", "OneTag_Signal", "NoTag_Signal"] ##we want to hide this
+    #region_lst = ["ThreeTag_Signal", "FourTag_Signal", "TwoTag_split_Signal"] 
     region_4b_lst = ["FourTag_Signal", "FourTag_Control", "FourTag_Sideband"]
     region_3b_lst = ["ThreeTag_Signal", "ThreeTag_Control", "ThreeTag_Sideband"]
     region_2b_lst = ["TwoTag_split_Signal", "TwoTag_split_Control", "TwoTag_split_Sideband"]
@@ -57,8 +57,8 @@ def main():
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
     DrawSignalEff(region_lst, inputdir, "region_lst", "PassDetaHH", doint=True)
     # For cuts that don't exist in the cutflow plot; only run this on original sample!
-    #DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
-    #DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
+    DrawSignalEff(detail_lst, inputdir, "detail_lst", "AllTag_Signal", donormint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "AllTag_Signal", doint=True, donormint=True)
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PreSel")
     #DrawSignalEff(detail_lst, inputdir, "detail_lst", "PassDetaHH")
     DrawSignalEff(region_4b_lst, inputdir, "region_4b_lst", "PreSel", doint=True)

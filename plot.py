@@ -57,7 +57,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_1500 = ifile.Get("RSG1_1500_" + cut )
     RSG1_1500.Scale(10)
     RSG1_2000 = ifile.Get("RSG1_2000_" + cut )
-    RSG1_2000.Scale(100)
+    RSG1_2000.Scale(30)
     RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
     RSG1_2500.Scale(100)
 
@@ -253,7 +253,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.6, 1.4) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -357,7 +357,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.AddEntry(bkg[1], "Stat Uncer.", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
-    leg.AddEntry(RSG1_2000, "G(2000)#times100", "F")
+    leg.AddEntry(RSG1_2000, "G(2000)#times30", "F")
     #leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")

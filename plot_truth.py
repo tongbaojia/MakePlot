@@ -10,6 +10,7 @@ import config as CONF
 from array import array
 import numpy as np
 #end of import for now
+##Created by Gray. Not useful for now.
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gROOT.LoadMacro("AtlasStyle.C") 
