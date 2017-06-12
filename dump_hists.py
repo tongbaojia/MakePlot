@@ -217,7 +217,7 @@ def makeSmoothedMJJPlots( infileName, outfileName):
     if not ignore_ttbar:
         top = f.Get("ttbar_hh").Clone()
         bkg.Add(top)
-    
+
     #make canvas
     c=ROOT.TCanvas()
     ROOT.gPad.SetLogy()

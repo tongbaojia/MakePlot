@@ -169,6 +169,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     filename = config["inputdir"] 
     outputFolder= config["outputdir"]
     blinded  = config["blind"]
+    selsyst  = config["syst"]
+    #print selsyst
     #print blinded, " blinded!", config["blind"]
     #print config, filepath, filename
     #print cut
@@ -201,6 +203,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         #     continue
         # if "FT_" in kname: ##these are buggy now!
         #     continue
+        if selsyst != "all":## this is only selecting certain systematics, for checking
+            if not (selsyst in kname):
+                continue
 
         if "totalbkg_hh" is kname:
             continue
@@ -523,10 +528,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
     leg.Draw()
 
-
-
     # save
-    postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
+    postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind") + ("" if selsyst is "all" else "_" + selsyst)
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
     #c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")
@@ -628,23 +631,26 @@ def main():
             os.makedirs(outputFolder)
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-            config = {}
-            config["root"] = rootinputpath
-            config["inputdir"] = inputdir
-            config["outputdir"] = outputFolder
-            config["cut"] = cut + "_" + region + "_"
-            config["blind"] = False
-            inputtasks.append(config)
-        for j, cut in enumerate(cut_lst):
-            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-            config = {}
-            config["root"] = rootinputpath
-            config["inputdir"] = inputdir
-            config["outputdir"] = outputFolder
-            config["cut"] = cut + "_" + region + "_"
-            if "Signal" in region:
+            for checksyst in ["all", "QCDNorm", "QCDShape", "normY", "smooth", "JET", "FT"]:
+                config = {}
+                config["root"] = rootinputpath
+                config["inputdir"] = inputdir
+                config["outputdir"] = outputFolder
+                config["cut"] = cut + "_" + region + "_"
                 config["blind"] = True
+                config["syst"]  = checksyst
                 inputtasks.append(config)
+        # for j, cut in enumerate(cut_lst):
+        #     rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
+        #     config = {}
+        #     config["root"] = rootinputpath
+        #     config["inputdir"] = inputdir
+        #     config["outputdir"] = outputFolder
+        #     config["cut"] = cut + "_" + region + "_"
+        #     config["syst"]  = "all"
+        #     if "Signal" in region:
+        #         config["blind"] = False
+        #         inputtasks.append(config)
 
    
     #dumpRegion(inputtasks[0])

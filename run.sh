@@ -3,7 +3,8 @@
 channels=(56 60)
 #channels=(b77_c00-15 b77_c00-16 b77_c10-15 b77_c10-16 ref)
 #channels=(syst_b_0)
-channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ TT)
+#channels=(CR_High CR_Low CR_Small SB_High SB_Low SB_Large SB_Small ZZ TT)
+channels=(ZZ TT)
 #channels=(b77)
 #channels=(bkgdr bkgeta bkgsb bkgtrk j0pT-alltrk-fin j0pT-leadtrk-fin j0pT-leadtrk-trkdr-fin j0pT-subltrk-fin)
 #for gather tables and histograms
@@ -24,15 +25,15 @@ for ch in ${channels[@]}; do
 	#python get_count.py --inputdir $out
 	#python test.py --inputdir $ch --full True
 	python get_count.py --inputdir $ch --full
-	#python plot.py --inputdir $ch
+	python plot.py --inputdir $ch
 	#python reweight.py --inputdir $ch
 	#python plot_trigeff.py --inputdir $ch
 	#python plot_sigeff.py --inputdir $ch
 	#python plot_cutflow.py --inputdir $ch
 	#python plot_prediction.py --inputdir $ch
-	#python dump_smooth.py --inputdir $ch
-	#python plot_random.py --inputdir $ch
-	#python plot_smooth.py --inputdir $ch
+	python dump_smooth.py --inputdir $ch
+	python plot_random.py --inputdir $ch
+	python plot_smooth.py --inputdir $ch
 done
 
 
