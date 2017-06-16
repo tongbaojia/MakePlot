@@ -58,15 +58,18 @@ def main():
     # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
     # if not os.path.exists(outputpath):
     #     os.makedirs(outputpath)
-    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
     # ## only if QCD sample exists
-    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
-    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
 
     # DrawPaper2DOptimzie("data_test/hist-MiniNTuple.root", "OneTag_Incl", prename="AllTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
@@ -337,7 +340,7 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
 def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yrange=[0, 0], subTop=True, extra=""):
     ## functions for the different regions; specifcally for muqcd studies
     SB_rad = 58
-    CR_rad = 38
+    CR_rad = 33
     SR_rad = 1.6
  
     #print inputdir
@@ -438,15 +441,12 @@ def DrawPaper2DComparePrediction(inputname, inputdir, keyword="_", prename="", X
         for y_bin in range(temp_hist_data.GetYaxis().GetNbins()):
             #pull_hist_OT.Fill(temp_hist_data.GetBinContent(x_bin, y_bin), temp_hist_data_copy.GetBinContent(x_bin, y_bin))
             if mySR((temp_hist_data.GetXaxis().GetBinCenter(x_bin), temp_hist_data.GetYaxis().GetBinCenter(y_bin))) < SR_rad:
-                if CONF.blind is True and ("ThreeTag_" in prename or "TwoTag_split_" in prename or "FourTag_" in prename ):
+                if (CONF.blind is True and "QCD" not in extra) and ("ThreeTag_" in prename or "TwoTag_split_" in prename or "FourTag_" in prename ):
                     temp_hist_data.SetBinContent(x_bin, y_bin, 0)
                 else:
                     pull_hist_SR.Fill(temp_hist_data.GetBinContent(x_bin, y_bin), temp_hist_data_copy.GetBinContent(x_bin, y_bin))
             elif myCR((temp_hist_data.GetXaxis().GetBinCenter(x_bin), temp_hist_data.GetYaxis().GetBinCenter(y_bin))) < CR_rad:
-                if CONF.blind is True and ("ThreeTag_" in prename or "TwoTag_split_" in prename or "FourTag_" in prename ):
-                    temp_hist_data.SetBinContent(x_bin, y_bin, 0)
-                else:
-                    pull_hist_CR.Fill(temp_hist_data.GetBinContent(x_bin, y_bin), temp_hist_data_copy.GetBinContent(x_bin, y_bin))
+                pull_hist_CR.Fill(temp_hist_data.GetBinContent(x_bin, y_bin), temp_hist_data_copy.GetBinContent(x_bin, y_bin))
             elif mySB((temp_hist_data.GetXaxis().GetBinCenter(x_bin), temp_hist_data.GetYaxis().GetBinCenter(y_bin))) < SB_rad:
                 pull_hist_SB.Fill(temp_hist_data.GetBinContent(x_bin, y_bin), temp_hist_data_copy.GetBinContent(x_bin, y_bin))
             else:

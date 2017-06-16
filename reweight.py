@@ -351,8 +351,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, labelPos=11, rebi
         spline = ROOT.TSpline3(cut, temp_graph)
         #spline = ROOT.TSpline3(hist_ratio)
         spline.SaveAs(reweightfolder + "rs" + str(iter_reweight) + "_" + cut +".cxx")
-        hist_ratio.SetMarkerColor(ROOT.kGreen)
-        hist_ratio.Draw("SAME")
+        #hist_ratio.SetMarkerColor(ROOT.kGreen)
+        #hist_ratio.Draw("SAME")
 
         inter_step = 5
         xf = ROOT.vector('double')(ni * inter_step)

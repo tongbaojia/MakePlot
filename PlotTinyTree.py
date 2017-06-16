@@ -664,10 +664,11 @@ def analysis(inputconfig):
         ##enable resolved veto for now and on
         #print t.Xhh, (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124.0)/(0.1*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115.0)/(0.1*t.j1_m), 2)))
         #if (abs(t.nresj) < 4): ##veto all 4 jets
-        if (t.nresj > -0.1): ##negative is SR regions
-            AllHists.Fill(t)
-        else:
-            pass
+        AllHists.Fill(t)
+        # if (t.nresj > -0.1): ##negative is SR regions
+        #     AllHists.Fill(t)
+        # else:
+        #     pass
         
 
     #write all the output

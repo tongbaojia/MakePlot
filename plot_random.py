@@ -143,6 +143,13 @@ def main():
     #         {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
     #         ], keyword=histname, norm=True)
 
+    ##check how resolved veto affect SR predictions
+    for histname in ["data_est_ThreeTag_Signal_mHH_l", "data_est_FourTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l"]:
+        DrawMulticomparison([
+            {"file":"sum_Moriond.root", "path":histname, "leg":"Veto"}, 
+            {"file":"../Moriond_noveto/sum_Moriond_noveto.root", "path":histname, "leg":"NoVeto"},
+            ], keyword=histname, norm=False, prename="Resveto", Rebin=5, Xrange=[500, 4000])
+
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
     region_lst = ["Sideband", "Control", "Signal"]
     region_dic = {"Sideband":1, "Control":2, "Signal":3}
