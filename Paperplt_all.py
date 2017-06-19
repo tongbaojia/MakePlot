@@ -54,22 +54,22 @@ def main():
 
     #special 2D optimization study
 
-    # for muqcd study
-    # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
-    # if not os.path.exists(outputpath):
-    #     os.makedirs(outputpath)
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
-    DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # # for muqcd study
+    # # outputpath = CONF.inputpath + inputdir + "/" + "Plot/Other/"
+    # # if not os.path.exists(outputpath):
+    # #     os.makedirs(outputpath)
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_Incl",            prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "OneTag_Incl",           prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
+    # DrawPaper2DComparePrediction("data_test/hist-MiniNTuple.root", "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 
-    # ## only if QCD sample exists
-    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
-    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
-    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
-    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
-    DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    # # ## only if QCD sample exists
+    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "NoTag_Incl", prename="OneTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root", "OneTag_Incl", prename="TwoTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_2Trk_split_Incl", prename="TwoTag_split_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_3Trk_Incl",       prename="ThreeTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
+    # DrawPaper2DComparePrediction("signal_QCD/hist-MiniNTuple.root",  "NoTag_4Trk_Incl",       prename="FourTag_Incl", Xrange=[50, 250], Yrange=[50, 250], subTop=False, extra="QCD_")
 
     # DrawPaper2DOptimzie("data_test/hist-MiniNTuple.root", "OneTag_Incl", prename="AllTag_Incl", Xrange=[50, 250], Yrange=[50, 250])
 

@@ -45,8 +45,8 @@ hist_r   = "hist-MiniNTuple.root"
 blind    = True
 #current total luminiosity, in fb 22.1; 13.0
 totlumi  = 36.1
-#3b/4b split 2b samples in: (2 for half and half, 5 for )
-split_factor  = 2
+#3b/4b split 2b samples in: (2 for half and half, 5 for now)
+split_factor  = 5
 #color dictionary for plotting style
 col_dic  = {"syst":ROOT.kGray+2}
 #size for legend

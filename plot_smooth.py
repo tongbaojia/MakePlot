@@ -178,8 +178,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     zjet = ifile.Get("zjet_hh")
     RSG1_1000 = ifile.Get("signal_RSG_c10_hh_m1000")
     RSG1_1500 = ifile.Get("signal_RSG_c10_hh_m1500")
+    RSG1_2000 = ifile.Get("signal_RSG_c10_hh_m2000")
     RSG1_2500 = ifile.Get("signal_RSG_c10_hh_m2500")
     RSG1_1500.Scale(10)
+    RSG1_2000.Scale(30)
     RSG1_2500.Scale(100)
 
     if not rebin == None:
@@ -190,6 +192,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         #zjet.Rebin(rebin)
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
+        RSG1_2000.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
 
     #use array to rebin histgrams
@@ -201,6 +204,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         #zjet      = zjet.Rebin(len(rebinarry) - 1, zjet.GetName()+"_rebinned", rebinarry)
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
+        RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
         RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
@@ -235,6 +239,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # stack signal on background
     RSG1_1000.Add(bkg[0]) 
     RSG1_1500.Add(bkg[0]) 
+    RSG1_2000.Add(bkg[0]) 
     RSG1_2500.Add(bkg[0]) 
 
     # canvas
@@ -286,15 +291,20 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     # RSG1_1000.SetLineColor(ROOT.kViolet+7)
     # RSG1_1000.Draw("HISTO SAME")
 
-    RSG1_1500.SetLineWidth(2)
-    RSG1_1500.SetLineStyle(2)
-    RSG1_1500.SetLineColor(ROOT.kPink+7)
-    RSG1_1500.Draw("HISTO SAME")
+    # RSG1_1500.SetLineWidth(2)
+    # RSG1_1500.SetLineStyle(2)
+    # RSG1_1500.SetLineColor(ROOT.kPink+7)
+    # RSG1_1500.Draw("HISTO SAME")
 
-    RSG1_2500.SetLineWidth(2)
-    RSG1_2500.SetLineStyle(2)
-    RSG1_2500.SetLineColor(ROOT.kGreen+4)
-    RSG1_2500.Draw("HISTO SAME")
+    RSG1_2000.SetLineWidth(2)
+    RSG1_2000.SetLineStyle(2)
+    RSG1_2000.SetLineColor(ROOT.kPink+7)
+    RSG1_2000.Draw("HISTO SAME")
+
+    # RSG1_2500.SetLineWidth(2)
+    # RSG1_2500.SetLineStyle(2)
+    # RSG1_2500.SetLineColor(ROOT.kGreen+4)
+    # RSG1_2500.Draw("HISTO SAME")
 
     bkg[1].SetFillColor(CONF.col_dic["syst"])
     bkg[1].SetLineColor(CONF.col_dic["syst"])
@@ -419,8 +429,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #leg.AddEntry(zjet, "Z+jets","F")
     leg.AddEntry(bkg[1], "Stat Uncertainty", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
-    leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
-    leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
+    #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
+    leg.AddEntry(RSG1_2000, "RSG 2.0TeV * 30", "F")
+    #leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
