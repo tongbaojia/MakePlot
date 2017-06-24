@@ -70,6 +70,7 @@ public :
    Float_t         Rhh;
    Float_t         Xtt;
    Float_t         nresj;
+   Float_t         resXhh;
    Float_t         weight;
 
    // List of branches
@@ -121,6 +122,7 @@ public :
    TBranch        *b_Rhh;   //!
    TBranch        *b_Xtt;   //!
    TBranch        *b_nresj;   //!
+   TBranch        *b_resXhh;   //!
    TBranch        *b_weight;   //!
 
    TinyTree(TTree *tree=0);
@@ -241,6 +243,7 @@ void TinyTree::Init(TTree *tree)
    fChain->SetBranchAddress("Rhh", &Rhh, &b_Rhh);
    //fChain->SetBranchAddress("Xtt", &Xtt, &b_Xtt);
    fChain->SetBranchAddress("nresj", &nresj, &b_nresj);
+   fChain->SetBranchAddress("resXhh", &resXhh, &b_resXhh); //will be activated
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    Notify();
 }

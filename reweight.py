@@ -470,8 +470,8 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]       = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]    = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
-        rebin_dic["j0_Pt"]       = array('d', range(450, 600, 30) + range(600, 1000, 40) + [1000, 1050, 1100, 1170, 1270, 1500, 2000]) #9.5 version
-        rebin_dic["j1_Pt"]       = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 1060, 1260, 2000])
+        rebin_dic["j0_Pt"]       = array('d', range(450, 600, 30) + range(600, 1000, 40) + [1000, 1050, 1100, 1170, 1270, 1500, 1750, 3200]) #9.5 version
+        rebin_dic["j1_Pt"]       = array('d', range(250, 650, 40) + [650, 700, 750, 800, 870, 960, 1060, 1260, 1600, 3200])
         #rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 40) + [300, 340, 390, 450, 520, 600, 800, 1300, 2000])
         rebin_dic["j0_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
         rebin_dic["j1_trk0_Pt"]  = array('d', [0, 60, 100, 140, 180, 220, 260, 300, 350, 400, 460, 520, 590, 670, 760, 880, 1200, 2000]) #9.5 version
@@ -483,10 +483,10 @@ def dumpRegion(config):
         rebin_dic["mHH_l"]       = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         rebin_dic["mHH_pole"]    = array('d', range(0, 2000, 100) + range(2000, 3000, 200) + [3000, 3500, 4000])
         #rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
-        rebin_dic["j0_Pt"]       = array('d', [400, 450, 480, 520, 560, 600, 640, 680, 730, 790, 860, 940, 1030, 1150, 1350, 2000])#9.5 version
-        rebin_dic["j1_Pt"]       = array('d', range(250, 800, 50) + [800, 860, 920, 1000, 1120, 1300, 2000])
-        rebin_dic["j0_trk0_Pt"]  = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 580, 700, 1000, 2000])
-        rebin_dic["j1_trk0_Pt"]  = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 580, 700, 1000, 2000])
+        rebin_dic["j0_Pt"]       = array('d', [400, 450, 480, 520, 560, 600, 640, 680, 730, 790, 860, 940, 1030, 1150, 2000])#9.5 version
+        rebin_dic["j1_Pt"]       = array('d', range(250, 800, 50) + [800, 860, 920, 1000, 1150, 2000])
+        rebin_dic["j0_trk0_Pt"]  = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 580, 700, 1000, 2200])
+        rebin_dic["j1_trk0_Pt"]  = array('d', range(0, 80, 80) + range(80, 320, 40) + [320, 370, 430, 490, 580, 700, 1000, 2200])
         rebin_dic["trk1_Pt"]     = array('d', range(0, 160, 20) + [160, 190, 250, 500])
         rebin_dic["trk_dr"]      = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
         rebin_dic["trk_pT_diff"] = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -498,8 +498,8 @@ def dumpRegion(config):
         rebin_dic["j0_Pt"]      = array('d', [450, 550, 650, 750, 850, 2000]) #9.5 version
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         #rebin_dic["trk0_Pt"]   = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
-        rebin_dic["j0_trk0_Pt"] = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
-        rebin_dic["j1_trk0_Pt"] = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2000]) #9.5 version
+        rebin_dic["j0_trk0_Pt"] = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2200]) #9.5 version
+        rebin_dic["j1_trk0_Pt"] = array('d', [0, 100, 150, 200, 250, 300, 380, 500, 2200]) #9.5 version
         rebin_dic["trk1_Pt"]    = array('d', range(0, 150, 30) + [150, 500])
         rebin_dic["trk_dr"]     = array('d', [0, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.2, 1.5, 2])
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
@@ -513,10 +513,10 @@ def dumpRegion(config):
     plotRegion(config, cut=config["cut"] + "sublHCand_trk0_Pt",  xTitle="J1 leadtrk p_{T} [GeV]", rebinarry=rebin_dic["j1_trk0_Pt"], fitrange=[0, 2000])
     plotRegion(config, cut=config["cut"] + "leadHCand_trk1_Pt",  xTitle="J0 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 600])
     plotRegion(config, cut=config["cut"] + "sublHCand_trk1_Pt",  xTitle="J1 subltrk p_{T} [GeV]", rebinarry=rebin_dic["trk1_Pt"], fitrange=[0, 600])
-    plotRegion(config, cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebinarry=rebin_dic["j0_Pt"], fitrange=[450, 2000])
-    plotRegion(config, cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebinarry=rebin_dic["j0_Pt"], Logy=1, fitrange=[450, 2000])
-    plotRegion(config, cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebinarry=rebin_dic["j1_Pt"], fitrange=[250, 2000])
-    plotRegion(config, cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebinarry=rebin_dic["j1_Pt"], Logy=1, fitrange=[250, 2000])
+    plotRegion(config, cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebinarry=rebin_dic["j0_Pt"], fitrange=[450, 2200])
+    plotRegion(config, cut=config["cut"] + "leadHCand_Pt_m",     xTitle="J0 p_{T} [GeV]", rebinarry=rebin_dic["j0_Pt"], Logy=1, fitrange=[450, 2200])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebinarry=rebin_dic["j1_Pt"], fitrange=[250, 2200])
+    plotRegion(config, cut=config["cut"] + "sublHCand_Pt_m",     xTitle="J1 p_{T} [GeV]", rebinarry=rebin_dic["j1_Pt"], Logy=1, fitrange=[250, 2200])
     
     if CONF.fullstudy:
         #plotRegion(config, cut=config["cut"] + "Rhh",                xTitle="Rhh", rebin=2)

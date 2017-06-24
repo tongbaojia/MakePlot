@@ -20,9 +20,9 @@ init_dic = {
         #"OneTag":{"ttbar":[-30, 10, -10], "qcd":[-5, 20, -5]}
     },
     "pole":{
-        "FourTag":{"ttbar":[-1, 30, 5], "qcd":[-5, 30, -3]},
-        "ThreeTag":{"ttbar":[1, 30, 5], "qcd":[-4, 25, -3]},
-        "TwoTag_split":{"ttbar":[-2, 30, -5], "qcd":[-3, 20, -3]},
+        "FourTag":{"ttbar":[-1, 30, 5], "qcd":[5, 20, 10]},
+        "ThreeTag":{"ttbar":[1, 30, 5], "qcd":[5, 10, 10]},
+        "TwoTag_split":{"ttbar":[-2, 30, -5], "qcd":[5, 5, 10]},
         #"TwoTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]},
         #"OneTag":{"ttbar":[-8, 10, -10], "qcd":[-1, 15, -4]}
     }
@@ -88,11 +88,21 @@ def dump(finaldis="l"):
             savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now; if not, change data_est to data
         else:
             savehist(ifile, "data_" + cut,  "data_hh")#unblind data now; if not, change data_est to data
-        tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
+        ##smooth data estimation combined 
+        #tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["qcd_est"]   = savehist(ifile,   "qcd_est_" + cut,   "qcd_hh",      dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
         tempdic["ttbar_est"] = savehist(ifile,   "ttbar_est_" + cut, "ttbar_hh",    dosmooth=True, smoothrange = topsmoothrange, initpar=init_dic[finaldis][c]["ttbar"])
         savehist(ifile, "zjet_" + cut,      "zjet_hh")
+        ##deal with combination here
+        if ops.dosyst:
+            tempdic["data_est"]  = savehist(ifile,   "data_est_" + cut,  "totalbkg_hh", dosmooth=True, smoothrange = qcdsmoothrange, initpar=init_dic[finaldis][c]["qcd"])
+        else:
+            hist_total = outfile.Get("qcd_hh").Clone("totalbkg_hh")
+            hist_total.Add(outfile.Get("ttbar_hh"), 1)
+            outfile.cd()
+            hist_total.Write()
 
+        ##for other mass points
         for mass in mass_lst:
             savehist(ifile, "RSG1_" + str(mass) + "_" + cut, "signal_RSG_c10_hh_m" + str(mass))
             if(ops.Xhh):
@@ -110,14 +120,20 @@ def dump(finaldis="l"):
 
 def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 3000), smoothfunc="MJ8", initpar=[], Rebin=True):
     hist  = inputroot.Get(inname).Clone()
+    ##for totalbkg
     if ("totalbkg" in outname):
-        #hist_zjet = inputroot.Get(inname.replace("data_est", "zjet")).Clone()
-        #hist.Add(hist_zjet, -1)
         hist_qcd = inputroot.Get(inname.replace("data", "qcd")).Clone()
         if not ignore_ttbar:
             hist_ttbar = inputroot.Get(inname.replace("data", "ttbar")).Clone()
             hist_qcd.Add(hist_ttbar, 1)
         hist = hist_qcd.Clone(inname)
+        hist_zjet = inputroot.Get(inname.replace("data_est", "zjet")).Clone()
+        hist.Scale((hist_zjet.Integral() + hist.Integral())/hist.Integral())
+    ##for qcd, trick and add zjet into the total normalization
+    if ("qcd" in outname): 
+        hist_zjet = inputroot.Get(inname.replace("qcd_est_", "zjet_")).Clone()
+        ##renormalize to Zjet normalization
+        hist.Scale((hist_zjet.Integral() + hist.Integral())/hist.Integral())
     #always clear the negative bins before smoothing!
     #print inname, smoothrange, initpar, hist.GetMaximum()
     ClearNegBin(hist)
@@ -125,6 +141,9 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     #print inname, smoothrange, initpar, hist.GetMaximum()
     if Rebin:
         hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
+
+    int_pre = hist.Integral()
+    #print "before", hist.Integral()
     #here do smoothing; but check if histogram is empty; if empty do not smooth
     if (ignore_ttbar and "ttbar" in outname) or hist.Integral() == 0:
         hist.Reset()
@@ -137,6 +156,9 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
         else: #be very careful here; don't mess up the default
             hist = smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error
 
+    int_aft = hist.Integral()
+    if int_aft > 0:
+        hist.Scale(int_pre/int_aft) ##fix normalization hard way
     hist.Scale(scale_lumi)
     hist.SetName(outname)
     hist.SetTitle(outname)

@@ -109,7 +109,7 @@ def get_reweight(curriter, folder, filename, spline=True):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
-    maxscale = 2.0 #this means the maximum correction is this for each reweighting; used to be 1.5
+    maxscale = 4.0 #this means the maximum correction is this for each reweighting; used to be 1.5
     minscale = 0.2 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v, cond in dic:#this "dic" really is not a dic, but a tuple! #variable, weight, condition
         if not eval(cond): ##if doesn't pass the condition, do not apply the weight!
@@ -134,7 +134,7 @@ def calc_reweight(dic, event, poly=False, spline=True):
             tempweight = 0.75
         elif tempweight > 1.4:
             tempweight = 1.4
-        totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
+        totalweight *= (tempweight - 1) * 0.88 + 1 #reduce the correction to tune convergence; :)
         #totalweight *= tempweight
 
     #print totalweight
@@ -181,8 +181,8 @@ class eventHists:
         self.h1_trk0_pt   = ROOT.TH1F("sublHCand_trk0_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
         self.h0_trk1_pt   = ROOT.TH1F("leadHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
         self.h1_trk1_pt   = ROOT.TH1F("sublHCand_trk1_Pt",  ";p_{T} [GeV]",      80,  0,   400)
-        self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
-        self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      200,   200,  2200)
+        self.h0_pt_m      = ROOT.TH1F("leadHCand_Pt_m",     ";p_{T} [GeV]",      300,   200,  3200)
+        self.h1_pt_m      = ROOT.TH1F("sublHCand_Pt_m",     ";p_{T} [GeV]",      300,   200,  3200)
         self.mH0H1        = ROOT.TH2F("mH0H1",              ";m_{J}^{lead} [GeV]; m_{J}^{subl} [GeV];", 200,  50,  250,  200,  50,  250)
 
         if self.fullhist:
@@ -204,10 +204,10 @@ class eventHists:
             self.h1_trkpt_diff= ROOT.TH1F("sublHCand_trk_pt_diff_frac",  ";trackjet p_{T} assym", 80,  0,   800)
             #self.h0_trks_pt   = ROOT.TH1F("leadHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
             #self.h1_trks_pt   = ROOT.TH1F("sublHCand_trks_Pt",  ";p_{T} [GeV]",      400,  0,   2000)
-            self.h0_trk0_eta  = ROOT.TH1F("leadHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
-            self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
-            self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";Eta",               50, -2.5,  2.5)
-            self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";Phi",               64, -3.2,  3.2)
+            self.h0_trk0_eta  = ROOT.TH1F("leadHCand_trk0_Eta", ";#eta",               50, -2.5,  2.5)
+            self.h0_trk0_phi  = ROOT.TH1F("leadHCand_trk0_Phi", ";#phi",               64, -3.2,  3.2)
+            self.h1_trk0_eta  = ROOT.TH1F("sublHCand_trk0_Eta", ";#eta",               50, -2.5,  2.5)
+            self.h1_trk0_phi  = ROOT.TH1F("sublHCand_trk0_Phi", ";#phi",               64, -3.2,  3.2)
             self.Rhh          = ROOT.TH1F("Rhh",                ";Rhh",              100,  0,  200)
             #self.trks_pt      = ROOT.TH1F("trks_Pt",            ";p_{T} [GeV]",      400,  0,   2000)
             self.dRH0H1       = ROOT.TH2F("dRH0H1",             ";#Deltar_{trk}^{lead}; #Deltar_{trk}^{subl};", 50, 0.2,  1.2, 50, 0.2, 1.2)
@@ -430,7 +430,6 @@ class regionHists:
         # self.TwoTag_split_lead_subl    = massregionHists("TwoTag_split_lead_subl", outputroot) #2bs, lead H lead trk tag, subl H subl trk tag
         # self.TwoTag_split_subl_lead    = massregionHists("TwoTag_split_subl_lead", outputroot) #2bs, lead H subl trk tag, subl H lead trk tag
         self.isData   = isData ##this is for special treatments to data
-        self.splitter = 0 ##to split events into halves for bkg estimation; for ttbar as well...
         self.doDetail = False ##to split events into halves for bkg estimation; for ttbar as well...
         self.split_factor = CONF.split_factor
         if self.doDetail:
@@ -483,7 +482,6 @@ class regionHists:
 
             elif (nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2): 
                 self.TwoTag.Fill(event) #this is 2 tight 2 tight, on either side
-                self.splitter += 1 ##flip the splitter
             elif nb_j0 + nb_j1 == 1:
                 self.OneTag.Fill(event) #this is 1 tight 4 tight, on either side
             elif nb_j0 + nb_j1 == 0:
@@ -519,15 +517,15 @@ class regionHists:
             #     elif (nb_j0 == 0 and nb_j1 == 1):
             #         self.ThreeTag_subl_bkg.Fill(event)
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and ((event.j0_nTrk >= 1 and event.j1_nTrk >= 2) or (event.j0_nTrk >= 2 and event.j1_nTrk >= 1)):
-                if (self.splitter%self.split_factor != 0): ##if true, then fill into 3b
+                if (event.eventNumber%self.split_factor != 0 ): ##if true, then fill into 3b
                     self.ThreeTag_bkg.Fill(event)
-                    ##sub this in
                     if (nb_j0 == 2 and nb_j1 == 0):
                         self.ThreeTag_lead_bkg.Fill(event)
                     elif (nb_j0 == 0 and nb_j1 == 2):
                         self.ThreeTag_subl_bkg.Fill(event)
+
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
-                if (self.splitter%self.split_factor == 0): ##if true, then fill into 4b
+                if (event.eventNumber%self.split_factor == 0 and (event.nresj > -1.9 if ops.dosyst != "ZZ" else True)): ##if true, then fill into 4b; not for ZZ
                     self.FourTag_bkg.Fill(event)
                     ##sub this in
                     if (nb_j0 == 2 and nb_j1 == 0):
@@ -664,11 +662,11 @@ def analysis(inputconfig):
         ##enable resolved veto for now and on
         #print t.Xhh, (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124.0)/(0.1*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115.0)/(0.1*t.j1_m), 2)))
         #if (abs(t.nresj) < 4): ##veto all 4 jets
-        AllHists.Fill(t)
-        # if (t.nresj > -0.1): ##negative is SR regions
-        #     AllHists.Fill(t)
-        # else:
-        #     pass
+        #AllHists.Fill(t)
+        if (t.nresj < -3.9): ##negative is SR regions
+            pass
+        else:
+            AllHists.Fill(t)
         
 
     #write all the output
@@ -733,6 +731,7 @@ def main():
         "ZZ"         : GetXhh(XhhCenterX=103., XhhCenterY=96.,  XhhCut=1.6), #"event.Xzz < 1.6" , ##use to be 2.1
         "TT"         : GetXhh(XhhCenterX=164., XhhCenterY=155., XhhCut=1.6)  #"event.Xzz < 1.6" , ##use to be 2.1
         }
+
     global SR_cut
     SR_cut = Syst_cut["SR"]
     global CR_cut
@@ -778,7 +777,7 @@ def main():
     if not turnon_reweight or ops.dosyst is not None :
         if (not ops.dijet): 
             inputtasks.append(pack_input("zjets_test"))
-    else:
+    else:##if reweight or do syst
         linklist = ["zjets_test", "ttbar_comb_test"] ##don't reweight ttbar and zjets
         for target in linklist:
             helpers.checkpath(outputpath + target)

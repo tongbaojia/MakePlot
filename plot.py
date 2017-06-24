@@ -253,7 +253,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.4, 1.8) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -279,7 +279,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     if not ("Signal" in cut and blinded):
         ratios[1].Draw("E0PZ SAME")
     ##add arrows; call this function
-    h_plt.drawarrow(ratios[1], 0.5, 2.0)
+    h_plt.drawarrow(ratios[1], 0.4, 1.8)
     # qcd_fit.SetLineColor(kRed)
     # qcd_fitUp.SetLineColor(kRed)
     # qcd_fitUp.SetLineStyle(2)

@@ -57,7 +57,7 @@ if [ $dopythonrun == "true" ]; then
 	python get_count.py    --inputdir $inputdir --full
 	python plot.py         --inputdir $inputdir
 	python plot_random.py  --inputdir $inputdir
-	python dump_smooth.py   --inputdir $inputdir
+	python dump_hists.py   --inputdir $inputdir
 fi
 echo "DONE!!!"
 

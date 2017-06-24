@@ -129,7 +129,7 @@ def main():
     global useOneTop
     useOneTop = False
     global doZjets 
-    doZjets   = False
+    doZjets   = True
     global fitresult
     fitresult = BackgroundFit(inputpath + "data_test/hist-MiniNTuple.root", \
         inputpath + "ttbar_comb_test/hist-MiniNTuple.root", inputpath + "zjets_test/hist-MiniNTuple.root", \

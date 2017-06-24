@@ -57,6 +57,14 @@ def main():
         "FT_EFF_Eigen_Light_12__1up",
         "FT_EFF_Eigen_Light_13__1down",
         "FT_EFF_Eigen_Light_13__1up",
+        "FT_EFF_Eigen_Light_14__1down",
+        "FT_EFF_Eigen_Light_14__1up",
+        "FT_EFF_Eigen_Light_15__1down",
+        "FT_EFF_Eigen_Light_15__1up",
+        "FT_EFF_Eigen_Light_16__1down",
+        "FT_EFF_Eigen_Light_16__1up",
+        "FT_EFF_Eigen_Light_17__1down",
+        "FT_EFF_Eigen_Light_17__1up",
         "FT_EFF_Eigen_Light_2__1down",
         "FT_EFF_Eigen_Light_2__1up",
         "FT_EFF_Eigen_Light_3__1down",
@@ -79,28 +87,28 @@ def main():
         "FT_EFF_extrapolation_from_charm__1up",
     ]
 
-    print "total b syst: ", len(bsyst)
+    print "total b syst: ", len(bsyst) ##the total is 58 now...
     inputtasks = []
     for i in range(1, len(bsyst)):
         inputtasks.append({"inputdir":"syst_b_" + str(i)})
-    inputtasks.append({"inputdir":"syst_JET_JER"}) #50
-    inputtasks.append({"inputdir":"syst_JET_JMR"}) #51
-    inputtasks.append({"inputdir":"syst_JET_Rtrk_Baseline_All__1down"}) #52
+    inputtasks.append({"inputdir":"syst_JET_JER"}) #
+    inputtasks.append({"inputdir":"syst_JET_JMR"}) #
+    inputtasks.append({"inputdir":"syst_JET_Rtrk_Baseline_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Baseline_All__1up"})
-    inputtasks.append({"inputdir":"syst_JET_Rtrk_Modelling_All__1down"}) #54
+    inputtasks.append({"inputdir":"syst_JET_Rtrk_Modelling_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Modelling_All__1up"})
-    inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1down"}) #56
+    inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
-    inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"}) #58
+    inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     #for ttbar
-    # inputtasks.append({"inputdir":"syst_tt_frag"}) #60
+    # inputtasks.append({"inputdir":"syst_tt_frag"}) #
     # inputtasks.append({"inputdir":"syst_tt_had"})
-    # inputtasks.append({"inputdir":"syst_tt_ppcs"}) #62 
+    # inputtasks.append({"inputdir":"syst_tt_ppcs"}) #
     # inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    # inputtasks.append({"inputdir":"syst_tt_mass_up"}) #64
+    # inputtasks.append({"inputdir":"syst_tt_mass_up"}) #
     # inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    # inputtasks.append({"inputdir":"syst_tt_rad_up"}) #66
+    # inputtasks.append({"inputdir":"syst_tt_rad_up"}) #
 
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -158,7 +166,7 @@ def syst_pipeline(config):
     os.system("rm -r " + inputpath + "Limitinput")
     print "done clearing!"
     os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
-    os.system("python dump_smooth.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
 
 
 if __name__ == '__main__': 

@@ -25,6 +25,8 @@ def main():
     ops = options()
     global inputdir
     inputdir = ops.inputdir
+    global reweightpath
+    reweightpath = "_bkg_5"
 
     global syst_lst
     syst_lst=["", "CR_High", "CR_Low", "CR_Small", "SB_Large", "SB_Small", "SB_High", "SB_Low"]#, "b70", "b77", "b80", "b85", "b90"]
@@ -82,7 +84,7 @@ def Dump_Compare(tag="FourTag", title="CR_Varations", region="Control"):
         #get the corresponding region
         outstr = ""
         outstr += syst.replace("_", " ") if syst is not "" else "Nominal"
-        systpath = "_" + syst if syst is not "" else ""
+        systpath = "_" + syst if syst is not "" else reweightpath
         inputtex = inputpath + inputdir + (systpath + "/" + "sum_" + inputdir + systpath + ".txt")
         f1 = open(inputtex, 'r')
         masterdic = json.load(f1)
@@ -127,7 +129,7 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
         #get the corresponding region
         outstr = ""
         outstr += syst.replace("_", " ") if syst is not "" else "Nominal"
-        systpath = "_" + syst if syst is not "" else ""
+        systpath = "_" + syst if syst is not "" else reweightpath
         inputtex = inputpath + inputdir + (systpath + "/" + "sum_" + inputdir + systpath + ".txt")
         f1 = open(inputtex, 'r')
         masterdic = json.load(f1)
@@ -209,7 +211,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     #print inputdir, inputname
     histdir   = inputdir + "_" + inputname
     inputroot = ROOT.TFile.Open(CONF.inputpath + "/" + histdir +  "/Limitinput/" + histdir + "_limit_" + tag  + ".root")
-    refroot   = ROOT.TFile.Open(CONF.inputpath + "/" + inputdir  + "/Limitinput/" + inputdir + "_limit_" + tag  + ".root")
+    refroot   = ROOT.TFile.Open(CONF.inputpath + "/" + inputdir + reweightpath + "/Limitinput/" + inputdir + reweightpath + "_limit_" + tag  + ".root")
     
     tempname = inputname + "_" + "compare" + "_" + tag + "_" + keyword + ("" if Logy == 0 else "_" + str(Logy))
     canv = ROOT.TCanvas(tempname, tempname, 800, 800)
@@ -242,7 +244,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     temp_hist.SetMaximum(maxbincontent * 1.5 * 100)
     ref_hist.SetMaximum(maxbincontent * 1.5 * 100)
     legend.AddEntry(temp_hist, inputname.replace("_", " "), "apl")
-    legend.AddEntry(ref_hist, "ref", "apl")
+    legend.AddEntry(ref_hist, "Nominal", "apl")
 
     # top pad
     pad0 = ROOT.TPad("pad0", "pad0", 0.0, 0.31, 1., 1.)
@@ -298,7 +300,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     #ratio of the two plots
     ratiohist = temp_hist.Clone("ratio")
     ratiohist.Divide(ref_hist)
-    ratiohist.GetYaxis().SetRangeUser(0.8, 1.2) #set range for ratio plot
+    ratiohist.GetYaxis().SetRangeUser(0.8, 1.3) #set range for ratio plot
     ratiohist.GetYaxis().SetTitle("Varaition/Nominal") #set range for ratio plot
     ratiohist.GetYaxis().SetTitleFont(43)
     ratiohist.GetYaxis().SetTitleSize(28)

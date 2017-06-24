@@ -214,6 +214,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         ks   = data.KolmogorovTest(data_est, "QU")
     int_data = data.Integral(0, data.GetXaxis().GetNbins()+1)
     int_data_est = data_est.Integral(0, data_est.GetXaxis().GetNbins()+1)
+    int_qcd = qcd.Integral(0, qcd.GetXaxis().GetNbins()+1)
+    int_ttbar = ttbar.Integral(0, ttbar.GetXaxis().GetNbins()+1)
+    print int_data_est, int_ttbar, int_qcd
     percentdiff   = 0 if int_data == 0 else (int_data_est - int_data)/(int_data) * 100.0
     #chi2 =        data.Chi2Test(data_est, "QU CHI2")
     #ndf  = chi2 / data.Chi2Test(data_est, "QU CHI2/NDF") if chi2 else 0.0
@@ -486,10 +489,13 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
-    plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
-    plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
-    plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]")
-    plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1)
+    if ("pole" in config["cut"]):
+        #print "here"
+        plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
+        plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
+    else:
+        plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]")
+        plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", Logy=1)
 
     print config["outputdir"], "done!"
 
@@ -515,7 +521,7 @@ def main():
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
 
     region_lst = ["Signal"]
-    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
+    cut_lst = ["TwoTag_split", "ThreeTag", "FourTag", "TwoTag_split_pole", "ThreeTag_pole", "FourTag_pole"]
 
     #create master list
     inputtasks = []
@@ -543,7 +549,7 @@ def main():
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
             if "Signal" in region:
-                config["blind"] = True
+                config["blind"] = False
                 inputtasks.append(config)
 
     for i in inputtasks:
