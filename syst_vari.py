@@ -26,7 +26,7 @@ def main():
     global inputdir
     inputdir = ops.inputdir
     global reweightpath
-    reweightpath = "_bkg_5"
+    reweightpath = "_" + CONF.reweightdir
 
     global syst_lst
     syst_lst=["", "CR_High", "CR_Low", "CR_Small", "SB_Large", "SB_Small", "SB_High", "SB_Low"]#, "b70", "b77", "b80", "b85", "b90"]

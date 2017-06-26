@@ -15,8 +15,8 @@ import multiprocessing as mp
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default="Moriond_bkg_5")
-    parser.add_argument("--Xhh",      action='store_true') #4times more time
+    parser.add_argument("--inputdir", default=CONF.workdir + "_" + CONF.reweightdir)
+    parser.add_argument("--Xhh",      default=CONF.doallsig) #4times more time, be aware
     return parser.parse_args()
 
 def main():
@@ -102,13 +102,13 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     #for ttbar
-    # inputtasks.append({"inputdir":"syst_tt_frag"}) #
-    # inputtasks.append({"inputdir":"syst_tt_had"})
-    # inputtasks.append({"inputdir":"syst_tt_ppcs"}) #
-    # inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    # inputtasks.append({"inputdir":"syst_tt_mass_up"}) #
-    # inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    # inputtasks.append({"inputdir":"syst_tt_rad_up"}) #
+    inputtasks.append({"inputdir":"syst_tt_frag"}) #
+    inputtasks.append({"inputdir":"syst_tt_had"})
+    inputtasks.append({"inputdir":"syst_tt_ppcs"}) #
+    inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    inputtasks.append({"inputdir":"syst_tt_mass_up"}) #
+    inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    inputtasks.append({"inputdir":"syst_tt_rad_up"}) #
 
     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
     npool = min(len(inputtasks), mp.cpu_count()-1)
@@ -138,27 +138,24 @@ def syst_pipeline(config):
 
     #for ttbar, also need to link the MCs.
     if "syst_tt_" in t:
-        for i, mass in enumerate(CONF.mass_lst):
-            #print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
-            #this is a really bad practice and temp fix now! need to watch this very carfully...
-            ori_link = CONF.inputpath + ops.inputdir + "/signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            dst_link = inputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            helpers.checkpath(inputpath + "signal_G_hh_c10_M" + str(mass))
-            #print ori_link, dst_link
-            if os.path.islink(dst_link):
-                os.unlink(dst_link)
-            os.symlink(ori_link, dst_link)
-
-            #link the 2HDM samples if necessary
-            if (ops.Xhh):
-                ori_link = CONF.inputpath + ops.inputdir + "/signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
-                dst_link = inputpath + "signal_X_hh_M" + str(mass) + "/hist-MiniNTuple.root"
-                helpers.checkpath(inputpath + "signal_X_hh_M" + str(mass))
+        sigMClist = ["signal_G_hh_c10_M"]
+        if (ops.Xhh):
+            sigMClist = ["signal_G_hh_c10_M", "signal_G_hh_c20_M", "signal_X_hh_M"]
+        for sigMC in sigMClist:
+            for i, mass in enumerate(CONF.mass_lst):
+                if mass == 2750 and sigMC == "signal_G_hh_c20_M": ##no 2750 c20 sample
+                    continue
+                #print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
+                #this is a really bad practice and temp fix now! need to watch this very carfully...
+                ori_link = CONF.inputpath + ops.inputdir + "/" + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                #ori_link = inputpath.replace("TEST", "DS1_cb") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+                dst_link = inputpath + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                helpers.checkpath(inputpath + sigMC + str(mass))
+                #print ori_link, dst_link
                 if os.path.islink(dst_link):
                     os.unlink(dst_link)
-                print "linking: ", dst_link
                 os.symlink(ori_link, dst_link)
+
 
     #start running programs
     #print (inputpath)

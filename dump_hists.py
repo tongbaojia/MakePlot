@@ -34,8 +34,9 @@ def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
     parser.add_argument("--inputdir", default=CONF.workdir)
-    parser.add_argument("--Xhh", action='store_true') #4times more time
-    parser.add_argument("--dosyst", action='store_true') #4times more time
+    parser.add_argument("--Xhh",      default=CONF.doallsig) #4times more time
+    parser.add_argument("--dosyst",   action='store_true') #4times more time
+    parser.add_argument("--doCR",     action='store_true') #4times more time
     return parser.parse_args()
 
 def main():
@@ -75,16 +76,17 @@ def dump(finaldis="l"):
     for c in cut_lst:
         print "start ", c, " file conversion "
         global outfile
-        outfile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("_pole" if "pole" in finaldis else "")), "RECREATE")
+        outfile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c + \
+            ("_pole" if "pole" in finaldis else "") + ("" if not ops.doCR else "_CR")), "RECREATE")
         #get the mass plot
         tempdic = {}
-        cut = c + "_Signal_mHH" + pltname
+        cut = c + ("_Signal_mHH" if not ops.doCR else "_Control_mHH") + pltname
         qcdsmoothrange = (1200, 3000)
         topsmoothrange = (1200, 3000)
         if "pole" in finaldis:
             qcdsmoothrange = (1200, 3000)
             topsmoothrange = (1200, 3000)
-        if CONF.blind:
+        if CONF.blind and not ops.doCR:
             savehist(ifile, "data_est_" + cut,  "data_hh")#blind data now; if not, change data_est to data
         else:
             savehist(ifile, "data_" + cut,  "data_hh")#unblind data now; if not, change data_est to data
@@ -107,6 +109,8 @@ def dump(finaldis="l"):
             savehist(ifile, "RSG1_" + str(mass) + "_" + cut, "signal_RSG_c10_hh_m" + str(mass))
             if(ops.Xhh):
                 savehist(ifile, "Xhh_" + str(mass) + "_" + cut, "signal_X_hh_m" + str(mass))
+                if mass != 2750:
+                    savehist(ifile, "RSG2_" + str(mass) + "_" + cut, "signal_RSG_c20_hh_m" + str(mass))
         outfile.Close()
         makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("_pole" if "pole" in finaldis else "")), pltoutputpath + c + pltname + "_smoothed.pdf")
         masterdic[c] = tempdic

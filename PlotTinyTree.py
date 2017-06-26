@@ -24,7 +24,7 @@ def options():
     parser.add_argument("--SB",        default=58) ##default SB size is 58
     parser.add_argument("--SBshift",   default=10) ##default SBshift size is 10
     parser.add_argument("--resveto",   action='store_true')
-    parser.add_argument("--Xhh",       action='store_true') #do 2HDM samples if necessary
+    parser.add_argument("--Xhh",       default=CONF.doallsig) #do 2HDM and c20 samples if necessary
     parser.add_argument("--dijet",     action='store_true') #do Dijet samples if necessary
     parser.add_argument("--debug",     action='store_true')
 
@@ -109,8 +109,8 @@ def get_reweight(curriter, folder, filename, spline=True):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
-    maxscale = 4.0 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.2 #this means the minimum correction is this for each reweighting; used to be 0.5
+    maxscale = 5.0 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.1 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v, cond in dic:#this "dic" really is not a dic, but a tuple! #variable, weight, condition
         if not eval(cond): ##if doesn't pass the condition, do not apply the weight!
             continue
@@ -130,11 +130,15 @@ def calc_reweight(dic, event, poly=False, spline=True):
         # if ((event.j0_nb==1)and(event.j1_nb==0)):
         #     print value, tempweight, x, v, cond
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.75:
-            tempweight = 0.75
-        elif tempweight > 1.4:
-            tempweight = 1.4
-        totalweight *= (tempweight - 1) * 0.88 + 1 #reduce the correction to tune convergence; :)
+        if tempweight < 0.6:
+            tempweight = 0.6
+        elif tempweight > 1.6:
+            tempweight = 1.6
+
+        if ops.iter < 3: ##first several iterations, slow down the convergence
+            totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
+        else: ##larger interations, just rock on
+            totalweight *= tempweight
         #totalweight *= tempweight
 
     #print totalweight
@@ -392,6 +396,7 @@ class bkgregionHists:
 #these are the different regions
 class regionHists:
     def __init__(self, outputroot, reweight, isData=False):
+        reweight = reweight and isData ##only reweight in data case!
         self.AllTag                    = massregionHists("AllTag", outputroot)
         self.NoTag                     = massregionHists("NoTag", outputroot)
         self.OneTag                    = massregionHists("OneTag", outputroot) #if test 1 tag fit, needs to enable this
@@ -762,7 +767,7 @@ def main():
     nsplit = CONF.splits
     split_list = ["data_test", "ttbar_comb_test"] #, "signal_QCD"] #if not turnon_reweight else  ["data_test"] #["data_test", "ttbar_comb_test", "signal_QCD"]
     #split_list = ["signal_QCD"]
-    if turnon_reweight:
+    if turnon_reweight and ops.dosyst is None:
         split_list = ["data_test"]
     if (ops.dijet): ##only do dijet in this case, always
         split_list = ["signal_QCD"]
@@ -792,27 +797,33 @@ def main():
             print ori_link, dst_link
             os.symlink(ori_link, dst_link)
 
+    ##for signal samples; only need to process once
+    sigMClist = ["signal_G_hh_c10_M"]
+    if (ops.Xhh):
+        sigMClist = ["signal_G_hh_c10_M", "signal_G_hh_c20_M", "signal_X_hh_M"]
+    
     for i, mass in enumerate(CONF.mass_lst):
         if (ops.dijet): ##don't do anything for the dijet case
             continue
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight or ops.dosyst is not None :
-            inputtasks.append(pack_input("signal_G_hh_c10_M" + str(mass)))
-            if (ops.Xhh):
-                inputtasks.append(pack_input("signal_X_hh_M" + str(mass)))
+            for sigMC in sigMClist:
+                if mass != 2750 and sigMC != "signal_G_hh_c20_M": ##no c20 2750 sample
+                    inputtasks.append(pack_input(sigMC + str(mass)))
         else:#if reweight, creat the folders and the links to the files
-            print "creating links of signal samples", "signal_G_hh_c10_M" + str(mass)
-            helpers.checkpath(outputpath + "signal_G_hh_c10_M" + str(mass))
-            #this is a really bad practice and temp fix now! need to watch this very carfully...
-            #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            ori_link = inputpath.replace(ops.inputdir, "Moriond") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            dst_link = outputpath + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-            #print ori_link, dst_link
-            if os.path.islink(dst_link):
-                os.unlink(dst_link)
-            print ori_link, dst_link
-            os.symlink(ori_link, dst_link)
-
+            for sigMC in sigMClist:
+                if mass != 2750 and sigMC != "signal_G_hh_c20_M": ##no c20 2750 sample
+                    print "creating links of signal samples", sigMC + str(mass)
+                    helpers.checkpath(outputpath + sigMC + str(mass))
+                    #this is a really bad practice and temp fix now! need to watch this very carfully...
+                    #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+                    ori_link = inputpath.replace(ops.inputdir, "Moriond") + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                    dst_link = outputpath + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                    #print ori_link, dst_link
+                    if os.path.islink(dst_link):
+                        os.unlink(dst_link)
+                    print ori_link, dst_link
+                    os.symlink(ori_link, dst_link)
     #return
     ##if reweight, reweight everything
     

@@ -15,8 +15,12 @@ outplotpath =  toppath +"/Plot/"
 helpers.checkpath(outplotpath)
 #put in the working directory name; default b77~
 workdir     =  "Moriond" #"Moriond" #b77
+#chosen reweight directory
+reweightdir =  "bkg_9" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
+#do c20 and 2HDM samples
+doallsig    =  False
 #check if reference folder exists
 fullstudy   =  True	
 #check if doing my thesis; if so, disable all the ATLAS labels

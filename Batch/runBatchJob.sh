@@ -47,7 +47,7 @@ echo "plotting syst: " $syst
 inputdir=$ch$"_"$syst
 echo  "inputdir is: " $inputdir
 re=$"bkg"
-iter="5"
+iter="9"
 echo  "reweight: " $re " iteration: " $iter
 
 ##start actual running

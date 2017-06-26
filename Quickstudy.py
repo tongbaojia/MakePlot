@@ -256,18 +256,23 @@ def MiniAnalysis(inputfile, outname="", DEBUG=False):
         # else:
         #     pass
 
-        if (t.hcand_boosted_pt[0] > 450 * 1000): #& (t.j1_pt < 800):
-            if (t.jet_ak2track_asso_n[0] >= 2): #& (t.j1_pt < 800):
-                plt.Plot1D("SF_0", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[0][0][0], 100, 0.5, 2.5) #, t.weight)
-                plt.Plot1D("SF_0", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[0][1][0], 100, 0.5, 2.5) #, t.weight)
-        else:
-            pass
-        if (t.hcand_boosted_pt[1] > 250 * 1000): #& (t.j1_pt < 800):
-            if (t.jet_ak2track_asso_n[1] >= 2): #& (t.j1_pt < 800):
-                plt.Plot1D("SF_1", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[1][0][0], 100, 0.5, 2.5) #, t.weight)
-                plt.Plot1D("SF_1", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[1][1][0], 100, 0.5, 2.5) #, t.weight)
-        else:
-            pass
+        #check reweighting factors
+        plt.Plot1D("SF_weight_pileup", "; pileup reweight;", t.weight_pileup, 52, -0.1, 2.5) #, t.weight)
+        
+
+        ##check b-tagging scale factors
+        # if (t.hcand_boosted_pt[0] > 450 * 1000): #& (t.j1_pt < 800):
+        #     if (t.jet_ak2track_asso_n[0] >= 2): #& (t.j1_pt < 800):
+        #         plt.Plot1D("SF_0", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[0][0][0], 100, 0.5, 2.5) #, t.weight)
+        #         plt.Plot1D("SF_0", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[0][1][0], 100, 0.5, 2.5) #, t.weight)
+        # else:
+        #     pass
+        # if (t.hcand_boosted_pt[1] > 250 * 1000): #& (t.j1_pt < 800):
+        #     if (t.jet_ak2track_asso_n[1] >= 2): #& (t.j1_pt < 800):
+        #         plt.Plot1D("SF_1", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[1][0][0], 100, 0.5, 2.5) #, t.weight)
+        #         plt.Plot1D("SF_1", "Number of tracks; nTrks;", t.jet_ak2track_asso_sys[1][1][0], 100, 0.5, 2.5) #, t.weight)
+        # else:
+        #     pass
 
         ##for quick trigger studies
         # TriggerDecision = False
@@ -312,19 +317,19 @@ def main():
     helpers.checkpath(outputpath)
 
     #if do eos
-    eosmcpath = "/eos/atlas/user/b/btong/bb/mc/test/gridOutput/MiniNTuple/*mc15_13TeV"
-    eosdatapath = "/eos/atlas/user/b/btong/bb/data/v02-02-03/gridOutput/MiniNTuple/*16_*periodB.*.root"
+    eosmcpath = "/eos/atlas/user/b/btong/bb/mc/v02-03-04/gridOutput/MiniNTuple/*mc15_13TeV"
+    eosdatapath = "/eos/atlas/user/b/btong/bb/data/v02-03-04/gridOutput/MiniNTuple/*16_*periodB.*.root"
     #start analysis on TinyNtuple
-    mass = 3000
+    mass = 1000
     #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
     #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
     #TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root")[0], "signal_M" + str(mass)) #MC
-    #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root")[0], outname="signal_M" + str(mass)) #MC
+    MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root")[0], outname="signal_M" + str(mass)) #MC
     #MiniAnalysis(glob.glob(eosmcpath + "*410007*ttbar*_allhad.*v1*.root")[0], outname="tthadv1") #MC
     #MiniAnalysis(glob.glob(eosmcpath + "*410007*ttbar*_allhad.*v3*.root")[0], outname="tthadv3") #MC
-    MiniAnalysis(glob.glob("/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/test_mini/data-MiniNTuple/mc15_13TeV.root")[0], outname="tthadv3") #MC
+    #MiniAnalysis(glob.glob("/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/test_mini/data-MiniNTuple/mc15_13TeV.root")[0], outname="tthadv3") #MC
     #MiniAnalysis(glob.glob(eosdatapath)[0], "data16") #data
     #MiniAnalysis(glob.glob("../test_mini/data-MiniNTuple/*.root_skim")[0], "signal_M" + str(mass)) #MC
 

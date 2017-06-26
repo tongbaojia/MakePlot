@@ -24,7 +24,7 @@ def main():
     ops = options()
 
     global iter_total
-    iter_total = 6
+    iter_total = 10
     print "total iteration: ", iter_total
     inputtasks = []
 

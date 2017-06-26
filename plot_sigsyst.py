@@ -25,9 +25,9 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default=CONF.workdir)
+    parser.add_argument("--inputdir", default=CONF.workdir + "_" + CONF.reweightdir)
     parser.add_argument("--inputroot", default="sum")
-    parser.add_argument("--chosenhist", default="l")
+    parser.add_argument("--hist", default="l")
     return parser.parse_args()
 
 # zero the x-errors
@@ -623,7 +623,7 @@ def main():
 
     global finaldis
     #finaldis = "pole"
-    finaldis = ops.chosenhist
+    finaldis = ops.hist
 
     # plot in the control region #
     # figuresFolder = inputpath + inputroot + "Plot/" + "Sideband"

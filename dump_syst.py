@@ -19,9 +19,10 @@ cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default=CONF.workdir)
-    parser.add_argument("--chosenhist", default="l")
-    parser.add_argument("--Xhh", action='store_true') #4times more time
+    parser.add_argument("--inputdir",   default=CONF.workdir + "_" + CONF.reweightdir)
+    parser.add_argument("--hist",       default="l") ##or  "pole"
+    parser.add_argument("--doCR",       action='store_true') ##if use CR region as SR
+    parser.add_argument("--Xhh",        default=CONF.doallsig) #4times more time
     return parser.parse_args()
 
 def main():
@@ -130,13 +131,13 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    # inputtasks.append({"inputdir":"syst_tt_frag"})
-    # inputtasks.append({"inputdir":"syst_tt_had"})
-    # inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
-    # inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    # inputtasks.append({"inputdir":"syst_tt_mass_up"})
-    # inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    # inputtasks.append({"inputdir":"syst_tt_rad_up"})
+    inputtasks.append({"inputdir":"syst_tt_frag"})
+    inputtasks.append({"inputdir":"syst_tt_had"})
+    inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
+    inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    inputtasks.append({"inputdir":"syst_tt_mass_up"})
+    inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    inputtasks.append({"inputdir":"syst_tt_rad_up"})
     for i in range(1, len(bsyst)):
         # if i == 16 or i == 45:
         #     continue
@@ -146,12 +147,17 @@ def main():
     global outfiles
     outfiles = {}
     global finaldis
-    finaldis = ops.chosenhist
+    finaldis = ops.hist
     for c in cut_lst:
-        outfiles[c]  = ROOT.TFile("%s/%s_limit_%s_fullsys%s.root" % (CONF.inputpath  + ops.inputdir + "/Limitinput", ops.inputdir, c, "" if "pole" not in finaldis else "_pole"), "Recreate")
+        outfiles[c]  = ROOT.TFile("%s/%s_limit_%s_fullsys%s%s.root" % (CONF.inputpath  + ops.inputdir + "/Limitinput", ops.inputdir, c, \
+            "" if "pole" not in finaldis else "_pole", "" if not ops.doCR else "_CR"), "Recreate")
     ##run it, order matters, because the pole file replaces the previous one!
     masterdic = {}
     masterdic.update(merge_method_sys())
+    if ops.doCR:
+        masterdic.update(merge_mc_sys(inputtasks[0]))
+        print "Do control region, stop right here, DONE"
+        return 
     ##masterdic.update(merge_mc_sys(inputtasks[0]))
     ## if already load the files: express
     for task in inputtasks:
@@ -213,7 +219,7 @@ def merge_mc_sys(config):
 
     for c in cut_lst:
         global infile
-        infile  = ROOT.TFile("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("" if "pole" not in finaldis else "_pole")), "READ")
+        infile  = ROOT.TFile("%s/%s_limit_%s%s.root" % (outputpath, inputdir, c + ("" if "pole" not in finaldis else "_pole"), "" if not ops.doCR else "_CR"), "READ")
         #print c
         #get the mass plot
         tempdic = {}
@@ -224,6 +230,9 @@ def merge_mc_sys(config):
             histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
             if (ops.Xhh):
                 histdic.update({"Xhh_" + str(mass) + "_est" : "signal_X_hh_m" + str(mass)})
+                if mass!= 2750:
+                    histdic.update({"RSG2_" + str(mass) + "_est" : "signal_RSG_c20_hh_m" + str(mass)})
+
         for histname, hist in histdic.iteritems():
             #print histname, infile.Get(hist).GetName()
             tempdic[histname]  =  GetIntegral(infile.Get(hist).Clone(hist + postname), outfiles[c])
@@ -237,6 +246,8 @@ def merge_method_sys():
     #find Michael's file
     infodic = {}
     inputpath = CONF.toppath + "/MakePlot/Xhh4bUtils/mHH_" + finaldis
+    if ops.doCR:
+        inputpath = CONF.toppath + "/MakePlot/Xhh4bUtils/CR"
     for c in cut_lst:
         infile  = ROOT.TFile("%s/outfile_boosted_%s.root" % (inputpath, c), "READ")
 
@@ -264,6 +275,7 @@ def merge_method_sys():
     return infodic
 
 def GetIntegral(hist, outfile, maxrange=4000):
+    '''this is where the histogram integrals are calculated, and the hists are saved'''
     #print hist.GetName()
     ##add maxtrange to avoid blow up of tails!!! unphysical, occurs in mHH_pole
     tempdic = {}

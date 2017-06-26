@@ -22,7 +22,6 @@ dump_lst = ["NoTag", "OneTag", "TwoTag", "TwoTag_split", "ThreeTag", "FourTag"] 
 ##setup the list of folders to process; these histograms are savedls
 word_dict  = {"FourTag":0, "ThreeTag":1, "TwoTag":3,"TwoTag_split":2, "OneTag":4, "NoTag":5}
 numb_dict  = {4:"FourTag", 3:"ThreeTag", 2:"TwoTag", 1:"OneTag", 0:"NoTag"}
-region_lst = ["Incl", "Sideband", "Control", "Signal"]
 
 #setup dictionary for signal regions and background estimations
 #default: ["FourTag", "ThreeTag", "TwoTag_split", "TwoTag", "OneTag"]
@@ -48,10 +47,9 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default=CONF.workdir)
-    parser.add_argument("--dosyst", action='store_true')
-    #parser.add_argument("--full", default=True) #4times more time
-    parser.add_argument("--full", action='store_true') #4times more time
-    parser.add_argument("--Xhh", action='store_true') #4times more time
+    parser.add_argument("--dosyst",   action='store_true')
+    parser.add_argument("--full",     action='store_true') #4times more time
+    parser.add_argument("--Xhh",      default=CONF.doallsig) #4times more time
     return parser.parse_args()
 
 def main():
@@ -87,6 +85,13 @@ def main():
         plt_lst = ["mHH_l", "mHH_pole"]
         #"leadHCand_trks_Pt", "sublHCand_trks_Pt", "trks_Pt"]
 
+    global region_lst 
+    region_lst = []
+    if not ops.dosyst:
+        region_lst = ["Incl", "Sideband", "Control", "Signal"]
+    if ops.dosyst:
+        region_lst = ["Sideband", "Control", "Signal"]
+
     global plt_m ##this is the key histogram to calculate total yields
     plt_m = "mHH_l"
 
@@ -120,6 +125,8 @@ def main():
         inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG1_%i" % mass})
         if (ops.Xhh):
             inputtasks.append({"inputdir":inputpath + "signal_X_hh_M%i/hist-MiniNTuple.root" % mass, "histname":"Xhh_%i" % mass})
+            if mass != 2750:
+                inputtasks.append({"inputdir":inputpath + "signal_G_hh_c20_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG2_%i" % mass})
 
 
     #do the fit first
@@ -703,7 +710,7 @@ def GetEvtCount(config):
         #get the corresponding region
         cutcounts = {}
         for j, region in enumerate(region_lst):
-            #print cut, region, config
+            ##print cut, region, config, plt_lst
             #deal with the other plots
             for hst in plt_lst:
                 hst_temp = input_f.Get(cut + "_" + region + "/" + hst).Clone()
