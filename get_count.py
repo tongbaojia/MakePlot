@@ -337,9 +337,9 @@ def fitestimation_test(histname="", inputdic={}):
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
                 htemp_qcd_NoTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_NoTag + "_" + region + "_" + hst).Clone()
                 htemp_qcd_OneTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_OneTag + "_" + region + "_" + hst).Clone()
-                #for ttbar, for mscale and mll, use 3b instead of 4b
-                if "ttbar" in histname and ("FourTag" in cut):
-                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
+                #for ttbar, for mscale and mll, use 2bs instead of 3/4b
+                if "ttbar" in histname and ("FourTag" in cut or "ThreeTag" in cut):
+                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
                     htemp_qcd = hist_temp.Clone()
                     del(hist_temp)
@@ -440,10 +440,10 @@ def fitestimation(histname="", inputdic={}, weight=False):
             #print histname, Ftransfer
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
-                #for ttbar, for mscale and mll, use 3b instead of 4b
-                if "ttbar" in histname and ("FourTag" in cut):
+                #for ttbar, for mscale and mll, use 2bs instead of 3/4b
+                if "ttbar" in histname and ("FourTag" in cut or "ThreeTag" in cut):
                     #print ref_cut, histname, cut, region, htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)
-                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
+                    hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
                     #print ref_cut, histname, cut, region, hist_temp.Integral(0, hist_temp.GetNbinsX()+1)
                     htemp_qcd = hist_temp.Clone()
@@ -558,8 +558,8 @@ def Getqcd(inputdic, histname=""):
         for j, region in enumerate(region_lst):
             for hst in plt_lst:
                 ##do the ttbar correction here as well
-                if ("FourTag" in cut):
-                    htemp_ttbar = outroot.Get("ttbar" + "_" + "ThreeTag" + "_" + region + "_" + hst).Clone()
+                if ("FourTag" in cut or "ThreeTag" in cut):
+                    htemp_ttbar = outroot.Get("ttbar" + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
                     htemp_ttbar_temp = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
                     htemp_ttbar.Scale(htemp_ttbar_temp.Integral(0, htemp_ttbar_temp.GetNbinsX()+1)/htemp_ttbar.Integral(0, htemp_ttbar.GetNbinsX()+1))
                     del(htemp_ttbar_temp)
@@ -733,13 +733,6 @@ def GetEvtCount(config):
                         err = float(err) #convert it back...so that python likes it
                         cutcounts[region + "_err"] = err
 
-                # outroot.cd()
-                # if ("Signal" in region) & (("TwoTag_split" in cut) \
-                #     or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind & (histname == "data"):
-                #     hst_temp.Reset()
-                # hst_temp.Write()
-                # del(hst_temp)
-
             #get the mass plot
             plttemp = outroot.Get(histname + "_" + cut + "_" + region + "_" + plt_m)
             del(plttemp)
@@ -827,9 +820,6 @@ def GetSignificance(mass):
             cutcounts[region], cutcounts_err[region], S, B = GetSensitivity(plttemp_sig, plttemp_bkg)
             if mass == 2000 and region is "Signal":
                 print "m:{:>5} c:{:>24} r:{:>8}; INFO-- sig:{:10.4f}  S:{:10.4f}  B:{:10.4f}  Entry:{:10.4f}".format(mass, cut, region, cutcounts[region], S, B, plttemp_sig.GetEntries())
-            #get the mass plot
-            # if ("Signal" in region) & (("OneTag" in cut) or ("TwoTag" in cut) \
-            #     or ("ThreeTag" in cut) or ("FourTag" in cut)) & CONF.blind:\ 
             del(plttemp_sig)
             del(plttemp_bkg)
         eventcounts[cut] = cutcounts

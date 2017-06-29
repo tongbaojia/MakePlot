@@ -143,10 +143,23 @@ def main():
     #         {"file":"../b70_calo/signal_G_hh_c10_M2500/hist-MiniNTuple.root", "path":"AllTag_Signal/" + histname, "leg":"Calo"},
     #         ], keyword=histname, norm=True)
 
-    DrawMulticomparison([
-        {"file":"../Moriond_bkg_5_note/sum_Moriond_bkg_5.root", "path":"qcd_est_FourTag_Signal_mHH_l", "leg":"NoVeto"}, 
-        {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root", "path":"qcd_est_FourTag_Signal_mHH_l", "leg":"Veto"},
-        ], keyword="mHH_l", norm=False, Rebin=5)
+    ##res veto check
+    # DrawMulticomparison([
+    #     {"file":"../Moriond_bkg_5_note/sum_Moriond_bkg_5.root", "path":"qcd_est_FourTag_Signal_mHH_l", "leg":"NoVeto"}, 
+    #     {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root", "path":"qcd_est_FourTag_Signal_mHH_l", "leg":"Veto"},
+    #     ], keyword="mHH_l", norm=False, Rebin=5)
+
+    for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
+        DrawMulticomparison([
+            {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Default"}, 
+            {"file":"../syst_tt_frag/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Frag"}, 
+            {"file":"../syst_tt_had/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Had"}, 
+            {"file":"../syst_tt_mass_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Mass up"}, 
+            {"file":"../syst_tt_mass_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Mass dw"}, 
+            {"file":"../syst_tt_ppcs/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"PPCS"}, 
+            {"file":"../syst_tt_rad_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad dw"}, 
+            {"file":"../syst_tt_rad_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad up"}, 
+            ], keyword="mHH_l", prename=tagname + "_Top_syst_stat", Xrange=[0, 3000], norm=False, Rebin=5)
 
     ##check how resolved veto affect SR predictions
     # for histname in ["data_est_ThreeTag_Signal_mHH_l", "data_est_FourTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l"]:

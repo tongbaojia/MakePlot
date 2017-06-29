@@ -20,7 +20,7 @@ reweightdir =  "bkg_9" #"Moriond" #b77
 #check if reference folder exists
 refpath     =  toppath +"/Output/ref/"
 #do c20 and 2HDM samples
-doallsig    =  False
+doallsig    =  True
 #check if reference folder exists
 fullstudy   =  True	
 #check if doing my thesis; if so, disable all the ATLAS labels

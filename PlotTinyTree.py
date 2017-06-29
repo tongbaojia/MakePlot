@@ -530,7 +530,7 @@ class regionHists:
 
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 #if (event.eventNumber%self.split_factor == 0 and (not(abs(event.nresj) >= 2 and event.resXhh > 3.2))): ##this is for larger resveto test
-                if (event.eventNumber%self.split_factor == 0 and (event.nresj > -1.9 if ops.dosyst != "ZZ" else True)): ##if true, then fill into 4b; not for ZZ
+                if (event.eventNumber%self.split_factor == 0 and (event.nresj > -1.9)): ##if true, then fill into 4b; not for ZZ
                     self.FourTag_bkg.Fill(event)
                     ##sub this in
                     if (nb_j0 == 2 and nb_j1 == 0):
@@ -547,6 +547,7 @@ class regionHists:
                         self.OneTag_lead_lead.Fill(event)
                     else:
                         self.OneTag_lead_subl.Fill(event)
+
             elif (nb_j0 == 0 and nb_j1 == 1):
                 self.OneTag_subl.Fill(event)
                 # ##for extra extra b-tagging on which jet studies
@@ -555,6 +556,7 @@ class regionHists:
                         self.OneTag_subl_lead.Fill(event)
                     else:
                         self.OneTag_subl_subl.Fill(event)
+
             elif (nb_j0 == 2 and nb_j1 == 0):
                 self.TwoTag_lead.Fill(event)
             elif (nb_j0 == 0 and nb_j1 == 2):
@@ -563,7 +565,6 @@ class regionHists:
                 self.ThreeTag_lead.Fill(event)
             elif (nb_j0 == 1 and nb_j1 == 2):
                 self.ThreeTag_subl.Fill(event)
-
 
 
     def Write(self, outputroot):
@@ -636,7 +637,7 @@ def analysis(inputconfig):
             helpers.drawProgressBar(i/(N*1.0))
         t.fChain.GetEntry(i)
         #print t.Xzz
-        
+
         ##place a cut if necessary
         # def selection():
         #     passed = True
@@ -650,7 +651,7 @@ def analysis(inputconfig):
             #continue
 
         ##speed up selection a bit; skip events with jet mass less than 65 for now
-        if (t.j0_m < 60 or t.j1_m < 60): ##as far as the cut can go
+        if (t.j0_m < 70 or t.j1_m < 60): ##as far as the cut can go
             continue
 
         ##add blinding
@@ -781,8 +782,9 @@ def main():
     if not turnon_reweight or ops.dosyst is not None :
         if (not ops.dijet): 
             inputtasks.append(pack_input("zjets_test"))
+            inputtasks.append(pack_input("signal_SM_hh"))
     else:##if reweight or do syst
-        linklist = ["zjets_test", "ttbar_comb_test"] ##don't reweight ttbar and zjets
+        linklist = ["zjets_test", "ttbar_comb_test", "signal_SM_hh"] ##don't reweight ttbar and zjets
         for target in linklist:
             helpers.checkpath(outputpath + target)
             ori_link = inputpath.replace(ops.inputdir, "Moriond") + target + "/hist-MiniNTuple.root"
