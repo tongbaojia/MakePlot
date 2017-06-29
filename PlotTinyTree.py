@@ -23,7 +23,6 @@ def options():
     parser.add_argument("--CR",        default=33) ##default CR size is 33
     parser.add_argument("--SB",        default=58) ##default SB size is 58
     parser.add_argument("--SBshift",   default=10) ##default SBshift size is 10
-    parser.add_argument("--resveto",   action='store_true')
     parser.add_argument("--Xhh",       default=CONF.doallsig) #do 2HDM and c20 samples if necessary
     parser.add_argument("--dijet",     action='store_true') #do Dijet samples if necessary
     parser.add_argument("--debug",     action='store_true')
@@ -530,6 +529,7 @@ class regionHists:
                         self.ThreeTag_subl_bkg.Fill(event)
 
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
+                #if (event.eventNumber%self.split_factor == 0 and (not(abs(event.nresj) >= 2 and event.resXhh > 3.2))): ##this is for larger resveto test
                 if (event.eventNumber%self.split_factor == 0 and (event.nresj > -1.9 if ops.dosyst != "ZZ" else True)): ##if true, then fill into 4b; not for ZZ
                     self.FourTag_bkg.Fill(event)
                     ##sub this in
@@ -661,13 +661,12 @@ def analysis(inputconfig):
                 elif (t.j0_nb == 1  and t.j1_nb == 1):##2b
                     continue
 
-        #AllHists.Fill(t)
-        ##or, add in resovled veto whenever feel like it
-        #if (ops.resveto):
-        ##enable resolved veto for now and on
         #print t.Xhh, (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124.0)/(0.1*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115.0)/(0.1*t.j1_m), 2)))
         #if (abs(t.nresj) < 4): ##veto all 4 jets
         #AllHists.Fill(t)
+        ##enable resolved veto for now and on
+        #if (abs(t.nresj) >= 4 and t.resXhh < 3.2): ##for larger resveto test
+        #if (abs(t.nresj) > 3.9): ##negative is SR regions
         if (t.nresj < -3.9): ##negative is SR regions
             pass
         else:
@@ -808,22 +807,24 @@ def main():
         #do not reweight signal samples; create links to the original files instead
         if not turnon_reweight or ops.dosyst is not None :
             for sigMC in sigMClist:
-                if mass != 2750 and sigMC != "signal_G_hh_c20_M": ##no c20 2750 sample
-                    inputtasks.append(pack_input(sigMC + str(mass)))
+                if mass == 2750 and sigMC == "signal_G_hh_c20_M": ##no c20 2750 sample
+                    continue
+                inputtasks.append(pack_input(sigMC + str(mass)))
         else:#if reweight, creat the folders and the links to the files
             for sigMC in sigMClist:
-                if mass != 2750 and sigMC != "signal_G_hh_c20_M": ##no c20 2750 sample
-                    print "creating links of signal samples", sigMC + str(mass)
-                    helpers.checkpath(outputpath + sigMC + str(mass))
-                    #this is a really bad practice and temp fix now! need to watch this very carfully...
-                    #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
-                    ori_link = inputpath.replace(ops.inputdir, "Moriond") + sigMC + str(mass) + "/hist-MiniNTuple.root"
-                    dst_link = outputpath + sigMC + str(mass) + "/hist-MiniNTuple.root"
-                    #print ori_link, dst_link
-                    if os.path.islink(dst_link):
-                        os.unlink(dst_link)
-                    print ori_link, dst_link
-                    os.symlink(ori_link, dst_link)
+                if mass == 2750 and sigMC == "signal_G_hh_c20_M": ##no c20 2750 sample
+                    continue
+                print "creating links of signal samples", sigMC + str(mass)
+                helpers.checkpath(outputpath + sigMC + str(mass))
+                #this is a really bad practice and temp fix now! need to watch this very carfully...
+                #ori_link = inputpath.replace("F_c10", "f_fin") + "signal_G_hh_c10_M" + str(mass) + "/hist-MiniNTuple.root"
+                ori_link = inputpath.replace(ops.inputdir, "Moriond") + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                dst_link = outputpath + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                #print ori_link, dst_link
+                if os.path.islink(dst_link):
+                    os.unlink(dst_link)
+                print ori_link, dst_link
+                os.symlink(ori_link, dst_link)
     #return
     ##if reweight, reweight everything
     

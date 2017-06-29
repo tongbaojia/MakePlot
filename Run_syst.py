@@ -101,7 +101,8 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    #for ttbar
+    ##for ttbar MC variations
+    ##see: https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TopSystematics2015
     inputtasks.append({"inputdir":"syst_tt_frag"}) #
     inputtasks.append({"inputdir":"syst_tt_had"})
     inputtasks.append({"inputdir":"syst_tt_ppcs"}) #
@@ -138,6 +139,14 @@ def syst_pipeline(config):
 
     #for ttbar, also need to link the MCs.
     if "syst_tt_" in t:
+        ##copy zjets as well
+        helpers.checkpath(inputpath + "zjets_test")
+        ori_link = CONF.inputpath + ops.inputdir + "/zjets_test/hist-MiniNTuple.root"
+        dst_link = inputpath + "zjets_test/hist-MiniNTuple.root"
+        if os.path.islink(dst_link):
+            os.unlink(dst_link)
+        os.symlink(ori_link, dst_link)
+        ##copy other MC signals
         sigMClist = ["signal_G_hh_c10_M"]
         if (ops.Xhh):
             sigMClist = ["signal_G_hh_c10_M", "signal_G_hh_c20_M", "signal_X_hh_M"]

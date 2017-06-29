@@ -32,11 +32,12 @@ def main():
     highmass = 3150
     # select the cuts
     global evtsel_lst, evtsel_dic
-    evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassSignal"]
+    evtsel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH", "PassResVeto", "PassSignal"]
     global datasel_lst, datasel_dic
     datasel_lst = ["All", "PassGRL", "PassTrig", "PassJetClean", "Pass2FatJets", "PassDiJetPt", "PassDetaHH"]
     datasel_dic = {"All":"Initial", "PassGRL":"Pass GRL", "PassTrig":"Pass Trigger", "PassJetClean":"Pass Jet Cleaning", \
-     "Pass2FatJets":"N(fiducial large-R jets)$\geq 2$", "PassDiJetPt":"Pass Large-R jet Selection", "PassDetaHH":"$|\Delta\eta(JJ)|<1.7$"}
+     "Pass2FatJets":"N(fiducial large-R jets)$\geq 2$", "PassDiJetPt":"Pass Large-R jet Selection", "PassDetaHH":"$|\Delta\eta(JJ)|<1.7$", 
+     "PassResVeto":"Veto Resolved SR"}
     global region_lst, region_dic
     region_lst = ["Sideband", "Control", "Signal"]
     region_dic = {"Sideband":"Sideband", "Control":"Control", "Signal":"Signal"}
@@ -48,7 +49,8 @@ def main():
     sample_lst = ["data", "RSG1_1000", "RSG1_2000", "RSG1_3000", "ttbar", "zjet"]
     global mcsel_lst, mcsel_dic
     mcsel_lst = ["All", "Pass2FatJets", "PassDetaHH", "PassSignal", "TwoTag_split", "ThreeTag", "FourTag"]
-    mcsel_dic = {"All":"Mini-ntuple Skimming", "Pass2FatJets":"2 large-R jets", "PassDetaHH":"$|\Delta\eta(JJ)|<1.7$", "PassSignal":"Signal Region", \
+    mcsel_dic = {"All":"Mini-ntuple Skimming", "Pass2FatJets":"2 large-R jets", "PassDetaHH":"$|\Delta\eta(JJ)|<1.7$", \
+    "PassResVeto":"Veto Resolved SR", "PassSignal":"Signal Region", \
     "TwoTag_split":"2b split Signal Region", "ThreeTag":"3b Signal Region", "FourTag":"4b Signal Region"}
 
     #Get Materinfo
@@ -67,10 +69,15 @@ def main():
     MC_outtex = open(outputpath + "SignalEffTable_RSG_c10.tex", "w")
     MCCutFlow(masterinfo, MC_outtex, keyword="RSG1")
     MC_outtex.close()
-    # Write the 2HDM cutflow table
-    #Xhh_outtex = open(outputpath + "SignalEffTable_Xhh.tex", "w")
-    #MCCutFlow(masterinfo, Xhh_outtex, keyword="Xhh")
-    #Xhh_outtex.close()
+    if CONF.doallsig:
+        # Write the MC cutflow table
+        MC_outtex = open(outputpath + "SignalEffTable_RSG_c20.tex", "w")
+        MCCutFlow(masterinfo, MC_outtex, keyword="RSG2")
+        MC_outtex.close()
+        # Write the 2HDM cutflow table
+        Xhh_outtex = open(outputpath + "SignalEffTable_Xhh.tex", "w")
+        MCCutFlow(masterinfo, Xhh_outtex, keyword="Xhh")
+        Xhh_outtex.close()
     # Finish the work
     del(masterinfo)
     f1.close()
@@ -149,6 +156,8 @@ def MCCutFlow(inputdic, outFile, keyword="RSG1"):
 
     ### do the cuts based on the number of entries in each plot
     for i, mass in enumerate(mass_lst):
+        if mass == 2750 and keyword == "RSG2":
+            continue;
         #get the corresponding region
         outstr = ""
         outstr += str(mass)

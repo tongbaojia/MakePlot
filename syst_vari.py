@@ -61,6 +61,7 @@ def main():
 
     #for ZZ unblinding
     Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal")
+    Dump_ZZCompare(title="TT_Signal_Region", region="Signal", vari="TT")
 
     # Finish the work
     print("--- %s seconds ---" % (time.time() - start_time))
@@ -165,7 +166,7 @@ def Dump_BKGCompare(tag="FourTag", title="SR_Varations", region="Signal"):
         print line
         outFile.write(line+" \n")
 
-def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal"):
+def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal", vari="ZZ"):
 
     texoutpath = inputpath + inputdir + "/" + "Plot/Tables/"
     if not os.path.exists(texoutpath):
@@ -182,7 +183,7 @@ def Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal"):
         #get the corresponding region
         outstr = ""
         outstr += tag.replace("_", " ") if tag is not "" else "Nominal"
-        inputtex = inputpath + inputdir + ("_ZZ" + "/" + "sum_" + inputdir + "_ZZ" + ".txt")
+        inputtex = inputpath + inputdir + ("_" + vari + "/" + "sum_" + inputdir + "_" + vari + ".txt")
         f1 = open(inputtex, 'r')
         masterdic = json.load(f1)
         #print masterdic, tag

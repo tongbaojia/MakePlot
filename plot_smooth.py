@@ -549,7 +549,7 @@ def main():
             config["outputdir"] = outputFolder
             config["cut"] = cut + "_" + region + "_"
             if "Signal" in region:
-                config["blind"] = False
+                config["blind"] = True
                 inputtasks.append(config)
 
     for i in inputtasks:

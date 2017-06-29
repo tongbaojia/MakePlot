@@ -114,8 +114,12 @@ def main():
     "normY4down",
     "normY5up",
     "normY5down",
-    "QCDShapeCRup", ##this is still too large; dominante systematics though
-    "QCDShapeCRdown",
+    ##"QCDShapeCRup", ##merged 
+    ##"QCDShapeCRdown",
+    "QCDShapeCRLowup", ##seperated
+    "QCDShapeCRLowdown",
+    "QCDShapeCRHighup", ##seperated
+    "QCDShapeCRHighdown",
     "QCDNormCRup",
     "QCDNormCRdown",
     ]
