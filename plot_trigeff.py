@@ -40,9 +40,9 @@ def main():
     DrawTrigEff(cut_lst, inputdir, outputname="trig", normalization="All")
     ##Draw pT dependent trig efficiency; needs fix...
     # DrawPtEff(inputdir, outputname="trig")
-    ##Draw the pT dependent independently for 2015 and 2016
-    DrawPtEff(inputdir, outputname="trig_15")
-    DrawPtEff(inputdir, outputname="trig_16")
+    ##Draw the pT dependent independently for 2015 and 2016, need to make the directory first
+    #DrawPtEff(inputdir, outputname="trig_15")
+    #DrawPtEff(inputdir, outputname="trig_16")
     #output.Close()
 
 def options():

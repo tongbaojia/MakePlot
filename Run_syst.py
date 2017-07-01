@@ -174,10 +174,10 @@ def syst_pipeline(config):
     os.system("rm " + inputpath + "sum_" + t + ".root")
     os.system("rm -r " + inputpath + "Limitinput")
     print "done clearing!"
-    tophack(inputpath=inputpath)
-    #os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
-    #os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
-
+    if "syst_tt_" in t: ##only for ttbar variations for now
+        tophack(inputpath=inputpath)
+    os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
 
 def tophack(inputpath):
     '''If use this, will copy the ttbar_comb_test to ttbar_comb_origin,

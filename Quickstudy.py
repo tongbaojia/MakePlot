@@ -76,7 +76,7 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
     firstrun = 276262
     lastrun  = 311481
     #print lumitable
-    #outtext = open("CR_2bs.txt", "w")
+    #outtext = open("CR_2b.txt", "w")
     #start looping through events
     N = t.fChain.GetEntries()
     counter = 0
@@ -90,8 +90,9 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
         t.fChain.GetEntry(i)
 
         '''check event number'''
-        if (t.j0_nb == 1 and t.j1_nb == 1):
-            if (t.Xhh > 1.6 and t.Rhh < 33):
+        if (t.j0_nb == 2 and t.j1_nb == 0) or (t.j0_nb == 0 and t.j1_nb == 2):
+            #if (t.Xhh > 1.6 and t.Rhh < 33):
+            if (t.Xhh < 1.6):
                 #outtext.write(str(int(t.runNumber)) + " " + str(t.eventNumber) + "\n")
                 #print t.runNumber, t.eventNumber, t.mHH
                 counter += 1
@@ -217,8 +218,8 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
             # plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
 
     print "number of events: ", counter
-    plt.Write(outroot)   
-    #outtext.close()           
+    #plt.Write(outroot)   
+    outtext.close()           
     print "DONE with the analysis!"
     #close the input file;
     del(t)

@@ -197,23 +197,23 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
 
 def SigMorph():
-##see: https://arxiv.org/pdf/1410.7388.pdf
-#Going to make a few statistical models we want to interpolate
-#initialize workspace with some common background part
+    ##see: https://arxiv.org/pdf/1410.7388.pdf
+    #Going to make a few statistical models we want to interpolate
+    #initialize workspace with some common background part
    w = ROOT.RooWorkspace('w')
    w.factory('Exponential::e(x[-5,15],tau[-.15,-3,0])')
    x = w.var('x')
 
    frame = x.frame()
 
-#center of Gaussian will move along the parameter points
+    #center of Gaussian will move along the parameter points
    mu = w.factory('mu[0,10]') #this is our continuous interpolation parameter
    paramPoints = np.arange(5)
    pdfs = ROOT.RooArgList()
-#paramVec = ROOT.TVectorD(len(paramPoints),paramPoints) #this gives problems, why?
+    #paramVec = ROOT.TVectorD(len(paramPoints),paramPoints) #this gives problems, why?
    paramVec = ROOT.TVectorD(len(paramPoints))
 
-# Now make the specific Gaussians to add on top of common background
+    # Now make the specific Gaussians to add on top of common background
    for i in paramPoints:
       w.factory('Gaussian::g{i}(x,mu{i}[{i},-3,5],sigma[1, 0, 2])'.format(i=i))
       w.factory('SUM::model{i}(s[50,0,100]*g{i},b[200,0,1000]*e)'.format(i=i))
@@ -223,8 +223,8 @@ def SigMorph():
       pdfs.add(pdf)
       paramVec[int(i)]=i
 
-#ok, now construct the MomentMorph, can choose from these settings
-#  { Linear, NonLinear, NonLinearPosFractions, NonLinearLinFractions, SineLinear } ;
+    #ok, now construct the MomentMorph, can choose from these settings
+    #  { Linear, NonLinear, NonLinearPosFractions, NonLinearLinFractions, SineLinear } ;
    setting = ROOT.RooMomentMorph.Linear
    morph = ROOT.RooMomentMorph('morph','morph',mu,ROOT.RooArgList(x),pdfs, paramVec, setting)
    getattr(w,'import')(morph) # work around for morph = w.import(morph)

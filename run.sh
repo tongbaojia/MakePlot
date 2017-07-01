@@ -31,7 +31,7 @@ for ch in ${channels[@]}; do
 	#python plot_sigeff.py --inputdir $ch
 	#python plot_cutflow.py --inputdir $ch
 	#python plot_prediction.py --inputdir $ch
-	python dump_hists.py --inputdir $ch
+	#python dump_hists.py --inputdir $ch
 	#python plot_random.py --inputdir $ch
 	#python plot_smooth.py --inputdir $ch
 done
