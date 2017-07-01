@@ -111,14 +111,17 @@ def main():
     inputtasks.append({"inputdir":"syst_tt_rad_down"})
     inputtasks.append({"inputdir":"syst_tt_rad_up"}) #
 
-    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    npool = min(len(inputtasks), mp.cpu_count()-1)
-    pool  = mp.Pool(npool)
-    pool.map(syst_pipeline, inputtasks)
+    ## for parallel computing
+    # print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    # npool = min(len(inputtasks), mp.cpu_count()-1)
+    # pool  = mp.Pool(npool)
+    # pool.map(syst_pipeline, inputtasks)
 
     # for i in inputtasks:
     #     syst_pipeline(i)
-    #syst_pipeline(inputtasks[28])
+    #syst_pipeline({"inputdir":"syst_b_0_copy"})
+    syst_pipeline({"inputdir":"syst_JET_JER_copy"})
+
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -171,8 +174,66 @@ def syst_pipeline(config):
     os.system("rm " + inputpath + "sum_" + t + ".root")
     os.system("rm -r " + inputpath + "Limitinput")
     print "done clearing!"
-    os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
-    os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    tophack(inputpath=inputpath)
+    #os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    #os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+
+
+def tophack(inputpath):
+    '''If use this, will copy the ttbar_comb_test to ttbar_comb_origin,
+    replace the ttbar_comb_test hist-MiniNtuple.root with itself, except in 
+    3b and 4b directories, histograms are scaled to the original Moriond yield 
+    times syst 2bs/original 2bs ratio.
+    '''
+    ##first rename the file
+    os.system("mv " + inputpath + "ttbar_comb_test/hist-MiniNTuple.root " + inputpath + "ttbar_comb_test/hist-MiniNTuple_org.root ")
+    refroot = ROOT.TFile.Open(CONF.inputpath + "Moriond/" + "ttbar_comb_test/hist-MiniNTuple.root", "read")
+    orgroot = ROOT.TFile.Open(inputpath + "ttbar_comb_test/hist-MiniNTuple_org.root", "read")
+    outroot = ROOT.TFile.Open(inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "recreate")
+
+    scaledic = {}
+    for tag in ["FourTag", "ThreeTag"]:
+        for region in ["Sideband", "Control", "Signal"]:
+            dirname = tag + "_" + region
+            dir2bname = "TwoTag_split" + "_" + region
+            print refroot.Get(dirname + "/mHH_l").Integral(), refroot.Get(dir2bname + "/mHH_l").Integral()
+            scaledic[dirname] = refroot.Get(dirname + "/mHH_l").Integral()/ refroot.Get(dir2bname + "/mHH_l").Integral()
+    ##copy the file
+    CopyDir(orgroot, outroot, scaledic)
+    
+    ##finish
+    refroot.Close()
+    orgroot.Close()
+    outroot.Close()
+    print "DONE!"
+
+def CopyDir(inputdir, outputdir, scaledic={}):
+    '''recursive copying code: copy all the TH1s'''
+    for key in inputdir.GetListOfKeys():
+        kname = key.GetName()
+        temp_item = inputdir.Get(kname)
+        temp_name = temp_item.GetName()
+        if temp_item.InheritsFrom("TH1"):
+            outputdir.cd()
+            if "FourTag" in outputdir.GetName() or "ThreeTag" in outputdir.GetName():
+                #print temp_name
+                #print "try to scale:", outputdir.GetName(), scaledic[outputdir.GetName()]
+                #print "before scale:", temp_item.Integral()
+                copy_item = temp_item.Clone() ##clone, otherwise have memory issue
+                copy_item.Scale(scaledic[outputdir.GetName()])
+                print "after scale:", copy_item.Integral()
+                copy_item.Write()
+            else:
+                temp_item.Write()
+        elif temp_item.InheritsFrom("TDirectory"):
+            outputdir.mkdir(temp_name)
+            if "FourTag" in temp_name or "ThreeTag" in temp_name:
+                dir2b = temp_name.replace("FourTag", "TwoTag_split").replace("ThreeTag", "TwoTag_split")
+                print temp_item, dir2b
+                CopyDir(inputdir.Get(dir2b), outputdir.Get(temp_name), scaledic)
+            else:
+                CopyDir(temp_item, outputdir.Get(temp_name))
+    return
 
 
 if __name__ == '__main__': 

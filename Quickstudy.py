@@ -76,8 +76,10 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
     firstrun = 276262
     lastrun  = 311481
     #print lumitable
+    #outtext = open("CR_2bs.txt", "w")
     #start looping through events
     N = t.fChain.GetEntries()
+    counter = 0
     for i in range(N):
     # get the next tree in the chain and verify
         if DEBUG & (i > 100000):
@@ -87,7 +89,12 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
 
         t.fChain.GetEntry(i)
 
-
+        '''check event number'''
+        if (t.j0_nb == 1 and t.j1_nb == 1):
+            if (t.Xhh > 1.6 and t.Rhh < 33):
+                #outtext.write(str(int(t.runNumber)) + " " + str(t.eventNumber) + "\n")
+                #print t.runNumber, t.eventNumber, t.mHH
+                counter += 1
         #print t.Xzz
         ''' ##this peak can be faked because around 1250, 2m/pT ~ 0.2, thus the two track jet start to merge to one
             ##so requiring a large R jet to have one and only one track jet basically is selecting 
@@ -107,9 +114,9 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
         #             plt.Plot1D("m_HH_signal", "mass JJ; MJJ, GeV;", t.mHH, 25, 500, 4500) #, t.weight)
 
         ''' check the Xhh vs pT '''
-        XhhExp = (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124)/(0.085*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115)/(0.12*t.j1_m), 2))) ##with pT dependent cut
-        plt.Plot2D("pT_Xhh", ";pT leadH; Xhh;", t.j0_pt, XhhExp, 50, 500, 2000, 42, -0.1, 2)
-        plt.Plot2D("pT_Xhh_Corr", ";pT leadH; Xhh Corr;", t.j0_pt, t.Xhh, 50, 500, 2000, 42, -0.1, 2)
+        # XhhExp = (ROOT.TMath.Sqrt(ROOT.TMath.Power((t.j0_m - 124)/(0.085*t.j0_m), 2) + ROOT.TMath.Power((t.j1_m - 115)/(0.12*t.j1_m), 2))) ##with pT dependent cut
+        # plt.Plot2D("pT_Xhh", ";pT leadH; Xhh;", t.j0_pt, XhhExp, 50, 500, 2000, 42, -0.1, 2)
+        # plt.Plot2D("pT_Xhh_Corr", ";pT leadH; Xhh Corr;", t.j0_pt, t.Xhh, 50, 500, 2000, 42, -0.1, 2)
 
         '''check if the number of events in consistent in runs'''
         # if t.Xhh > 1.6 and t.Rhh < 35.8:
@@ -209,7 +216,9 @@ def TinyAnalysis(inputfile, outname="", DEBUG=False):
             # plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j0_trk0_eta, t.j0_trk0_phi, t.j0_trk1_eta, t.j0_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
             # plt.Plot2D("drtrk_mHH_signal", "pT JJ; MJJ, GeV; dR trkjets;", t.mHH, helpers.dR(t.j1_trk0_eta, t.j1_trk0_phi, t.j1_trk1_eta, t.j1_trk1_phi), 50, 0, 4000, 44, -0.2, 2) #, t.weight)
 
-    plt.Write(outroot)           
+    print "number of events: ", counter
+    plt.Write(outroot)   
+    #outtext.close()           
     print "DONE with the analysis!"
     #close the input file;
     del(t)
@@ -300,7 +309,7 @@ def MiniAnalysis(inputfile, outname="", DEBUG=False):
         #     plt.Plot1D("HLT_all", "HLT_all; jetpt;", t.hcand_boosted_pt[0]/1000.0, 40, 0, 2000) #, t.weight)
 
 
-    plt.Write(outroot)           
+    plt.Write(outroot)        
     print "DONE with the analysis!"
     #close the input file;
     del(t)
@@ -322,11 +331,11 @@ def main():
     #start analysis on TinyNtuple
     mass = 1000
     #TinyAnalysis(inputpath + "signal_G_hh_c10_M" + str(mass) + "/" + "hist-MiniNTuple.root", "signal_M" + str(mass)) #MC
-    #TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
+    TinyAnalysis(inputpath + "data_test/" + "hist-MiniNTuple.root", "data") #data
     #TinyAnalysis(inputpath + "data_test16/" + "hist-MiniNTuple.root", "data") #data
     ##start analysis on MiniNtuple
     #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root")[0], "signal_M" + str(mass)) #MC
-    MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root")[0], outname="signal_M" + str(mass)) #MC
+    #MiniAnalysis(glob.glob(eosmcpath + "*G_hh_bbbb_c10*" + str(mass) + ".hh4b*.root")[0], outname="signal_M" + str(mass)) #MC
     #MiniAnalysis(glob.glob(eosmcpath + "*410007*ttbar*_allhad.*v1*.root")[0], outname="tthadv1") #MC
     #MiniAnalysis(glob.glob(eosmcpath + "*410007*ttbar*_allhad.*v3*.root")[0], outname="tthadv3") #MC
     #MiniAnalysis(glob.glob("/afs/cern.ch/work/b/btong/bbbb/MoriondAnalysis/test_mini/data-MiniNTuple/mc15_13TeV.root")[0], outname="tthadv3") #MC

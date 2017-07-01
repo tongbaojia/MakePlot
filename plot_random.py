@@ -159,7 +159,7 @@ def main():
             {"file":"../syst_tt_ppcs/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"PPCS"}, 
             {"file":"../syst_tt_rad_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad dw"}, 
             {"file":"../syst_tt_rad_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad up"}, 
-            ], keyword="mHH_l", prename=tagname + "_Top_syst_stat", Xrange=[0, 3000], norm=False, Rebin=5)
+            ], keyword="mHH_l", prename=tagname + "_Top_syst_stat", Xrange=[0, 3000], norm=False, Rebin=5, Logy=1)
 
     ##check how resolved veto affect SR predictions
     # for histname in ["data_est_ThreeTag_Signal_mHH_l", "data_est_FourTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l"]:

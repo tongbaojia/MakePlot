@@ -47,7 +47,7 @@ yield_region_lst = ["Sideband", "Control", "Signal"]
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--inputdir", default=CONF.workdir)
-    parser.add_argument("--dosyst",   action='store_true')
+    parser.add_argument("--dosyst",   action='store_true') ##this is only for MC systematics
     parser.add_argument("--full",     action='store_true') #4times more time
     parser.add_argument("--Xhh",      default=CONF.doallsig) #4times more time
     return parser.parse_args()
