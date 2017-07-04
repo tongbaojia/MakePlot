@@ -642,7 +642,7 @@ def main():
             os.makedirs(outputFolder)
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-            for checksyst in ["all", "QCDNorm", "QCDShape", "normY", "smooth", "JET", "FT"]:
+            for checksyst in ["all", "QCDNorm", "QCDShape", "normY", "smooth", "JET", "FT", "tt"]:
                 config = {}
                 config["root"] = rootinputpath
                 config["inputdir"] = inputdir

@@ -115,7 +115,7 @@ def main():
     "normY5up",
     "normY5down",
     ##"QCDShapeCRup", ##merged 
-    ##"QCDShapeCRdown",
+    #"QCDShapeCRdown",
     "QCDShapeCRLowup", ##seperated
     "QCDShapeCRLowdown",
     "QCDShapeCRHighup", ##seperated
@@ -137,7 +137,7 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
     inputtasks.append({"inputdir":"syst_tt_frag"})
     inputtasks.append({"inputdir":"syst_tt_had"})
-    inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
+    #inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
     inputtasks.append({"inputdir":"syst_tt_mass_down"})
     inputtasks.append({"inputdir":"syst_tt_mass_up"})
     inputtasks.append({"inputdir":"syst_tt_rad_down"})
@@ -287,7 +287,11 @@ def GetIntegral(hist, outfile, maxrange=4000):
     tempdic["int"] = hist.IntegralAndError(0, hist.FindBin(maxrange)+1, err)
     tempdic["int" + "_err"] = float(err)
     outfile.cd()
-    hist.Write()
+    if "X_hh" in hist.GetName():
+        hist.SetName(hist.GetName().replace("X_hh", "2HDM_hh")) ##fix for limit input
+        hist.Write()
+    else:
+        hist.Write()
     del hist
     return tempdic
 

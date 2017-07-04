@@ -50,7 +50,7 @@ def main():
 
     # Draw the efficiency plot relative to the all normalization
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel")
-    DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True)
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True, dosum=True)
 
 
 def options():
@@ -59,7 +59,7 @@ def options():
     return parser.parse_args()
 
 
-def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", doint=False, donormint=False, dorel=False):
+def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", doint=False, donormint=False, dorel=False, dosum=False):
     ### the first argument is the input directory
     ### the second argument is the output prefix name
     ### the third argument is relative to what normalization: 0 for total number of events
@@ -74,6 +74,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     graph_lst = []
     maxbincontent = 0.001
     minbincontent = -0.001
+
 
     for i, cut in enumerate(cut_lst):
         eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
@@ -107,6 +108,13 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             # print ratioerror(cutevt_mc, totevt_mc)
             input_mc.Close()
 
+    if dosum:##add in a sum curve
+        eff_lst.append( ROOT.TH1F(inputdir + "_" + "sum", "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
+        for i, cut in enumerate(cut_lst):
+            eff_lst[-1].Add(eff_lst[i])
+        maxbincontent =  eff_lst[-1].GetMaximum()
+
+    for i, cut in enumerate(eff_lst):
         canv.cd()
         #maxbincontent = 0.15
         #convert it to a TGraph
@@ -118,8 +126,11 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
         graph_lst[i].SetMaximum(maxbincontent * 1.6)
         graph_lst[i].SetMinimum(minbincontent)
         #print cut_dic[cut]
-        legend.AddEntry(graph_lst[i], cut_dic[cut], "apl")
-        if cut==cut_lst[0]: 
+        if i < len(cut_lst):
+            legend.AddEntry(graph_lst[i], cut_dic[cut_lst[i]], "apl")
+        else: ##of corse this is do sum as well
+            legend.AddEntry(graph_lst[i], "All of above", "apl")
+        if i == 0: 
             graph_lst[i].Draw("APC")
             #gr.Draw("same L hist")
         else: 

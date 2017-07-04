@@ -111,17 +111,17 @@ def main():
     inputtasks.append({"inputdir":"syst_tt_rad_down"})
     inputtasks.append({"inputdir":"syst_tt_rad_up"}) #
 
-    ## for parallel computing
-    # print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    # npool = min(len(inputtasks), mp.cpu_count()-1)
-    # pool  = mp.Pool(npool)
-    # pool.map(syst_pipeline, inputtasks)
+    ### for parallel computing
+    print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+    npool = min(len(inputtasks), mp.cpu_count()-1)
+    pool  = mp.Pool(npool)
+    pool.map(syst_pipeline, inputtasks)
 
     # for i in inputtasks:
     #     syst_pipeline(i)
     #syst_pipeline({"inputdir":"syst_b_0_copy"})
-    syst_pipeline({"inputdir":"syst_JET_JER_copy"})
-
+    #syst_pipeline({"inputdir":"syst_JET_JER_copy"})
+    #syst_pipeline({"inputdir":"Moriond_ZZ"}) ##see if this helps ZZ...
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -168,35 +168,40 @@ def syst_pipeline(config):
                     os.unlink(dst_link)
                 os.symlink(ori_link, dst_link)
 
-
     #start running programs
     #print (inputpath)
     os.system("rm " + inputpath + "sum_" + t + ".root")
     os.system("rm -r " + inputpath + "Limitinput")
-    print "done clearing!"
-    if "syst_tt_" in t: ##only for ttbar variations for now
-        tophack(inputpath=inputpath)
-    os.system("python get_count.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
-    os.system("python dump_hists.py --dosyst " + " --inputdir " + t + (" --Xhh " if ops.Xhh else ""))
+    # print "done clearing!"
+    # ###this is correcting the 3b/4b normalization to 2b. Should only be applied when ttbar stats makes no sense!
+    # if "syst_tt_" in t or "JET_JER" in t or "JET_JMR" in t: ##only for ttbar variations for now
+    #      Tophack(inputpath=inputpath)
+    # #Tophack(inputpath=inputpath)
+    os.system("python get_count.py --dosyst " + " --inputdir " + t)
+    ##ttbar has weird smoothing behaviour, use ttbar + qcd for final distribution now
+    os.system("python dump_hists.py " + " --inputdir " + t + (" --dosyst" if "syst_tt_" in t else ""))
 
-def tophack(inputpath):
+def Tophack(inputpath):
     '''If use this, will copy the ttbar_comb_test to ttbar_comb_origin,
     replace the ttbar_comb_test hist-MiniNtuple.root with itself, except in 
     3b and 4b directories, histograms are scaled to the original Moriond yield 
     times syst 2bs/original 2bs ratio.
     '''
-    ##first rename the file
-    os.system("mv " + inputpath + "ttbar_comb_test/hist-MiniNTuple.root " + inputpath + "ttbar_comb_test/hist-MiniNTuple_org.root ")
+    ##first rename the file; don't over do it though
+    if os.path.isfile(inputpath + "ttbar_comb_test/hist-MiniNTuple_org.root"):
+        pass
+    else:
+        os.system("mv " + inputpath + "ttbar_comb_test/hist-MiniNTuple.root " + inputpath + "ttbar_comb_test/hist-MiniNTuple_org.root ")
     refroot = ROOT.TFile.Open(CONF.inputpath + "Moriond/" + "ttbar_comb_test/hist-MiniNTuple.root", "read")
     orgroot = ROOT.TFile.Open(inputpath + "ttbar_comb_test/hist-MiniNTuple_org.root", "read")
     outroot = ROOT.TFile.Open(inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "recreate")
 
     scaledic = {}
     for tag in ["FourTag", "ThreeTag"]:
-        for region in ["Sideband", "Control", "Signal"]:
+        for region in ["Sideband", "Control", "Signal", "Incl"]:
             dirname = tag + "_" + region
             dir2bname = "TwoTag_split" + "_" + region
-            print refroot.Get(dirname + "/mHH_l").Integral(), refroot.Get(dir2bname + "/mHH_l").Integral()
+            #print refroot.Get(dirname + "/mHH_l").Integral(), refroot.Get(dir2bname + "/mHH_l").Integral()
             scaledic[dirname] = refroot.Get(dirname + "/mHH_l").Integral()/ refroot.Get(dir2bname + "/mHH_l").Integral()
     ##copy the file
     CopyDir(orgroot, outroot, scaledic)
@@ -220,8 +225,11 @@ def CopyDir(inputdir, outputdir, scaledic={}):
                 #print "try to scale:", outputdir.GetName(), scaledic[outputdir.GetName()]
                 #print "before scale:", temp_item.Integral()
                 copy_item = temp_item.Clone() ##clone, otherwise have memory issue
-                copy_item.Scale(scaledic[outputdir.GetName()])
-                print "after scale:", copy_item.Integral()
+                try:
+                    copy_item.Scale(scaledic[outputdir.GetName()])
+                except KeyError:
+                    pass
+                #print "after scale:", copy_item.Integral()
                 copy_item.Write()
             else:
                 temp_item.Write()
@@ -229,8 +237,11 @@ def CopyDir(inputdir, outputdir, scaledic={}):
             outputdir.mkdir(temp_name)
             if "FourTag" in temp_name or "ThreeTag" in temp_name:
                 dir2b = temp_name.replace("FourTag", "TwoTag_split").replace("ThreeTag", "TwoTag_split")
-                print temp_item, dir2b
-                CopyDir(inputdir.Get(dir2b), outputdir.Get(temp_name), scaledic)
+                #print temp_item, dir2b
+                try:
+                    CopyDir(inputdir.Get(dir2b), outputdir.Get(temp_name), scaledic)
+                except AttributeError:
+                    CopyDir(temp_item, outputdir.Get(temp_name))
             else:
                 CopyDir(temp_item, outputdir.Get(temp_name))
     return

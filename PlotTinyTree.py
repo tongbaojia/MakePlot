@@ -46,7 +46,7 @@ def get_parameter(filename="test.txt", region=""):
             continue
         lstline =  line.split()
         #check which iteration it is; don't go beyond! start with 1
-        #print lstline[0], ops.iter
+        #print lstline, ops.iter
         if int(lstline[0]) > int(ops.iter):
             continue
         #now proceed normally
@@ -108,8 +108,8 @@ def get_reweight(curriter, folder, filename, spline=True):
 #calculate the weight based on the input dictionary as the instruction
 def calc_reweight(dic, event, poly=False, spline=True):
     totalweight = 1
-    maxscale = 5.0 #this means the maximum correction is this for each reweighting; used to be 1.5
-    minscale = 0.1 #this means the minimum correction is this for each reweighting; used to be 0.5
+    maxscale = 10.0 #this means the maximum correction is this for each reweighting; used to be 1.5
+    minscale = 0.05 #this means the minimum correction is this for each reweighting; used to be 0.5
     for x, v, cond in dic:#this "dic" really is not a dic, but a tuple! #variable, weight, condition
         if not eval(cond): ##if doesn't pass the condition, do not apply the weight!
             continue
@@ -121,24 +121,29 @@ def calc_reweight(dic, event, poly=False, spline=True):
             value =  v["high"]
         #start calculated reweight factor
         tempweight = 1
+        tempiter   = 1
         if poly: #use polynomial fits
             tempweight = v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         if spline: #use spline functions!
             tempweight = eval("ROOT." + v["name"].replace(".cxx", "(%d)" % value))
+            tempiter   = int(v["name"].split("_")[0].replace("rs", ""))
+            
             #print "new: ", tempweight, "old: ", v["par0"] + v["par1"] * value + v["par2"] * value ** 2 + v["par3"] * value ** 3
         # if ((event.j0_nb==1)and(event.j1_nb==0)):
         #     print value, tempweight, x, v, cond
         #this protects each individual weight; tight this up a bit; used to be 0.8 and 1.2s
-        if tempweight < 0.6:
-            tempweight = 0.6
-        elif tempweight > 1.6:
-            tempweight = 1.6
+        if tempweight < 0.7:
+            tempweight = 0.7
+        elif tempweight > 1.4:
+            tempweight = 1.4
 
-        if ops.iter < 3: ##first several iterations, slow down the convergence
-            totalweight *= (tempweight - 1) * 0.618 + 1 #reduce the correction to tune convergence; :)
+        ##always reduce the correction
+        ##totalweight *= (tempweight - 1) * 0.75 + 1
+        if tempiter < 5: ##first several iterations, reduce
+            totalweight *= (tempweight - 1) * 0.75 + 1 #reduce the correction to tune convergence; :)
         else: ##larger interations, just rock on
+            #print v["name"], tempiter, value, eval("ROOT." + v["name"].replace(".cxx", "(%d)" % value))
             totalweight *= tempweight
-        #totalweight *= tempweight
 
     #print totalweight
     #also contrain the totalweight
@@ -530,7 +535,8 @@ class regionHists:
 
             if ((nb_j0 == 2 and nb_j1 == 0) or (nb_j0 == 0 and nb_j1 == 2)) and event.j0_nTrk >= 2 and event.j1_nTrk >= 2:
                 #if (event.eventNumber%self.split_factor == 0 and (not(abs(event.nresj) >= 2 and event.resXhh > 3.2))): ##this is for larger resveto test
-                if (event.eventNumber%self.split_factor == 0 and (event.nresj > -1.9)): ##if true, then fill into 4b; not for ZZ
+                #if (event.eventNumber%self.split_factor == 0 and ((event.nresj > -1.9) if (ops.dosyst is not None and "ZZ" not in ops.dosyst ) else True)): ##if true, then fill into 4b; not for ZZ
+                if (event.eventNumber%self.split_factor == 0 and ((event.nresj > -1.9))): ##if true, then fill into 4b; not for ZZ
                     self.FourTag_bkg.Fill(event)
                     ##sub this in
                     if (nb_j0 == 2 and nb_j1 == 0):
