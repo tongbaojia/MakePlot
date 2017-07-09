@@ -127,6 +127,10 @@ def main():
             inputtasks.append({"inputdir":inputpath + "signal_X_hh_M%i/hist-MiniNTuple.root" % mass, "histname":"Xhh_%i" % mass})
             if mass != 2750:
                 inputtasks.append({"inputdir":inputpath + "signal_G_hh_c20_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG2_%i" % mass})
+    
+    ##for the fucking high mass request
+    for extramass in [3500, 4000, 4500, 5000, 6000]:
+        inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % extramass, "histname":"RSG1_%i" % extramass})
 
 
     #do the fit first
@@ -338,7 +342,7 @@ def fitestimation_test(histname="", inputdic={}):
                 htemp_qcd_NoTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_NoTag + "_" + region + "_" + hst).Clone()
                 htemp_qcd_OneTag = outroot.Get(histname.replace("_est", "") + "_" + ref_cut_OneTag + "_" + region + "_" + hst).Clone()
                 #for ttbar, for mscale and mll, use 2bs instead of 3/4b
-                if "ttbar" in histname and ("FourTag" in cut or "ThreeTag" in cut):
+                if "ttbar" in histname and ("FourTag" in cut or ("ThreeTag" in cut and "Signal" in region)):
                     hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
                     htemp_qcd = hist_temp.Clone()
@@ -441,7 +445,7 @@ def fitestimation(histname="", inputdic={}, weight=False):
             for hst in plt_lst:
                 htemp_qcd = outroot.Get(histname.replace("_est", "") + "_" + ref_cut + "_" + region + "_" + hst).Clone()
                 #for ttbar, for mscale and mll, use 2bs instead of 3/4b
-                if "ttbar" in histname and ("FourTag" in cut or "ThreeTag" in cut):
+                if "ttbar" in histname and ("FourTag" in cut or ("ThreeTag" in cut and "Signal" in region)):
                     #print ref_cut, histname, cut, region, htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)
                     hist_temp = outroot.Get(histname.replace("_est", "") + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
                     hist_temp.Scale(htemp_qcd.Integral(0, htemp_qcd.GetNbinsX()+1)/hist_temp.Integral(0, hist_temp.GetNbinsX()+1))
@@ -557,8 +561,8 @@ def Getqcd(inputdic, histname=""):
         cutcounts = {}
         for j, region in enumerate(region_lst):
             for hst in plt_lst:
-                ##do the ttbar correction here as well
-                if ("FourTag" in cut or "ThreeTag" in cut):
+                ##do the ttbar correction here as well; replace 4b everywhere with 2bs; replace 3b only at signal
+                if ("FourTag" in cut or ("ThreeTag" in cut and "Signal" in region)):
                     htemp_ttbar = outroot.Get("ttbar" + "_" + "TwoTag_split" + "_" + region + "_" + hst).Clone()
                     htemp_ttbar_temp = outroot.Get("ttbar" + "_" + cut + "_" + region + "_" + hst).Clone()
                     htemp_ttbar.Scale(htemp_ttbar_temp.Integral(0, htemp_ttbar_temp.GetNbinsX()+1)/htemp_ttbar.Integral(0, htemp_ttbar.GetNbinsX()+1))

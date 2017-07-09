@@ -111,6 +111,9 @@ def dump(finaldis="l"):
                 savehist(ifile, "Xhh_" + str(mass) + "_" + cut, "signal_X_hh_m" + str(mass))
                 if mass != 2750:
                     savehist(ifile, "RSG2_" + str(mass) + "_" + cut, "signal_RSG_c20_hh_m" + str(mass))
+        for extramass in [3500, 4000, 4500, 5000, 6000]:
+            savehist(ifile, "RSG1_" + str(extramass) + "_" + cut, "signal_RSG_c10_hh_m" + str(extramass))
+                    
         outfile.Close()
         makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("_pole" if "pole" in finaldis else "")), pltoutputpath + c + pltname + "_smoothed.pdf")
         masterdic[c] = tempdic
@@ -144,7 +147,7 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     #rebin is also done here, will be send to limit input
     #print inname, smoothrange, initpar, hist.GetMaximum()
     if Rebin:
-        hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
+        hist = do_variable_rebinning(hist, array('d', range(0, 7000, 100)))
 
     int_pre = hist.Integral()
     #print "before", hist.Integral()
@@ -154,13 +157,14 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     elif dosmooth:
         #print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
-            makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar)
+            makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar, maxPlotRange=7000)
         if ops.dosyst:
             hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"]) ##This one doesn't have smoothing error, only for systematics
         else: #be very careful here; don't mess up the default
             hist = smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error
 
     int_aft = hist.Integral()
+    #print hist.GetName(), "before", int_aft, "after", int_aft
     if int_aft > 0:
         hist.Scale(int_pre/int_aft) ##fix normalization hard way
     hist.Scale(scale_lumi)

@@ -47,6 +47,7 @@ def main():
     cut_dic = {"NoTag":"0 b-tags", "OneTag":"1 b-tags", "TwoTag":"2 b-tags", "TwoTag_split":"2 b-tags, split", "ThreeTag":"3 b-tags", "FourTag":"4 b-tags"}
     global sample_lst
     sample_lst = ["data", "RSG1_1000", "RSG1_2000", "RSG1_3000", "ttbar", "zjet"]
+    #sample_lst = ["data", "RSG1_4000", "RSG1_5000", "RSG1_6000", "ttbar", "zjet"]
     global mcsel_lst, mcsel_dic
     mcsel_lst = ["All", "Pass2FatJets", "PassDetaHH", "PassSignal", "TwoTag_split", "ThreeTag", "FourTag"]
     mcsel_dic = {"All":"Mini-ntuple Skimming", "Pass2FatJets":"2 large-R jets", "PassDetaHH":"$|\Delta\eta(JJ)|<1.7$", \

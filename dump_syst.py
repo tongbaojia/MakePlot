@@ -236,6 +236,9 @@ def merge_mc_sys(config):
                 histdic.update({"Xhh_" + str(mass) + "_est" : "signal_X_hh_m" + str(mass)})
                 if mass!= 2750:
                     histdic.update({"RSG2_" + str(mass) + "_est" : "signal_RSG_c20_hh_m" + str(mass)})
+        ##for extra high mass signals
+        for mass in [3500, 4000, 4500, 5000, 6000]:
+            histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
 
         for histname, hist in histdic.iteritems():
             #print histname, infile.Get(hist).GetName()
@@ -278,13 +281,13 @@ def merge_method_sys():
         infile.Close()
     return infodic
 
-def GetIntegral(hist, outfile, maxrange=4000):
+def GetIntegral(hist, outfile, maxrange=7000):
     '''this is where the histogram integrals are calculated, and the hists are saved'''
     #print hist.GetName()
     ##add maxtrange to avoid blow up of tails!!! unphysical, occurs in mHH_pole
     tempdic = {}
     err = ROOT.Double(0.)
-    tempdic["int"] = hist.IntegralAndError(0, hist.FindBin(maxrange)+1, err)
+    tempdic["int"] = hist.IntegralAndError(0, hist.FindBin(maxrange) - 1, err)
     tempdic["int" + "_err"] = float(err)
     outfile.cd()
     if "X_hh" in hist.GetName():
@@ -452,7 +455,8 @@ def plot_RSG_syst(masterdic, cut):
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
     # setup basic plot parameters
     # load input MC file
-    mass_lst = [1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    #mass_lst = [1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
+    mass_lst = [1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000, 3500, 4000, 4500, 5000]
     systag_lst = ["JER", "JMR", "Rtrk", "EFF", "Stat"]
     systag_dic = {"JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "EFF":"b-tag SF", "Stat":"Stats"}
     eff_lst = []
@@ -460,11 +464,13 @@ def plot_RSG_syst(masterdic, cut):
     maxbincontent = 40.0
     minbincontent = -0.001
     lowmass  = 950
-    highmass = 3150
+    #highmass = 3150
+    highmass = 5050
 
     for i, syst in enumerate(systag_lst):
         eff_lst.append( ROOT.TH1F(syst, "%s; Mass, GeV; Systematic Percentage Diff" %syst, int((highmass-lowmass)/100), lowmass, highmass) )
         for mass in mass_lst:
+            #print mass
             if syst is "Stat":
                 for key2 in masterdic[cut]:
                     if "RSG1_" + str(mass) in key2:

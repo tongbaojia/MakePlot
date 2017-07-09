@@ -809,6 +809,7 @@ def main():
     if (ops.Xhh):
         sigMClist = ["signal_G_hh_c10_M", "signal_G_hh_c20_M", "signal_X_hh_M"]
     
+    #for i, mass in enumerate([3500, 4000, 4500, 5000, 6000]):
     for i, mass in enumerate(CONF.mass_lst):
         if (ops.dijet): ##don't do anything for the dijet case
             continue

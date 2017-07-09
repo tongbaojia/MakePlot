@@ -32,7 +32,7 @@ else:
 	pass
 #setup all the other constants
 #MC mass points; <=400 has no entries!
-mass_lst   = [500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]#, 3500, 4000, 4500, 5000, 6000]
+mass_lst   = [500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000] #, 3500, 4000, 4500, 5000, 6000]
 #for data and MC, number of file splits, right now 14 = 2 * (8 - 1)
 ##this affects the cutflow plot error!!! because root reduces the error by sqrt(N). Need to scale it back up...
 splits     = 14
@@ -45,7 +45,7 @@ clr_lst    = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPi
 mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r   = "hist-MiniNTuple.root"
-#set the blinding status
+#set the blinding status; True is blind
 blind    = True
 #current total luminiosity, in fb 22.1; 13.0
 totlumi  = 36.1

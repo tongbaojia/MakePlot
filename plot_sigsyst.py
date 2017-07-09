@@ -383,7 +383,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     bkg[0].GetYaxis().SetLabelFont(43)
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
-    bkg[0].GetYaxis().SetRangeUser(0.06, yMax)
+    bkg[0].GetYaxis().SetRangeUser(0.006, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -566,8 +566,8 @@ def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
     if "TwoTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
@@ -576,8 +576,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -586,8 +586,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
         rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])

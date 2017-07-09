@@ -46,10 +46,16 @@ def main():
     ###for 2D comparison
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
-    # ###signalregion shape comparison
+    # ###signalregion shape comparison; top shape comparison
     inputroot = "sum_" + inputdir + ".root"
     #DrawSRcomparison(inputroot, inputdata="ttbar")
     #DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    DrawMulticomparison([
+        {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"TwoTag_split" + "_Sideband/leadHCand_Mass", "leg":"2bs"}, 
+        {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"ThreeTag" + "_Sideband/leadHCand_Mass", "leg":"3b"}, 
+        {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"FourTag" + "_Sideband/leadHCand_Mass", "leg":"4b"}, 
+        ], keyword="leadHCand_Mass", prename="Top_syst_stat", Xrange=[70, 200], norm=True, Rebin=1, Logy=0)
+
     #DrawSRcomparison(inputroot, inputdata="qcd_est")
     #DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
     # DrawSRcomparison(inputroot, inputdata="RSG1_1000", Logy=1, Xrange=[0, 4000])
@@ -102,9 +108,9 @@ def main():
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2])
     #DrawBTaggingPlot("data_test/hist-MiniNTuple.root",             "AllTag_Signal", keyword="MV2H0H1", prename="Data_AllTag_Signal", Xrange=[-2, 2], Yrange=[-2, 2], dodouble=2)
 
-    ##draw the reweighted 2D distributions; works conditionally! for appendix weight section
-    # inputpath = CONF.inputpath + "Moriond_bkg_5" + "/"
-    # outputpath = CONF.inputpath + "Moriond_bkg_5" + "/" + "Plot/Other/"
+    # #draw the reweighted 2D distributions; works conditionally! for appendix weight section
+    # inputpath = CONF.inputpath + "Moriond_bkg_9" + "/"
+    # outputpath = CONF.inputpath + "Moriond_bkg_9" + "/" + "Plot/Other/"
     # if not os.path.exists(outputpath):
     #     os.makedirs(outputpath)
     # for i in ["2Trk_split", "3Trk", "4Trk"]:

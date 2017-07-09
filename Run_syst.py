@@ -101,8 +101,8 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"}) #
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    ##for ttbar MC variations
-    ##see: https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TopSystematics2015
+    #for ttbar MC variations
+    #see: https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/TopSystematics2015
     inputtasks.append({"inputdir":"syst_tt_frag"}) #
     inputtasks.append({"inputdir":"syst_tt_had"})
     inputtasks.append({"inputdir":"syst_tt_ppcs"}) #
@@ -167,19 +167,29 @@ def syst_pipeline(config):
                 if os.path.islink(dst_link):
                     os.unlink(dst_link)
                 os.symlink(ori_link, dst_link)
+            for i, mass in enumerate([3500, 4000, 4500, 5000, 6000]):
+                if sigMC != "signal_G_hh_c10_M": ##no 2750 c20 sample
+                    continue
+                ori_link = CONF.inputpath + ops.inputdir + "/" + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                dst_link = inputpath + sigMC + str(mass) + "/hist-MiniNTuple.root"
+                helpers.checkpath(inputpath + sigMC + str(mass))
+                if os.path.islink(dst_link):
+                    os.unlink(dst_link)
+                os.symlink(ori_link, dst_link)
 
     #start running programs
     #print (inputpath)
-    os.system("rm " + inputpath + "sum_" + t + ".root")
+    #os.system("rm " + inputpath + "sum_" + t + ".root")
     os.system("rm -r " + inputpath + "Limitinput")
     # print "done clearing!"
     # ###this is correcting the 3b/4b normalization to 2b. Should only be applied when ttbar stats makes no sense!
     # if "syst_tt_" in t or "JET_JER" in t or "JET_JMR" in t: ##only for ttbar variations for now
     #      Tophack(inputpath=inputpath)
     # #Tophack(inputpath=inputpath)
-    os.system("python get_count.py --dosyst " + " --inputdir " + t)
+    #os.system("python get_count.py --dosyst " + " --inputdir " + t)
     ##ttbar has weird smoothing behaviour, use ttbar + qcd for final distribution now
     os.system("python dump_hists.py " + " --inputdir " + t + (" --dosyst" if "syst_tt_" in t else ""))
+    #os.system("python dump_hists.py " + " --inputdir " + t)
 
 def Tophack(inputpath):
     '''If use this, will copy the ttbar_comb_test to ttbar_comb_origin,
