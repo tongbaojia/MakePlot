@@ -26,7 +26,7 @@ def main():
     ops = options()
     inputdir = ops.inputdir
     global inputpath
-    inputpath = CONF.inputpath + inputdir + "/"
+    inputpath = CONF.inputpath + "TEST" + "/" ##have to change this to TEST to have full mHH region plots!!!
     global outputpath
     outputpath = CONF.inputpath + inputdir + "/" + "PaperPlot/Other/"
     print "output direcotry is: ", outputpath
@@ -147,7 +147,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fCR = ROOT.TF2("CR", myCR,0,Xrange[1],0,Xrange[1])
     contoursCR = array.array("d", [33.0])
     fCR.SetContour(1, contoursCR)
-    fCR.SetNpx(400)
+    fCR.SetNpx(600)
     fCR.SetLineColor(ROOT.kOrange+7)
     fCR.SetLineWidth(3)
     fCR.Draw("same, cont3")
@@ -156,7 +156,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fSB = ROOT.TF2("SB", mySB,0,Xrange[1],0,Xrange[1])
     contoursSB = array.array("d", [58.0])
     fSB.SetContour(1, contoursSB)
-    fSB.SetNpx(400)
+    fSB.SetNpx(600)
     fSB.SetLineColor(ROOT.kYellow)
     fSB.SetLineWidth(3)
     fSB.Draw("same, cont3")

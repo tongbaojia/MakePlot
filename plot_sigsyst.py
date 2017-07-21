@@ -299,10 +299,10 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
     #comput the integrals! and make the table
     if (not blinded):
-        texoutpath = CONF.inputpath + "b77" + "/" + "Plot/Tables/"
+        texoutpath = CONF.inputpath + ops.inputdir + "/" + "Plot/Tables/"
         if not os.path.exists(texoutpath):
             os.makedirs(texoutpath)
-        outtexFile = open( texoutpath + cut + "_SR_region_compare" + ("" if "pole" not in finaldis else "_pole") + ".tex", "w")
+        outtexFile = open( texoutpath + cut + "_SR_region_compare" + ".tex", "w")
         tableList = []
         int_range_lst = [">1000", ">1500", ">2000", ">2500", ">3000"]
         help_table.add_table_head(tableList, int_range_lst, title="Mass Range")
@@ -312,7 +312,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         #print masterdic, systag
         for int_range in int_range_lst:   
             err = ROOT.Double(0.)
-            int_range = bkg[2].IntegralAndError(bkg[2].GetXaxis().FindBin(int(int_range.replace(">", ""))), bkg[2].GetXaxis().GetNbins()+1, err)
+            int_range = bkg[0].IntegralAndError(bkg[0].GetXaxis().FindBin(int(int_range.replace(">", ""))), bkg[0].GetXaxis().FindBin(3800), err)
             outstr += help_table.add_entry((int_range, float(err)))
         #finish the current entry
         outstr+="\\\\"
@@ -324,7 +324,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         temp_data = ifile.Get("data_hh" )
         for int_range in int_range_lst:
             err = ROOT.Double(0.)
-            int_range = temp_data.IntegralAndError(temp_data.GetXaxis().FindBin(int(int_range.replace(">", ""))), temp_data.GetXaxis().GetNbins()+1, err)
+            int_range = temp_data.IntegralAndError(temp_data.GetXaxis().FindBin(int(int_range.replace(">", ""))), temp_data.GetXaxis().FindBin(3800), err)
             outstr += help_table.add_entry((int_range, float(err)))
         #finish the current entry
         outstr+="\\\\"
@@ -566,8 +566,8 @@ def dumpRegion(config):
     rebin_dic = {}
     #different rebin for each catagory
     if "TwoTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450] + range(450, 600, 30) + range(600, 800, 40) + [800, 850, 900, 1000, 1200, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 1000, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 60] + range(60, 300, 30) + [300, 330, 360, 400, 450, 500, 600, 800, 1300, 2000])
@@ -576,8 +576,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 60, 90, 120, 160, 200, 250, 300, 350, 400, 450, 500, 600, 800])
         rebin_dic["trks_Pt"]    = array('d', range(0, 400, 40) + [400, 450, 500, 550, 600, 800, 900, 1000, 1300, 1600, 2000])
     if "ThreeTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [400, 450, 480, 520, 560, 600, 640, 690, 750, 820, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', range(250, 600, 50) + [600, 700, 800, 1000, 1300, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
@@ -586,8 +586,8 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 30, 70] + range(70, 310, 40) + [310, 360, 430, 500, 600, 800, 2000])
     if "FourTag" in config["cut"]:
-        rebin_dic["mHH_l"]      = array('d', range(0, 6000, 100))
-        rebin_dic["mHH_pole"]   = array('d', range(0, 6000, 100))
+        rebin_dic["mHH_l"]      = array('d', range(0, 4000, 100))
+        rebin_dic["mHH_pole"]   = array('d', range(0, 4000, 100))
         rebin_dic["j0_Pt"]      = array('d', [450, 500, 570, 650, 800, 1000, 2000])
         rebin_dic["j1_Pt"]      = array('d', [250, 320, 390, 460, 550, 2000])
         rebin_dic["trk0_Pt"]    = array('d', [0, 70, 140, 210, 280, 360, 500, 2000])
@@ -611,6 +611,7 @@ def dumpRegion(config):
 def main():
 
     start_time = time.time()
+    global ops
     ops = options()
     #setup basics
     inputdir = ops.inputdir
@@ -640,28 +641,28 @@ def main():
         outputFolder = inputpath + inputroot + "Plot/Signal_Syst"
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
-        for j, cut in enumerate(cut_lst):
-            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-            for checksyst in ["all", "QCDNorm", "QCDShape", "normY", "smooth", "JET", "FT", "tt"]:
-                config = {}
-                config["root"] = rootinputpath
-                config["inputdir"] = inputdir
-                config["outputdir"] = outputFolder
-                config["cut"] = cut + "_" + region + "_"
-                config["blind"] = True
-                config["syst"]  = checksyst
-                inputtasks.append(config)
         # for j, cut in enumerate(cut_lst):
         #     rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
-        #     config = {}
-        #     config["root"] = rootinputpath
-        #     config["inputdir"] = inputdir
-        #     config["outputdir"] = outputFolder
-        #     config["cut"] = cut + "_" + region + "_"
-        #     config["syst"]  = "all"
-        #     if "Signal" in region:
-        #         config["blind"] = False
+        #     for checksyst in ["all", "QCDNorm", "QCDShape", "normY", "smooth", "JET", "FT", "tt"]:
+        #         config = {}
+        #         config["root"] = rootinputpath
+        #         config["inputdir"] = inputdir
+        #         config["outputdir"] = outputFolder
+        #         config["cut"] = cut + "_" + region + "_"
+        #         config["blind"] = True
+        #         config["syst"]  = checksyst
         #         inputtasks.append(config)
+        for j, cut in enumerate(cut_lst):
+            rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
+            config = {}
+            config["root"] = rootinputpath
+            config["inputdir"] = inputdir
+            config["outputdir"] = outputFolder
+            config["cut"] = cut + "_" + region + "_"
+            config["syst"]  = "all"
+            if "Signal" in region:
+                config["blind"] = False
+                inputtasks.append(config)
 
    
     #dumpRegion(inputtasks[0])

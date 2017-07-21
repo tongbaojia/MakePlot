@@ -45,9 +45,9 @@ clr_lst    = [ROOT.kRed+1, ROOT.kBlue+1, ROOT.kOrange+7, ROOT.kGreen+3, ROOT.kPi
 mrk_lst  = range(20, 40)
 #defuault root file name
 hist_r   = "hist-MiniNTuple.root"
-#set the blinding status; True is blind
-blind    = True
-#current total luminiosity, in fb 22.1; 13.0
+#set the blinding status; True is blind; False is unblind!
+blind    = False
+#current total luminiosity, in fb 22.1; 13.0; uncertainty 2.2%
 totlumi  = 36.1
 #3b/4b split 2b samples in: (2 for half and half, 5 for now)
 split_factor  = 5

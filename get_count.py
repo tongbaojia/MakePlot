@@ -121,6 +121,7 @@ def main():
     inputtasks.append({"inputdir":inputpath + "ttbar_comb_test/hist-MiniNTuple.root", "histname":"ttbar"})
     inputtasks.append({"inputdir":inputpath + "zjets_test/hist-MiniNTuple.root", "histname":"zjet"})
     inputtasks.append({"inputdir":inputpath + "data_test/hist-MiniNTuple.root", "histname":"data"})
+    inputtasks.append({"inputdir":inputpath + "signal_SM_hh/hist-MiniNTuple.root", "histname":"sm"})
     for mass in mass_lst:
         inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG1_%i" % mass})
         if (ops.Xhh):
@@ -128,9 +129,9 @@ def main():
             if mass != 2750:
                 inputtasks.append({"inputdir":inputpath + "signal_G_hh_c20_M%i/hist-MiniNTuple.root" % mass, "histname":"RSG2_%i" % mass})
     
-    ##for the fucking high mass request
-    for extramass in [3500, 4000, 4500, 5000, 6000]:
-        inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % extramass, "histname":"RSG1_%i" % extramass})
+    # ##for the fucking high mass request
+    # for extramass in [3500, 4000, 4500, 5000, 6000]:
+    #     inputtasks.append({"inputdir":inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % extramass, "histname":"RSG1_%i" % extramass})
 
 
     #do the fit first

@@ -41,67 +41,67 @@ def main():
     ##starndard plots
     # ##paper plot
 
-    ##compare the trackjet distribution before reweighting
-    for histname in ["leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
-        DrawMulticomparison([
-            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
-            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
-            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on leadH"},
-            {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on sublH"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
-            # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
-            #{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
-            ], keyword=histname, Xrange=[0, 600], norm=True, prename="MC_2bs", Rebin=10, Logy=1)
+    # ##compare the trackjet distribution before reweighting
+    # for histname in ["leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_Incl" + "/" + histname, "leg":"2bs SB"},
+    #         {"file":"signal_QCD/hist-MiniNTuple.root", "path":"NoTag_Incl" + "/" + histname, "leg":"NoTag"},
+    #         {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_Incl" + "/" + histname, "leg":"OneTag on leadH"},
+    #         {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_Incl" + "/" + histname, "leg":"OneTag on sublH"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_lead_Incl" + "/" + histname, "leg":"OneTag lead on lead"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_lead_subl_Incl" + "/" + histname, "leg":"OneTag lead on subl"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_lead_Incl" + "/" + histname, "leg":"OneTag subl on lead"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"OneTag_subl_subl_Incl" + "/" + histname, "leg":"OneTag subl on subl"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_lead_lead_Incl" + "/" + histname, "leg":"2bs lead + lead"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_lead_subl_Incl" + "/" + histname, "leg":"2bs lead + subl"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_subl_lead_Incl" + "/" + histname, "leg":"2bs subl + lead"},
+    #         # {"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_subl_subl_Incl" + "/" + histname, "leg":"2bs subl + subl"},
+    #         #{"file":"signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband" + "/" + histname, "leg":"2bs SB"},
+    #         ], keyword=histname, Xrange=[0, 600], norm=True, prename="MC_2bs", Rebin=10, Logy=1)
 
-    ##compare reweighting in QCD MC
-    for histname in ["leadHCand_Pt_m", "sublHCand_Pt_m"]:
-        DrawMulticomparison([
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"TwoTag_split_Incl/" + histname, "leg":"2bs;"},
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"OneTag_Incl/" + histname, "leg":"1b;"}, 
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkg;"},
-            #{"file":"../Moriond_bkgeta_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgeta;"},
-            #{"file":"../Moriond_bkgdr_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgdr;"},
-            #{"file":"../Moriond_bkgtrk_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgtrk;"},
-            #{"file":"../Moriond_bkgsb_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgsb;"},
-            #{"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root",  "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted alltrk;"},
-            #{"file":"../Moriond_j0pT-leadtrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted leadtrk;"},
-            #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted subltrk;"},
-            ], keyword=histname, norm=True, Xrange=[250, 1000], Rebin=5, Logy=1, prename="Dijet_Incl")
+    # ##compare reweighting in QCD MC
+    # for histname in ["leadHCand_Pt_m", "sublHCand_Pt_m"]:
+    #     DrawMulticomparison([
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"TwoTag_split_Incl/" + histname, "leg":"2bs;"},
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"OneTag_Incl/" + histname, "leg":"1b;"}, 
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkg;"},
+    #         #{"file":"../Moriond_bkgeta_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgeta;"},
+    #         #{"file":"../Moriond_bkgdr_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgdr;"},
+    #         #{"file":"../Moriond_bkgtrk_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgtrk;"},
+    #         #{"file":"../Moriond_bkgsb_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgsb;"},
+    #         #{"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root",  "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted alltrk;"},
+    #         #{"file":"../Moriond_j0pT-leadtrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted leadtrk;"},
+    #         #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted subltrk;"},
+    #         ], keyword=histname, norm=True, Xrange=[250, 1000], Rebin=5, Logy=1, prename="Dijet_Incl")
 
-    for histname in ["leadHCand_trk0_Pt", "sublHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk1_Pt"]:
-        DrawMulticomparison([
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"TwoTag_split_Incl/" + histname, "leg":"2bs;"},
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"OneTag_Incl/" + histname, "leg":"1b;"}, 
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkg;"},
-            #{"file":"../Moriond_bkgeta_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgeta;"},
-            #{"file":"../Moriond_bkgdr_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgdr;"},
-            #{"file":"../Moriond_bkgtrk_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgtrk;"},
-            #{"file":"../Moriond_bkgsb_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgsb;"},
-            #{"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root",  "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted alltrk;"},
-            #{"file":"../Moriond_j0pT-leadtrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted leadtrk;"},
-            #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted subltrk;"},
-            ], keyword=histname, norm=True, Xrange=[0, 1000], Rebin=5, Logy=1, prename="Dijet_Incl")
+    # for histname in ["leadHCand_trk0_Pt", "sublHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk1_Pt"]:
+    #     DrawMulticomparison([
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"TwoTag_split_Incl/" + histname, "leg":"2bs;"},
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"OneTag_Incl/" + histname, "leg":"1b;"}, 
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkg;"},
+    #         #{"file":"../Moriond_bkgeta_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgeta;"},
+    #         #{"file":"../Moriond_bkgdr_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgdr;"},
+    #         #{"file":"../Moriond_bkgtrk_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgtrk;"},
+    #         #{"file":"../Moriond_bkgsb_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted bkgsb;"},
+    #         #{"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root",  "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted alltrk;"},
+    #         #{"file":"../Moriond_j0pT-leadtrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted leadtrk;"},
+    #         #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Incl/" + histname, "leg":"1b reweighted subltrk;"},
+    #         ], keyword=histname, norm=True, Xrange=[0, 1000], Rebin=5, Logy=1, prename="Dijet_Incl")
 
-    for histname in ["mHH_l"]:
-            for region in ["Signal", "Sideband", "Control", "Incl"]:
-                DrawMulticomparison([
-                    {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"TwoTag_split_" + region + "/" + histname, "leg":"2bs;"}, 
-                    {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"OneTag_" + region + "/" +  histname, "leg":"1b;"},
-                    {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkg;"},
-                    #{"file":"../Moriond_bkgeta_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgeta;"},
-                    #{"file":"../Moriond_bkgdr_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgdr;"},
-                    #{"file":"../Moriond_bkgtrk_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgtrk;"},
-                    #{"file":"../Moriond_bkgsb_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgsb;"},
-                    #{"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root",  "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted alltrk;"},
-                    #{"file":"../Moriond_j0pT-leadtrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted leadtrk;"},
-                    #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted subltrk;"},
-                    ], keyword=histname, norm=True, Xrange=[500, 3500], prename="Dijet_" + region, Rebin=10, Logy=1)
+    # for histname in ["mHH_l"]:
+    #         for region in ["Signal", "Sideband", "Control", "Incl"]:
+    #             DrawMulticomparison([
+    #                 {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"TwoTag_split_" + region + "/" + histname, "leg":"2bs;"}, 
+    #                 {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"OneTag_" + region + "/" +  histname, "leg":"1b;"},
+    #                 {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root",              "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkg;"},
+    #                 #{"file":"../Moriond_bkgeta_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgeta;"},
+    #                 #{"file":"../Moriond_bkgdr_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgdr;"},
+    #                 #{"file":"../Moriond_bkgtrk_5/signal_QCD/hist-MiniNTuple.root",           "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgtrk;"},
+    #                 #{"file":"../Moriond_bkgsb_5/signal_QCD/hist-MiniNTuple.root",            "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted bkgsb;"},
+    #                 #{"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root",  "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted alltrk;"},
+    #                 #{"file":"../Moriond_j0pT-leadtrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted leadtrk;"},
+    #                 #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted subltrk;"},
+    #                 ], keyword=histname, norm=True, Xrange=[500, 3500], prename="Dijet_" + region, Rebin=10, Logy=1)
 
 
     # ##compare reweighting in BQCD MC
@@ -134,61 +134,72 @@ def main():
     #             #{"file":"../Moriond_j0pT-subltrk-fin_5/signal_BQCD_200/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_" + region + "/" +  histname, "leg":"1b reweighted subltrk;"},
     #             ], keyword=histname, norm=True, Xrange=[500, 3500], prename="BQCD_" + region, Rebin=10, Logy=1)
 
-    ##for QCD mHH shape study; this is comparing to data
-    for histname in ["mHH_l"]:
-        for tag in ["TwoTag_split", "ThreeTag", "FourTag"]:
-            for region in ["Signal", "Sideband", "Control"]:
-                DrawMulticomparison([ 
-                    {"file":"../Moriond/sum_Moriond.root", "path":("qcd_" if "Signal" not in region else "qcd_est_")+ tag + "_" + region + "_" + histname, "leg":"Data;"},
-                    {"file":"../Moriond/sum_Moriond.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"no reweight;"},
-                    {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkg;"},
-                    {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgeta;"},
-                    {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgdr;"},
-                    {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgsb;"},
-                    {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgtrk;"},
-                    {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight alltrk;"},
-                    {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight leadtrk;"},
-                    {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight subltrk;"},
-                    ], keyword=histname, norm=True, Xrange=[500, 3500], prename="Data_" + tag + "_" + region, Rebin=10, Logy=1)
+    # ##for QCD mHH shape study; this is comparing to data
+    # for histname in ["mHH_l", "mHH_pole"]:
+    #     for tag in ["TwoTag_split", "ThreeTag", "FourTag"]:
+    #         for region in ["Signal", "Sideband", "Control"]:
+    #             DrawMulticomparison([ 
+    #                 #{"file":"../Moriond/sum_Moriond.root", "path":("qcd_" if "Signal" not in region else "qcd_est_")+ tag + "_" + region + "_" + histname, "leg":"Data;"},
+    #                 #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"no reweight;"},
+    #                 {"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkg;"},
+    #                 #{"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgeta;"},
+    #                 #{"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgdr;"},
+    #                 #{"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgsb;"},
+    #                 #{"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgtrk;"},
+    #                 {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight alltrk;"},
+    #                 #{"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight leadtrk;"},
+    #                 #{"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight subltrk;"},
+    #                 ], keyword=histname, norm=False, Xrange=[500, 3500], prename="Data_" + tag + "_" + region, Rebin=10, Logy=1)
 
-    for histname in ["leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
-        for tag in ["TwoTag_split", "ThreeTag", "FourTag"]:
-            for region in ["Signal", "Sideband", "Control"]:
-                DrawMulticomparison([ 
-                    {"file":"../Moriond/sum_Moriond.root", "path":("qcd_" if "Signal" not in region else "qcd_est_")+ tag + "_" + region + "_" + histname, "leg":"Data;"},
-                    {"file":"../Moriond/sum_Moriond.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"no reweight;"},
-                    {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkg;"},
-                    {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgeta;"},
-                    {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgdr;"},
-                    {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgsb;"},
-                    {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgtrk;"},
-                    {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight alltrk;"},
-                    {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight leadtrk;"},
-                    {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight subltrk;"},
-                    ], keyword=histname, Xrange=[0, 600], norm=True, prename="Data_" + tag + "_" + region, Rebin=5, Logy=1)
 
-    # ##for QCD mHH shape study
-    for histname in ["mHH_l"]:
-        DrawMulticomparison([ 
-            #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_Sideband/" + histname, "leg":"0b;"},
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband/" + histname, "leg":"2bs;"},
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"OneTag_Sideband/" + histname, "leg":"1b;"},
-            #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_Sideband/" + histname, "leg":"2b;"},
-            {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Sideband/" + histname, "leg":"1b; reweighted bkg"},
-            {"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Sideband/" + histname, "leg":"1b; reweighted alltrk"},
-            #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"ThreeTag_Sideband/" + histname, "leg":"3b;"},
-            #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"FourTag_Sideband/" + histname, "leg":"4b;"},
-            ], keyword=histname, prename="MC", norm=True, Xrange=[500, 3500], Rebin=10, Logy=1)
+
+    for histname in ["totalbkg_hh", "qcd_hh"]:
+        for tag in ["TwoTag_split", "ThreeTag", "FourTag"]:
+            for region in ["Signal"]:
+                DrawMulticomparison([ 
+                    {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_" + tag + ".root", "path":histname, "leg":"reweight bkg;"},
+                    {"file":"../Moriond_j0pT-alltrk-fin_5/Limitinput/Moriond_j0pT-alltrk-fin_5_limit_" + tag + ".root", "path":histname, "leg":"reweight alltrk;"},
+                    ], keyword=histname, norm=False, Xrange=[500, 3500], prename="Reweight_" + tag + "_" + region, Logy=1)
+
+
+    # for histname in ["leadHCand_trk0_Pt", "leadHCand_trk1_Pt", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]:
+    #     for tag in ["TwoTag_split", "ThreeTag", "FourTag"]:
+    #         for region in ["Signal", "Sideband", "Control"]:
+    #             DrawMulticomparison([ 
+    #                 {"file":"../Moriond/sum_Moriond.root", "path":("qcd_" if "Signal" not in region else "qcd_est_")+ tag + "_" + region + "_" + histname, "leg":"Data;"},
+    #                 {"file":"../Moriond/sum_Moriond.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"no reweight;"},
+    #                 {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkg;"},
+    #                 {"file":"../Moriond_bkgeta_5/sum_Moriond_bkgeta_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgeta;"},
+    #                 {"file":"../Moriond_bkgdr_5/sum_Moriond_bkgdr_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgdr;"},
+    #                 {"file":"../Moriond_bkgsb_5/sum_Moriond_bkgsb_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgsb;"},
+    #                 {"file":"../Moriond_bkgtrk_5/sum_Moriond_bkgtrk_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight bkgtrk;"},
+    #                 {"file":"../Moriond_j0pT-alltrk-fin_5/sum_Moriond_j0pT-alltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight alltrk;"},
+    #                 {"file":"../Moriond_j0pT-leadtrk-fin_5/sum_Moriond_j0pT-leadtrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight leadtrk;"},
+    #                 {"file":"../Moriond_j0pT-subltrk-fin_5/sum_Moriond_j0pT-subltrk-fin_5.root", "path":"qcd_est_" + tag + "_" + region + "_" + histname, "leg":"reweight subltrk;"},
+    #                 ], keyword=histname, Xrange=[0, 600], norm=True, prename="Data_" + tag + "_" + region, Rebin=5, Logy=1)
+
+    # # # ##for QCD mHH shape study
+    # for histname in ["mHH_l"]:
+    #     DrawMulticomparison([ 
+    #         #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_Sideband/" + histname, "leg":"0b;"},
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_split_Sideband/" + histname, "leg":"2bs;"},
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"OneTag_Sideband/" + histname, "leg":"1b;"},
+    #         #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"TwoTag_Sideband/" + histname, "leg":"2b;"},
+    #         {"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Sideband/" + histname, "leg":"1b; reweighted bkg"},
+    #         {"file":"../Moriond_j0pT-alltrk-fin_5/signal_QCD/hist-MiniNTuple.root", "path":"NoTag_2Trk_split_Sideband/" + histname, "leg":"1b; reweighted alltrk"},
+    #         #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"ThreeTag_Sideband/" + histname, "leg":"3b;"},
+    #         #{"file":"../Moriond_bkg_5/signal_QCD/hist-MiniNTuple.root", "path":"FourTag_Sideband/" + histname, "leg":"4b;"},
+    #         ], keyword=histname, prename="MC", norm=True, Xrange=[500, 3500], Rebin=10, Logy=1)
     
-    for histname in ["mHH_l"]:
-        DrawMulticomparison([ 
-            #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_NoTag_Sideband_" + histname, "leg":"0b;"},
-            {"file":"../Moriond/sum_Moriond.root", "path":"qcd_TwoTag_split_Sideband_" + histname, "leg":"2bs;"},
-            {"file":"../Moriond/sum_Moriond.root", "path":"qcd_OneTag_Sideband_" + histname, "leg":"1b;"},
-            {"file":"../Moriond/sum_Moriond.root", "path":"qcd_TwoTag_Sideband_" + histname, "leg":"2b;"},
-            #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_ThreeTag_Sideband_" + histname, "leg":"3b;"},
-            #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_FourTag_Sideband_" + histname, "leg":"4b;"},
-            ], keyword=histname, prename="Data",  norm=True, Xrange=[500, 3500], Rebin=10, Logy=1)
+    # for histname in ["mHH_l"]:
+    #     DrawMulticomparison([ 
+    #         #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_NoTag_Sideband_" + histname, "leg":"0b;"},
+    #         {"file":"../Moriond/sum_Moriond.root", "path":"qcd_TwoTag_split_Sideband_" + histname, "leg":"2bs;"},
+    #         {"file":"../Moriond/sum_Moriond.root", "path":"qcd_OneTag_Sideband_" + histname, "leg":"1b;"},
+    #         {"file":"../Moriond/sum_Moriond.root", "path":"qcd_TwoTag_Sideband_" + histname, "leg":"2b;"},
+    #         #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_ThreeTag_Sideband_" + histname, "leg":"3b;"},
+    #         #{"file":"../Moriond/sum_Moriond.root", "path":"qcd_FourTag_Sideband_" + histname, "leg":"4b;"},
+    #         ], keyword=histname, prename="Data",  norm=True, Xrange=[500, 3500], Rebin=10, Logy=1)
 
 
 def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=[0, 0], norm=True, Logy=0, Rebin=1):

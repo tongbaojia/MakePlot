@@ -60,6 +60,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_2000.Scale(30)
     RSG1_2500 = ifile.Get("RSG1_2500_" + cut )
     RSG1_2500.Scale(100)
+    SMhh = ifile.Get("sm_" + cut )
+    SMhh.Scale(100)
+
 
     #do simple rebin as rebin values
     if not rebin == None:
@@ -73,6 +76,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         RSG1_1500.Rebin(rebin)
         RSG1_2000.Rebin(rebin)
         RSG1_2500.Rebin(rebin)
+        SMhh.Rebin(rebin)
     #use array to rebin histgrams
     if not rebinarry == None:
         data      = data.Rebin(len(rebinarry) - 1, data.GetName()+"_rebinned", rebinarry)
@@ -85,6 +89,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
         RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
         RSG1_2500 = RSG1_2500.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
+        SMhh      = SMhh.Rebin(len(rebinarry) - 1, RSG1_2500.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -148,6 +153,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_1500.Add(bkg[0]) 
     RSG1_2000.Add(bkg[0]) 
     RSG1_2500.Add(bkg[0]) 
+    #SMhh.Add(bkg[0])  ##don't add bkg for SMhh
 
     # canvas
     c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 600, 600)
@@ -213,6 +219,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_2500.SetLineStyle(2)
     RSG1_2500.SetLineColor(ROOT.kGreen+4)
     #RSG1_2500.Draw("HISTO SAME")
+
+    SMhh.SetLineWidth(2)
+    SMhh.SetLineStyle(2)
+    SMhh.SetLineColor(ROOT.kGreen+4)
+    if ("Signal" in cut):
+        SMhh.Draw("HISTO SAME")
 
     bkg[1].SetFillColor(CONF.col_dic["syst"])
     bkg[1].SetLineColor(CONF.col_dic["syst"])
@@ -359,13 +371,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
     leg.AddEntry(RSG1_2000, "G(2000)#times30", "F")
     #leg.AddEntry(RSG1_2500, "RSG 2.5TeV * 100", "F")
+    if ("Signal" in cut):
+        leg.AddEntry(SMhh, "SMNR#times1000", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
     leg.Draw()
-
-
-
 
 
     # save

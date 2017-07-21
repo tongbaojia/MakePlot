@@ -104,15 +104,16 @@ def dump(finaldis="l"):
             outfile.cd()
             hist_total.Write()
 
-        ##for other mass points
+        ##for other mass points/signals
+        savehist(ifile, "sm_" + cut, "sm_hh")
         for mass in mass_lst:
             savehist(ifile, "RSG1_" + str(mass) + "_" + cut, "signal_RSG_c10_hh_m" + str(mass))
             if(ops.Xhh):
                 savehist(ifile, "Xhh_" + str(mass) + "_" + cut, "signal_X_hh_m" + str(mass))
                 if mass != 2750:
                     savehist(ifile, "RSG2_" + str(mass) + "_" + cut, "signal_RSG_c20_hh_m" + str(mass))
-        for extramass in [3500, 4000, 4500, 5000, 6000]:
-            savehist(ifile, "RSG1_" + str(extramass) + "_" + cut, "signal_RSG_c10_hh_m" + str(extramass))
+        # for extramass in [3500, 4000, 4500, 5000, 6000]:
+        #     savehist(ifile, "RSG1_" + str(extramass) + "_" + cut, "signal_RSG_c10_hh_m" + str(extramass))
                     
         outfile.Close()
         makeSmoothedMJJPlots("%s/%s_limit_%s.root" % (outputpath, inputdir, c + ("_pole" if "pole" in finaldis else "")), pltoutputpath + c + pltname + "_smoothed.pdf")
@@ -143,7 +144,9 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
         hist.Scale((hist_zjet.Integral() + hist.Integral())/hist.Integral())
     #always clear the negative bins before smoothing!
     #print inname, smoothrange, initpar, hist.GetMaximum()
-    ClearNegBin(hist)
+    if ("data_hh" not in outname): ##don't do it for data
+        #print "here"
+        ClearNegBin(hist)
     #rebin is also done here, will be send to limit input
     #print inname, smoothrange, initpar, hist.GetMaximum()
     if Rebin:
@@ -157,11 +160,15 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     elif dosmooth:
         #print inname, smoothrange, initpar ##for debug
         sm = smoothfit.smoothfit(hist, fitFunction = smoothfunc, fitRange = smoothrange, \
-            makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar, maxPlotRange=7000)
+            makePlots = True, verbose = False, outfileName=inname, ouutfilepath=pltoutputpath, initpar=initpar, maxPlotRange=4000) ##could be up to 7000
         if ops.dosyst:
             hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"]) ##This one doesn't have smoothing error, only for systematics
+        elif ops.doCR: #be very careful here; don't mess up the default
+            hist =  smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error, don't want this any more
         else: #be very careful here; don't mess up the default
-            hist = smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error
+            #hist =  smoothfit.MakeSmoothHistoWithError(hist, sm) ##This one is with smoothing error, don't want this any more
+            hist =  smoothfit.MakeSmoothHisto(hist, sm["nom"])
+
 
     int_aft = hist.Integral()
     #print hist.GetName(), "before", int_aft, "after", int_aft

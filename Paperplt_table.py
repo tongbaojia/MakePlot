@@ -1,6 +1,6 @@
 import ROOT, rootlogon, helpers
 import help_table as help_table
-import dump_merge as dump_merge
+import dump_syst as dump_syst
 import argparse, array, copy, glob,  os, sys, time
 import config as CONF
 try:
@@ -61,7 +61,7 @@ def options():
 
 ###
 def SBCR_table(masterdic):
-    texoutpath = CONF.inputpath + "b77" + "/" + "PaperPlot/Tables/"
+    texoutpath = CONF.inputpath + CONF.workdir + "_" + CONF.reweightdir + "/" + "PaperPlot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
     outFile = open( texoutpath + "SBCR_table.tex", "w")
@@ -121,7 +121,7 @@ def SBCR_table(masterdic):
     outFile.close()
 
 def SR_table(masterdic, summarydic):
-    texoutpath = CONF.inputpath + "b77" + "/" + "PaperPlot/Tables/"
+    texoutpath = CONF.inputpath + CONF.workdir + "_" + CONF.reweightdir + "/" + "PaperPlot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
     outFile = open( texoutpath + "SR_table.tex", "w")
@@ -146,7 +146,7 @@ def SR_table(masterdic, summarydic):
         outstr += raw_lst_dic[raw]
         #print masterdic, systag
         for c in cut_lst:   
-            totalsyst = dump_merge.add_syst(summarydic[c][raw])[0]
+            totalsyst = dump_syst.add_syst(summarydic[c][raw])[0]
             valuetuple = (masterdic[c][raw + "_est"]["int"], totalsyst * masterdic[c][raw + "_est"]["int"])
             outstr += help_table.add_entry(valuetuple)
         #finish the current entry
@@ -169,7 +169,7 @@ def SR_table(masterdic, summarydic):
     outFile.close()
 
 def Syst_table(masterdic):
-    texoutpath = CONF.inputpath + "b77" + "/" + "PaperPlot/Tables/"
+    texoutpath = CONF.inputpath + CONF.workdir + "_" + CONF.reweightdir + "/" + "PaperPlot/Tables/"
     if not os.path.exists(texoutpath):
         os.makedirs(texoutpath)
     outFile = open( texoutpath + "Syst_table.tex", "w")
@@ -217,8 +217,8 @@ def Syst_table(masterdic):
                     outstr += help_table.add_entry((0, 0), doerr=False, percent=True)
 
             else:
-                temp_col_dic = dump_merge.find_syst(masterdic, c, systag, col)
-                outstr += help_table.add_entry(dump_merge.add_syst(temp_col_dic), doerr=False, percent=True)
+                temp_col_dic = dump_syst.find_syst(masterdic, c, systag, col)
+                outstr += help_table.add_entry(dump_syst.add_syst(temp_col_dic), doerr=False, percent=True)
                 column_dic[temp_col].update(temp_col_dic)
         #finish the current entry
         outstr+="\\\\"
@@ -229,7 +229,7 @@ def Syst_table(masterdic):
     outstr = ""
     outstr += "Total Sys"
     for temp_col in column_lst:
-        outstr += help_table.add_entry(dump_merge.add_syst(column_dic[temp_col]), doerr=False, percent=True)
+        outstr += help_table.add_entry(dump_syst.add_syst(column_dic[temp_col]), doerr=False, percent=True)
     outstr+="\\\\"
     tableList.append(outstr)
 

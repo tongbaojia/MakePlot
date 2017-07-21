@@ -46,15 +46,15 @@ def main():
     ###for 2D comparison
     #DrawPaper2D("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag_Incl", prename="RSG1500_All_Incl_paper", Xrange=[10, 300], Yrange=[10, 350], compinputname="../b70_calo/signal_G_hh_c10_M1500/hist-MiniNTuple.root", compinputdir="AllTag_Incl") 
 
-    # ###signalregion shape comparison; top shape comparison
-    inputroot = "sum_" + inputdir + ".root"
-    #DrawSRcomparison(inputroot, inputdata="ttbar")
-    #DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
-    DrawMulticomparison([
-        {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"TwoTag_split" + "_Sideband/leadHCand_Mass", "leg":"2bs"}, 
-        {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"ThreeTag" + "_Sideband/leadHCand_Mass", "leg":"3b"}, 
-        {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"FourTag" + "_Sideband/leadHCand_Mass", "leg":"4b"}, 
-        ], keyword="leadHCand_Mass", prename="Top_syst_stat", Xrange=[70, 200], norm=True, Rebin=1, Logy=0)
+    # # ###signalregion shape comparison; top shape comparison
+    # inputroot = "sum_" + inputdir + ".root"
+    # #DrawSRcomparison(inputroot, inputdata="ttbar")
+    # #DrawSRcomparison(inputroot, inputdata="ttbar", Logy=1)
+    # DrawMulticomparison([
+    #     {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"TwoTag_split" + "_Sideband/leadHCand_Mass", "leg":"2bs"}, 
+    #     {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"ThreeTag" + "_Sideband/leadHCand_Mass", "leg":"3b"}, 
+    #     {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":"FourTag" + "_Sideband/leadHCand_Mass", "leg":"4b"}, 
+    #     ], keyword="leadHCand_Mass", prename="Top_syst_stat", Xrange=[70, 200], norm=True, Rebin=1, Logy=0)
 
     #DrawSRcomparison(inputroot, inputdata="qcd_est")
     #DrawSRcomparison(inputroot, inputdata="qcd_est", Logy=1)
@@ -68,21 +68,21 @@ def main():
     # DrawSRcomparison(inputroot, inputdata="RSG1_2000", keyword="sublHCand_Mass_s", Xrange=[90, 180])
     # DrawSRcomparison(inputroot, inputdata="RSG1_3000", keyword="sublHCand_Mass_s", Xrange=[90, 180])
 
-    # # ###draw the mhh before and after scale
-    DrawScalecomparison(inputroot, norm=False)
-    DrawScalecomparison(inputroot, norm=True, Logy=1)
-    # ###end of standard plots
+    # # # ###draw the mhh before and after scale
+    # DrawScalecomparison(inputroot, norm=False)
+    # DrawScalecomparison(inputroot, norm=True, Logy=1)
+    # # ###end of standard plots
 
-    # ##region shape comparisons
-    # ##side band shapes
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "OneTag_Sideband", keyword="mH0H1", prename="Sideband_OneTag", Xrange=[40, 250], Yrange=[40, 250])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "OneTag_Control", keyword="mH0H1", prename="Control_OneTag", Xrange=[40, 250], Yrange=[40, 250])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_Sideband", keyword="mH0H1", prename="Sideband_TwoTag", Xrange=[40, 250], Yrange=[40, 250])
-    DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_Control", keyword="mH0H1", prename="Control_TwoTag", Xrange=[40, 250], Yrange=[40, 250])
-    DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
-    #DrawRegionPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G1500", Xrange=[40, 250], Yrange=[40, 250])
-    #DrawRegionPlot("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G3000", Xrange=[40, 250], Yrange=[40, 250])
-    # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
+    # # ##region shape comparisons
+    # # ##side band shapes
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "OneTag_Sideband", keyword="mH0H1", prename="Sideband_OneTag", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "OneTag_Control", keyword="mH0H1", prename="Control_OneTag", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_Sideband", keyword="mH0H1", prename="Sideband_TwoTag", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawSignalPlot("data_test/hist-MiniNTuple.root", "TwoTag_Control", keyword="mH0H1", prename="Control_TwoTag", Xrange=[40, 250], Yrange=[40, 250])
+    # DrawRegionPlot("data_test/hist-MiniNTuple.root", "NoTag", keyword="mH0H1", prename="Compare", Xrange=[40, 250], Yrange=[40, 250])
+    # #DrawRegionPlot("signal_G_hh_c10_M1500/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G1500", Xrange=[40, 250], Yrange=[40, 250])
+    # #DrawRegionPlot("signal_G_hh_c10_M3000/hist-MiniNTuple.root", "AllTag", keyword="mH0H1", prename="Compare_G3000", Xrange=[40, 250], Yrange=[40, 250])
+    # # #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_ZZ", keyword="mH0H1", prename="ZZ", Xrange=[40, 250], Yrange=[40, 250])
     
     ##correlations of the jet mass and jet pT;
     #DrawSignalPlot("data_test/hist-MiniNTuple.root", "NoTag_Incl", keyword="leadHCand_trk0_pt_v_j_m", prename="NoTag_Incl", Xrange=[10, 300], Yrange=[50, 200])
@@ -155,17 +155,17 @@ def main():
     #     {"file":"../Moriond_bkg_5/sum_Moriond_bkg_5.root", "path":"qcd_est_FourTag_Signal_mHH_l", "leg":"Veto"},
     #     ], keyword="mHH_l", norm=False, Rebin=5)
 
-    for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
-        DrawMulticomparison([
-            {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Default"}, 
-            {"file":"../syst_tt_frag/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Frag"}, 
-            {"file":"../syst_tt_had/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Had"}, 
-            {"file":"../syst_tt_mass_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Mass up"}, 
-            {"file":"../syst_tt_mass_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Mass dw"}, 
-            {"file":"../syst_tt_ppcs/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"PPCS"}, 
-            {"file":"../syst_tt_rad_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad dw"}, 
-            {"file":"../syst_tt_rad_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad up"}, 
-            ], keyword="mHH_l", prename=tagname + "_Top_syst_stat", Xrange=[0, 3000], norm=False, Rebin=5, Logy=1)
+    # for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
+    #     DrawMulticomparison([
+    #         {"file":"../Moriond/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Default"}, 
+    #         {"file":"../syst_tt_frag/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Frag"}, 
+    #         {"file":"../syst_tt_had/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Had"}, 
+    #         {"file":"../syst_tt_mass_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Mass up"}, 
+    #         {"file":"../syst_tt_mass_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Mass dw"}, 
+    #         {"file":"../syst_tt_ppcs/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"PPCS"}, 
+    #         {"file":"../syst_tt_rad_down/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad dw"}, 
+    #         {"file":"../syst_tt_rad_up/ttbar_comb_test/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"Rad up"}, 
+    #         ], keyword="mHH_l", prename=tagname + "_Top_syst_stat", Xrange=[0, 3000], norm=False, Rebin=5, Logy=1)
 
     ##check how resolved veto affect SR predictions
     # for histname in ["data_est_ThreeTag_Signal_mHH_l", "data_est_FourTag_Signal_mHH_l", "data_est_TwoTag_split_Signal_mHH_l"]:
@@ -173,6 +173,25 @@ def main():
     #         {"file":"sum_Moriond.root", "path":histname, "leg":"Veto"}, 
     #         {"file":"../Moriond_noveto/sum_Moriond_noveto.root", "path":histname, "leg":"NoVeto"},
     #         ], keyword=histname, norm=False, prename="Resveto", Rebin=5, Xrange=[500, 4000])
+
+
+    # ##b-tagging scale factor check
+    # for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
+    #     DrawMulticomparison([
+    #         {"file":"../test/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"nominal"}, 
+    #         {"file":"../test/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"btag_syst_all" + tagname + "_Signal/mHH_l", "leg":"all SF"}, 
+    #         {"file":"../test/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"btag_syst_b" + tagname + "_Signal/mHH_l", "leg":"Eff SF only"}, 
+    #         {"file":"../test/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"btag_syst_nob" + tagname + "_Signal/mHH_l", "leg":"Ineff SF only"}, 
+    #         ], keyword="mHH_l", norm=False, Rebin=5, Xrange=[500, 4000], prename="bSF_3000_FT_EFF_Eigen_B_0__1down_" + tagname)
+    # for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
+    #     DrawMulticomparison([
+    #         {"file":"../test/signal_G_hh_c10_M4000/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"nominal"}, 
+    #         {"file":"../test/signal_G_hh_c10_M4000/hist-MiniNTuple.root", "path":"btag_syst_all" + tagname + "_Signal/mHH_l", "leg":"all SF"}, 
+    #         {"file":"../test/signal_G_hh_c10_M4000/hist-MiniNTuple.root", "path":"btag_syst_b" + tagname + "_Signal/mHH_l", "leg":"Eff SF only"}, 
+    #         {"file":"../test/signal_G_hh_c10_M4000/hist-MiniNTuple.root", "path":"btag_syst_nob" + tagname + "_Signal/mHH_l", "leg":"Ineff SF only"}, 
+    #         ], keyword="mHH_l", norm=False, Rebin=5, Xrange=[500, 5000], prename="bSF_4000_FT_EFF_Eigen_B_0__1down_" + tagname)
+
+
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):
     region_lst = ["Sideband", "Control", "Signal"]
@@ -608,7 +627,7 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
     xleg, yleg = 0.5, 0.6
     legend = ROOT.TLegend(xleg, yleg, xleg+0.2, yleg+0.3)
     counter = 0
-    maxbincontent = (0.05 if Logy ==0 else 10)
+    maxbincontent = (0 if Logy ==0 else 10)
     temphst_lst = []
     graph_lst   = []
     tempratio_lst = []
@@ -647,7 +666,7 @@ def DrawMulticomparison(inputlst, keyword="", prename="", Xrange=[0, 0], Yrange=
         temphst_lst[i].SetMarkerColor(1 if i == 0 else CONF.clr_lst[i])
         temphst_lst[i].SetMarkerSize(1)
         temphst_lst[i].SetMaximum(maxbincontent * (1.5 if Logy == 0 else 150))
-        temphst_lst[i].SetMinimum(0.001 if Logy == 0 else 0.2)
+        #temphst_lst[i].SetMinimum(0.001 if Logy == 0 else 0.2)
         if Xrange != [0, 0]:
             temphst_lst[i].GetXaxis().SetRangeUser(Xrange[0], Xrange[1])
         legend.AddEntry(temphst_lst[i], dic["leg"] + " KS: " + str(('%.3g' % temphst_lst[i].KolmogorovTest(temphst_lst[0], "QU"))), "pl")

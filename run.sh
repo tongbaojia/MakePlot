@@ -36,6 +36,11 @@ for ch in ${channels[@]}; do
 	#python plot_smooth.py --inputdir $ch
 done
 
+##finish syst part
+#python dump_syst.py --hist pole ##generate limit input file
+#python dump_syst.py 
+python plot_sigsyst.py --hist pole
+python plot_sigsyst.py
 
 #specify the paths to gather!
 # inputpath="/afs/cern.ch/work/b/btong/bbbb/CHEPAnalysis/Output/"

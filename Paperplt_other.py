@@ -1,4 +1,5 @@
 # Tony Tong; baojia.tong@cern.ch
+##plot sideband and control region distributions
 import os, argparse, sys, math, time
 import config as CONF
 from array import array
@@ -112,7 +113,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         elif cut.find("TwoTag") > -1:
             tag = "TwoTag_split"
         #print CONF.inputpath + ops.inputdir + "/Limitinput/" + ops.inputdir + "_limit_" + tag + "_fullsys.root"
-        syst_file = ROOT.TFile(CONF.inputpath + ops.inputdir + "/Limitinput/" + ops.inputdir + "_limit_" + tag + "_fullsys.root", "read")
+        #syst_file = ROOT.TFile(CONF.inputpath + ops.inputdir + "/Limitinput/" + ops.inputdir + "_limit_" + tag + "_fullsys.root", "read")
+        syst_file = ROOT.TFile(CONF.inputpath + ops.inputdir + "/Limitinput/" + ops.inputdir + "_limit_" + tag + "_CR.root", "read")
         syst_file.cd()
         for key in ROOT.gDirectory.GetListOfKeys():
             kname = key.GetName()
@@ -120,15 +122,13 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
             #     continue
             temp_syst_norm = ttbar.Clone()
             temp_syst_norm.Add(qcd, 1)
-            if "totalbkg_hh" in kname and "up" in kname and "QCD" in kname:
+            if "totalbkg_hh" in kname and ("QCDShapeCRLow" in kname or "QCDShapeCRHigh" in kname):
                 temp_syst = syst_file.Get(kname).Clone(kname)
                 temp_syst.Scale(temp_syst_norm.Integral()/temp_syst.Integral())
-                syst_up.append(temp_syst)
-                #print kname
-            elif "totalbkg_hh" in kname and "down" in kname and "QCD" in kname:
-                temp_syst = syst_file.Get(kname).Clone(kname)
-                temp_syst.Scale(temp_syst_norm.Integral()/temp_syst.Integral())
-                syst_down.append(temp_syst)
+                if "up" in kname:
+                    syst_up.append(temp_syst)
+                elif "down" in kname:
+                    syst_down.append(temp_syst)
         syst_file.Close()
     #print len(syst_up), len(syst_down)
 
@@ -273,6 +273,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     ratios[1].SetLineWidth(2)
     if not ("Signal" in cut and blinded):
         ratios[1].Draw("E0PZ SAME")
+    h_plt.drawarrow(ratios[1], 0.4, 1.8)
     # qcd_fit.SetLineColor(kRed)
     # qcd_fitUp.SetLineColor(kRed)
     # qcd_fitUp.SetLineStyle(2)

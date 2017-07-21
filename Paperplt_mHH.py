@@ -1,4 +1,5 @@
 # Tony Tong, baojia.tong@cern.ch
+## plot signal region
 import os, argparse
 import sys
 import math
@@ -23,9 +24,9 @@ ROOT.gROOT.SetBatch(True)
 def options():
     parser = argparse.ArgumentParser()
     parser.add_argument("--plotter")
-    parser.add_argument("--inputdir", default=CONF.workdir)
+    parser.add_argument("--inputdir",  default=CONF.workdir)
     parser.add_argument("--inputroot", default="sum")
-    parser.add_argument("--chosenhist", default="l")
+    parser.add_argument("--hist",      default="pole")
     return parser.parse_args()
 
 # zero the x-errors
@@ -204,7 +205,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     RSG1_1500 = ifile.Get("signal_RSG_c10_hh_m1500")
     RSG1_2000 = ifile.Get("signal_RSG_c10_hh_m2000")
     RSG1_1500.Scale(10)
-    RSG1_2000.Scale(100)
+    RSG1_2000.Scale(30)
 
     if not rebin == None:
         data.Rebin(rebin)
@@ -302,7 +303,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     bkg[0].GetYaxis().SetLabelFont(43)
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
-    bkg[0].GetYaxis().SetRangeUser(0.5, yMax)
+    bkg[0].GetYaxis().SetRangeUser(0.2, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -327,6 +328,8 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     bkg[1].SetMarkerSize(0)
     bkg[1].Draw("E2 SAME")
 
+
+    #print config, filepath, filename, cut, ttbar.Integral()
     ttbar.SetLineWidth(2)
     ttbar.SetLineColor(ROOT.kBlack)
     ttbar.SetFillColor(ROOT.kAzure-9)
@@ -423,7 +426,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     legW=0.4
     leg = ROOT.TLegend(0.66, 0.75, 0.95, 0.95)
     # top right, a bit left
-    ATLASLabel(0.19, 0.91, StatusLabel)
+    ATLASLabel(0.19, 0.91, CONF.StatusLabel)
     if "15" in filepath:
         myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, 2015, 3.2 fb^{-1}", CONF.paperlegsize)
     elif "16" in filepath:
@@ -458,7 +461,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     leg.AddEntry(bkg[1], "Stat+Syst", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "G1.5TeV*10", "F")
-    leg.AddEntry(RSG1_2000, "G(2000)#times100", "F")
+    leg.AddEntry(RSG1_2000, "G(2000)#times30", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
@@ -524,11 +527,11 @@ def dumpRegion(config):
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
     if "pole" in finaldis:
-        plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]")
-        plotRegion(config, cut=config["cut"] + "mHH_pole",           xTitle="m_{2J} [GeV]", Logy=1)
+        plotRegion(config, cut=config["cut"] + "mHH_pole",        xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"])
+        plotRegion(config, cut=config["cut"] + "mHH_pole",        xTitle="m_{2J} [GeV]", Logy=1, rebinarry=rebin_dic["mHH_pole"])
     else:
-        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]")
-        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]", Logy=1)
+        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"])
+        plotRegion(config, cut=config["cut"] + "mHH_l",           xTitle="m_{2J} [GeV]", Logy=1, rebinarry=rebin_dic["mHH_l"])
 
     print config["outputdir"], "done!"
 
@@ -544,13 +547,11 @@ def main():
     inputroot = ops.inputroot
     inputpath = CONF.inputpath + inputdir + "/"
 
-    global StatusLabel
-    StatusLabel = "Preliminary" ##StatusLabel = "Preliminary"
     global figuresFolder
 
     global finaldis
     #finaldis = "pole"
-    finaldis = ops.chosenhist
+    finaldis = ops.hist
 
     # plot in the control region #
     # figuresFolder = inputpath + inputroot + "Plot/" + "Sideband"

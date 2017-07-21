@@ -48,6 +48,13 @@ def main():
     outputroot = ROOT.TFile.Open(outputpath + "temp.root", "recreate")
     # Fill the histogram from the table
 
+
+    for tag in tag_lst:
+        ##for extra study: reweighting SR shape comaprison
+        DrawSRcomparison(inputname="j0pT-alltrk-fin_5", tag=tag, keyword="totalbkg_hh")
+        DrawSRcomparison(inputname="j0pT-alltrk-fin_5", tag=tag, keyword="qcd_hh")
+        print "DONE reweighting comparison"
+
     for tag in tag_lst:
         print "CR variations"
         Dump_Compare(tag=tag, title="CR_Varations", region="Control")
@@ -58,6 +65,7 @@ def main():
             if inputname is not "":
                 #DrawSRcomparison(inputname=inputname, tag=tag, keyword="totalbkg_hh")
                 DrawSRcomparison(inputname=inputname, tag=tag, keyword="qcd_hh")
+
 
     #for ZZ unblinding
     Dump_ZZCompare(title="ZZ_Signal_Region", region="Signal")
@@ -301,7 +309,7 @@ def DrawSRcomparison(inputname="CR_High", tag="", keyword="totalbkg_hh", prename
     #ratio of the two plots
     ratiohist = temp_hist.Clone("ratio")
     ratiohist.Divide(ref_hist)
-    ratiohist.GetYaxis().SetRangeUser(0.8, 1.3) #set range for ratio plot
+    ratiohist.GetYaxis().SetRangeUser(0.6, 1.5) #set range for ratio plot
     ratiohist.GetYaxis().SetTitle("Varaition/Nominal") #set range for ratio plot
     ratiohist.GetYaxis().SetTitleFont(43)
     ratiohist.GetYaxis().SetTitleSize(28)

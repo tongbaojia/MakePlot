@@ -13,6 +13,7 @@ except ImportError:
 
 treename  = "XhhMiniNtuple"
 cut_lst = ["FourTag", "ThreeTag", "TwoTag_split"]
+debug = False ##debug flag
 #setup fit initial values; tricky for the fits...
 
 #define functions
@@ -229,16 +230,17 @@ def merge_mc_sys(config):
         tempdic = {}
         #find the correct outputfile
         outfiles[c].cd()
-        histdic = {"data":"data_hh", "totalbkg_est":"totalbkg_hh", "qcd_est":"qcd_hh", "ttbar_est":"ttbar_hh", "zjet_est":"zjet_hh"}
+        histdic = {"data":"data_hh", "totalbkg_est":"totalbkg_hh", "qcd_est":"qcd_hh", "ttbar_est":"ttbar_hh", "zjet_est":"zjet_hh", "sm_est":"sm_hh"}
         for mass in mass_lst:
             histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
             if (ops.Xhh):
                 histdic.update({"Xhh_" + str(mass) + "_est" : "signal_X_hh_m" + str(mass)})
                 if mass!= 2750:
                     histdic.update({"RSG2_" + str(mass) + "_est" : "signal_RSG_c20_hh_m" + str(mass)})
-        ##for extra high mass signals
-        for mass in [3500, 4000, 4500, 5000, 6000]:
-            histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
+        
+        # ##for extra high mass signals
+        # for mass in [3500, 4000, 4500, 5000, 6000]:
+        #     histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
 
         for histname, hist in histdic.iteritems():
             #print histname, infile.Get(hist).GetName()
@@ -259,7 +261,7 @@ def merge_method_sys():
         infile  = ROOT.TFile("%s/outfile_boosted_%s.root" % (inputpath, c), "READ")
 
         for syst in method_qcd_syst:
-            hist_temp_qcd   = infile.Get("qcd_hh").Clone("qcd_hh_" + syst)
+            hist_temp_qcd     = infile.Get("qcd_hh").Clone("qcd_hh_" + syst)
             hist_temp_ttbar   = infile.Get("ttbar_hh").Clone("ttbar_hh_" + syst)
             infile.cd()
             for key in ROOT.gDirectory.GetListOfKeys():
@@ -281,12 +283,14 @@ def merge_method_sys():
         infile.Close()
     return infodic
 
-def GetIntegral(hist, outfile, maxrange=7000):
+def GetIntegral(hist, outfile, maxrange=4000):
     '''this is where the histogram integrals are calculated, and the hists are saved'''
     #print hist.GetName()
     ##add maxtrange to avoid blow up of tails!!! unphysical, occurs in mHH_pole
     tempdic = {}
     err = ROOT.Double(0.)
+    if ("data_hh" not in hist.GetName()):##except data
+        ClearNegBin(hist) ##clear the 0 and negative bins
     tempdic["int"] = hist.IntegralAndError(0, hist.FindBin(maxrange) - 1, err)
     tempdic["int" + "_err"] = float(err)
     outfile.cd()
@@ -373,8 +377,6 @@ def GetTable(masterdic, c):
 
 #find a bunch of systematics
 def find_syst(masterdic, c, systag, col):
-    global debug
-    debug = False
     sys_lst = {}
     #loopoing throught the dictionary
     for key1 in masterdic:#get to the 2b/3b/4b region; containes the systemtaic info as well
@@ -601,6 +603,13 @@ def plot_RSG_syst_detail(masterdic, cut):
     helpers.checkpath(CONF.inputpath + ops.inputdir + "/" + "Plot/Syst/")
     canv.SaveAs(CONF.inputpath + ops.inputdir + "/" + "Plot/Syst/"  +  canv.GetName() + ".pdf")
     canv.Close()
+
+def ClearNegBin(hist):
+    for ibin in range(0, hist.GetNbinsX()+1):
+        if hist.GetBinContent(ibin) <= 0:
+            hist.SetBinContent(ibin, 0.00000001)
+            hist.SetBinError(ibin,  0.00000001)
+    return
 
 if __name__ == '__main__': 
     main()
