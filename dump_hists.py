@@ -150,7 +150,7 @@ def savehist(inputroot, inname, outname, dosmooth=False, smoothrange = (1100, 30
     #rebin is also done here, will be send to limit input
     #print inname, smoothrange, initpar, hist.GetMaximum()
     if Rebin:
-        hist = do_variable_rebinning(hist, array('d', range(0, 7000, 100)))
+        hist = do_variable_rebinning(hist, array('d', range(0, 4000, 100)))
 
     int_pre = hist.Integral()
     #print "before", hist.Integral()

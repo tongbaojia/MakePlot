@@ -186,14 +186,14 @@ def syst_pipeline(config):
 
     #start running programs
     #print (inputpath)
-    os.system("rm " + inputpath + "sum_" + t + ".root")
+    #os.system("rm " + inputpath + "sum_" + t + ".root")
     os.system("rm -r " + inputpath + "Limitinput")
     # print "done clearing!"
     # ###this is correcting the 3b/4b normalization to 2b. Should only be applied when ttbar stats makes no sense!
     # if "syst_tt_" in t or "JET_JER" in t or "JET_JMR" in t: ##only for ttbar variations for now
     #      Tophack(inputpath=inputpath)
     # #Tophack(inputpath=inputpath)
-    os.system("python get_count.py --dosyst " + " --inputdir " + t)
+    #os.system("python get_count.py --dosyst " + " --inputdir " + t)
     ##ttbar has weird smoothing behaviour, use ttbar + qcd for final distribution now
     os.system("python dump_hists.py " + " --inputdir " + t + (" --dosyst" if "syst_tt_" in t else ""))
     #os.system("python dump_hists.py " + " --inputdir " + t)

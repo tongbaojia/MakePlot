@@ -223,17 +223,17 @@ def main():
         yield_tex = open( texoutpath + tag + "_yield.tex", "w")
         WriteYield(masterinfo, yield_tex, tag)
 
-    # #save time if do systematics ## turn it off now...
-    # if (not ops.dosyst and True):
-    #     ##Do overlay signal region predictions
-    #     print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
-    #     npool = min(len(inputtasks), mp.cpu_count()-1)
-    #     pool  = mp.Pool(npool)
-    #     for result in pool.map(GetSignificance, mass_lst):
-    #         masterinfo.update(result)
-    #         #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
-    #     ##produce the significance plots
-    #     DumpSignificance(masterinfo)
+    #save time if do systematics ## turn it off now...
+    if (not ops.dosyst and True):
+        ##Do overlay signal region predictions
+        print " Running %s jobs on %s cores" % (len(inputtasks), mp.cpu_count()-1)
+        npool = min(len(inputtasks), mp.cpu_count()-1)
+        pool  = mp.Pool(npool)
+        for result in pool.map(GetSignificance, mass_lst):
+            masterinfo.update(result)
+            #WriteEvtCount(masterinfo["RSG1_" + str(mass)+ "sig_est"], output, "RSG %i Significance" % mass)
+        ##produce the significance plots
+        DumpSignificance(masterinfo)
 
     #finish and quit
     with open(inputpath + "sum%s_%s.txt" % ("" if background_model==0 else str(background_model), inputdir), "w") as f:
@@ -813,6 +813,7 @@ def GetSignificance(mass):
         cutcounts = {}
         cutcounts_err = {}
         for j, region in enumerate(region_lst):
+            #print region
             #needs fix!!!
             plttemp_sig = outroot.Get("RSG1_" + str(mass) + "_" + cut + "_" + region + "_" + plt_m).Clone()
             plttemp_bkg = outroot.Get("data_est" + "_" + cut + "_" + region + "_" + plt_m).Clone()
@@ -823,7 +824,7 @@ def GetSignificance(mass):
             plttemp_sig.Scale(2.5)
             plttemp_bkg.Scale(2.5)
             cutcounts[region], cutcounts_err[region], S, B = GetSensitivity(plttemp_sig, plttemp_bkg)
-            if mass == 2000 and region is "Signal":
+            if mass == 1500 and region is "Signal":
                 print "m:{:>5} c:{:>24} r:{:>8}; INFO-- sig:{:10.4f}  S:{:10.4f}  B:{:10.4f}  Entry:{:10.4f}".format(mass, cut, region, cutcounts[region], S, B, plttemp_sig.GetEntries())
             del(plttemp_sig)
             del(plttemp_bkg)

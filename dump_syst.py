@@ -5,6 +5,7 @@ import ROOT, rootlogon
 import Xhh4bUtils.BkgFit.smoothfit_Ultimate as smoothfit
 import helpers, help_table
 import config as CONF
+import dump_hists as dump_hists
 ROOT.gROOT.SetBatch()
 try:
     import simplejson as json                 
@@ -115,7 +116,7 @@ def main():
     "normY4down",
     "normY5up",
     "normY5down",
-    ##"QCDShapeCRup", ##merged 
+    #"QCDShapeCRup", ##merged 
     #"QCDShapeCRdown",
     "QCDShapeCRLowup", ##seperated
     "QCDShapeCRLowdown",
@@ -136,13 +137,15 @@ def main():
     inputtasks.append({"inputdir":"syst_JET_Rtrk_TotalStat_All__1up"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1down"})
     inputtasks.append({"inputdir":"syst_JET_Rtrk_Tracking_All__1up"})
-    inputtasks.append({"inputdir":"syst_tt_frag"})
-    inputtasks.append({"inputdir":"syst_tt_had"})
-    #inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
-    inputtasks.append({"inputdir":"syst_tt_mass_down"})
-    inputtasks.append({"inputdir":"syst_tt_mass_up"})
-    inputtasks.append({"inputdir":"syst_tt_rad_down"})
-    inputtasks.append({"inputdir":"syst_tt_rad_up"})
+
+    ##ttbar all dropped
+    # inputtasks.append({"inputdir":"syst_tt_frag"})
+    # inputtasks.append({"inputdir":"syst_tt_had"})
+    # #inputtasks.append({"inputdir":"syst_tt_ppcs"}) # this one has no stat to start with; take out
+    # inputtasks.append({"inputdir":"syst_tt_mass_down"})
+    # inputtasks.append({"inputdir":"syst_tt_mass_up"})
+    # inputtasks.append({"inputdir":"syst_tt_rad_down"})
+    # inputtasks.append({"inputdir":"syst_tt_rad_up"})
     for i in range(1, len(bsyst)):
         # if i == 16 or i == 45:
         #     continue
@@ -259,6 +262,9 @@ def merge_method_sys():
         inputpath = CONF.toppath + "/MakePlot/Xhh4bUtils/CR"
     for c in cut_lst:
         infile  = ROOT.TFile("%s/outfile_boosted_%s.root" % (inputpath, c), "READ")
+        
+        inputpath_ref = CONF.inputpath + CONF.workdir + "_" + CONF.reweightdir + "/Limitinput/"
+        infile_ref  = ROOT.TFile("%s/%s_limit_%s%s.root" % (inputpath_ref, CONF.workdir + "_" + CONF.reweightdir, c + ("" if "pole" not in finaldis else "_pole"), "" if not ops.doCR else "_CR"), "READ")
 
         for syst in method_qcd_syst:
             hist_temp_qcd     = infile.Get("qcd_hh").Clone("qcd_hh_" + syst)
@@ -271,6 +277,24 @@ def merge_method_sys():
                 if ("ttbar_hh_" + syst) in key.GetName():
                     hist_temp_ttbar   = infile.Get("ttbar_hh_" + syst).Clone("ttbar_hh_" + syst)
             #total bkg   
+            ## add hard correction
+            hist_temp_qcd_ref = infile_ref.Get("qcd_hh").Clone("qcd_hh_ref_" + syst)
+            hist_temp_qcd   = dump_hists.do_variable_rebinning(hist_temp_qcd, array('d', range(0, 4000, 100)))
+            
+            ##correct smoothing syst weird stuff; forced correction
+            if "smoothQ" in syst:
+                cur_bin = 1
+                while cur_bin < hist_temp_qcd_ref.GetNbinsX():
+                    if hist_temp_qcd_ref.GetBinLowEdge(cur_bin + 1) <= 1200:
+                        hist_temp_qcd.SetBinContent(cur_bin, hist_temp_qcd_ref.GetBinContent(cur_bin))
+                        cur_bin += 1
+                    else:
+                        break
+
+            hist_temp_qcd.SetName(hist_temp_qcd.GetName().replace("_rebinned", ""))
+            hist_temp_ttbar = dump_hists.do_variable_rebinning(hist_temp_ttbar, array('d', range(0, 4000, 100)))
+            hist_temp_ttbar.SetName(hist_temp_ttbar.GetName().replace("_rebinned", ""))
+
             hist_temp_total   = hist_temp_qcd.Clone("totalbkg_hh_" + syst)
             hist_temp_total.Add(hist_temp_ttbar, 1)
             tempdic = {}
@@ -291,7 +315,8 @@ def GetIntegral(hist, outfile, maxrange=4000):
     err = ROOT.Double(0.)
     if ("data_hh" not in hist.GetName()):##except data
         ClearNegBin(hist) ##clear the 0 and negative bins
-    tempdic["int"] = hist.IntegralAndError(0, hist.FindBin(maxrange) - 1, err)
+    #print hist.FindBin(maxrange), hist.GetBinCenter(hist.FindBin(maxrange))
+    tempdic["int"] = hist.IntegralAndError(0, hist.FindBin(maxrange), err) ##buggy; fixed
     tempdic["int" + "_err"] = float(err)
     outfile.cd()
     if "X_hh" in hist.GetName():

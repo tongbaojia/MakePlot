@@ -526,7 +526,7 @@ def dumpRegion(config):
         rebin_dic["trk_pT_diff"]= array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
         rebin_dic["trks_Pt"]    = array('d', [0, 70, 140, 210, 280, 350, 500, 2000])
     #all the kinematic plots that needs to be plotted; set the axis and name, rebin information 1 by 1
-    if "pole" in finaldis:
+    if "pole" in config["hist"]:
         plotRegion(config, cut=config["cut"] + "mHH_pole",        xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_pole"])
         plotRegion(config, cut=config["cut"] + "mHH_pole",        xTitle="m_{2J} [GeV]", Logy=1, rebinarry=rebin_dic["mHH_pole"])
     else:
@@ -557,7 +557,7 @@ def main():
     # figuresFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
-    region_lst = ["Signal"]
+    region_lst = ["Signal", "Control"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
     #create master list
     inputtasks = []
@@ -565,12 +565,16 @@ def main():
     for i, region in enumerate(region_lst):
         if inputroot == "sum":
             inputroot = ""
-        outputFolder = inputpath + inputroot + "PaperPlot/Signal"
+        outputFolder = inputpath + inputroot + "PaperPlot/" + region
         if not os.path.exists(outputFolder):
             os.makedirs(outputFolder)
         for j, cut in enumerate(cut_lst):
             rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + ("" if "pole" not in finaldis else "_pole") +".root"
             config = {}
+            config["hist"] = "pole"            
+            if region == "Control":
+                config["hist"]  = "l"  
+                rootinputpath = inputpath + "Limitinput/"  + inputdir + "_limit_" + cut + "_fullsys" + "_CR.root"
             config["root"] = rootinputpath
             config["inputdir"] = inputdir
             config["outputdir"] = outputFolder
