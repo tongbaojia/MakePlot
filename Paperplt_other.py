@@ -246,7 +246,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
     if ("Control" in cut and "mHH" in cut):
-        hratio.GetYaxis().SetRangeUser(0.1, 2.4) #set range for ratio plot
+        hratio.GetYaxis().SetRangeUser(0.5, 2.4) #set range for ratio plot
     else:
         hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
 
@@ -412,7 +412,7 @@ def dumpRegion(config):
     #plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"])
     #plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1)
     if "Sideband" in config["cut"]:
-        plotRegion(config, cut=config["cut"] + "leadHCand_Mass_s",   xTitle="Leading large-R jet mass [GeV]", yTitle="Events / 20 GeV", rebin=2)
+        plotRegion(config, cut=config["cut"] + "leadHCand_Mass_s",   xTitle="Leading large-R jet mass [GeV]", yTitle="Events / 10 GeV")
     if "Control" in config["cut"]:
         plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", rebinarry=rebin_dic["mHH_l"])
         plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", rebinarry=rebin_dic["mHH_l"], Logy=1)

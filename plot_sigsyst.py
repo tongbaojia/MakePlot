@@ -311,8 +311,8 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         outstr += "totalbkg"
         #print masterdic, systag
         for int_range in int_range_lst:   
-            err = ROOT.Double(0.)
-            int_range = bkg[0].IntegralAndError(bkg[0].GetXaxis().FindBin(int(int_range.replace(">", ""))), bkg[0].GetXaxis().FindBin(3800), err)
+            err = ROOT.Double(0.) ##bkg[2] is the hist with uncertainties
+            int_range = bkg[2].IntegralAndError(bkg[2].GetXaxis().FindBin(int(int_range.replace(">", ""))), bkg[2].GetXaxis().FindBin(3900), err)
             outstr += help_table.add_entry((int_range, float(err)))
         #finish the current entry
         outstr+="\\\\"
@@ -324,7 +324,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         temp_data = ifile.Get("data_hh" )
         for int_range in int_range_lst:
             err = ROOT.Double(0.)
-            int_range = temp_data.IntegralAndError(temp_data.GetXaxis().FindBin(int(int_range.replace(">", ""))), temp_data.GetXaxis().FindBin(3800), err)
+            int_range = temp_data.IntegralAndError(temp_data.GetXaxis().FindBin(int(int_range.replace(">", ""))), temp_data.GetXaxis().FindBin(3900), err)
             outstr += help_table.add_entry((int_range, float(err)))
         #finish the current entry
         outstr+="\\\\"

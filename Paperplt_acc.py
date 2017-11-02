@@ -51,6 +51,10 @@ def main():
     # Draw the efficiency plot relative to the all normalization
     DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel")
     DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True, dosum=True)
+    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", signal="G_hh_c20")
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True, dosum=True, signal="G_hh_c20")
+    DrawSignalEff(evtsel_lst, inputdir, "evtsel", "PreSel", signal="X_hh")
+    DrawSignalEff(region_lst, inputdir, "region_lst", "PreSel", doint=True, dosum=True, signal="X_hh")
 
 
 def options():
@@ -59,7 +63,7 @@ def options():
     return parser.parse_args()
 
 
-def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", doint=False, donormint=False, dorel=False, dosum=False):
+def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", doint=False, donormint=False, dorel=False, dosum=False, signal="G_hh_c10"):
     ### the first argument is the input directory
     ### the second argument is the output prefix name
     ### the third argument is relative to what normalization: 0 for total number of events
@@ -80,8 +84,10 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
         eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
 
         for mass in mass_lst:
+            if signal == "G_hh_c20" and mass == 2750:
+                continue
             #here could be changed to have more options
-            input_mc = ROOT.TFile.Open(inputpath + "signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass)
+            input_mc = ROOT.TFile.Open(inputpath + "signal_" + signal + "_M%i/hist-MiniNTuple.root" % mass)
             cutflow_mc = input_mc.Get("CutFlowNoWeight").Clone() #notice here we use no weight for now!
             cutflow_mc_w = input_mc.Get("CutFlowWeight").Clone()
             if dorel:
@@ -104,6 +110,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             eff_content = cutevt_mc/totevt_mc
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), cutevt_mc/totevt_mc)
             eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), helpers.ratioerror(cutevt_mc, totevt_mc))
+            eff_lst[i].GetXaxis().SetTitle("m_{G^{*}_{KK}} [GeV]")
             maxbincontent = max(maxbincontent, eff_content)
             # print ratioerror(cutevt_mc, totevt_mc)
             input_mc.Close()
@@ -166,14 +173,19 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     status.SetTextFont(42)
     status.SetNDC()
     status.Draw()
-
-    myText(xatlas, yatlas-0.05, 1, "G c=1.0, #sqrt{s} = 13 TeV", CONF.paperlegsize - 2)
+    if signal == "G_hh_c10":
+        signal_leg = "G c=1.0,"
+    if signal == "G_hh_c20":
+        signal_leg = "G c=2.0,"
+    if signal == "X_hh":
+        signal_leg = "H,"
+    myText(xatlas, yatlas-0.05, 1, signal_leg + " #sqrt{s} = 13 TeV", CONF.paperlegsize - 2)
     myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize - 2)
     # finish up
-    canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".pdf")
-    canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".eps")
-    canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".png")
-    canv.SaveAs(outputpath + outputname + "_" + canv.GetName() + ".C")
+    canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".pdf")
+    canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".eps")
+    canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".png")
+    canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".C")
     canv.Close()
 
 

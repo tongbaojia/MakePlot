@@ -75,8 +75,10 @@ def SBCR_table(masterdic):
             cut_lst.append(t + "__" + r)
             cut_name_lst.append(r)
     help_table.add_table_head(tableList, cut_name_lst, title="Source", special_raw=tag_lst)
-    raw_lst = ["qcd", "ttbar", "zjet", "data"]
-    raw_lst_dic = {"qcd":"Multijet", "ttbar":"\\ttbar", "zjet":"$Z$+jet", "data":"Total"}
+    #raw_lst = ["qcd", "ttbar", "zjet", "data"]
+    #raw_lst_dic = {"qcd":"Multijet", "ttbar":"\\ttbar", "zjet":"$Z$+jet", "data":"Total"}
+    raw_lst = ["qcd", "ttbar", "data"]
+    raw_lst_dic = {"qcd":"Multijet", "ttbar":"\\ttbar", "data":"Total"}
     #check and debug
     # keylist = masterdic.keys()
     # keylist.sort()
@@ -97,7 +99,8 @@ def SBCR_table(masterdic):
                 err_fit = masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1] + "_syst_muqcd_fit_up"]
                 #print err_fit
             err_all  = helpers.syst_adderror(masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1] + "_err"], err_fit)
-            valuetuple = (masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1]], err_all)
+            value    = masterdic[raw_tempname][c.split("__")[0]][c.split("__")[1]] + (masterdic["zjet"][c.split("__")[0]][c.split("__")[1]] if raw_tempname == "qcd_est" else 0)
+            valuetuple = (value, err_all)
             outstr += help_table.add_entry(valuetuple)
         #finish the current entry
         outstr+="\\\\"
@@ -107,8 +110,7 @@ def SBCR_table(masterdic):
     outstr = ""
     outstr += "Data"
     for c in cut_lst:
-        valuetuple = (masterdic["data"][c.split("__")[0]][c.split("__")[1]], 
-                masterdic["data"][c.split("__")[0]][c.split("__")[1] + "_err"])
+        valuetuple = (masterdic["data"][c.split("__")[0]][c.split("__")[1]])
         outstr += help_table.add_entry(valuetuple)
     outstr+="\\\\"
     tableList.append(outstr)
@@ -157,7 +159,7 @@ def SR_table(masterdic, summarydic):
     outstr = ""
     outstr += "Data"
     for c in cut_lst:
-        outstr += help_table.add_entry((masterdic[c]["data"]["int"], masterdic[c]["data"]["int_err"]))
+        outstr += help_table.add_entry((masterdic[c]["data"]["int"]))
     outstr+="\\\\"
     tableList.append(outstr)
     #finish the table
@@ -189,9 +191,11 @@ def Syst_table(masterdic):
         column_dic[col] = {}
     ###this is super complicated...let's get them one by one
     help_table.add_table_head(tableList, column_name_lst, title="Source", special_raw=tag_lst)
-    systag_lst = ["Lumi", "JER", "JMR", "tt", "Rtrk",  "EFF", "method", "Stat"]
-    systag_dic = {"Lumi":"Luminosity", "JER":"JER", "JMR":"JMR", "tt":"\\ttbar MC", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"$b$-tagging", "Stat":"Statistical"}
-    #systag_lst = {"method":"Bkg Est"}
+    ##take out ttbar
+    #systag_lst = ["Lumi", "JER", "JMR", "tt", "Rtrk",  "EFF", "method", "Stat"]
+    #systag_dic = {"Lumi":"Luminosity", "JER":"JER", "JMR":"JMR", "tt":"\\ttbar MC", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"$b$-tagging", "Stat":"Statistical"}
+    systag_lst = ["Lumi", "JER", "JMR", "Rtrk",  "EFF", "method", "Stat"]
+    systag_dic = {"Lumi":"Luminosity", "JER":"JER", "JMR":"JMR", "Rtrk":"JES/JMS", "method":"Bkg Est", "EFF":"$b$-tagging", "Stat":"Statistical"}
     #add each systematics
     for systag in systag_lst:
         #get the corresponding region

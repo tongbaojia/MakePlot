@@ -161,15 +161,15 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fSB.SetLineWidth(3)
     fSB.Draw("same, cont3")
 
-    # ttbar:
-    fTT = ROOT.TF2("TT", myTop,0,Xrange[1],0,Xrange[1])
-    contoursTT = array.array("d", [1.0])
-    fTT.SetContour(1, contoursTT)
-    fTT.SetNpx(50)
-    fTT.SetLineColor(46)
-    fTT.SetLineWidth(3)
-    fTT.SetLineStyle(5)
-    fTT.Draw("same, cont3")
+    # # ttbar:
+    # fTT = ROOT.TF2("TT", myTop,0,Xrange[1],0,Xrange[1])
+    # contoursTT = array.array("d", [1.0])
+    # fTT.SetContour(1, contoursTT)
+    # fTT.SetNpx(50)
+    # fTT.SetLineColor(46)
+    # fTT.SetLineWidth(3)
+    # fTT.SetLineStyle(5)
+    # fTT.Draw("same, cont3")
     # ttbar label:
     ttb_txt = ROOT.TLatex(0.65, 0.75, "#splitline{t#bar{t} enriched}{region}")
     ttb_txt.SetTextColor(46)
@@ -290,15 +290,15 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     fSB.SetLineWidth(6)
     fSB.Draw("same, cont3")
 
-    # ttbar:
-    fTT = ROOT.TF2("TT", myTop,0,Xrange[1],0,Xrange[1])
-    contoursTT = array.array("d", [1.0])
-    fTT.SetContour(1, contoursTT)
-    fTT.SetNpx(50)
-    fTT.SetLineColor(46)
-    fTT.SetLineWidth(3)
-    fTT.SetLineStyle(5)
-    fTT.Draw("same, cont3")
+    # # ttbar:
+    # fTT = ROOT.TF2("TT", myTop,0,Xrange[1],0,Xrange[1])
+    # contoursTT = array.array("d", [1.0])
+    # fTT.SetContour(1, contoursTT)
+    # fTT.SetNpx(50)
+    # fTT.SetLineColor(46)
+    # fTT.SetLineWidth(3)
+    # fTT.SetLineStyle(5)
+    # fTT.Draw("same, cont3")
     # ttbar label:
     ttb_txt = ROOT.TLatex(0.65, 0.75, "#splitline{t#bar{t} enriched}{region}")
     ttb_txt.SetTextColor(46)

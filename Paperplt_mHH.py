@@ -243,7 +243,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
     yMax = data.GetMaximum() * 1.5
     if ("FourTag" in cut):
-        yMax = data.GetMaximum() * 2.2
+        yMax = data.GetMaximum() * 1
     if Logy==1:
         yMax = yMax * 10
     #qcd_fit = ifile.Get("qcd_fit")
@@ -362,7 +362,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.1, 4.8) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.1, 2.8) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
