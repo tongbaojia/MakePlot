@@ -110,7 +110,14 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             eff_content = cutevt_mc/totevt_mc
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), cutevt_mc/totevt_mc)
             eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), helpers.ratioerror(cutevt_mc, totevt_mc))
-            eff_lst[i].GetXaxis().SetTitle("m_{G^{*}_{KK}} [GeV]")
+
+            if signal == "G_hh_c10":
+                eff_lst[i].GetXaxis().SetTitle("m_{G*_{kk}} [GeV]")
+            if signal == "G_hh_c20":
+                eff_lst[i].GetXaxis().SetTitle("m_{G*_{kk}} [GeV]")
+            if signal == "X_hh":
+                eff_lst[i].GetXaxis().SetTitle("m_{S} [GeV]")
+            
             maxbincontent = max(maxbincontent, eff_content)
             # print ratioerror(cutevt_mc, totevt_mc)
             input_mc.Close()
@@ -174,11 +181,11 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     status.SetNDC()
     status.Draw()
     if signal == "G_hh_c10":
-        signal_leg = "G c=1.0,"
+        signal_leg = "G*_{kk} k/#bar{M_{pl}} = 1,"
     if signal == "G_hh_c20":
-        signal_leg = "G c=2.0,"
+        signal_leg = "G*_{kk} k/#bar{M_{pl}} = 2,"
     if signal == "X_hh":
-        signal_leg = "H,"
+        signal_leg = "S,"
     myText(xatlas, yatlas-0.05, 1, signal_leg + " #sqrt{s} = 13 TeV", CONF.paperlegsize - 2)
     myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize - 2)
     # finish up
@@ -187,8 +194,6 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".png")
     canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".C")
     canv.Close()
-
-
 
 
 if __name__ == "__main__":

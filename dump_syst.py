@@ -237,6 +237,7 @@ def merge_mc_sys(config):
         for mass in mass_lst:
             histdic.update({"RSG1_" + str(mass) + "_est" : "signal_RSG_c10_hh_m" + str(mass)})
             if (ops.Xhh):
+                #print("here!!!")
                 histdic.update({"Xhh_" + str(mass) + "_est" : "signal_X_hh_m" + str(mass)})
                 if mass!= 2750:
                     histdic.update({"RSG2_" + str(mass) + "_est" : "signal_RSG_c20_hh_m" + str(mass)})
@@ -334,6 +335,8 @@ def GetTable(masterdic, c):
     outFile = open( texoutpath + c + "_fullsyst" + ("" if "pole" not in finaldis else "_pole") + ".tex", "w")
     tableList = []
     column_lst = ["totalbkg", "qcd", "ttbar", "RSG1_1000", "RSG1_2000", "RSG1_3000"]
+    if (ops.Xhh):
+        column_lst.append("Xhh_2000")
     column_dic = {}
     for col in column_lst:
         column_dic[col] = {}

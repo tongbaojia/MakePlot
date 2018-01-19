@@ -219,19 +219,39 @@ def main():
     #         ], keyword="mHH_l", norm=False, Rebin=5, Xrange=[500, 5000], prename="bSF_4000_FT_EFF_Eigen_B_0__1down_" + tagname)
 
     #check how systematics are
+    # DrawMulticomparison([
+    #     #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"qcd_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
+    #     #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"data_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
+    #     #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"ttbar_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
+    #     #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"zjet_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
+    #     #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"qcd_est_TwoTag_split_Signal_mHH_pole", "leg":"presmooth"}, 
+    #     {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_TwoTag_split_fullsys_pole.root", "path":"qcd_hh", "leg":"default"}, 
+    #     {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_TwoTag_split_fullsys_pole.root", "path":"qcd_hh_smoothQ0up", "leg":"vary"}, 
+    #     {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_TwoTag_split_pole.root", "path":"qcd_hh", "leg":"origin"}, 
+    #     #{"file":"../../MakePlot/Xhh4bUtils/mHH_pole/outfile_boosted_TwoTag_split.root", "path":"qcd_hh_smoothQ0up", "leg":"smoothup"},
+    #     #{"file":"../../MakePlot/Xhh4bUtils/mHH_pole/outfile_boosted_TwoTag_split.root", "path":"qcd_hh_smoothQ0down", "leg":"smoothdown"},
+    #     #{"file":"../../MakePlot/Xhh4bUtils/mHH_pole/outfile_boosted_TwoTag_split.root", "path":"qcd_hh", "leg":"default"},
+    #     ], keyword="qcd_hh", norm=False, prename="Resveto", Rebin=1, Xrange=[500, 4000], Logy=1)
+
+
+    # DrawMulticomparison([
+    #     {"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"RSG1_2000_ThreeTag_Signal_mHH_l", "leg":"RSG c=1.0"}, 
+    #     {"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"RSG2_2000_ThreeTag_Signal_mHH_l", "leg":"RSG c=2.0"}, 
+    #     {"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"Xhh_2000_ThreeTag_Signal_mHH_l", "leg":"H, scalar"}, 
+    #     ], keyword="", norm=False, prename="Sig_2TeV", Rebin=5, Xrange=[500, 3000], Logy=0)
+
     DrawMulticomparison([
-        #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"qcd_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
-        #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"data_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
-        #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"ttbar_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
-        #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"zjet_NoTag_2Trk_split_Signal_mHH_pole", "leg":"presmooth unscaled"}, 
-        #{"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"qcd_est_TwoTag_split_Signal_mHH_pole", "leg":"presmooth"}, 
-        {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_TwoTag_split_fullsys_pole.root", "path":"qcd_hh", "leg":"default"}, 
-        {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_TwoTag_split_fullsys_pole.root", "path":"qcd_hh_smoothQ0up", "leg":"vary"}, 
-        {"file":"../Moriond_bkg_9/Limitinput/Moriond_bkg_9_limit_TwoTag_split_pole.root", "path":"qcd_hh", "leg":"origin"}, 
-        #{"file":"../../MakePlot/Xhh4bUtils/mHH_pole/outfile_boosted_TwoTag_split.root", "path":"qcd_hh_smoothQ0up", "leg":"smoothup"},
-        #{"file":"../../MakePlot/Xhh4bUtils/mHH_pole/outfile_boosted_TwoTag_split.root", "path":"qcd_hh_smoothQ0down", "leg":"smoothdown"},
-        #{"file":"../../MakePlot/Xhh4bUtils/mHH_pole/outfile_boosted_TwoTag_split.root", "path":"qcd_hh", "leg":"default"},
-        ], keyword="qcd_hh", norm=False, prename="Resveto", Rebin=1, Xrange=[500, 4000], Logy=1)
+        {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/mHH_l", "leg":"PU reweight"}, 
+        {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/mHH_l", "leg":"no PU reweight"}, 
+        ], keyword="", norm=False, prename="Sig_2TeV_pileup_2bs", Rebin=5, Xrange=[500, 4000], Logy=0)
+    DrawMulticomparison([
+        {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"ThreeTag_Signal/mHH_l", "leg":"PU reweight"}, 
+        {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"ThreeTag_Signal/mHH_l", "leg":"no PU reweight"}, 
+        ], keyword="", norm=False, prename="Sig_2TeV_pileup_3b", Rebin=5, Xrange=[500, 4000], Logy=0)
+    DrawMulticomparison([
+        {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"FourTag_Signal/mHH_l", "leg":"PU reweight"}, 
+        {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/mHH_l", "leg":"no PU reweight"}, 
+        ], keyword="", norm=False, prename="Sig_2TeV_pileup_4b", Rebin=5, Xrange=[500, 4000], Logy=0)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):

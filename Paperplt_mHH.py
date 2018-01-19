@@ -1,5 +1,5 @@
 # Tony Tong, baojia.tong@cern.ch
-## plot signal region
+## plot signal region, control region
 import os, argparse
 import sys
 import math
@@ -82,7 +82,7 @@ def makeDataRatio(data, bkg):
     gRatioBand = data.Clone("gRatioBand")
     for i in range(0, data.GetN()):
         gRatioBand.SetPoint(i, data.GetX()[i], 1.0)
-        if bkg.GetY()[i] > 0:
+        if bkg.GetY()[i] > 0.01:
             gRatioBand.SetPointEYhigh(i, bkg.GetErrorYhigh(i) / bkg.GetY()[i]) 
             gRatioBand.SetPointEYlow(i, bkg.GetErrorYlow(i) / bkg.GetY()[i])             
             gRatioBand.SetPointEXhigh(i, bkg.GetErrorXhigh(i)) 
@@ -90,7 +90,7 @@ def makeDataRatio(data, bkg):
     # ratio set to data/bkg with data stat errors only
     gRatioDataBkg = data.Clone("gRatioDataBkg")
     for i in range(0, data.GetN()):
-        if data.GetY()[i]>0 and bkg.GetY()[i]>0:
+        if data.GetY()[i]>0 and bkg.GetY()[i] > 0.01:
             gRatioDataBkg.SetPoint(i, data.GetX()[i], data.GetY()[i] / bkg.GetY()[i])
             gRatioDataBkg.SetPointEYhigh(i, data.GetErrorYhigh(i) / bkg.GetY()[i])
             gRatioDataBkg.SetPointEYlow(i, data.GetErrorYlow(i) / bkg.GetY()[i])
@@ -200,12 +200,14 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     #qcd_origin = ifile.Get("qcd_" + cut )
     #print "factor is ", qcd.Integral()/qcd_origin.Integral()
     ttbar = ifile.Get("ttbar_hh")
-    zjet = ifile.Get("zjet_hh")
+    zjet  = ifile.Get("zjet_hh")
     RSG1_1000 = ifile.Get("signal_RSG_c10_hh_m1000")
     RSG1_1500 = ifile.Get("signal_RSG_c10_hh_m1500")
     RSG1_2000 = ifile.Get("signal_RSG_c10_hh_m2000")
+    Xhh_2000  = ifile.Get("signal_2HDM_hh_m2000")
     RSG1_1500.Scale(10)
-    RSG1_2000.Scale(30)
+    RSG1_2000.Scale(30 * 1.61) ##stupid
+    Xhh_2000.Scale(5)
 
     if not rebin == None:
         data.Rebin(rebin)
@@ -216,6 +218,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
         RSG1_1000.Rebin(rebin)
         RSG1_1500.Rebin(rebin)
         RSG1_2000.Rebin(rebin)
+        Xhh_2000.Rebin(rebin)
 
     #use array to rebin histgrams
     if not rebinarry == None:
@@ -227,6 +230,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
         RSG1_1000 = RSG1_1000.Rebin(len(rebinarry) - 1, RSG1_1000.GetName()+"_rebinned", rebinarry)
         RSG1_1500 = RSG1_1500.Rebin(len(rebinarry) - 1, RSG1_1500.GetName()+"_rebinned", rebinarry)
         RSG1_2000 = RSG1_2000.Rebin(len(rebinarry) - 1, RSG1_2000.GetName()+"_rebinned", rebinarry)
+        Xhh_2000  = Xhh_2000.Rebin(len(rebinarry) - 1, Xhh_2000.GetName()+"_rebinned", rebinarry)
 
     #get QS scores
     if "Signal" in cut and blinded:
@@ -241,9 +245,9 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
 
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
-    yMax = data.GetMaximum() * 1.5
+    yMax = data.GetMaximum() * 1.6
     if ("FourTag" in cut):
-        yMax = data.GetMaximum() * 1
+        yMax = data.GetMaximum() * 2
     if Logy==1:
         yMax = yMax * 10
     #qcd_fit = ifile.Get("qcd_fit")
@@ -312,15 +316,11 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     # RSG1_1000.SetLineColor(ROOT.kViolet+7)
     # RSG1_1000.Draw("HISTO SAME")
 
-    RSG1_1500.SetLineWidth(2)
-    RSG1_1500.SetLineStyle(2)
-    RSG1_1500.SetLineColor(ROOT.kGreen+4)
-
+    #RSG1_1500.SetLineWidth(2)
+    #RSG1_1500.SetLineStyle(2)
+    #RSG1_1500.SetLineColor(ROOT.kGreen+4)
     #RSG1_1500.Draw("HISTO SAME")
-    RSG1_2000.SetLineWidth(2)
-    RSG1_2000.SetLineStyle(2)
-    RSG1_2000.SetLineColor(ROOT.kPink+7)
-    RSG1_2000.Draw("HISTO SAME")
+
 
     bkg[1].SetFillColor(CONF.col_dic["syst"])
     bkg[1].SetLineColor(CONF.col_dic["syst"])
@@ -334,6 +334,21 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     ttbar.SetLineColor(ROOT.kBlack)
     ttbar.SetFillColor(ROOT.kAzure-9)
     ttbar.Draw("HISTO SAME")
+
+    RSG1_2000.SetLineWidth(2)
+    RSG1_2000.SetLineStyle(2)
+    RSG1_2000.SetLineColor(ROOT.kPink+7)
+    RSG1_2000.Draw("HISTO SAME")
+
+    Xhh_2000.SetLineWidth(2)
+    Xhh_2000.SetLineStyle(2)
+    Xhh_2000.SetLineColor(ROOT.kGreen+4)
+    Xhh_2000.Draw("HISTO SAME")
+
+    ## add extra line
+    line0 = ROOT.TLine(xMin, 0.2, xMax, 0.2)
+    line0.SetLineWidth(2)
+    line0.Draw()
 
     #zjet.SetLineWidth(2)
     #zjet.SetLineColor(ROOT.kBlack)
@@ -362,7 +377,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
-    hratio.GetYaxis().SetRangeUser(0.1, 2.8) #set range for ratio plot
+    hratio.GetYaxis().SetRangeUser(0.5, 1.5) #set range for ratio plot
     hratio.GetYaxis().SetNdivisions(405)
 
     hratio.GetXaxis().SetTitleFont(43)
@@ -424,7 +439,7 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     legHunit=0.05
     legH=legHunit*6 # retuned below based on number of entries to 0.05*num_entries
     legW=0.4
-    leg = ROOT.TLegend(0.66, 0.75, 0.95, 0.95)
+    leg = ROOT.TLegend(0.56, 0.75, 0.95, 0.95)
     # top right, a bit left
     ATLASLabel(0.19, 0.91, CONF.StatusLabel)
     if "15" in filepath:
@@ -461,7 +476,8 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 100 GeV", Logy=0, rebin=Non
     leg.AddEntry(bkg[1], "Stat+Syst", "F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "G1.5TeV*10", "F")
-    leg.AddEntry(RSG1_2000, "G(2000)#times30", "F")
+    leg.AddEntry(RSG1_2000, "G*_{KK} (2 TeV k/#bar{M_{pl}}=1) #times 30", "F")
+    leg.AddEntry(Xhh_2000,  "S (2 TeV) #times 5", "F")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)

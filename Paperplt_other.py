@@ -1,5 +1,5 @@
 # Tony Tong; baojia.tong@cern.ch
-##plot sideband and control region distributions
+##plot sideband and control region distributions; kinematics
 import os, argparse, sys, math, time
 import config as CONF
 from array import array
@@ -15,7 +15,7 @@ ROOT.gROOT.LoadMacro("AtlasStyle.C")
 ROOT.gROOT.LoadMacro("AtlasLabels.C")
 ROOT.SetAtlasStyle()
 ROOT.TH1.AddDirectory(False)
-StatusLabel="Preliminary"
+StatusLabel="Internal"
 ROOT.gROOT.SetBatch(True)
 
 #define functions
@@ -188,7 +188,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     if ("Control" in cut and "mHH" in cut):
         bkg[0].GetYaxis().SetRangeUser(0.5, yMax) #set range for ratio plot
     else:
-        bkg[0].GetYaxis().SetRangeUser(0.001, yMax)
+        bkg[0].GetYaxis().SetRangeUser(0.2, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
     bkg[0].Draw("HISTO")
 
@@ -324,7 +324,12 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     else:
         ROOT.myText(0.19, 0.87, 1, "#sqrt{s}=13 TeV, " + str(CONF.totlumi) + " fb^{-1}", CONF.paperlegsize)
     if cut.find("Signal") > -1:
-        tag = "Signal Region"
+        if filename.find("ZZ"):
+            tag = "Low Mass Validation Region"
+        if filename.find("TT"):
+            tag = "High Mass Validation Region"
+        else:
+            tag = "Signal Region"
     elif cut.find("Control") > -1:
         tag = "Control Region"
     elif cut.find("Sideband") > -1:
@@ -413,9 +418,14 @@ def dumpRegion(config):
     #plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1)
     if "Sideband" in config["cut"]:
         plotRegion(config, cut=config["cut"] + "leadHCand_Mass_s",   xTitle="Leading large-R jet mass [GeV]", yTitle="Events / 10 GeV")
+        plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="Leading large-R jet's leading trackjet p_{T} [GeV]", yTitle="Events / 30 GeV", rebinarry=array('d', range(0, 600, 30)))
+        plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", Logy = 1, rebinarry=rebin_dic["mHH_l"])
     if "Control" in config["cut"]:
+        plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", Logy = 1, rebinarry=rebin_dic["mHH_l"])
+        #plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="Leading large-R jet's leading trackjet p_{T} [GeV]", yTitle="Events / 30 GeV", rebinarry=array('d', range(0, 600, 30)))
+    if "Signal" in config["cut"]:
         plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", rebinarry=rebin_dic["mHH_l"])
-        plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", rebinarry=rebin_dic["mHH_l"], Logy=1)
+        plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", Logy = 1, rebinarry=rebin_dic["mHH_l"])
     #plotRegion(config, cut=config["cut"] + "leadHCand_trk_pt_diff_frac", xTitle="J0 pt diff", rebin=2)
     #plotRegion(config, cut=config["cut"] + "sublHCand_trk_pt_diff_frac", xTitle="J1 pt diff", rebin=2)
     print config["outputdir"], "done!"
@@ -437,14 +447,21 @@ def main():
     print "input root file is: ", rootinputpath
 
     global StatusLabel
-    StatusLabel = "Preliminary" ##StatusLabel = "Internal"
+    StatusLabel = "Internal" ##StatusLabel = "Internal"
     
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]")
     # plotRegion(rootinputpath, inputdir, cut="FourTag" + "_" + "Sideband" + "_" + "mHH_l", xTitle="m_{2J} [GeV]", Logy=1)
+    if "Moriond_bkg_9" in inputdir:
+        region_lst = ["Sideband", "Control"]
+    elif "Moriond_ZZ" in inputdir:
+        region_lst = ["Signal"]
+    elif "Moriond_TT" in inputdir:
+        region_lst = ["Signal"]
+    elif "Moriond" in inputdir:
+        region_lst = ["Sideband", "Control"]
 
-    region_lst = ["Sideband", "Control"]
     cut_lst = ["TwoTag_split", "ThreeTag", "FourTag"]#, "OneTag", "TwoTag"]
 
     #create master list

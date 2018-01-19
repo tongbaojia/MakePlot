@@ -135,8 +135,8 @@ def SR_table(masterdic, summarydic):
         for r in region_lst:
             cut_lst.append(t)
     help_table.add_table_head(tableList, cut_lst, title="Source")
-    raw_lst = ["qcd", "ttbar", "totalbkg"]
-    raw_lst_dic = {"qcd":"Multijet", "ttbar":"\\ttbar", "totalbkg":"Total"}
+    raw_lst = ["qcd", "ttbar", "totalbkg", "RSG1_2000", "Xhh_2000"]
+    raw_lst_dic = {"qcd":"Multijet", "ttbar":"\\ttbar", "totalbkg":"Total", "RSG1_2000":"G*_{KK} (2 TeV)", "Xhh_2000":"S (2 TeV)"}
     #check and debug
     # keylist = masterdic.keys()
     # keylist.sort()
@@ -151,6 +151,7 @@ def SR_table(masterdic, summarydic):
             totalsyst = dump_syst.add_syst(summarydic[c][raw])[0]
             valuetuple = (masterdic[c][raw + "_est"]["int"], totalsyst * masterdic[c][raw + "_est"]["int"])
             outstr += help_table.add_entry(valuetuple)
+            print valuetuple, c, raw
         #finish the current entry
         outstr+="\\\\"
         tableList.append(outstr)
@@ -176,8 +177,8 @@ def Syst_table(masterdic):
         os.makedirs(texoutpath)
     outFile = open( texoutpath + "Syst_table.tex", "w")
     tag_lst = ["TwoTag_split", "ThreeTag", "FourTag"]
-    sample_lst = ["totalbkg", "RSG1_2000"]
-    sample_dic = {"totalbkg":"Background", "RSG1_2000":"\\Grav(2\\,\\TeV)"}
+    sample_lst = ["totalbkg", "RSG1_2000", "Xhh_2000"]
+    sample_dic = {"totalbkg":"Background", "RSG1_2000":"G*_{KK} (2 TeV)", "Xhh_2000":"S (2 TeV)"}
     tableList = []
     column_lst = []
     column_name_lst = []
