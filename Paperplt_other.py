@@ -93,11 +93,11 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
     xMin = data.GetXaxis().GetBinLowEdge(1)
     xMax = data.GetXaxis().GetBinUpEdge(data.GetXaxis().GetNbins())
-    yMax = data.GetMaximum() * 1.5
+    yMax = data.GetMaximum() * 1.8
     if ("FourTag" in cut):
-        yMax = data.GetMaximum() * 1.7
+        yMax = data.GetMaximum() * 2.0
     if Logy==1:
-        yMax = yMax * 10
+        yMax = yMax * 20
     #qcd_fit = ifile.Get("qcd_fit")
     #qcd_fitUp = ifile.Get("qcd_fitUp")
     #qcd_fitDown = ifile.Get("qcd_fitDown")
@@ -186,7 +186,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     bkg[0].GetYaxis().SetTitle(yTitle)
     bkg[0].GetYaxis().SetTitleOffset(1.7)
     if ("Control" in cut and "mHH" in cut):
-        bkg[0].GetYaxis().SetRangeUser(0.5, yMax) #set range for ratio plot
+        bkg[0].GetYaxis().SetRangeUser(0.02, yMax) #set range for ratio plot
     else:
         bkg[0].GetYaxis().SetRangeUser(0.2, yMax)
     bkg[0].SetFillColor(ROOT.kYellow)
@@ -329,17 +329,17 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
         if filename.find("TT"):
             tag = "High Mass Validation Region"
         else:
-            tag = "Signal Region"
+            tag = "Boosted Signal Region"
     elif cut.find("Control") > -1:
-        tag = "Control Region"
+        tag = "Boosted Control Region"
     elif cut.find("Sideband") > -1:
-        tag = "Sideband Region"
+        tag = "Boosted Sideband Region"
     if cut.find("FourTag") > -1:
-        tag += ", Boosted 4-tag"
+        tag += ", 4-tag"
     elif cut.find("ThreeTag") > -1:
-        tag += ", Boosted 3-tag"
+        tag += ", 3-tag"
     elif cut.find("TwoTag") > -1:
-        tag += ", Boosted 2-tag"
+        tag += ", 2-tag"
     ROOT.myText(0.19, 0.83, 1, tag, CONF.paperlegsize)
     ##### legend
     #leg.SetNColumns(2)
@@ -353,9 +353,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.AddEntry(ttbar, "t#bar{t}","F")
     #leg.AddEntry(zjet, "Z+jets","F")
     if ("Control" in cut and "mHH" in cut):
-        leg.AddEntry(bkg[1], "Stat+Syst", "F")
+        leg.AddEntry(bkg[1], "Stat+Syst Uncertainties", "F")
     else:
-        leg.AddEntry(bkg[1], "Stat", "F")
+        leg.AddEntry(bkg[1], "Stat Uncertainties", "F")
 
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")

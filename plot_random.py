@@ -240,18 +240,103 @@ def main():
     #     {"file":"../Moriond_bkg_9/sum_Moriond_bkg_9.root", "path":"Xhh_2000_ThreeTag_Signal_mHH_l", "leg":"H, scalar"}, 
     #     ], keyword="", norm=False, prename="Sig_2TeV", Rebin=5, Xrange=[500, 3000], Logy=0)
 
+    ## pile up checks
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/mHH_l", "leg":"PU reweight"}, 
+    #     {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/mHH_l", "leg":"no PU reweight"}, 
+    #     ], keyword="", norm=False, prename="Sig_2TeV_pileup_2bs", Rebin=5, Xrange=[500, 4000], Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"ThreeTag_Signal/mHH_l", "leg":"PU reweight"}, 
+    #     {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"ThreeTag_Signal/mHH_l", "leg":"no PU reweight"}, 
+    #     ], keyword="", norm=False, prename="Sig_2TeV_pileup_3b", Rebin=5, Xrange=[500, 4000], Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"FourTag_Signal/mHH_l", "leg":"PU reweight"}, 
+    #     {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/mHH_l", "leg":"no PU reweight"}, 
+    #     ], keyword="", norm=False, prename="Sig_2TeV_pileup_4b", Rebin=5, Xrange=[500, 4000], Logy=0)
+
+    # ## 2HDM NLO and LO shape difference checks
+    # for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
+    #     DrawMulticomparison([
+    #         {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"LO"}, 
+    #         {"file":"../TEST/signal_X_hh_NLO_M1000/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"NLO"}, 
+    #         ], keyword="", norm=True, prename="2HDM_NLO_1000GeV_" + tagname, Rebin=5, Xrange=[500, 4000], Logy=1)
+    #     DrawMulticomparison([
+    #         {"file":"../TEST/signal_X_hh_M1600/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"LO"}, 
+    #         {"file":"../TEST/signal_X_hh_NLO_M1600/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"NLO"}, 
+    #         ], keyword="", norm=True, prename="2HDM_NLO_1600GeV_" + tagname, Rebin=5, Xrange=[500, 4000], Logy=1)
+    #     DrawMulticomparison([
+    #         {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"LO"}, 
+    #         {"file":"../TEST/signal_X_hh_NLO_M3000/hist-MiniNTuple.root", "path":tagname + "_Signal/mHH_l", "leg":"NLO"}, 
+    #         ], keyword="", norm=True, prename="2HDM_NLO_3000GeV_" + tagname, Rebin=5, Xrange=[500, 4000], Logy=1)
+
+    # for tagname in ["FourTag", "ThreeTag", "TwoTag_split"]:
+    #     DrawMulticomparison([
+    #         {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":tagname + "_Signal/hCandDeta", "leg":"LO"}, 
+    #         {"file":"../TEST/signal_X_hh_NLO_M1000/hist-MiniNTuple.root", "path":tagname + "_Signal/hCandDeta", "leg":"NLO"}, 
+    #         ], keyword="", norm=True, prename="2HDM_NLO_1000GeV_" + tagname, Rebin=2, Logy=0)
+    #     DrawMulticomparison([
+    #         {"file":"../TEST/signal_X_hh_M1600/hist-MiniNTuple.root", "path":tagname + "_Signal/hCandDeta", "leg":"LO"}, 
+    #         {"file":"../TEST/signal_X_hh_NLO_M1600/hist-MiniNTuple.root", "path":tagname + "_Signal/hCandDeta", "leg":"NLO"}, 
+    #         ], keyword="", norm=True, prename="2HDM_NLO_1600GeV_" + tagname, Rebin=2, Logy=0)
+    #     DrawMulticomparison([
+    #         {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":tagname + "_Signal/hCandDeta", "leg":"LO"}, 
+    #         {"file":"../TEST/signal_X_hh_NLO_M3000/hist-MiniNTuple.root", "path":tagname + "_Signal/hCandDeta", "leg":"NLO"}, 
+    #         ], keyword="", norm=True, prename="2HDM_NLO_3000GeV_" + tagname, Rebin=2, Logy=0)
+
+    ## check if b-tagging has eta and mass dependence on jets
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/leadHCand_Eta", "leg":"2bs"},
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/leadHCand_Eta", "leg":"4b"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/leadHCand_Eta", "leg":"0b"}, 
+    #     ], keyword="", norm=True, prename="Sig_3TeV_jet0_eta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/sublHCand_Eta", "leg":"2bs"},
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/sublHCand_Eta", "leg":"4b"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/sublHCand_Eta", "leg":"0b"}, 
+    #     ], keyword="", norm=True, prename="Sig_3TeV_jet1_eta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/leadHCand_trk0_Eta", "leg":"2bs"},
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/leadHCand_trk0_Eta", "leg":"4b"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/leadHCand_trk0_Eta", "leg":"0b"}, 
+    #     ], keyword="", norm=True, prename="Sig_3TeV_jet0_trk0eta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/sublHCand_trk0_Eta", "leg":"2bs"},
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/sublHCand_trk0_Eta", "leg":"4b"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/sublHCand_trk0_Eta", "leg":"0b"}, 
+    #     ], keyword="", norm=True, prename="Sig_3TeV_jet1_trk0eta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/leadHCand_trk1_Eta", "leg":"2bs"},
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/leadHCand_trk1_Eta", "leg":"4b"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/leadHCand_trk1_Eta", "leg":"0b"}, 
+    #     ], keyword="", norm=True, prename="Sig_3TeV_jet0_trk1eta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/sublHCand_trk1_Eta", "leg":"2bs"},
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/sublHCand_trk1_Eta", "leg":"4b"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/sublHCand_trk1_Eta", "leg":"0b"}, 
+    #     ], keyword="", norm=True, prename="Sig_3TeV_jet1_trk1eta", Rebin=2, Logy=0)
+
     DrawMulticomparison([
-        {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/mHH_l", "leg":"PU reweight"}, 
-        {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/mHH_l", "leg":"no PU reweight"}, 
-        ], keyword="", norm=False, prename="Sig_2TeV_pileup_2bs", Rebin=5, Xrange=[500, 4000], Logy=0)
+        {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"1 TeV"},
+        {"file":"../TEST/signal_X_hh_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"2 TeV"}, 
+        {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"3 TeV"}, 
+        ], keyword="", norm=True, prename="Sig_H_4b_jet0_deta", Rebin=2, Logy=0)
     DrawMulticomparison([
-        {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"ThreeTag_Signal/mHH_l", "leg":"PU reweight"}, 
-        {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"ThreeTag_Signal/mHH_l", "leg":"no PU reweight"}, 
-        ], keyword="", norm=False, prename="Sig_2TeV_pileup_3b", Rebin=5, Xrange=[500, 4000], Logy=0)
+        {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"1 TeV"},
+        {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"2 TeV"}, 
+        {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"3 TeV"}, 
+        ], keyword="", norm=True, prename="Sig_RSG_4b_jet0_deta", Rebin=2, Logy=0)
+
+
     DrawMulticomparison([
-        {"file":"../TEST/signal_G_hh_c20_M2000_pileup/hist-MiniNTuple.root", "path":"FourTag_Signal/mHH_l", "leg":"PU reweight"}, 
-        {"file":"../TEST/signal_G_hh_c20_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/mHH_l", "leg":"no PU reweight"}, 
-        ], keyword="", norm=False, prename="Sig_2TeV_pileup_4b", Rebin=5, Xrange=[500, 4000], Logy=0)
+        {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"1 TeV"},
+        {"file":"../TEST/signal_X_hh_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"2 TeV"}, 
+        {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"3 TeV"}, 
+        ], keyword="", norm=True, prename="Sig_H_2bs_jet0_deta", Rebin=2, Logy=0)
+    DrawMulticomparison([
+        {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"1 TeV"},
+        {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"2 TeV"}, 
+        {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"3 TeV"}, 
+        ], keyword="", norm=True, prename="Sig_RSG_2bs_jet0_deta", Rebin=2, Logy=0)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):

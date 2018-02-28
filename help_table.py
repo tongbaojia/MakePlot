@@ -52,12 +52,12 @@ def add_entry(valuetuple, doerr=True, percent=False):
             temstr += " - " 
             return temstr
         else:
-            temstr += str(helpers.round_sig(valuetuple[0] * (100 if percent else 1), 2)) 
+            temstr += str(helpers.round_sig(valuetuple[0] * (100 if percent else 1), 3)) 
             if doerr:
                 temstr += " $\\pm$ "
-                temstr += str(helpers.round_sig(valuetuple[1] * (100 if percent else 1), 2)) #cause sqrt(a^2 + b^2) is sigma*a/sqrt(a^2 + b^2) 
+                temstr += str(helpers.round_sig(valuetuple[1] * (100 if percent else 1), 3)) #cause sqrt(a^2 + b^2) is sigma*a/sqrt(a^2 + b^2) 
     else:
-        temstr += str(helpers.round_sig(valuetuple * (100 if percent else 1), 2)) 
+        temstr += str(helpers.round_sig(valuetuple * (100 if percent else 1), 3)) 
     return temstr
 
 

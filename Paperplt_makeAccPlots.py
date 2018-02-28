@@ -251,7 +251,7 @@ for c in cutList:
         if doResolved:
             if o.coupling in ["1.0","2.0"]:
                 c.graph.GetYaxis().SetRangeUser(0,0.19)
-                c.graph.GetXaxis().SetTitle("m_{G*}_{KK} [GeV]")
+                c.graph.GetXaxis().SetTitle("m_{G_{KK}} [GeV]")
                 c.graph.GetXaxis().SetTitleSize(0.07)
                 c.graph.GetXaxis().SetTitleOffset(0.9)
             else:
@@ -262,7 +262,7 @@ for c in cutList:
         else:
             c.graph.GetYaxis().SetRangeUser(0, 0.19)
             if o.coupling in ["boosted10"]:
-                c.graph.GetXaxis().SetTitle("m_{G*_{KK}} [GeV]")
+                c.graph.GetXaxis().SetTitle("m_{G_{KK}} [GeV]")
                 #c.graph.GetXaxis().SetTitleSize(0.07)
                 #c.graph.GetXaxis().SetTitleOffset(0.9)
             else:

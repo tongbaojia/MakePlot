@@ -62,7 +62,7 @@ def makeDataRatio(data, bkg):
     gRatioBand = data.Clone("gRatioBand")
     for i in range(0, data.GetN()):
         gRatioBand.SetPoint(i, data.GetX()[i], 1.0)
-        if bkg.GetY()[i] > 0:
+        if bkg.GetY()[i] > 0.02:
             gRatioBand.SetPointEYhigh(i, bkg.GetErrorYhigh(i) / bkg.GetY()[i]) 
             gRatioBand.SetPointEYlow(i, bkg.GetErrorYlow(i) / bkg.GetY()[i])             
             gRatioBand.SetPointEXhigh(i, bkg.GetErrorXhigh(i)) 
@@ -143,9 +143,9 @@ def rebinData(ifile, rebin, scale=1):
 def drawarrow(graph, ratio_ylow=0.5, ratio_yhigh=1.5):
     '''this function adds arrows on overflow/underflow bins'''
     ratio_arrow = ROOT.TArrow(0, 0, 0, 0, 0.01, "|>")
-    ratio_arrow.SetLineWidth(3)
-    ratio_arrow.SetLineColor(ROOT.kRed)
-    ratio_arrow.SetFillColor(ROOT.kRed)
+    ratio_arrow.SetLineWidth(2)
+    ratio_arrow.SetLineColor(ROOT.kBlack)
+    ratio_arrow.SetFillColor(ROOT.kBlack)
 
     for pt in xrange(graph.GetN()):
         y = graph.GetY()[pt]
@@ -155,8 +155,8 @@ def drawarrow(graph, ratio_ylow=0.5, ratio_yhigh=1.5):
         y_low  = y + graph.GetEYhigh()[pt]
         y_high = y - graph.GetEYlow()[pt]
         if y_low < ratio_ylow * 1.1:
-            ratio_arrow.DrawArrow(x, 1 - abs(1 - ratio_ylow)*2./3., x, ratio_ylow)
+            ratio_arrow.DrawArrow(x, 1 - abs(1 - ratio_ylow)*2./3., x, ratio_ylow + 0.03)
             #print y, y_low
         elif y_high > ratio_yhigh * 0.9:
-            ratio_arrow.DrawArrow(x, 1 + abs(1 - ratio_yhigh)*2./3., x, ratio_yhigh)
+            ratio_arrow.DrawArrow(x, 1 + abs(1 - ratio_yhigh)*2./3., x, ratio_yhigh - 0.03)
 ####################################################################################

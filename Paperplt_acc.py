@@ -69,7 +69,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     ### the third argument is relative to what normalization: 0 for total number of events
     ### 1 for signal mass region
     afterscript = "_rel" if dorel else ""
-    canv = ROOT.TCanvas(inputdir + "_" + "Efficiency" + "_" + normalization + afterscript, "Efficiency", 800, 800)
+    canv = ROOT.TCanvas(inputdir + "_" + "Efficiency" + "_" + normalization + afterscript, "Efficiency", 800, 600)
     xleg, yleg = 0.55, 0.73
     legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.18)
     # setup basic plot parameters
@@ -110,11 +110,13 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
             eff_content = cutevt_mc/totevt_mc
             eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), cutevt_mc/totevt_mc)
             eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), helpers.ratioerror(cutevt_mc, totevt_mc))
+            # for j in range(1, eff_lst[i].GetNbinsX() + 1):
+            #     eff_lst[i].GetXaxis().SetBinLabel(j, str(eff_lst[i].GetXaxis().GetBinLowEdge(j)/1000.))
 
             if signal == "G_hh_c10":
-                eff_lst[i].GetXaxis().SetTitle("m_{G*_{kk}} [GeV]")
+                eff_lst[i].GetXaxis().SetTitle("m_{G_{kk}} [GeV]")
             if signal == "G_hh_c20":
-                eff_lst[i].GetXaxis().SetTitle("m_{G*_{kk}} [GeV]")
+                eff_lst[i].GetXaxis().SetTitle("m_{G_{kk}} [GeV]")
             if signal == "X_hh":
                 eff_lst[i].GetXaxis().SetTitle("m_{S} [GeV]")
             
@@ -174,20 +176,20 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     atlas.SetTextFont(72)
     atlas.SetNDC()
     atlas.Draw()
-    status = ROOT.TLatex(xatlas + 0.14, yatlas, CONF.StatusLabel)
+    status = ROOT.TLatex(xatlas + 0.14, yatlas, "Simulation")
     #status.SetTextAlign(22)
     status.SetTextSize(0.04)
     status.SetTextFont(42)
     status.SetNDC()
     status.Draw()
     if signal == "G_hh_c10":
-        signal_leg = "G*_{kk} k/#bar{M_{pl}} = 1,"
+        signal_leg = "G_{kk} k/#bar{M}_{pl} = 1,"
     if signal == "G_hh_c20":
-        signal_leg = "G*_{kk} k/#bar{M_{pl}} = 2,"
+        signal_leg = "G_{kk} k/#bar{M}_{pl} = 2,"
     if signal == "X_hh":
-        signal_leg = "S,"
-    myText(xatlas, yatlas-0.05, 1, signal_leg + " #sqrt{s} = 13 TeV", CONF.paperlegsize - 2)
-    myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize - 2)
+        signal_leg = "Scalar,"
+    myText(xatlas, yatlas-0.05, 1, signal_leg + " #sqrt{s} = 13 TeV", CONF.paperlegsize)
+    myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize)
     # finish up
     canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".pdf")
     canv.SaveAs(outputpath + signal + "_" + outputname + "_" + canv.GetName() + ".eps")

@@ -29,7 +29,7 @@ def main():
     output = ROOT.TFile.Open(CONF.outplotpath + "sig_truth.root", "recreate")
 
     #print output
-    plt_lst = ["mHH_l", "hCandDr",
+    plt_lst = ["mHH_l", "hCandDr", "hCandDeta", "hCandDphi", "leadHCand_Eta", "sublHCand_Eta", 
         "leadHCand_Mass_s", "leadHCand_Pt_m", "leadHCand_trk0_Pt", "leadHCand_trk1_Pt",
         "sublHCand_Mass_s", "sublHCand_Pt_m", "sublHCand_trk0_Pt", "sublHCand_trk1_Pt"]
     # select the cuts
@@ -66,6 +66,7 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir="", outputname="", 
         legend = ROOT.TLegend(xleg, yleg, xleg+0.3, yleg+0.2)
 
         sfiles = ["/signal_G_hh_c10_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
+        #sfiles = ["/signal_X_hh_M%i/hist-MiniNTuple.root" % mass for mass in mass_lst]
   	sinfos = ["RSG " + str(m) + " GeV" for m in mass_lst]
         dfiles = ["/data_test/hist-MiniNTuple.root"]
   	dinfos = ["0Tag data"]
@@ -92,18 +93,10 @@ def DrawSignalTruth(outputroot, dcut_lst, scut_lst, inputdir="", outputname="", 
             temp_mc.GetXaxis().SetLabelSize(0.03)
             temp_mc.GetYaxis().SetNdivisions(505)
             temp_mc.GetXaxis().SetNdivisions(505)
+            #print(cut)
 	    if cut.split("_")[-1] == "pt":
 		temp_mc.Rebin(10)
 		temp_mc.GetXaxis().SetTitle( temp_mc.GetXaxis().GetTitle() + " [GeV]")
-	    elif "deta" in cut.lower():
-		temp_mc.Rebin(30)
-		maxbincontent = .6 / 1.5
-		# draw line at the cut value
-		cutval = 1.7
-		line = ROOT.TLine(1.7, 0, 1.7, 0.4)
-		line.SetLineWidth(3)
-		line.SetLineStyle(9)
-		line.Draw()
 	    else:
 		temp_mc.GetXaxis().SetTitle( "#DeltaR between H, child b")
 		dR_type = cut.split("/")[1][0:4]

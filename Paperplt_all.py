@@ -124,7 +124,7 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     # Set Axis Labels
     temp_hist.GetXaxis().SetTitle("m_{J}^{lead} [GeV]")
     temp_hist.GetYaxis().SetTitle("m_{J}^{subl} [GeV]")
-    temp_hist.GetZaxis().SetTitle("Events/10 GeV^{2}")
+    temp_hist.GetZaxis().SetTitle("Events / 25 GeV^{2}")
     temp_hist.GetZaxis().SetTitleOffset(1.6)
     temp_hist.GetZaxis().SetRangeUser(0, temp_hist.GetMaximum())
     # change divisions
@@ -253,7 +253,7 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     # Set Axis Labels
     temp_hist.GetXaxis().SetTitle("m_{J}^{lead} [GeV]")
     temp_hist.GetYaxis().SetTitle("m_{J}^{subl} [GeV]")
-    temp_hist.GetZaxis().SetTitle("Events/10 GeV^{2}")
+    temp_hist.GetZaxis().SetTitle("Events / 25 GeV^{2}")
     temp_hist.GetZaxis().SetTitleOffset(1.8)
     temp_hist.GetZaxis().SetRangeUser(0, temp_hist.GetMaximum())
     # change divisions
