@@ -495,19 +495,21 @@ def plotRegion(config, cut, xTitle, yTitle="Events / 0.1 TeV", Logy=0, rebin=Non
     #leg.AddEntry(zjet, "Z+jets","F")
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "G1.5TeV*10", "F")
-    leg.AddEntry(Xhh_2000,  "Scalar (2 TeV) #times 5", "l")
-    leg.AddEntry(RSG1_2000, "G_{KK} (2 TeV k/#bar{M}_{pl}=1) #times 30", "l")
+    leg.AddEntry(Xhh_2000,  "Scalar (2 TeV)", "l") ## times 5
+    leg.AddEntry(RSG1_2000, "G_{KK} (2 TeV k/#bar{M}_{Pl}=1) #times 30", "l")
     leg.AddEntry(bkg[1], "Stat+Syst Uncertainties", "FF")
     #leg.AddEntry(qcd_fit, "Fit to Ratio", "L")
     #leg.AddEntry(qcd_fitUp, "#pm 1#sigma Uncertainty", "L")
     leg.SetY1(leg.GetY2()-leg.GetNRows()*legHunit)
     leg.Draw()
-
-
+    c0.Update() 
+    pad0.Update()
+    pad1.Update()
 
     # save
     postname = ("" if Logy == 0 else "_" + str(Logy)) + ("" if not ("Signal" in cut and blinded) else "_blind")
     #c0.SaveAs(outputFolder+"/"+filename.replace(".root", ".pdf"))
+    c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".root")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".C")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".png")
     c0.SaveAs(outputFolder+ "/" + filename + "_" + cut + postname + ".pdf")

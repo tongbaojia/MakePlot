@@ -31,9 +31,9 @@ def main():
     global mass_lst
     mass_lst = [700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000, 2250, 2500, 2750, 3000]
     global lowmass
-    lowmass = 650
+    lowmass = 650 / 1000.
     global highmass
-    highmass = 3150
+    highmass = 3150 / 1000.
 
     # select the cuts
     # the list must start from the largest to the smallest!
@@ -81,7 +81,7 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
 
 
     for i, cut in enumerate(cut_lst):
-        eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
+        eff_lst.append( ROOT.TH1F(inputdir + "_" + cut, "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/0.1), lowmass, highmass) )
 
         for mass in mass_lst:
             if signal == "G_hh_c20" and mass == 2750:
@@ -108,24 +108,24 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
                 totevt_mc    = cuthist_temp.Integral(0, cuthist_temp.GetXaxis().GetNbins()+1) * scale_weight
 
             eff_content = cutevt_mc/totevt_mc
-            eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass), cutevt_mc/totevt_mc)
-            eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass), helpers.ratioerror(cutevt_mc, totevt_mc))
+            eff_lst[i].SetBinContent(eff_lst[i].GetXaxis().FindBin(mass/1000.), cutevt_mc/totevt_mc)
+            eff_lst[i].SetBinError(eff_lst[i].GetXaxis().FindBin(mass/1000.), helpers.ratioerror(cutevt_mc, totevt_mc))
             # for j in range(1, eff_lst[i].GetNbinsX() + 1):
             #     eff_lst[i].GetXaxis().SetBinLabel(j, str(eff_lst[i].GetXaxis().GetBinLowEdge(j)/1000.))
 
             if signal == "G_hh_c10":
-                eff_lst[i].GetXaxis().SetTitle("m_{G_{kk}} [GeV]")
+                eff_lst[i].GetXaxis().SetTitle("m(G_{kk}) [TeV]")
             if signal == "G_hh_c20":
-                eff_lst[i].GetXaxis().SetTitle("m_{G_{kk}} [GeV]")
+                eff_lst[i].GetXaxis().SetTitle("m(G_{kk}) [TeV]")
             if signal == "X_hh":
-                eff_lst[i].GetXaxis().SetTitle("m_{S} [GeV]")
+                eff_lst[i].GetXaxis().SetTitle("m(Scalar) [TeV]")
             
             maxbincontent = max(maxbincontent, eff_content)
             # print ratioerror(cutevt_mc, totevt_mc)
             input_mc.Close()
 
     if dosum:##add in a sum curve
-        eff_lst.append( ROOT.TH1F(inputdir + "_" + "sum", "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/100), lowmass, highmass) )
+        eff_lst.append( ROOT.TH1F(inputdir + "_" + "sum", "%s; Mass [GeV]; Acceptance x Efficiency" %cut, int((highmass-lowmass)/0.1), lowmass, highmass) )
         for i, cut in enumerate(cut_lst):
             eff_lst[-1].Add(eff_lst[i])
         maxbincontent =  eff_lst[-1].GetMaximum()
@@ -176,16 +176,16 @@ def DrawSignalEff(cut_lst, inputdir="b77", outputname="", normalization="All", d
     atlas.SetTextFont(72)
     atlas.SetNDC()
     atlas.Draw()
-    status = ROOT.TLatex(xatlas + 0.14, yatlas, "Simulation")
+    status = ROOT.TLatex(xatlas + 0.1, yatlas, "Simulation")
     #status.SetTextAlign(22)
     status.SetTextSize(0.04)
     status.SetTextFont(42)
     status.SetNDC()
     status.Draw()
     if signal == "G_hh_c10":
-        signal_leg = "G_{kk} k/#bar{M}_{pl} = 1,"
+        signal_leg = "G_{kk} k/#bar{M}_{Pl} = 1,"
     if signal == "G_hh_c20":
-        signal_leg = "G_{kk} k/#bar{M}_{pl} = 2,"
+        signal_leg = "G_{kk} k/#bar{M}_{Pl} = 2,"
     if signal == "X_hh":
         signal_leg = "Scalar,"
     myText(xatlas, yatlas-0.05, 1, signal_leg + " #sqrt{s} = 13 TeV", CONF.paperlegsize)

@@ -145,7 +145,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     RSG1_2500.Add(bkg[0]) 
 
     # canvas
-    c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 800)
+    c0 = ROOT.TCanvas("c0"+filename+cut, "Insert hilarious TCanvas name here", 800, 600)
     c0.SetRightMargin(0.05)
 
     # top pad
@@ -184,7 +184,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     bkg[0].GetYaxis().SetLabelFont(43)
     bkg[0].GetYaxis().SetLabelSize(28)
     bkg[0].GetYaxis().SetTitle(yTitle)
-    bkg[0].GetYaxis().SetTitleOffset(1.7)
+    bkg[0].GetYaxis().SetTitleOffset(1.25)
     if ("Control" in cut and "mHH" in cut):
         bkg[0].GetYaxis().SetRangeUser(0.02, yMax) #set range for ratio plot
     else:
@@ -244,6 +244,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     hratio.GetYaxis().SetTitleSize(35)
     hratio.GetYaxis().SetLabelFont(43)
     hratio.GetYaxis().SetLabelSize(28)
+    hratio.GetYaxis().SetTitleOffset(1.25)
     hratio.GetYaxis().SetTitle("Data / Bkgd")
     if ("Control" in cut and "mHH" in cut):
         hratio.GetYaxis().SetRangeUser(0.5, 2.4) #set range for ratio plot
@@ -252,7 +253,7 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
 
     hratio.GetYaxis().SetNdivisions(405)
     hratio.GetXaxis().SetTitleFont(43)
-    hratio.GetXaxis().SetTitleOffset(3.5)
+    hratio.GetXaxis().SetTitleOffset(2.8)
     hratio.GetXaxis().SetTitleSize(35)
     hratio.GetXaxis().SetLabelFont(43)
     hratio.GetXaxis().SetLabelSize(28)
@@ -312,9 +313,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     legH=legHunit*6 # retuned below based on number of entries to 0.05*num_entries
     legW=0.4
     if ("Control" in cut and "mHH" in cut):
-        leg = ROOT.TLegend(0.66, 0.75, 0.95, 0.95)
+        leg = ROOT.TLegend(0.57, 0.83, 0.93, 0.93)
     else:
-        leg = ROOT.TLegend(0.7, 0.75, 0.95, 0.95)
+        leg = ROOT.TLegend(0.57, 0.83, 0.93, 0.93)
     # top right, a bit left
     ROOT.ATLASLabel(0.19, 0.91, StatusLabel)
     if "15" in filepath:
@@ -353,9 +354,9 @@ def plotRegion(config, cut, xTitle, yTitle="N Events", Logy=0, rebin=None, rebin
     leg.AddEntry(ttbar, "t#bar{t}","F")
     #leg.AddEntry(zjet, "Z+jets","F")
     if ("Control" in cut and "mHH" in cut):
-        leg.AddEntry(bkg[1], "Stat+Syst Uncertainties", "F")
+        leg.AddEntry(bkg[1], "Stat Uncertainties", "FF")
     else:
-        leg.AddEntry(bkg[1], "Stat Uncertainties", "F")
+        leg.AddEntry(bkg[1], "Stat Uncertainties", "FF")
 
     #leg.AddEntry(RSG1_1000, "RSG1, 1TeV", "F")
     #leg.AddEntry(RSG1_1500, "RSG 1.5TeV * 10", "F")
@@ -418,7 +419,7 @@ def dumpRegion(config):
     #plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", rebinarry=rebin_dic["mHH_l"], Logy=1)
     if "Sideband" in config["cut"]:
         plotRegion(config, cut=config["cut"] + "leadHCand_Mass_s",   xTitle="Leading large-R jet mass [GeV]", yTitle="Events / 10 GeV")
-        plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="Leading large-R jet's leading trackjet p_{T} [GeV]", yTitle="Events / 30 GeV", rebinarry=array('d', range(0, 600, 30)))
+        plotRegion(config, cut=config["cut"] + "leadHCand_trk0_Pt",  xTitle="Leading large-R jet's leading trackjet p_{T} [GeV]", yTitle="Events / 20 GeV", rebinarry=array('d', range(0, 600, 30)))
         plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", Logy = 1, rebinarry=rebin_dic["mHH_l"])
     if "Control" in config["cut"]:
         plotRegion(config, cut=config["cut"] + "mHH_l",              xTitle="m_{2J} [GeV]", yTitle="Events / 100 GeV", Logy = 1, rebinarry=rebin_dic["mHH_l"])
@@ -447,7 +448,7 @@ def main():
     print "input root file is: ", rootinputpath
 
     global StatusLabel
-    StatusLabel = "Internal" ##StatusLabel = "Internal"
+    StatusLabel = CONF.StatusLabel ##StatusLabel = "Internal"
     
     # plot in the control region #
     # outputFolder = inputpath + inputroot + "Plot/" + "Sideband"

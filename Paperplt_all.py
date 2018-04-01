@@ -179,11 +179,11 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     #helpers.DrawWords(ttb_txt)
 
     # fill box
-    fillbox = ROOT.TBox(110,202,230,240)
+    fillbox = ROOT.TBox(150,202,230,240)
     fillbox.SetFillStyle(1001)
     fillbox.SetFillColor(0)
     # line box
-    linebox = ROOT.TBox(110,202,230,240)
+    linebox = ROOT.TBox(150,202,230,240)
     linebox.SetFillStyle(0)
     linebox.SetLineWidth(2)
     linebox.SetLineStyle(1)
@@ -193,10 +193,11 @@ def DrawPaper2D(inputname, inputdir, keyword="_", prename="", Xrange=[0, 0], Yra
     fillbox.Draw("same")
 
     # Draw Watermarks
-    xatlas, yatlas = 0.37, 0.87
+    xatlas, yatlas = 0.48, 0.87
     ATLASLabel(xatlas, yatlas, StatusLabel)
     myText(xatlas, yatlas-0.05, 1, "#sqrt{s}=13 TeV, " + str(CONF.totlumi) + " fb^{-1}", CONF.paperlegsize)
     myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize)
+    myText(xatlas+0.07, yatlas-0.1, 0, "Tony", CONF.paperlegsize)
 
     canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")
     canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".png")
@@ -308,11 +309,11 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     #helpers.DrawWords(ttb_txt)
 
     # fill box
-    fillbox = ROOT.TBox(110,202,230,240)
+    fillbox = ROOT.TBox(150,202,230,240)
     fillbox.SetFillStyle(1001)
     fillbox.SetFillColor(0)
     # line box
-    linebox = ROOT.TBox(110,202,230,240)
+    linebox = ROOT.TBox(150,202,230,240)
     linebox.SetFillStyle(0)
     linebox.SetLineWidth(2)
     linebox.SetLineStyle(1)
@@ -322,10 +323,11 @@ def DrawPaper2DPrediction(inputname, inputdir, keyword="_", prename="", Xrange=[
     fillbox.Draw("same")
 
     # Draw Watermarks
-    xatlas, yatlas = 0.37, 0.87
+    xatlas, yatlas = 0.48, 0.87
     ATLASLabel(xatlas, yatlas, StatusLabel)
     myText(xatlas, yatlas-0.05, 1, "#sqrt{s}=13 TeV, " + str(CONF.totlumi) + " fb^{-1}", CONF.paperlegsize)
     myText(xatlas, yatlas-0.1, 1, "Boosted", CONF.paperlegsize)
+    myText(xatlas+0.07, yatlas-0.1, 0, "T.T", CONF.paperlegsize)
 
 
     canv.SaveAs(outputpath + prename + "_" +  canv.GetName() + ".pdf")

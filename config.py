@@ -56,4 +56,4 @@ col_dic  = {"syst":ROOT.kGray+2}
 #size for legend
 legsize       = 20
 paperlegsize  = 20
-StatusLabel   = "Internal" #"Preliminary"
+StatusLabel   = "" #"Internal", "Preliminary"
