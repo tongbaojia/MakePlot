@@ -315,28 +315,34 @@ def main():
     #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"NoTag_Signal/sublHCand_trk1_Eta", "leg":"0b"}, 
     #     ], keyword="", norm=True, prename="Sig_3TeV_jet1_trk1eta", Rebin=2, Logy=0)
 
-    DrawMulticomparison([
-        {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"1 TeV"},
-        {"file":"../TEST/signal_X_hh_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"2 TeV"}, 
-        {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"3 TeV"}, 
-        ], keyword="", norm=True, prename="Sig_H_4b_jet0_deta", Rebin=2, Logy=0)
-    DrawMulticomparison([
-        {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"1 TeV"},
-        {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"2 TeV"}, 
-        {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"3 TeV"}, 
-        ], keyword="", norm=True, prename="Sig_RSG_4b_jet0_deta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"1 TeV"},
+    #     {"file":"../TEST/signal_X_hh_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"2 TeV"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"3 TeV"}, 
+    #     ], keyword="", norm=True, prename="Sig_H_4b_jet0_deta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"1 TeV"},
+    #     {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"2 TeV"}, 
+    #     {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"FourTag_Signal/hCandDeta", "leg":"3 TeV"}, 
+    #     ], keyword="", norm=True, prename="Sig_RSG_4b_jet0_deta", Rebin=2, Logy=0)
 
 
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"1 TeV"},
+    #     {"file":"../TEST/signal_X_hh_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"2 TeV"}, 
+    #     {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"3 TeV"}, 
+    #     ], keyword="", norm=True, prename="Sig_H_2bs_jet0_deta", Rebin=2, Logy=0)
+    # DrawMulticomparison([
+    #     {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"1 TeV"},
+    #     {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"2 TeV"}, 
+    #     {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"3 TeV"}, 
+    #     ], keyword="", norm=True, prename="Sig_RSG_2bs_jet0_deta", Rebin=2, Logy=0)
+    
     DrawMulticomparison([
-        {"file":"../TEST/signal_X_hh_M1000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"1 TeV"},
-        {"file":"../TEST/signal_X_hh_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"2 TeV"}, 
-        {"file":"../TEST/signal_X_hh_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"3 TeV"}, 
-        ], keyword="", norm=True, prename="Sig_H_2bs_jet0_deta", Rebin=2, Logy=0)
-    DrawMulticomparison([
-        {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"1 TeV"},
-        {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"2 TeV"}, 
-        {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"TwoTag_split_Signal/hCandDeta", "leg":"3 TeV"}, 
-        ], keyword="", norm=True, prename="Sig_RSG_2bs_jet0_deta", Rebin=2, Logy=0)
+        {"file":"../TEST/signal_G_hh_c10_M1000/hist-MiniNTuple.root", "path":"AllTag_Incl/mHH_l", "leg":"1 TeV"},
+        {"file":"../TEST/signal_G_hh_c10_M2000/hist-MiniNTuple.root", "path":"AllTag_Incl/mHH_l", "leg":"2 TeV"}, 
+        {"file":"../TEST/signal_G_hh_c10_M3000/hist-MiniNTuple.root", "path":"AllTag_Incl/mHH_l", "leg":"3 TeV"}, 
+        ], keyword="", norm=True, prename="signal_compare", Rebin=5, Xrange=[500, 4000], Logy=0)
 
 
 def DrawRegionPlot(inputname, inputdir, keyword="_", prename="Compare", Xrange=[0, 0], Yrange=[0, 0]):

@@ -22,9 +22,9 @@ refpath     =  toppath +"/Output/ref/"
 #do c20 and 2HDM samples
 doallsig    =  True
 #check if reference folder exists
-fullstudy   =  True	
+fullstudy   =  False	
 #check if doing my thesis; if so, disable all the ATLAS labels
-thesis      =  False
+thesis      =  True
 #check if the path exists
 if not os.path.exists(refpath):
 	print "please copy the directory: /afs/cern.ch/user/b/btong/work/public/RunIIHH4b/ref over to Output/ref!!!"
